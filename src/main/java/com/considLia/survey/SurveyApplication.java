@@ -10,4 +10,11 @@ public class SurveyApplication {
     SpringApplication.run(SurveyApplication.class, args);
   }
 
+  // @Bean
+  // public CommandLineRunner initDb(PersonRepository personRepository) {
+  // return args -> {
+  //
+  //
+  // };
+  // }
 }
