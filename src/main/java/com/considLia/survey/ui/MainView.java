@@ -17,7 +17,6 @@ public class MainView extends VerticalLayout {
 
   public MainView(SurveyRepository surveyRepository) {
 
-
     Survey survey = surveyRepository.getSurveyBySurveyId(1l);
 
     add(new H1(survey.getSurveyTitle()));
@@ -31,9 +30,6 @@ public class MainView extends VerticalLayout {
         add(new H3(mqa.getQuestionTitle()));
       }
     }
-
-    System.out.println("Nådde hit 333");
-
   }
 
 }
