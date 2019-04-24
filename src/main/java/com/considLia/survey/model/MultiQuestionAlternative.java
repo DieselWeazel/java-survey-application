@@ -14,8 +14,15 @@ public class MultiQuestionAlternative {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "alternative_id")
-  private long alternativeId;
+  private Long alternativeId;
+
   private String questionTitle;
+
+  public MultiQuestionAlternative() {}
+
+  public MultiQuestionAlternative(String questionTitle) {
+    this.questionTitle = questionTitle;
+  }
 
   public String getQuestionTitle() {
     return questionTitle;
@@ -24,6 +31,4 @@ public class MultiQuestionAlternative {
   public void setQuestionTitle(String questionTitle) {
     this.questionTitle = questionTitle;
   }
-
-
 }

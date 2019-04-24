@@ -8,6 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import com.considLia.survey.model.MultiQuestion;
 import com.considLia.survey.model.MultiQuestionAlternative;
+import com.considLia.survey.model.Question;
 import com.considLia.survey.model.Survey;
 import com.considLia.survey.model.TextQuestion;
 import com.considLia.survey.repositories.SurveyRepository;
@@ -44,13 +45,11 @@ public class SurveyApplication {
 
       multi.setAlternativeList(alternativeList);
 
-      Set<MultiQuestion> questionList = new HashSet<>();
+      Set<Question> questionList = new HashSet<>();
       questionList.add(multi);
-      Set<TextQuestion> textQuestionList = new HashSet<>();
-      textQuestionList.add(text);
+      questionList.add(text);
 
-      survey1.setMultiQuestionList(questionList);
-      survey1.setTextQuestionList(textQuestionList);
+      survey1.setQuestionList(questionList);
 
       surveyRepository.save(survey1);
 

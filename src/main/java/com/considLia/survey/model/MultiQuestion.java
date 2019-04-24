@@ -3,52 +3,31 @@ package com.considLia.survey.model;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "multiquestion")
-public class MultiQuestion implements Question {
+public class MultiQuestion extends Question {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "question_id")
-  private long questionId;
-  private String questionTitle;
   private int questionType;
 
   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-  @JoinTable(name = "multiq_multia", joinColumns = @JoinColumn(name = "question_id"),
-      inverseJoinColumns = @JoinColumn(name = "alternative_id"))
+  @JoinColumn(name = "question_id")
   private Set<MultiQuestionAlternative> alternativeList;
 
-  public MultiQuestion() {}
+  public MultiQuestion() {
+    super();
+  }
 
-  public MultiQuestion(String questionTitle, int questionType) {
-    this.questionTitle = questionTitle;
+  public MultiQuestion(String questionTitle, int position, int questionType) {
+    super(questionTitle, position);
     this.questionType = questionType;
     alternativeList = new HashSet<>();
 
-  }
-
-  public String getQuestionTitle() {
-    return questionTitle;
-  }
-
-  public void setQuestionTitle(String questionTitle) {
-    this.questionTitle = questionTitle;
-  }
-
-  public long getQuestionId() {
-    return questionId;
   }
 
   public Set<MultiQuestionAlternative> getAlternativeList() {

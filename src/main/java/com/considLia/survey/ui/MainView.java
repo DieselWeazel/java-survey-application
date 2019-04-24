@@ -1,14 +1,10 @@
 package com.considLia.survey.ui;
 
-import java.util.Set;
-import com.considLia.survey.model.MultiQuestion;
-import com.considLia.survey.model.MultiQuestionAlternative;
+import com.considLia.survey.model.Question;
 import com.considLia.survey.model.Survey;
-import com.considLia.survey.model.TextQuestion;
 import com.considLia.survey.repositories.SurveyRepository;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
-import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 
@@ -20,16 +16,15 @@ public class MainView extends VerticalLayout {
     Survey survey = surveyRepository.getSurveyBySurveyId(1l);
 
     add(new H1(survey.getSurveyTitle()));
-    for (TextQuestion t : survey.getTextQuestionList()) {
-      add(new H2(t.getQuestionTitle()));
+
+    survey.getQuestionList();
+
+    for (Question q : survey.getQuestionList()) {
+      add(new H2(q.getQuestionTitle()));
+
+
     }
-    for (MultiQuestion m : survey.getMultiQuestionList()) {
-      add(new H2(m.getQuestionTitle()));
-      Set<MultiQuestionAlternative> set = m.getAlternativeList();
-      for (MultiQuestionAlternative mqa : set) {
-        add(new H3(mqa.getQuestionTitle()));
-      }
-    }
+
   }
 
 }
