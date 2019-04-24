@@ -1,34 +1,49 @@
 package com.considLia.survey.model;
 
 import java.sql.Date;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 @Entity
+@Table(name = "survey")
 public class Survey {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "survey_id")
   private long surveyId;
 
   private String surveyTitle, creator;
   private Date date;
 
-  @OneToMany(cascade = CascadeType.ALL)
-  private List<Question> questionList;
+  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+  @JoinTable(name = "survey_multi", joinColumns = @JoinColumn(name = "survey_id"),
+      inverseJoinColumns = @JoinColumn(name = "question_id"))
+  private Set<MultiQuestion> multiQuestionList;
+
+  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+  @JoinTable(name = "survey_text", joinColumns = @JoinColumn(name = "survey_id"),
+      inverseJoinColumns = @JoinColumn(name = "question_id"))
+  private Set<TextQuestion> textQuestionList;
 
   public Survey() {}
 
   public Survey(String surveyTitle, String creator) {
     setSurveyTitle(surveyTitle);
     setCreator(creator);
-    setQuestionList(new ArrayList<>());
+    multiQuestionList = new HashSet<>();
+    textQuestionList = new HashSet<>();
 
   }
 
@@ -61,19 +76,27 @@ public class Survey {
     this.date = date;
   }
 
-  public List<Question> getQuestionList() {
-    return questionList;
+  public Set<MultiQuestion> getMultiQuestionList() {
+    return multiQuestionList;
   }
 
-  public void setQuestionList(List<Question> questionList) {
-    this.questionList = questionList;
+  public void setMultiQuestionList(Set<MultiQuestion> multiQuestionList) {
+    this.multiQuestionList = multiQuestionList;
+  }
+
+  public Set<TextQuestion> getTextQuestionList() {
+    return textQuestionList;
+  }
+
+  public void setTextQuestionList(Set<TextQuestion> textQuestionList) {
+    this.textQuestionList = textQuestionList;
   }
 
   @Override
   public String toString() {
     return "Survey [surveyId=" + surveyId + ", surveyTitle=" + surveyTitle + ", creator=" + creator
-        + ", date=" + date + ", questionList=" + questionList + "]";
+        + ", date=" + date + ", multiQuestionList=" + multiQuestionList + ", textQuestionList="
+        + textQuestionList + "]";
   }
-
 
 }
