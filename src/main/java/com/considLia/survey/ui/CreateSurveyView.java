@@ -21,14 +21,16 @@ public class CreateSurveyView extends VerticalLayout {
   TextField creatorName = new TextField();
   TextField questionTitle = new TextField();
 
-  Survey thisSurvey;
+  private Survey thisSurvey;
   private int typeOfQuestion;
+  private int questionPosition;
 
   private SurveyRepository surveyRepository;
 
   public CreateSurveyView(SurveyRepository surveyRepository) {
 
     this.surveyRepository = surveyRepository;
+    questionPosition = 1;
     thisSurvey = new Survey();
 
     HorizontalLayout horizontalContainer = new HorizontalLayout();
@@ -82,13 +84,26 @@ public class CreateSurveyView extends VerticalLayout {
 
     if (typeOfQuestion == 0) {
       Question question = new TextQuestion();
+      question.setQuestionTitle(questionTitle.getValue());
+      question.setPosition(questionPosition);
+      questionPosition++;
 
       thisSurvey.getQuestionList().add(question);
     } else if (typeOfQuestion == 1 || typeOfQuestion == 2) {
       Question question = new MultiQuestion();
+      question.setQuestionTitle(questionTitle.getValue());
+      question.setPosition(questionPosition);
+      // Add question alternative textfield value
+      // question.getAlternativeList().add();
+      questionPosition++;
 
       thisSurvey.getQuestionList().add(question);
+    } else {
+      /*
+       * Felhantering ifall typ av fråga inte är rätt gjord (?)
+       */
     }
+
   }
 
 }
