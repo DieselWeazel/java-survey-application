@@ -11,15 +11,16 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Route;
 
 @Route(value = "createsurvey", layout = MainLayout.class)
 public class CreateSurveyView extends VerticalLayout {
 
-  Button addQuestion = new Button("Add question", event -> addQuestion());
-  TextField surveyTitle = new TextField();
-  TextField creatorName = new TextField();
-  TextField questionTitle = new TextField();
+  private Button addQuestion = new Button("Add question", event -> addQuestion());
+  private TextField surveyTitle = new TextField();
+  private TextField creatorName = new TextField();
+  private TextField questionTitle = new TextField();
 
   private Survey thisSurvey;
   private int typeOfQuestion;
@@ -33,12 +34,10 @@ public class CreateSurveyView extends VerticalLayout {
     questionPosition = 1;
     thisSurvey = new Survey();
 
-    HorizontalLayout horizontalContainer = new HorizontalLayout();
-
     surveyTitle.setPlaceholder("Survey title");
-
     creatorName.setPlaceholder("Created by");
 
+    HorizontalLayout horizontalContainer = new HorizontalLayout();
     horizontalContainer.add(surveyTitle, creatorName);
 
     add(horizontalContainer);
@@ -47,21 +46,38 @@ public class CreateSurveyView extends VerticalLayout {
 
   public void addQuestion() {
     questionTitle.setPlaceholder("Question title");
+    questionTitle.setValueChangeMode(ValueChangeMode.EAGER);
 
     typeOfQuestion = -1;
 
-    Button save = new Button("submit", event -> saveQuestion(typeOfQuestion));
+    Button save = new Button("Submit survey", event -> saveQuestion(typeOfQuestion));
 
+    addQuestion.setEnabled(false);
     RadioButtonGroup<String> radioButtons = new RadioButtonGroup<>();
     radioButtons.setItems("Text question", "Radio Question", "Checkbox Question");
     radioButtons.addValueChangeListener(event -> {
-      if (event.getValue().equalsIgnoreCase("Text question")) {
-        System.out.println("Picked Text");
+      if (event.getValue().equalsIgnoreCase("Text question")
+          && !questionTitle.getValue().isEmpty()) {
+        save.setEnabled(true);
         typeOfQuestion = 0;
       } else if (event.getValue().equalsIgnoreCase("Multi question")) {
         typeOfQuestion = 1;
       } else if (event.getValue().equalsIgnoreCase("Checkbox Question")) {
         typeOfQuestion = 2;
+      }
+    });
+
+    questionTitle.addValueChangeListener(event -> {
+      if (radioButtons.getValue().equalsIgnoreCase("Text question")
+          && !questionTitle.getValue().isEmpty()) {
+        addQuestion.setEnabled(true);
+        typeOfQuestion = 0;
+      } else if (radioButtons.getValue().equalsIgnoreCase("Multi question")) {
+        typeOfQuestion = 1;
+      } else if (radioButtons.getValue().equalsIgnoreCase("Checkbox Question")) {
+        typeOfQuestion = 2;
+      } else if (questionTitle.isEmpty()) {
+        addQuestion.setEnabled(false);
       }
     });
 
@@ -87,7 +103,6 @@ public class CreateSurveyView extends VerticalLayout {
       Question question = new TextQuestion();
       question.setQuestionTitle(questionTitle.getValue());
       question.setPosition(questionPosition);
-      System.out.println("Save Question" + questionPosition);
       questionPosition++;
 
       thisSurvey.getQuestionList().add(question);
