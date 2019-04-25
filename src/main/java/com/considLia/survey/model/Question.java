@@ -1,5 +1,6 @@
 package com.considLia.survey.model;
 
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -18,7 +19,6 @@ public abstract class Question {
   private Long questionId;
   private String questionTitle;
   private int position;
-
 
   public Question() {}
 
@@ -46,4 +46,9 @@ public abstract class Question {
   public Long getQuestionId() {
     return questionId;
   }
+
+  public abstract Set<MultiQuestionAlternative> getAlternativeList();
+
+  public abstract void setAlternativeList(Set<MultiQuestionAlternative> alternativeList);
+
 }

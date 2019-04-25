@@ -1,5 +1,6 @@
 package com.considLia.survey;
 
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 import org.springframework.boot.CommandLineRunner;
@@ -27,15 +28,16 @@ public class SurveyApplication {
       Survey survey1 = new Survey();
       survey1.setSurveyTitle("Test");
       survey1.setCreator("Jens");
+      survey1.setDate(LocalDate.now());
 
       MultiQuestion multi = new MultiQuestion();
       multi.setQuestionTitle("Test multi");
       multi.setQuestionType(1);
 
       MultiQuestionAlternative multiAlt = new MultiQuestionAlternative();
-      multiAlt.setQuestionTitle("Testalternativ1");
+      multiAlt.setAlternativeTitle("Testalternativ1");
       MultiQuestionAlternative multiAlt2 = new MultiQuestionAlternative();
-      multiAlt2.setQuestionTitle("Testalternativ2");
+      multiAlt2.setAlternativeTitle("Testalternativ2");
       TextQuestion text = new TextQuestion();
       text.setQuestionTitle("Test textfråga");
 

@@ -16,19 +16,19 @@ public class MultiQuestionAlternative {
   @Column(name = "alternative_id")
   private Long alternativeId;
 
-  private String questionTitle;
+  private String alternativeTitle;
 
   public MultiQuestionAlternative() {}
 
   public MultiQuestionAlternative(String questionTitle) {
-    this.questionTitle = questionTitle;
+    this.alternativeTitle = questionTitle;
   }
 
-  public String getQuestionTitle() {
-    return questionTitle;
+  public String getAlternativeTitle() {
+    return alternativeTitle;
   }
 
-  public void setQuestionTitle(String questionTitle) {
-    this.questionTitle = questionTitle;
+  public void setAlternativeTitle(String alternativeTitle) {
+    this.alternativeTitle = alternativeTitle;
   }
 }
