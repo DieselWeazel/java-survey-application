@@ -32,13 +32,14 @@ public class Survey {
 
   public Survey() {
     questionList = new HashSet<>();
+    date = LocalDate.now();
   }
 
   public Survey(String surveyTitle, String creator) {
     setSurveyTitle(surveyTitle);
     setCreator(creator);
     questionList = new HashSet<>();
-
+    date = LocalDate.now();
   }
 
   public Long getSurveyId() {

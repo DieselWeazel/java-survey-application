@@ -16,10 +16,12 @@ import com.vaadin.flow.router.Route;
 @Route(value = "createsurvey", layout = MainLayout.class)
 public class CreateSurveyView extends VerticalLayout {
 
-  Button addQuestion = new Button("Add question", event -> addQuestion());
-  TextField surveyTitle = new TextField();
-  TextField creatorName = new TextField();
-  TextField questionTitle = new TextField();
+  private Button addQuestionButton;
+  private TextField surveyTitleTextField;
+  private TextField creatorNameTextField;
+  private TextField questionTitleTextField;
+
+  private HorizontalLayout horizontalTextfieldContainer;
 
   private Survey thisSurvey;
   private int typeOfQuestion;
@@ -30,33 +32,33 @@ public class CreateSurveyView extends VerticalLayout {
   public CreateSurveyView(SurveyRepository surveyRepository) {
 
     this.surveyRepository = surveyRepository;
-    questionPosition = 1;
-    thisSurvey = new Survey();
+    this.questionPosition = 1;
+    this.thisSurvey = new Survey();
+    this.horizontalTextfieldContainer = new HorizontalLayout();
+    this.addQuestionButton = new Button("Add question", event -> addQuestion());
+    this.surveyTitleTextField = new TextField();
+    this.creatorNameTextField = new TextField();
+    this.questionTitleTextField = new TextField();
 
-    HorizontalLayout horizontalContainer = new HorizontalLayout();
+    surveyTitleTextField.setPlaceholder("Survey title");
+    creatorNameTextField.setPlaceholder("Created by");
 
-    surveyTitle.setPlaceholder("Survey title");
-
-    creatorName.setPlaceholder("Created by");
-
-    horizontalContainer.add(surveyTitle, creatorName);
-
-    add(horizontalContainer);
-    add(addQuestion);
+    horizontalTextfieldContainer.add(surveyTitleTextField, creatorNameTextField);
+    add(horizontalTextfieldContainer);
+    add(addQuestionButton);
   }
 
   public void addQuestion() {
-    questionTitle.setPlaceholder("Question title");
+    questionTitleTextField.setPlaceholder("Question title");
 
     typeOfQuestion = -1;
 
-    Button save = new Button("submit", event -> saveQuestion(typeOfQuestion));
+    Button saveButton = new Button("submit", event -> saveQuestion(typeOfQuestion));
 
     RadioButtonGroup<String> radioButtons = new RadioButtonGroup<>();
     radioButtons.setItems("Text question", "Radio Question", "Checkbox Question");
     radioButtons.addValueChangeListener(event -> {
       if (event.getValue().equalsIgnoreCase("Text question")) {
-        System.out.println("Picked Text");
         typeOfQuestion = 0;
       } else if (event.getValue().equalsIgnoreCase("Multi question")) {
         typeOfQuestion = 1;
@@ -65,15 +67,15 @@ public class CreateSurveyView extends VerticalLayout {
       }
     });
 
-    add(questionTitle);
+    add(questionTitleTextField);
     add(radioButtons);
-    add(save);
+    add(saveButton);
   }
 
   public void saveSurvey() {
 
-    thisSurvey.setCreator(creatorName.getValue());
-    thisSurvey.setSurveyTitle(surveyTitle.getValue());
+    thisSurvey.setCreator(creatorNameTextField.getValue());
+    thisSurvey.setSurveyTitle(surveyTitleTextField.getValue());
     thisSurvey.setDate(LocalDate.now());
 
     surveyRepository.save(thisSurvey);
@@ -85,15 +87,14 @@ public class CreateSurveyView extends VerticalLayout {
 
     if (typeOfQuestion == 0) {
       Question question = new TextQuestion();
-      question.setQuestionTitle(questionTitle.getValue());
+      question.setQuestionTitle(questionTitleTextField.getValue());
       question.setPosition(questionPosition);
-      System.out.println("Save Question" + questionPosition);
       questionPosition++;
 
       thisSurvey.getQuestionList().add(question);
     } else if (typeOfQuestion == 1 || typeOfQuestion == 2) {
       Question question = new MultiQuestion();
-      question.setQuestionTitle(questionTitle.getValue());
+      question.setQuestionTitle(questionTitleTextField.getValue());
       question.setPosition(questionPosition);
       // Add question alternative textfield value
       // question.getAlternativeList().add();
