@@ -26,7 +26,6 @@ public class CreateSurveyView extends VerticalLayout {
 
   private SurveyRepository surveyRepository;
 
-
   public CreateSurveyView(SurveyRepository surveyRepository) {
 
     this.surveyRepository = surveyRepository;
@@ -74,8 +73,9 @@ public class CreateSurveyView extends VerticalLayout {
     thisSurvey.setSurveyTitle(surveyTitle.getValue());
     thisSurvey.setDate(LocalDate.now());
 
+    surveyRepository.save(thisSurvey);
 
-
+    thisSurvey = null;
   }
 
   public void saveQuestion(int typeOfQuestion) {
@@ -89,8 +89,6 @@ public class CreateSurveyView extends VerticalLayout {
 
       thisSurvey.getQuestionList().add(question);
     }
-
-
   }
 
 }
