@@ -1,6 +1,11 @@
 package com.considLia.survey.ui;
 
+import java.time.LocalDate;
+import com.considLia.survey.model.MultiQuestion;
+import com.considLia.survey.model.Question;
 import com.considLia.survey.model.Survey;
+import com.considLia.survey.model.TextQuestion;
+import com.considLia.survey.repositories.SurveyRepository;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -16,11 +21,17 @@ public class CreateSurveyView extends VerticalLayout {
   TextField creatorName = new TextField();
   TextField questionTitle = new TextField();
 
-  private boolean addButtonReady;
+  private Survey thisSurvey;
+  private int typeOfQuestion;
+  private int questionPosition;
 
-  public CreateSurveyView() {
+  private SurveyRepository surveyRepository;
 
-    addButtonReady = true;
+  public CreateSurveyView(SurveyRepository surveyRepository) {
+
+    this.surveyRepository = surveyRepository;
+    questionPosition = 1;
+    thisSurvey = new Survey();
 
     HorizontalLayout horizontalContainer = new HorizontalLayout();
 
@@ -35,37 +46,66 @@ public class CreateSurveyView extends VerticalLayout {
   }
 
   public void addQuestion() {
-    if (addButtonReady) {
-      questionTitle.setPlaceholder("Question title");
-      Button save = new Button("submit", event -> saveSurvey());
+    questionTitle.setPlaceholder("Question title");
 
-      RadioButtonGroup<String> radioButtons = new RadioButtonGroup<>();
-      radioButtons.setItems("Text question", "Radio Question", "Checkbox Question");
-      radioButtons.addValueChangeListener(event -> {
-        if (event.getValue().equalsIgnoreCase("Text question")) {
+    typeOfQuestion = -1;
 
-        } else if (event.getValue().equalsIgnoreCase("Multi question")) {
+    Button save = new Button("submit", event -> saveQuestion(typeOfQuestion));
 
-        } else if (event.getValue().equalsIgnoreCase("Checkbox Question")) {
+    RadioButtonGroup<String> radioButtons = new RadioButtonGroup<>();
+    radioButtons.setItems("Text question", "Radio Question", "Checkbox Question");
+    radioButtons.addValueChangeListener(event -> {
+      if (event.getValue().equalsIgnoreCase("Text question")) {
+        System.out.println("Picked Text");
+        typeOfQuestion = 0;
+      } else if (event.getValue().equalsIgnoreCase("Multi question")) {
+        typeOfQuestion = 1;
+      } else if (event.getValue().equalsIgnoreCase("Checkbox Question")) {
+        typeOfQuestion = 2;
+      }
+    });
 
-        }
-      });
-
-      add(questionTitle);
-      add(radioButtons);
-      add(save);
-
-      addButtonReady = false;
-    }
+    add(questionTitle);
+    add(radioButtons);
+    add(save);
   }
 
   public void saveSurvey() {
 
-    addButtonReady = true;
+    thisSurvey.setCreator(creatorName.getValue());
+    thisSurvey.setSurveyTitle(surveyTitle.getValue());
+    thisSurvey.setDate(LocalDate.now());
 
-    Survey newSurvey = new Survey();
+    surveyRepository.save(thisSurvey);
 
-    newSurvey.setCreator(creatorName.getValue());
+    thisSurvey = null;
+  }
+
+  public void saveQuestion(int typeOfQuestion) {
+
+    if (typeOfQuestion == 0) {
+      Question question = new TextQuestion();
+      question.setQuestionTitle(questionTitle.getValue());
+      question.setPosition(questionPosition);
+      System.out.println("Save Question" + questionPosition);
+      questionPosition++;
+
+      thisSurvey.getQuestionList().add(question);
+    } else if (typeOfQuestion == 1 || typeOfQuestion == 2) {
+      Question question = new MultiQuestion();
+      question.setQuestionTitle(questionTitle.getValue());
+      question.setPosition(questionPosition);
+      // Add question alternative textfield value
+      // question.getAlternativeList().add();
+      questionPosition++;
+
+      thisSurvey.getQuestionList().add(question);
+    } else {
+      /*
+       * Felhantering ifall typ av fråga inte är rätt gjord (?)
+       */
+    }
+
   }
 
 }
