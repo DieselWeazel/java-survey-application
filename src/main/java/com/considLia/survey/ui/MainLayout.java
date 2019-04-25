@@ -32,7 +32,6 @@ public class MainLayout extends VerticalLayout implements RouterLayout, AfterNav
     navigation.addClassName("navigation");
     navigation.add(createRouterLink(MainView.class, "Home"));
     navigation.add(createRouterLink(CreateSurveyView.class, "createsurvey"));
-    navigation.add(createRouterLink(ShowSurveyView.class, "showsurvey"));
 
     contentContainer = new VerticalLayout();
     contentContainer.addClassName("content");
