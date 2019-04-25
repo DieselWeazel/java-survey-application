@@ -21,6 +21,7 @@ public class MultiQuestion extends Question {
 
   public MultiQuestion() {
     super();
+    alternativeList = new HashSet<>();
   }
 
   public MultiQuestion(String questionTitle, int position, int questionType) {
