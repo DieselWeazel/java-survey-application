@@ -3,6 +3,7 @@ package com.considLia.survey.ui;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
 
@@ -27,7 +28,27 @@ public class CreateSurveyView extends VerticalLayout {
   }
 
   public void addQuestion() {
+    TextField questionTitle = new TextField();
+    questionTitle.setPlaceholder("Question title");
+    Button save = new Button("submit");
 
+    RadioButtonGroup<String> radioButtons = new RadioButtonGroup<>();
+    radioButtons.setItems("Text question", "Radio Question", "Checkbox Question");
+    radioButtons.addValueChangeListener(event -> {
+      if (event.getValue().equalsIgnoreCase("Text question")) {
+
+      } else if (event.getValue().equalsIgnoreCase("Multi question")) {
+
+      } else if (event.getValue().equalsIgnoreCase("Checkbox Question")) {
+
+      }
+    });
+
+
+
+    add(questionTitle);
+    add(radioButtons);
+    add(save);
   }
 
 
