@@ -11,12 +11,15 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Route;
 
 @Route(value = "createsurvey", layout = MainLayout.class)
 public class CreateSurveyView extends VerticalLayout {
 
   private Button addQuestionButton;
+  private Button submitSurveyButton;
+
   private TextField surveyTitleTextField;
   private TextField creatorNameTextField;
   private TextField questionTitleTextField;
@@ -36,9 +39,11 @@ public class CreateSurveyView extends VerticalLayout {
     this.thisSurvey = new Survey();
     this.horizontalTextfieldContainer = new HorizontalLayout();
     this.addQuestionButton = new Button("Add question", event -> addQuestion());
+    this.submitSurveyButton = new Button("submit", event -> saveQuestion(typeOfQuestion));
     this.surveyTitleTextField = new TextField();
     this.creatorNameTextField = new TextField();
     this.questionTitleTextField = new TextField();
+    questionTitleTextField.setValueChangeMode(ValueChangeMode.EAGER);
 
     surveyTitleTextField.setPlaceholder("Survey title");
     creatorNameTextField.setPlaceholder("Created by");
@@ -46,6 +51,8 @@ public class CreateSurveyView extends VerticalLayout {
     horizontalTextfieldContainer.add(surveyTitleTextField, creatorNameTextField);
     add(horizontalTextfieldContainer);
     add(addQuestionButton);
+    add(submitSurveyButton);
+
   }
 
   public void addQuestion() {
@@ -53,23 +60,47 @@ public class CreateSurveyView extends VerticalLayout {
 
     typeOfQuestion = -1;
 
-    Button saveButton = new Button("submit", event -> saveQuestion(typeOfQuestion));
-
+    addQuestionButton.setEnabled(false);
     RadioButtonGroup<String> radioButtons = new RadioButtonGroup<>();
     radioButtons.setItems("Text question", "Radio Question", "Checkbox Question");
+
     radioButtons.addValueChangeListener(event -> {
-      if (event.getValue().equalsIgnoreCase("Text question")) {
-        typeOfQuestion = 0;
-      } else if (event.getValue().equalsIgnoreCase("Multi question")) {
-        typeOfQuestion = 1;
-      } else if (event.getValue().equalsIgnoreCase("Checkbox Question")) {
-        typeOfQuestion = 2;
+      if (event.getValue().equalsIgnoreCase("Text question")
+          && !questionTitleTextField.getValue().isEmpty()) {
+        addQuestionButton.setEnabled(true);
+        if (event.getValue().equalsIgnoreCase("Text question")) {
+          typeOfQuestion = 0;
+        } else if (event.getValue().equalsIgnoreCase("Multi question")) {
+          typeOfQuestion = 1;
+        } else if (event.getValue().equalsIgnoreCase("Checkbox Question")) {
+          typeOfQuestion = 2;
+        }
       }
+      if (questionTitleTextField.isEmpty()) {
+        addQuestionButton.setEnabled(false);
+      }
+    });
+
+    questionTitleTextField.addValueChangeListener(event -> {
+      if (questionTitleTextField.isEmpty()) {
+        addQuestionButton.setEnabled(false);
+      }
+      if (radioButtons.getValue() != null) {
+        if (radioButtons.getValue().equalsIgnoreCase("Text question")
+            && !questionTitleTextField.getValue().isEmpty()) {
+          addQuestionButton.setEnabled(true);
+          typeOfQuestion = 0;
+        } else if (radioButtons.getValue().equalsIgnoreCase("Multi question")) {
+          typeOfQuestion = 1;
+        } else if (radioButtons.getValue().equalsIgnoreCase("Checkbox Question")) {
+          typeOfQuestion = 2;
+        }
+      }
+
     });
 
     add(questionTitleTextField);
     add(radioButtons);
-    add(saveButton);
   }
 
   public void saveSurvey() {
