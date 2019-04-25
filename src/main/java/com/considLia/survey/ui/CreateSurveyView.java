@@ -17,10 +17,14 @@ import com.vaadin.flow.router.Route;
 @Route(value = "createsurvey", layout = MainLayout.class)
 public class CreateSurveyView extends VerticalLayout {
 
-  private Button addQuestion = new Button("Add question", event -> addQuestion());
-  private TextField surveyTitle = new TextField();
-  private TextField creatorName = new TextField();
-  private TextField questionTitle = new TextField();
+  private Button addQuestionButton;
+  private Button submitSurveyButton;
+
+  private TextField surveyTitleTextField;
+  private TextField creatorNameTextField;
+  private TextField questionTitleTextField;
+
+  private HorizontalLayout horizontalTextfieldContainer;
 
   private Survey thisSurvey;
   private int typeOfQuestion;
@@ -31,65 +35,78 @@ public class CreateSurveyView extends VerticalLayout {
   public CreateSurveyView(SurveyRepository surveyRepository) {
 
     this.surveyRepository = surveyRepository;
-    questionPosition = 1;
-    thisSurvey = new Survey();
+    this.questionPosition = 1;
+    this.thisSurvey = new Survey();
+    this.horizontalTextfieldContainer = new HorizontalLayout();
+    this.addQuestionButton = new Button("Add question", event -> addQuestion());
+    this.submitSurveyButton = new Button("submit", event -> saveQuestion(typeOfQuestion));
+    this.surveyTitleTextField = new TextField();
+    this.creatorNameTextField = new TextField();
+    this.questionTitleTextField = new TextField();
+    questionTitleTextField.setValueChangeMode(ValueChangeMode.EAGER);
 
-    surveyTitle.setPlaceholder("Survey title");
-    creatorName.setPlaceholder("Created by");
+    surveyTitleTextField.setPlaceholder("Survey title");
+    creatorNameTextField.setPlaceholder("Created by");
 
-    HorizontalLayout horizontalContainer = new HorizontalLayout();
-    horizontalContainer.add(surveyTitle, creatorName);
+    horizontalTextfieldContainer.add(surveyTitleTextField, creatorNameTextField);
+    add(horizontalTextfieldContainer);
+    add(addQuestionButton);
+    add(submitSurveyButton);
 
-    add(horizontalContainer);
-    add(addQuestion);
   }
 
   public void addQuestion() {
-    questionTitle.setPlaceholder("Question title");
-    questionTitle.setValueChangeMode(ValueChangeMode.EAGER);
+    questionTitleTextField.setPlaceholder("Question title");
 
     typeOfQuestion = -1;
 
-    Button save = new Button("Submit survey", event -> saveQuestion(typeOfQuestion));
-
-    addQuestion.setEnabled(false);
+    addQuestionButton.setEnabled(false);
     RadioButtonGroup<String> radioButtons = new RadioButtonGroup<>();
     radioButtons.setItems("Text question", "Radio Question", "Checkbox Question");
+
     radioButtons.addValueChangeListener(event -> {
       if (event.getValue().equalsIgnoreCase("Text question")
-          && !questionTitle.getValue().isEmpty()) {
-        save.setEnabled(true);
-        typeOfQuestion = 0;
-      } else if (event.getValue().equalsIgnoreCase("Multi question")) {
-        typeOfQuestion = 1;
-      } else if (event.getValue().equalsIgnoreCase("Checkbox Question")) {
-        typeOfQuestion = 2;
+          && !questionTitleTextField.getValue().isEmpty()) {
+        addQuestionButton.setEnabled(true);
+        if (event.getValue().equalsIgnoreCase("Text question")) {
+          typeOfQuestion = 0;
+        } else if (event.getValue().equalsIgnoreCase("Multi question")) {
+          typeOfQuestion = 1;
+        } else if (event.getValue().equalsIgnoreCase("Checkbox Question")) {
+          typeOfQuestion = 2;
+        }
+      }
+      if (questionTitleTextField.isEmpty()) {
+        addQuestionButton.setEnabled(false);
       }
     });
 
-    questionTitle.addValueChangeListener(event -> {
-      if (radioButtons.getValue().equalsIgnoreCase("Text question")
-          && !questionTitle.getValue().isEmpty()) {
-        addQuestion.setEnabled(true);
-        typeOfQuestion = 0;
-      } else if (radioButtons.getValue().equalsIgnoreCase("Multi question")) {
-        typeOfQuestion = 1;
-      } else if (radioButtons.getValue().equalsIgnoreCase("Checkbox Question")) {
-        typeOfQuestion = 2;
-      } else if (questionTitle.isEmpty()) {
-        addQuestion.setEnabled(false);
+    questionTitleTextField.addValueChangeListener(event -> {
+      if (questionTitleTextField.isEmpty()) {
+        addQuestionButton.setEnabled(false);
       }
+      if (radioButtons.getValue() != null) {
+        if (radioButtons.getValue().equalsIgnoreCase("Text question")
+            && !questionTitleTextField.getValue().isEmpty()) {
+          addQuestionButton.setEnabled(true);
+          typeOfQuestion = 0;
+        } else if (radioButtons.getValue().equalsIgnoreCase("Multi question")) {
+          typeOfQuestion = 1;
+        } else if (radioButtons.getValue().equalsIgnoreCase("Checkbox Question")) {
+          typeOfQuestion = 2;
+        }
+      }
+
     });
 
-    add(questionTitle);
+    add(questionTitleTextField);
     add(radioButtons);
-    add(save);
   }
 
   public void saveSurvey() {
 
-    thisSurvey.setCreator(creatorName.getValue());
-    thisSurvey.setSurveyTitle(surveyTitle.getValue());
+    thisSurvey.setCreator(creatorNameTextField.getValue());
+    thisSurvey.setSurveyTitle(surveyTitleTextField.getValue());
     thisSurvey.setDate(LocalDate.now());
 
     surveyRepository.save(thisSurvey);
@@ -101,14 +118,14 @@ public class CreateSurveyView extends VerticalLayout {
 
     if (typeOfQuestion == 0) {
       Question question = new TextQuestion();
-      question.setQuestionTitle(questionTitle.getValue());
+      question.setQuestionTitle(questionTitleTextField.getValue());
       question.setPosition(questionPosition);
       questionPosition++;
 
       thisSurvey.getQuestionList().add(question);
     } else if (typeOfQuestion == 1 || typeOfQuestion == 2) {
       Question question = new MultiQuestion();
-      question.setQuestionTitle(questionTitle.getValue());
+      question.setQuestionTitle(questionTitleTextField.getValue());
       question.setPosition(questionPosition);
       // Add question alternative textfield value
       // question.getAlternativeList().add();
