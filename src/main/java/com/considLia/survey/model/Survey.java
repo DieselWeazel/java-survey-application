@@ -1,6 +1,6 @@
 package com.considLia.survey.model;
 
-import java.sql.Date;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.CascadeType;
@@ -24,7 +24,7 @@ public class Survey {
   private Long surveyId;
 
   private String surveyTitle, creator;
-  private Date date;
+  private LocalDate date;
 
   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   @JoinColumn(name = "survey_id")
@@ -60,11 +60,11 @@ public class Survey {
     this.creator = creator;
   }
 
-  public Date getDate() {
+  public LocalDate getDate() {
     return date;
   }
 
-  public void setDate(Date date) {
+  public void setDate(LocalDate date) {
     this.date = date;
   }
 
