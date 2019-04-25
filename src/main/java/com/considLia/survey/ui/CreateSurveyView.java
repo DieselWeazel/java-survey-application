@@ -19,6 +19,7 @@ public class CreateSurveyView extends VerticalLayout {
 
   private Button addQuestionButton;
   private Button submitSurveyButton;
+  RadioButtonGroup<String> radioButtons;
 
   private TextField surveyTitleTextField;
   private TextField creatorNameTextField;
@@ -29,6 +30,7 @@ public class CreateSurveyView extends VerticalLayout {
   private Survey thisSurvey;
   private int typeOfQuestion;
   private int questionPosition;
+  private boolean addAndSave;
 
   private SurveyRepository surveyRepository;
 
@@ -36,6 +38,7 @@ public class CreateSurveyView extends VerticalLayout {
 
     this.surveyRepository = surveyRepository;
     this.questionPosition = 1;
+    this.addAndSave = false;
     this.thisSurvey = new Survey();
     this.horizontalTextfieldContainer = new HorizontalLayout();
     this.addQuestionButton = new Button("Add question", event -> addQuestion());
@@ -57,11 +60,15 @@ public class CreateSurveyView extends VerticalLayout {
 
   public void addQuestion() {
     questionTitleTextField.setPlaceholder("Question title");
-
     typeOfQuestion = -1;
 
     addQuestionButton.setEnabled(false);
-    RadioButtonGroup<String> radioButtons = new RadioButtonGroup<>();
+
+    if (radioButtons != null) {
+      remove(radioButtons);
+    }
+
+    radioButtons = new RadioButtonGroup<>();
     radioButtons.setItems("Text question", "Radio Question", "Checkbox Question");
 
     radioButtons.addValueChangeListener(event -> {
@@ -99,8 +106,12 @@ public class CreateSurveyView extends VerticalLayout {
 
     });
 
+    remove(addQuestionButton);
+    remove(submitSurveyButton);
     add(questionTitleTextField);
     add(radioButtons);
+    add(addQuestionButton);
+    add(submitSurveyButton);
   }
 
   public void saveSurvey() {
