@@ -30,7 +30,9 @@ public class Survey {
   @JoinColumn(name = "survey_id")
   private Set<Question> questionList;
 
-  public Survey() {}
+  public Survey() {
+    questionList = new HashSet<>();
+  }
 
   public Survey(String surveyTitle, String creator) {
     setSurveyTitle(surveyTitle);

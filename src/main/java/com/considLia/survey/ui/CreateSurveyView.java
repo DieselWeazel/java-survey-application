@@ -56,6 +56,7 @@ public class CreateSurveyView extends VerticalLayout {
     radioButtons.setItems("Text question", "Radio Question", "Checkbox Question");
     radioButtons.addValueChangeListener(event -> {
       if (event.getValue().equalsIgnoreCase("Text question")) {
+        System.out.println("Picked Text");
         typeOfQuestion = 0;
       } else if (event.getValue().equalsIgnoreCase("Multi question")) {
         typeOfQuestion = 1;
@@ -86,6 +87,7 @@ public class CreateSurveyView extends VerticalLayout {
       Question question = new TextQuestion();
       question.setQuestionTitle(questionTitle.getValue());
       question.setPosition(questionPosition);
+      System.out.println("Save Question" + questionPosition);
       questionPosition++;
 
       thisSurvey.getQuestionList().add(question);
