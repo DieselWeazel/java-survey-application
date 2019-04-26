@@ -7,6 +7,7 @@ import com.considLia.survey.model.Survey;
 import com.considLia.survey.model.TextQuestion;
 import com.considLia.survey.repositories.SurveyRepository;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -15,6 +16,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Route;
 
+@StyleSheet("css/app.css")
 @Route(value = "createsurvey", layout = MainLayout.class)
 public class CreateSurveyView extends VerticalLayout {
 
@@ -36,6 +38,7 @@ public class CreateSurveyView extends VerticalLayout {
   private SurveyRepository surveyRepository;
 
   public CreateSurveyView(SurveyRepository surveyRepository) {
+    setId("createsurvey");
 
     this.surveyRepository = surveyRepository;
     this.questionPosition = 1;
@@ -49,8 +52,13 @@ public class CreateSurveyView extends VerticalLayout {
     this.questionTitleTextField = new TextField();
     questionTitleTextField.setValueChangeMode(ValueChangeMode.EAGER);
 
+    surveyTitleTextField.setLabel("Survey title");
     surveyTitleTextField.setPlaceholder("Survey title");
+    surveyTitleTextField.setWidth("400px");
+    creatorNameTextField.setLabel("Survey title");
     creatorNameTextField.setPlaceholder("Created by");
+    creatorNameTextField.setWidth("250px");
+    horizontalTextfieldContainer.setClassName("staticcontainer");
 
     horizontalTextfieldContainer.add(surveyTitleTextField, creatorNameTextField);
     add(horizontalTextfieldContainer);
