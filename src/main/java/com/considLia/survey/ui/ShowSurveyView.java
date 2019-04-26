@@ -24,6 +24,9 @@ public class ShowSurveyView extends VerticalLayout implements HasUrlParameter<Lo
   // -- TextContainers --
   private H1 h1;
 
+  // -- Serializement --
+  private Binder<Question> binder = new Binder<>(Question.class);
+
   // -- Layout --
   public ShowSurveyView(SurveyRepository surveyRepository) {
     this.surveyRepository = surveyRepository;
@@ -69,14 +72,15 @@ public class ShowSurveyView extends VerticalLayout implements HasUrlParameter<Lo
 
     // java.lang.IllegalArgumentException: Could not resolve property name Test textfråga from Property set for bean com.considLia.survey.model.Survey
     // Bean issue?
-    Binder<Survey> binder = new Binder<>(Survey.class);
+
     TextField textField = new TextField();
 
     for (Question q: survey.getQuestionList()){
       binder.forField(textField).bind(q.getQuestionTitle());
-    }
 
-    binder.setBean(survey);
+    }
+    binder.bindInstanceFields(this);
+//    binder.setBean(survey.getQuestionList());
 
 
 
