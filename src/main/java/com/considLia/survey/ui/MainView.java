@@ -42,14 +42,14 @@ public class MainView extends VerticalLayout {
 
     survey.getQuestionList();
 
-    for (Question q : survey.getQuestionList()) {
-      add(new H2(q.getQuestionTitle()));
-      if (q.getAlternativeList() != null) {
-        for (MultiQuestionAlternative mqa : q.getAlternativeList()) {
-          add(new H3(mqa.getAlternativeTitle()));
-        }
-      }
-    }
+//    for (Question q : survey.getQuestionList()) {
+//      add(new H2(q.getQuestionTitle()));
+//      if (q.getAlternativeList() != null) {
+//        for (MultiQuestionAlternative mqa : q.getAlternativeList()) {
+//          add(new H3(mqa.getAlternativeTitle()));
+//        }
+//      }
+//    }
 
   }
 
