@@ -1,5 +1,6 @@
 package com.considLia.survey.ui;
 
+import com.considLia.survey.model.MultiQuestion;
 import com.considLia.survey.model.MultiQuestionAlternative;
 import com.considLia.survey.model.Question;
 import com.considLia.survey.model.Survey;
@@ -15,7 +16,7 @@ public class MainView extends VerticalLayout {
 
   public MainView(SurveyRepository surveyRepository) {
 
-    Survey survey = surveyRepository.getSurveyBySurveyId(1l);
+    Survey survey = surveyRepository.getSurveyBySurveyId(20l);
 
     add(new H1(survey.getSurveyTitle() + " " + survey.getCreator() + " " + survey.getDate()));
 
@@ -23,8 +24,9 @@ public class MainView extends VerticalLayout {
 
     for (Question q : survey.getQuestionList()) {
       add(new H2(q.getQuestionTitle()));
-      if (q.getAlternativeList() != null) {
-        for (MultiQuestionAlternative mqa : q.getAlternativeList()) {
+      if (q instanceof MultiQuestion) {
+        MultiQuestion mq = (MultiQuestion) q;
+        for (MultiQuestionAlternative mqa : mq.getAlternativeList()) {
           add(new H3(mqa.getAlternativeTitle()));
         }
       }
