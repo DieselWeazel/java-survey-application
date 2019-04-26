@@ -7,6 +7,7 @@ import com.considLia.survey.model.Survey;
 import com.considLia.survey.model.TextQuestion;
 import com.considLia.survey.repositories.SurveyRepository;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
@@ -42,7 +43,7 @@ public class CreateSurveyView extends VerticalLayout {
     this.thisSurvey = new Survey();
     this.horizontalTextfieldContainer = new HorizontalLayout();
     this.addQuestionButton = new Button("Add question", event -> addQuestion());
-    this.submitSurveyButton = new Button("submit", event -> saveQuestion(typeOfQuestion));
+    this.submitSurveyButton = new Button("submit", event -> saveSurvey());
     this.surveyTitleTextField = new TextField();
     this.creatorNameTextField = new TextField();
     this.questionTitleTextField = new TextField();
@@ -59,14 +60,16 @@ public class CreateSurveyView extends VerticalLayout {
   }
 
   public void addQuestion() {
+
+    if (radioButtons != null) {
+      remove(radioButtons);
+      saveQuestion(typeOfQuestion);
+    }
+
     questionTitleTextField.setPlaceholder("Question title");
     typeOfQuestion = -1;
 
     addQuestionButton.setEnabled(false);
-
-    if (radioButtons != null) {
-      remove(radioButtons);
-    }
 
     radioButtons = new RadioButtonGroup<>();
     radioButtons.setItems("Text question", "Radio Question", "Checkbox Question");
@@ -134,6 +137,9 @@ public class CreateSurveyView extends VerticalLayout {
       questionPosition++;
 
       thisSurvey.getQuestionList().add(question);
+
+      add(new H3(question.getQuestionTitle()));
+
     } else if (typeOfQuestion == 1 || typeOfQuestion == 2) {
       Question question = new MultiQuestion();
       question.setQuestionTitle(questionTitleTextField.getValue());
