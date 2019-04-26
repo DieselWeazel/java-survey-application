@@ -55,7 +55,7 @@ public class CreateSurveyView extends VerticalLayout {
     surveyTitleTextField.setLabel("Survey title");
     surveyTitleTextField.setPlaceholder("Survey title");
     surveyTitleTextField.setWidth("400px");
-    creatorNameTextField.setLabel("Survey title");
+    creatorNameTextField.setLabel("Created by");
     creatorNameTextField.setPlaceholder("Created by");
     creatorNameTextField.setWidth("250px");
     horizontalTextfieldContainer.setClassName("staticcontainer");
