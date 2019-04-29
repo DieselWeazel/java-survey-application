@@ -175,6 +175,8 @@ public class CreateSurveyView extends VerticalLayout {
     thisSurvey.setDate(LocalDate.now());
 
     surveyRepository.save(thisSurvey);
+
+    getUI().ifPresent(ui -> ui.navigate(""));
   }
 
   // Make custom question component and add it to questionscontainer
