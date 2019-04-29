@@ -54,6 +54,7 @@ public class CreateSurveyView extends VerticalLayout {
 
     addQuestionButton = new Button("Add question", event -> addQuestion());
     submitSurveyButton = new Button("submit", event -> saveSurvey());
+    submitSurveyButton.setEnabled(false);
     surveyTitleTextField = new TextField();
     creatorNameTextField = new TextField();
     questionTitleTextField = new TextField();
@@ -62,13 +63,19 @@ public class CreateSurveyView extends VerticalLayout {
     surveyTitleTextField.setLabel("Survey title");
     surveyTitleTextField.setPlaceholder("Survey title");
     surveyTitleTextField.setWidth("400px");
+    surveyTitleTextField.setValueChangeMode(ValueChangeMode.EAGER);
     creatorNameTextField.setLabel("Created by");
     creatorNameTextField.setPlaceholder("Created by");
     creatorNameTextField.setWidth("250px");
+    creatorNameTextField.setValueChangeMode(ValueChangeMode.EAGER);
     header.setClassName("header");
     addQuestionPackage.setClassName("questionpackage");
 
     header.add(surveyTitleTextField, creatorNameTextField);
+
+    surveyTitleTextField.addValueChangeListener(titleChange -> checkFilledFields());
+    creatorNameTextField.addValueChangeListener(titleChange -> checkFilledFields());
+
     add(header);
     add(questions);
     add(addQuestionPackage);
@@ -81,6 +88,7 @@ public class CreateSurveyView extends VerticalLayout {
 
     if (radioButtons != null) {
       saveQuestion(questionTitleTextField.getValue(), typeOfQuestion);
+      checkFilledFields();
     } else {
       radioButtons = new RadioButtonGroup<>();
       radioButtons.setItems("Text question", "Radio Question", "Checkbox Question");
@@ -178,4 +186,16 @@ public class CreateSurveyView extends VerticalLayout {
     radioButtons.setValue("");
   }
 
+  public boolean validateQuestionListLength() {
+    return thisSurvey.getQuestionList().size() != 0;
+  }
+
+  public void checkFilledFields() {
+    if (!(surveyTitleTextField.isEmpty() || creatorNameTextField.isEmpty())
+        && validateQuestionListLength()) {
+      submitSurveyButton.setEnabled(true);
+    } else {
+      submitSurveyButton.setEnabled(false);
+    }
+  }
 }
