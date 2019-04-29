@@ -1,9 +1,9 @@
 package com.considLia.survey.ui;
 
 import java.time.LocalDate;
+import com.considLia.survey.custom_component.RadioQuestionWithButtons;
 import com.considLia.survey.custom_component.TextQuestionWithButtons;
 import com.considLia.survey.model.MultiQuestion;
-import com.considLia.survey.model.Question;
 import com.considLia.survey.model.Survey;
 import com.considLia.survey.model.TextQuestion;
 import com.considLia.survey.repositories.SurveyRepository;
@@ -34,7 +34,6 @@ public class CreateSurveyView extends VerticalLayout {
 
   private Survey thisSurvey;
   private int typeOfQuestion;
-  private int questionPosition;
   private static final int TEXT_QUESTION = 0;
   private static final int RADIO_QUESTION = 1;
   private static final int BOX_QUESTION = 2;
@@ -45,7 +44,6 @@ public class CreateSurveyView extends VerticalLayout {
     setId("createsurvey");
 
     this.surveyRepository = surveyRepository;
-    questionPosition = 1;
     thisSurvey = new Survey();
 
     header = new HorizontalLayout();
@@ -137,17 +135,17 @@ public class CreateSurveyView extends VerticalLayout {
     addQuestionButton.setEnabled(false);
   }
 
-  // Move question in questionscontainer (add error handling)
+  // Move question in questionscontainer (add error handling), NOT COMPLETE for other than
+  // textquestion
   public void moveQuestion(Button button, int moveDirection) {
     HorizontalLayout component = (HorizontalLayout) button.getParent().get();
     questions.replace(component,
         questions.getComponentAt(questions.indexOf(component) + moveDirection));
   }
 
-  // Remove questions from questionscontainer
+  // Remove questions from questionscontainer, NOT COMPLETE for other than textquestion
   public void removeQuestion(Button button) {
-    HorizontalLayout component = (HorizontalLayout) button.getParent().get();
-    questions.remove(component);
+    questions.remove(button.getParent().get());
     checkFilledFields();
 
   }
@@ -155,18 +153,26 @@ public class CreateSurveyView extends VerticalLayout {
   // Save survey with questions to database(multiquestion not implemented)
   public void saveSurvey() {
     for (int position = 0; position < questions.getComponentCount(); position++) {
-      Question question;
 
       if (questions.getComponentAt(position) instanceof TextQuestionWithButtons) {
-        System.out.println("spara textfråga");
         TextQuestionWithButtons component =
             (TextQuestionWithButtons) questions.getComponentAt(position);
-        question = new TextQuestion();
+        TextQuestion question = new TextQuestion();
         question.setQuestionTitle(component.getQuestion());
         question.setPosition(position);
         thisSurvey.getQuestionList().add(question);
-      } else {
-        System.out.println("Spara multifråga");
+      } else if (questions.getComponentAt(position) instanceof RadioQuestionWithButtons) {
+        RadioQuestionWithButtons component =
+            (RadioQuestionWithButtons) questions.getComponentAt(position);
+        MultiQuestion question = new MultiQuestion();
+        question.setQuestionTitle(component.getQuestion());
+        question.setPosition(position);
+        question.setQuestionType(RADIO_QUESTION);
+
+        // question.getAlternativeList().addAll(component.getAlternatives());
+
+        thisSurvey.getQuestionList().add(question);
+
       }
 
     }
@@ -184,16 +190,12 @@ public class CreateSurveyView extends VerticalLayout {
 
       questions.add(new TextQuestionWithButtons(questionTitle, this));
 
-    } else if (typeOfQuestion == RADIO_QUESTION || typeOfQuestion == BOX_QUESTION) {
-      Question question = new MultiQuestion();
-      question.setQuestionTitle(questionTitleTextField.getValue());
-      question.setPosition(questionPosition);
-      // Add question alternative textfield value
-      // question.getAlternativeList().add();
+    } else if (typeOfQuestion == RADIO_QUESTION) {
 
-      questionPosition++;
+      // questions.add(new RadioQuestionWithButtons(questionTitle, this));
 
-      thisSurvey.getQuestionList().add(question);
+    } else if (typeOfQuestion == BOX_QUESTION) {
+
     } else {
 
       /*
