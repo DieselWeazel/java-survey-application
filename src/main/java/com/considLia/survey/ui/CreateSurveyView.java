@@ -1,6 +1,7 @@
 package com.considLia.survey.ui;
 
 import java.time.LocalDate;
+import com.considLia.survey.custom_component.TextQuestionWithButtons;
 import com.considLia.survey.model.MultiQuestion;
 import com.considLia.survey.model.Question;
 import com.considLia.survey.model.Survey;
@@ -8,7 +9,6 @@ import com.considLia.survey.model.TextQuestion;
 import com.considLia.survey.repositories.SurveyRepository;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.StyleSheet;
-import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
@@ -55,6 +55,7 @@ public class CreateSurveyView extends VerticalLayout {
     addQuestionButton = new Button("Add question", event -> addQuestion());
     submitSurveyButton = new Button("submit", event -> saveSurvey());
     submitSurveyButton.setEnabled(false);
+
     surveyTitleTextField = new TextField();
     creatorNameTextField = new TextField();
     questionTitleTextField = new TextField();
@@ -68,9 +69,9 @@ public class CreateSurveyView extends VerticalLayout {
     creatorNameTextField.setPlaceholder("Created by");
     creatorNameTextField.setWidth("250px");
     creatorNameTextField.setValueChangeMode(ValueChangeMode.EAGER);
-    header.setClassName("header");
+    
+    header.setClassName("createheader");
     addQuestionPackage.setClassName("questionpackage");
-
     header.add(surveyTitleTextField, creatorNameTextField);
 
     surveyTitleTextField.addValueChangeListener(titleChange -> checkFilledFields());
@@ -92,12 +93,12 @@ public class CreateSurveyView extends VerticalLayout {
     } else {
       radioButtons = new RadioButtonGroup<>();
       radioButtons.setItems("Text question", "Radio Question", "Checkbox Question");
+      questionTitleTextField.setWidth("300px");
+      questionTitleTextField.setPlaceholder("Question title");
+      questionTitleTextField.setLabel("Question title");
       addQuestionPackage.add(questionTitleTextField);
       addQuestionPackage.add(radioButtons);
     }
-
-    questionTitleTextField.setPlaceholder("Question title");
-    typeOfQuestion = -1;
 
     addQuestionButton.setEnabled(false);
 
@@ -144,27 +145,26 @@ public class CreateSurveyView extends VerticalLayout {
   }
 
   public void saveSurvey() {
-
+    for (int position = 0; position < questions.getComponentCount(); position++) {
+      TextQuestionWithButtons component =
+          (TextQuestionWithButtons) questions.getComponentAt(position);
+      Question question = new TextQuestion();
+      question.setQuestionTitle(component.getQuestion());
+      question.setPosition(position);
+      thisSurvey.getQuestionList().add(question);
+    }
     thisSurvey.setCreator(creatorNameTextField.getValue());
     thisSurvey.setSurveyTitle(surveyTitleTextField.getValue());
     thisSurvey.setDate(LocalDate.now());
 
     surveyRepository.save(thisSurvey);
-
-    thisSurvey = null;
   }
 
   public void saveQuestion(String questionTitle, int typeOfQuestion) {
 
     if (typeOfQuestion == TEXT_QUESTION) {
-      Question question = new TextQuestion();
-      question.setQuestionTitle(questionTitle);
-      question.setPosition(questionPosition);
-      questionPosition++;
 
-      thisSurvey.getQuestionList().add(question);
-
-      questions.add(new H3(question.getQuestionTitle()));
+      questions.add(new TextQuestionWithButtons(questionTitle, this));
 
     } else if (typeOfQuestion == RADIO_QUESTION || typeOfQuestion == BOX_QUESTION) {
       Question question = new MultiQuestion();
@@ -172,6 +172,7 @@ public class CreateSurveyView extends VerticalLayout {
       question.setPosition(questionPosition);
       // Add question alternative textfield value
       // question.getAlternativeList().add();
+
       questionPosition++;
 
       thisSurvey.getQuestionList().add(question);
