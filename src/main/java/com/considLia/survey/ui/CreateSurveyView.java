@@ -85,6 +85,7 @@ public class CreateSurveyView extends VerticalLayout {
 
   }
 
+  // Create addQuestion-package with listeners, if already created: save the question
   public void addQuestion() {
 
     if (radioButtons != null) {
@@ -98,61 +99,76 @@ public class CreateSurveyView extends VerticalLayout {
       questionTitleTextField.setLabel("Question title");
       addQuestionPackage.add(questionTitleTextField);
       addQuestionPackage.add(radioButtons);
-    }
 
-    addQuestionButton.setEnabled(false);
-
-    radioButtons.addValueChangeListener(event -> {
-      if (event.getValue().equalsIgnoreCase("Text question")
-          && !questionTitleTextField.getValue().isEmpty()) {
-        addQuestionButton.setEnabled(true);
-        if (event.getValue().equalsIgnoreCase("Text question")) {
-          typeOfQuestion = TEXT_QUESTION;
-        } else if (event.getValue().equalsIgnoreCase("Multi question")) {
-          typeOfQuestion = RADIO_QUESTION;
-        } else if (event.getValue().equalsIgnoreCase("Checkbox Question")) {
-          typeOfQuestion = BOX_QUESTION;
-        }
-      }
-      if (questionTitleTextField.isEmpty()) {
-        addQuestionButton.setEnabled(false);
-      }
-    });
-
-    questionTitleTextField.addValueChangeListener(event -> {
-      if (questionTitleTextField.isEmpty()) {
-        addQuestionButton.setEnabled(false);
-      }
-      if (radioButtons.getValue() != null) {
-        if (radioButtons.getValue().equalsIgnoreCase("Text question")
+      radioButtons.addValueChangeListener(event -> {
+        if (event.getValue().equalsIgnoreCase("Text question")
             && !questionTitleTextField.getValue().isEmpty()) {
           addQuestionButton.setEnabled(true);
-          typeOfQuestion = TEXT_QUESTION;
-        } else if (radioButtons.getValue().equalsIgnoreCase("Multi question")) {
-          typeOfQuestion = RADIO_QUESTION;
-        } else if (radioButtons.getValue().equalsIgnoreCase("Checkbox Question")) {
-          typeOfQuestion = BOX_QUESTION;
+          if (event.getValue().equalsIgnoreCase("Text question")) {
+            typeOfQuestion = TEXT_QUESTION;
+          } else if (event.getValue().equalsIgnoreCase("Multi question")) {
+            typeOfQuestion = RADIO_QUESTION;
+          } else if (event.getValue().equalsIgnoreCase("Checkbox Question")) {
+            typeOfQuestion = BOX_QUESTION;
+          }
         }
-      }
+        if (questionTitleTextField.isEmpty()) {
+          addQuestionButton.setEnabled(false);
+        }
+      });
 
-    });
-
+      questionTitleTextField.addValueChangeListener(event -> {
+        if (questionTitleTextField.isEmpty()) {
+          addQuestionButton.setEnabled(false);
+        }
+        if (radioButtons.getValue() != null) {
+          if (radioButtons.getValue().equalsIgnoreCase("Text question")
+              && !questionTitleTextField.getValue().isEmpty()) {
+            addQuestionButton.setEnabled(true);
+            typeOfQuestion = TEXT_QUESTION;
+          } else if (radioButtons.getValue().equalsIgnoreCase("Multi question")) {
+            typeOfQuestion = RADIO_QUESTION;
+          } else if (radioButtons.getValue().equalsIgnoreCase("Checkbox Question")) {
+            typeOfQuestion = BOX_QUESTION;
+          }
+        }
+      });
+    }
+    addQuestionButton.setEnabled(false);
   }
 
+  // Move question in questionscontainer (add error handling)
+  public void moveQuestion(Button button, int moveDirection) {
+    HorizontalLayout component = (HorizontalLayout) button.getParent().get();
+    questions.replace(component,
+        questions.getComponentAt(questions.indexOf(component) + moveDirection));
+  }
+
+  // Remove questions from questionscontainer
   public void removeQuestion(Button button) {
     HorizontalLayout component = (HorizontalLayout) button.getParent().get();
     questions.remove(component);
     checkFilledFields();
+
   }
 
+  // Save survey with questions to database(multiquestion not implemented)
   public void saveSurvey() {
     for (int position = 0; position < questions.getComponentCount(); position++) {
-      TextQuestionWithButtons component =
-          (TextQuestionWithButtons) questions.getComponentAt(position);
-      Question question = new TextQuestion();
-      question.setQuestionTitle(component.getQuestion());
-      question.setPosition(position);
-      thisSurvey.getQuestionList().add(question);
+      Question question;
+
+      if (questions.getComponentAt(position) instanceof TextQuestionWithButtons) {
+        System.out.println("spara textfråga");
+        TextQuestionWithButtons component =
+            (TextQuestionWithButtons) questions.getComponentAt(position);
+        question = new TextQuestion();
+        question.setQuestionTitle(component.getQuestion());
+        question.setPosition(position);
+        thisSurvey.getQuestionList().add(question);
+      } else {
+        System.out.println("Spara multifråga");
+      }
+
     }
     thisSurvey.setCreator(creatorNameTextField.getValue());
     thisSurvey.setSurveyTitle(surveyTitleTextField.getValue());
@@ -161,6 +177,7 @@ public class CreateSurveyView extends VerticalLayout {
     surveyRepository.save(thisSurvey);
   }
 
+  // Make custom question component and add it to questionscontainer
   public void saveQuestion(String questionTitle, int typeOfQuestion) {
 
     if (typeOfQuestion == TEXT_QUESTION) {
@@ -188,10 +205,12 @@ public class CreateSurveyView extends VerticalLayout {
     radioButtons.setValue("");
   }
 
+  // Control if questions list is not 0
   public boolean validateQuestionListLength() {
     return questions.getComponentCount() != 0;
   }
 
+  // Check if title and creator textfields are filled out
   public void checkFilledFields() {
     if (!(surveyTitleTextField.isEmpty() || creatorNameTextField.isEmpty())
         && validateQuestionListLength()) {
