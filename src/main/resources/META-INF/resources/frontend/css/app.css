@@ -1,13 +1,20 @@
 #createsurvey {
+	
   display: flex;
   min-height: 100vh;
   padding: 0;
+  
 }
 
-#createsurvey .staticcontainer {
+#createsurvey .header {
 	width: 45%;
 	margin-bottom: 0px;
 	padding-bottom: 10px;
 	border-bottom: 2px solid gray;
+}
+
+#createsurvey .questionpackage {
+	
+	
 	
 }
