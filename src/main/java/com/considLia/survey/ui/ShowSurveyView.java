@@ -79,8 +79,10 @@ public class ShowSurveyView extends VerticalLayout implements HasUrlParameter<Lo
     // Should work outside of constructor as well, then methods outside with save etc should work perfectly fine.
     Binder<MultiQuestionAlternative> binderAlternatives = new Binder<>(MultiQuestionAlternative.class);
 
+//    for(Question q : surveyRepository.findByQuestionOrderPosition(survey, 0)){
     for (Question q: survey.getQuestionList()){
 
+      System.out.println(q.getQuestionTitle());
       if (q instanceof MultiQuestion) {
         add(new H2(q.getQuestionTitle()));
         HorizontalLayout horLayout = new HorizontalLayout();

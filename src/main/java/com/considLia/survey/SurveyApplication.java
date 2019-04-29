@@ -28,7 +28,7 @@ public class SurveyApplication {
        survey1.setDate(LocalDate.now());
        //
        MultiQuestion multi = new MultiQuestion();
-       multi.setQuestionTitle("Test multi");
+       multi.setQuestionTitle("aTest multi");
        multi.setQuestionType(1);
 
        MultiQuestionAlternative multiAlt = new MultiQuestionAlternative();
@@ -42,7 +42,7 @@ public class SurveyApplication {
 
 
        TextQuestion text = new TextQuestion();
-       text.setQuestionTitle("Test textfråga");
+       text.setQuestionTitle("bTest textfråga");
 
        Set<MultiQuestionAlternative> alternativeList = new HashSet<>();
        alternativeList.add(multiAlt);
@@ -53,7 +53,7 @@ public class SurveyApplication {
        multi.setAlternativeList(alternativeList);
 
        MultiQuestion multi2 = new MultiQuestion();
-       multi2.setQuestionTitle("Test multi // one response only");
+       multi2.setQuestionTitle("cTest multi // one response only");
        multi2.setQuestionType(0);
 
         MultiQuestionAlternative singleAlt = new MultiQuestionAlternative();
