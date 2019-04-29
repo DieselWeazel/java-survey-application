@@ -69,7 +69,7 @@ public class CreateSurveyView extends VerticalLayout {
     creatorNameTextField.setPlaceholder("Created by");
     creatorNameTextField.setWidth("250px");
     creatorNameTextField.setValueChangeMode(ValueChangeMode.EAGER);
-    
+
     header.setClassName("createheader");
     addQuestionPackage.setClassName("questionpackage");
     header.add(surveyTitleTextField, creatorNameTextField);
@@ -142,6 +142,7 @@ public class CreateSurveyView extends VerticalLayout {
   public void removeQuestion(Button button) {
     HorizontalLayout component = (HorizontalLayout) button.getParent().get();
     questions.remove(component);
+    checkFilledFields();
   }
 
   public void saveSurvey() {
@@ -188,7 +189,7 @@ public class CreateSurveyView extends VerticalLayout {
   }
 
   public boolean validateQuestionListLength() {
-    return thisSurvey.getQuestionList().size() != 0;
+    return questions.getComponentCount() != 0;
   }
 
   public void checkFilledFields() {
