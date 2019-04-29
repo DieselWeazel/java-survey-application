@@ -9,6 +9,9 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 
 public class TextQuestionWithButtons extends HorizontalLayout {
 
+  private static final int MOVE_UP = -1;
+  private static final int MOVE_DOWN = 1;
+
   private String question;
 
   public TextQuestionWithButtons(String question, CreateSurveyView survey) {
@@ -21,6 +24,10 @@ public class TextQuestionWithButtons extends HorizontalLayout {
     title.setWidth("90%");
 
     add(title);
+    add(new Button(new Icon(VaadinIcon.ARROW_UP),
+        event -> survey.moveQuestion(event.getSource(), MOVE_UP)));
+    add(new Button(new Icon(VaadinIcon.ARROW_DOWN),
+        event -> survey.moveQuestion(event.getSource(), MOVE_DOWN)));
     add(new Button(new Icon(VaadinIcon.PENCIL)));
     add(new Button(new Icon(VaadinIcon.TRASH), event -> survey.removeQuestion(event.getSource())));
 
