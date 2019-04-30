@@ -1,13 +1,14 @@
 package com.considLia.survey.ui;
 
 import java.time.LocalDate;
+import com.considLia.survey.custom_component.RadioQuestionWithButtons;
+import com.considLia.survey.custom_component.TextQuestionWithButtons;
 import com.considLia.survey.model.MultiQuestion;
-import com.considLia.survey.model.Question;
 import com.considLia.survey.model.Survey;
 import com.considLia.survey.model.TextQuestion;
 import com.considLia.survey.repositories.SurveyRepository;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.html.H3;
+import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
@@ -15,146 +16,211 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Route;
 
+@StyleSheet("css/app.css")
 @Route(value = "createsurvey", layout = MainLayout.class)
 public class CreateSurveyView extends VerticalLayout {
 
   private Button addQuestionButton;
   private Button submitSurveyButton;
-  RadioButtonGroup<String> radioButtons;
+  private RadioButtonGroup<String> radioButtons;
 
   private TextField surveyTitleTextField;
   private TextField creatorNameTextField;
   private TextField questionTitleTextField;
 
-  private HorizontalLayout horizontalTextfieldContainer;
+  private HorizontalLayout header;
+  private VerticalLayout questions;
+  private VerticalLayout addQuestionPackage;
 
   private Survey thisSurvey;
   private int typeOfQuestion;
-  private int questionPosition;
-  private boolean addAndSave;
+  private static final int TEXT_QUESTION = 0;
+  private static final int RADIO_QUESTION = 1;
+  private static final int BOX_QUESTION = 2;
 
   private SurveyRepository surveyRepository;
 
   public CreateSurveyView(SurveyRepository surveyRepository) {
+    setId("createsurvey");
 
     this.surveyRepository = surveyRepository;
-    this.questionPosition = 1;
-    this.addAndSave = false;
-    this.thisSurvey = new Survey();
-    this.horizontalTextfieldContainer = new HorizontalLayout();
-    this.addQuestionButton = new Button("Add question", event -> addQuestion());
-    this.submitSurveyButton = new Button("submit", event -> saveSurvey());
-    this.surveyTitleTextField = new TextField();
-    this.creatorNameTextField = new TextField();
-    this.questionTitleTextField = new TextField();
+    thisSurvey = new Survey();
+
+    header = new HorizontalLayout();
+    questions = new VerticalLayout();
+    addQuestionPackage = new VerticalLayout();
+
+    addQuestionButton = new Button("Add question", event -> addQuestion());
+    submitSurveyButton = new Button("submit", event -> saveSurvey());
+    submitSurveyButton.setEnabled(false);
+
+    surveyTitleTextField = new TextField();
+    creatorNameTextField = new TextField();
+    questionTitleTextField = new TextField();
     questionTitleTextField.setValueChangeMode(ValueChangeMode.EAGER);
 
+    surveyTitleTextField.setLabel("Survey title");
     surveyTitleTextField.setPlaceholder("Survey title");
+    surveyTitleTextField.setWidth("400px");
+    surveyTitleTextField.setValueChangeMode(ValueChangeMode.EAGER);
+    creatorNameTextField.setLabel("Created by");
     creatorNameTextField.setPlaceholder("Created by");
+    creatorNameTextField.setWidth("250px");
+    creatorNameTextField.setValueChangeMode(ValueChangeMode.EAGER);
 
-    horizontalTextfieldContainer.add(surveyTitleTextField, creatorNameTextField);
-    add(horizontalTextfieldContainer);
+    header.setClassName("createheader");
+    addQuestionPackage.setClassName("questionpackage");
+    header.add(surveyTitleTextField, creatorNameTextField);
+
+    surveyTitleTextField.addValueChangeListener(titleChange -> checkFilledFields());
+    creatorNameTextField.addValueChangeListener(titleChange -> checkFilledFields());
+
+    add(header);
+    add(questions);
+    add(addQuestionPackage);
     add(addQuestionButton);
     add(submitSurveyButton);
 
   }
 
+  // Create addQuestion-package with listeners, if already created: save the question
   public void addQuestion() {
 
     if (radioButtons != null) {
-      remove(radioButtons);
-      saveQuestion(typeOfQuestion);
-    }
+      saveQuestion(questionTitleTextField.getValue(), typeOfQuestion);
+      checkFilledFields();
+    } else {
+      radioButtons = new RadioButtonGroup<>();
+      radioButtons.setItems("Text question", "Radio Question", "Checkbox Question");
+      questionTitleTextField.setWidth("300px");
+      questionTitleTextField.setPlaceholder("Question title");
+      questionTitleTextField.setLabel("Question title");
+      addQuestionPackage.add(questionTitleTextField);
+      addQuestionPackage.add(radioButtons);
 
-    questionTitleTextField.setPlaceholder("Question title");
-    typeOfQuestion = -1;
-
-    addQuestionButton.setEnabled(false);
-
-    radioButtons = new RadioButtonGroup<>();
-    radioButtons.setItems("Text question", "Radio Question", "Checkbox Question");
-
-    radioButtons.addValueChangeListener(event -> {
-      if (event.getValue().equalsIgnoreCase("Text question")
-          && !questionTitleTextField.getValue().isEmpty()) {
-        addQuestionButton.setEnabled(true);
-        if (event.getValue().equalsIgnoreCase("Text question")) {
-          typeOfQuestion = 0;
-        } else if (event.getValue().equalsIgnoreCase("Multi question")) {
-          typeOfQuestion = 1;
-        } else if (event.getValue().equalsIgnoreCase("Checkbox Question")) {
-          typeOfQuestion = 2;
-        }
-      }
-      if (questionTitleTextField.isEmpty()) {
-        addQuestionButton.setEnabled(false);
-      }
-    });
-
-    questionTitleTextField.addValueChangeListener(event -> {
-      if (questionTitleTextField.isEmpty()) {
-        addQuestionButton.setEnabled(false);
-      }
-      if (radioButtons.getValue() != null) {
-        if (radioButtons.getValue().equalsIgnoreCase("Text question")
+      radioButtons.addValueChangeListener(event -> {
+        if (event.getValue().equalsIgnoreCase("Text question")
             && !questionTitleTextField.getValue().isEmpty()) {
           addQuestionButton.setEnabled(true);
-          typeOfQuestion = 0;
-        } else if (radioButtons.getValue().equalsIgnoreCase("Multi question")) {
-          typeOfQuestion = 1;
-        } else if (radioButtons.getValue().equalsIgnoreCase("Checkbox Question")) {
-          typeOfQuestion = 2;
+          if (event.getValue().equalsIgnoreCase("Text question")) {
+            typeOfQuestion = TEXT_QUESTION;
+          } else if (event.getValue().equalsIgnoreCase("Multi question")) {
+            typeOfQuestion = RADIO_QUESTION;
+          } else if (event.getValue().equalsIgnoreCase("Checkbox Question")) {
+            typeOfQuestion = BOX_QUESTION;
+          }
         }
-      }
+        if (questionTitleTextField.isEmpty()) {
+          addQuestionButton.setEnabled(false);
+        }
+      });
 
-    });
-
-    remove(addQuestionButton);
-    remove(submitSurveyButton);
-    add(questionTitleTextField);
-    add(radioButtons);
-    add(addQuestionButton);
-    add(submitSurveyButton);
+      questionTitleTextField.addValueChangeListener(event -> {
+        if (questionTitleTextField.isEmpty()) {
+          addQuestionButton.setEnabled(false);
+        }
+        if (radioButtons.getValue() != null) {
+          if (radioButtons.getValue().equalsIgnoreCase("Text question")
+              && !questionTitleTextField.getValue().isEmpty()) {
+            addQuestionButton.setEnabled(true);
+            typeOfQuestion = TEXT_QUESTION;
+          } else if (radioButtons.getValue().equalsIgnoreCase("Multi question")) {
+            typeOfQuestion = RADIO_QUESTION;
+          } else if (radioButtons.getValue().equalsIgnoreCase("Checkbox Question")) {
+            typeOfQuestion = BOX_QUESTION;
+          }
+        }
+      });
+    }
+    addQuestionButton.setEnabled(false);
   }
 
-  public void saveSurvey() {
+  // Move question in questionscontainer (add error handling), NOT COMPLETE for other than
+  // textquestion
+  public void moveQuestion(Button button, int moveDirection) {
+    HorizontalLayout component = (HorizontalLayout) button.getParent().get();
+    questions.replace(component,
+        questions.getComponentAt(questions.indexOf(component) + moveDirection));
+  }
 
+  // Remove questions from questionscontainer, NOT COMPLETE for other than textquestion
+  public void removeQuestion(Button button) {
+    questions.remove(button.getParent().get());
+    checkFilledFields();
+
+  }
+
+  // Save survey with questions to database(multiquestion not implemented)
+  public void saveSurvey() {
+    for (int position = 0; position < questions.getComponentCount(); position++) {
+
+      if (questions.getComponentAt(position) instanceof TextQuestionWithButtons) {
+        TextQuestionWithButtons component =
+            (TextQuestionWithButtons) questions.getComponentAt(position);
+        TextQuestion question = new TextQuestion();
+        question.setQuestionTitle(component.getQuestion());
+        question.setPosition(position);
+        thisSurvey.getQuestionList().add(question);
+      } else if (questions.getComponentAt(position) instanceof RadioQuestionWithButtons) {
+        RadioQuestionWithButtons component =
+            (RadioQuestionWithButtons) questions.getComponentAt(position);
+        MultiQuestion question = new MultiQuestion();
+        question.setQuestionTitle(component.getQuestion());
+        question.setPosition(position);
+        question.setQuestionType(RADIO_QUESTION);
+
+        // question.getAlternativeList().addAll(component.getAlternatives());
+
+        thisSurvey.getQuestionList().add(question);
+
+      }
+
+    }
     thisSurvey.setCreator(creatorNameTextField.getValue());
     thisSurvey.setSurveyTitle(surveyTitleTextField.getValue());
     thisSurvey.setDate(LocalDate.now());
 
     surveyRepository.save(thisSurvey);
 
-    thisSurvey = null;
+    getUI().ifPresent(ui -> ui.navigate(""));
   }
 
-  public void saveQuestion(int typeOfQuestion) {
+  // Make custom question component and add it to questionscontainer
+  public void saveQuestion(String questionTitle, int typeOfQuestion) {
 
-    if (typeOfQuestion == 0) {
-      Question question = new TextQuestion();
-      question.setQuestionTitle(questionTitleTextField.getValue());
-      question.setPosition(questionPosition);
-      questionPosition++;
+    if (typeOfQuestion == TEXT_QUESTION) {
 
-      thisSurvey.getQuestionList().add(question);
+      questions.add(new TextQuestionWithButtons(questionTitle, this));
 
-      add(new H3(question.getQuestionTitle()));
+    } else if (typeOfQuestion == RADIO_QUESTION) {
 
-    } else if (typeOfQuestion == 1 || typeOfQuestion == 2) {
-      Question question = new MultiQuestion();
-      question.setQuestionTitle(questionTitleTextField.getValue());
-      question.setPosition(questionPosition);
-      // Add question alternative textfield value
-      // question.getAlternativeList().add();
-      questionPosition++;
+      // questions.add(new RadioQuestionWithButtons(questionTitle, this));
 
-      thisSurvey.getQuestionList().add(question);
+    } else if (typeOfQuestion == BOX_QUESTION) {
+
     } else {
+
       /*
        * Felhantering ifall typ av fråga inte är rätt gjord (?)
        */
-    }
 
+    }
+    questionTitleTextField.setValue("");
+    radioButtons.setValue("");
   }
 
+  // Control if questions list is not 0
+  public boolean validateQuestionListLength() {
+    return questions.getComponentCount() != 0;
+  }
+
+  // Check if title and creator textfields are filled out
+  public void checkFilledFields() {
+    if (!(surveyTitleTextField.isEmpty() || creatorNameTextField.isEmpty())
+        && validateQuestionListLength()) {
+      submitSurveyButton.setEnabled(true);
+    } else {
+      submitSurveyButton.setEnabled(false);
+    }
+  }
 }
