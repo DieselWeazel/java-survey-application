@@ -1,6 +1,8 @@
 package com.considLia.survey.custom_component;
 
 import java.util.List;
+import java.util.Set;
+import com.considLia.survey.model.MultiQuestionAlternative;
 import com.considLia.survey.ui.CreateSurveyView;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H5;
@@ -16,14 +18,22 @@ public class RadioQuestionWithButtons extends VerticalLayout {
   private static final int MOVE_DOWN = 1;
 
   private String question;
-  private List<String> alternatives;
+  private Set<MultiQuestionAlternative> alternatives;
+  private int questionType;
 
   private HorizontalLayout content;
 
   public RadioQuestionWithButtons(String question, CreateSurveyView survey,
-      List<String> alternatives) {
+      List<String> stringAlternatives, int questionType) {
 
-    this.alternatives = alternatives;
+    for (int position = 0; position < stringAlternatives.size(); position++) {
+      MultiQuestionAlternative alt = new MultiQuestionAlternative();
+      alt.setPosition(position);
+      alt.setAlternativeTitle(stringAlternatives.get(position));
+      alternatives.add(alt);
+    }
+
+    this.questionType = questionType;
     this.question = question;
     content = new HorizontalLayout();
 
@@ -31,7 +41,7 @@ public class RadioQuestionWithButtons extends VerticalLayout {
     H5 title = new H5(question);
     title.setWidth("90%");
     RadioButtonGroup<String> radioButtons = new RadioButtonGroup<>();
-    radioButtons.setItems(alternatives);
+    radioButtons.setItems(stringAlternatives);
 
     content.add(title);
     content.add(new Button(new Icon(VaadinIcon.ARROW_UP),
@@ -55,12 +65,20 @@ public class RadioQuestionWithButtons extends VerticalLayout {
     this.question = question;
   }
 
-  public List<String> getAlternatives() {
+  public Set<MultiQuestionAlternative> getAlternatives() {
     return alternatives;
   }
 
-  public void setAlternatives(List<String> alternatives) {
+  public void setAlternatives(Set<MultiQuestionAlternative> alternatives) {
     this.alternatives = alternatives;
+  }
+
+  public int getQuestionType() {
+    return questionType;
+  }
+
+  public void setQuestionType(int questionType) {
+    this.questionType = questionType;
   }
 
 }

@@ -87,7 +87,13 @@ public class CreateSurveyView extends VerticalLayout {
   public void addQuestion() {
 
     if (radioButtons != null) {
-      saveQuestion(questionTitleTextField.getValue(), typeOfQuestion);
+      if (typeOfQuestion == TEXT_QUESTION) {
+        questions.add(new TextQuestionWithButtons(questionTitleTextField.getValue(), this));
+      } else {
+        // questions.add(new RadioQuestionWithButtons(questionTitleTextField.getValue(), this));
+      }
+      questionTitleTextField.setValue("");
+      radioButtons.setValue("");
       checkFilledFields();
     } else {
       radioButtons = new RadioButtonGroup<>();
@@ -147,7 +153,6 @@ public class CreateSurveyView extends VerticalLayout {
   public void removeQuestion(Button button) {
     questions.remove(button.getParent().get());
     checkFilledFields();
-
   }
 
   // Save survey with questions to database(multiquestion not implemented)
@@ -161,15 +166,15 @@ public class CreateSurveyView extends VerticalLayout {
         question.setQuestionTitle(component.getQuestion());
         question.setPosition(position);
         thisSurvey.getQuestionList().add(question);
+
       } else if (questions.getComponentAt(position) instanceof RadioQuestionWithButtons) {
         RadioQuestionWithButtons component =
             (RadioQuestionWithButtons) questions.getComponentAt(position);
         MultiQuestion question = new MultiQuestion();
         question.setQuestionTitle(component.getQuestion());
         question.setPosition(position);
-        question.setQuestionType(RADIO_QUESTION);
-
-        // question.getAlternativeList().addAll(component.getAlternatives());
+        question.setQuestionType(component.getQuestionType());
+        question.getAlternativeList().addAll(component.getAlternatives());
 
         thisSurvey.getQuestionList().add(question);
 
@@ -190,11 +195,7 @@ public class CreateSurveyView extends VerticalLayout {
 
     if (typeOfQuestion == TEXT_QUESTION) {
 
-      questions.add(new TextQuestionWithButtons(questionTitle, this));
-
     } else if (typeOfQuestion == RADIO_QUESTION) {
-
-      // questions.add(new RadioQuestionWithButtons(questionTitle, this));
 
     } else if (typeOfQuestion == BOX_QUESTION) {
 
@@ -205,8 +206,7 @@ public class CreateSurveyView extends VerticalLayout {
        */
 
     }
-    questionTitleTextField.setValue("");
-    radioButtons.setValue("");
+
   }
 
   // Control if questions list is not 0
