@@ -2,7 +2,13 @@ package com.considLia.survey.model;
 
 import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "multiquestion")
@@ -48,7 +54,5 @@ public class MultiQuestion extends Question {
     return "MultiQuestion [alternativeList=" + alternativeList + ", questionType=" + questionType
         + "]";
   }
-
-
 
 }

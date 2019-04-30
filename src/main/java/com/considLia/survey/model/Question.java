@@ -45,4 +45,9 @@ public abstract class Question {
   public Long getQuestionId() {
     return questionId;
   }
+
+  @Override
+  public String toString() {
+    return getQuestionTitle();
+  }
 }
