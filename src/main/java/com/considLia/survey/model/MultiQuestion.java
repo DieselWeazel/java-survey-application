@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 @Entity
@@ -17,6 +18,7 @@ public class MultiQuestion extends Question {
 
   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   @JoinColumn(name = "question_id")
+  @OrderBy("position ASC")
   private Set<MultiQuestionAlternative> alternativeList;
 
   public MultiQuestion() {

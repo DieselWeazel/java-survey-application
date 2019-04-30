@@ -12,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 @Entity
@@ -28,6 +29,7 @@ public class Survey {
 
   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   @JoinColumn(name = "survey_id")
+  @OrderBy("position ASC")
   private Set<Question> questionList;
 
   public Survey() {
@@ -45,7 +47,6 @@ public class Survey {
   public Long getSurveyId() {
     return surveyId;
   }
-
 
   public String getSurveyTitle() {
     return surveyTitle;
@@ -84,6 +85,5 @@ public class Survey {
     return "Survey [surveyId=" + surveyId + ", surveyTitle=" + surveyTitle + ", creator=" + creator
         + ", date=" + date + ", questionList=" + questionList + "]";
   }
-
 
 }
