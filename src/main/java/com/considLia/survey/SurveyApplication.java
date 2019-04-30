@@ -32,13 +32,17 @@ public class SurveyApplication {
        multi.setQuestionType(1);
 
        MultiQuestionAlternative multiAlt = new MultiQuestionAlternative();
-       multiAlt.setAlternativeTitle("FLerSvarsAlternativ 1");
+       multiAlt.setAlternativeTitle("Första");
+       multiAlt.setPosition(1);
        MultiQuestionAlternative multiAlt2 = new MultiQuestionAlternative();
-       multiAlt2.setAlternativeTitle("FLerSvarsAlternativ 2");
+       multiAlt2.setAlternativeTitle("Andra");
+       multiAlt2.setPosition(2);
        MultiQuestionAlternative multiAlt3 = new MultiQuestionAlternative();
-       multiAlt3.setAlternativeTitle("FLerSvarsAlternativ 3");
+       multiAlt3.setAlternativeTitle("Tredje");
+       multiAlt3.setPosition(3);
        MultiQuestionAlternative multiAlt4 = new MultiQuestionAlternative();
-        multiAlt4.setAlternativeTitle("FLerSvarsAlternativ 4");
+        multiAlt4.setAlternativeTitle("Fjärde");
+        multiAlt4.setPosition(4);
 
 
        TextQuestion text = new TextQuestion();
@@ -57,13 +61,17 @@ public class SurveyApplication {
        multi2.setQuestionType(0);
 
         MultiQuestionAlternative singleAlt = new MultiQuestionAlternative();
-        singleAlt.setAlternativeTitle("Varken Eller Svar 1");
+        singleAlt.setAlternativeTitle("AAAAAAA");
+        singleAlt.setPosition(1);
         MultiQuestionAlternative singleAlt2 = new MultiQuestionAlternative();
-        singleAlt2.setAlternativeTitle("Varken Eller Svar 2");
+        singleAlt2.setAlternativeTitle("BBBBB");
+        singleAlt2.setPosition(2);
         MultiQuestionAlternative singleAlt3 = new MultiQuestionAlternative();
-        singleAlt3.setAlternativeTitle("Varken Eller Svar 3");
+        singleAlt3.setAlternativeTitle("CCCCCCC");
+        singleAlt3.setPosition(3);
         MultiQuestionAlternative singleAlt4 = new MultiQuestionAlternative();
-        singleAlt4.setAlternativeTitle("Varken Eller Svar 4");
+        singleAlt4.setAlternativeTitle("DDDDDDD");
+        singleAlt4.setPosition(4);
 
         Set<MultiQuestionAlternative> alternativeList2 = new HashSet<>();
         alternativeList2.add(singleAlt);

@@ -2,12 +2,7 @@ package com.considLia.survey.model;
 
 import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "multiquestion")
@@ -17,6 +12,7 @@ public class MultiQuestion extends Question {
 
   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   @JoinColumn(name = "question_id")
+  @OrderBy("position ASC")
   private Set<MultiQuestionAlternative> alternativeList;
 
   public MultiQuestion() {

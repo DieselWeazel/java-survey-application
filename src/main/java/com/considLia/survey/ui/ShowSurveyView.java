@@ -8,6 +8,7 @@ import com.considLia.survey.repositories.SurveyRepository;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.checkbox.CheckboxGroup;
+import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.H3;
@@ -27,7 +28,8 @@ import javax.validation.constraints.Null;
 public class ShowSurveyView extends VerticalLayout implements HasUrlParameter<Long> {
 
   // -- Private Variables --
-  private SurveyRepository surveyRepository;
+  // -- Containers --
+  private VerticalLayout mainVerticalLayout = new VerticalLayout();
 
   // -- TextContainers --
   private H1 h1;
@@ -36,18 +38,33 @@ public class ShowSurveyView extends VerticalLayout implements HasUrlParameter<Lo
   private Button saveButton = new Button();
 
   // -- Serializement --
+  private SurveyRepository surveyRepository;
   private Binder<Question> binder = new Binder<>(Question.class);
 
   // -- Layout --
   public ShowSurveyView(SurveyRepository surveyRepository) {
+    mainVerticalLayout.addClassName("design");
     this.surveyRepository = surveyRepository;
     h1 = new H1("PlaceHolder // Survey Not Actually Found, Text not Updated");
     saveButton.setText("Send");
     saveButton.addClickListener(e-> saveResponse());
 
-    add(h1);
+
+    initUI();
   }
 
+  // -- UI method, adding, etc.
+  private void initUI() {
+
+    mainVerticalLayout.setMinWidth("60%");
+    mainVerticalLayout.setMaxWidth("80%");
+
+
+    mainVerticalLayout.add(h1);
+    add(mainVerticalLayout);
+  }
+
+  // -- Data methods --
   // -- Parameter Method, finding Survey --
   @Override
   public void setParameter(BeforeEvent event, Long parameter) {
@@ -84,7 +101,7 @@ public class ShowSurveyView extends VerticalLayout implements HasUrlParameter<Lo
 
       System.out.println(q.getQuestionTitle());
       if (q instanceof MultiQuestion) {
-        add(new H2(q.getQuestionTitle()));
+        mainVerticalLayout.add(new H2(q.getQuestionTitle()));
         HorizontalLayout horLayout = new HorizontalLayout();
 //                CheckboxGroup questionCheckBoxGroup = new CheckboxGroup();
         MultiQuestion mq = (MultiQuestion) q;
@@ -109,9 +126,9 @@ public class ShowSurveyView extends VerticalLayout implements HasUrlParameter<Lo
           horLayout.add(checkBoxVertContainer);
 
         }
-        add(horLayout);
+        mainVerticalLayout.add(horLayout);
       } else {
-        add(new H2(q.getQuestionTitle()));
+        mainVerticalLayout.add(new H2(q.getQuestionTitle()));
         TextField textField2 = new TextField();
 
         binder.forField(textField2).bind(Question::getQuestionTitle, Question::setQuestionTitle);

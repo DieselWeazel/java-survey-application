@@ -17,6 +17,8 @@ public class MultiQuestionAlternative {
   @Column(name = "alternative_id")
   private Long alternativeId;
 
+  private int position;
+
   private String alternativeTitle;
 
   public MultiQuestionAlternative() {}
@@ -39,7 +41,15 @@ public class MultiQuestionAlternative {
             ": " + alternativeTitle;
   }
 
-//  @Override
+  public int getPosition() {
+    return position;
+  }
+
+  public void setPosition(int position) {
+    this.position = position;
+  }
+
+  //  @Override
 //  public boolean equals(Object o) {
 //    if (this == o) return true;
 //    if (o == null || getClass() != o.getClass()) return false;
