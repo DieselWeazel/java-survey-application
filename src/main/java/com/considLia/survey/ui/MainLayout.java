@@ -5,7 +5,6 @@ import java.util.Map;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasElement;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -13,7 +12,6 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.RouterLayout;
 import com.vaadin.flow.router.RouterLink;
 
-@StyleSheet("css/app.css")
 public class MainLayout extends VerticalLayout implements RouterLayout {
 
   private Map<Class<? extends Component>, RouterLink> targets = new HashMap<>();
@@ -23,18 +21,17 @@ public class MainLayout extends VerticalLayout implements RouterLayout {
   private VerticalLayout contentContainer;
 
   public MainLayout() {
-    setId("mainlayout");
+
 
     navigation = new HorizontalLayout();
     navigation.add(createRouterLink(MainView.class, "Home", VaadinIcon.HOME));
     navigation
         .add(createRouterLink(CreateSurveyView.class, "Create New Survey", VaadinIcon.PLUS_CIRCLE));
-    navigation.setClassName("header");
 
     contentContainer = new VerticalLayout();
-    contentContainer.setClassName("content");
 
     add(navigation, contentContainer);
+
 
   }
 
@@ -54,5 +51,6 @@ public class MainLayout extends VerticalLayout implements RouterLayout {
       this.contentContainer.add((Component) content);
     }
   }
+
 
 }
