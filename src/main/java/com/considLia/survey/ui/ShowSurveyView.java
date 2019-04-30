@@ -23,13 +23,18 @@ import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.Route;
 
 import javax.validation.constraints.Null;
-
+/*
+http://localhost:8080/showsurvey/1
+ */
+@StyleSheet("css/app.css")
 @Route(value = "showsurvey", layout = MainLayout.class)
 public class ShowSurveyView extends VerticalLayout implements HasUrlParameter<Long> {
 
   // -- Private Variables --
   // -- Containers --
   private VerticalLayout mainVerticalLayout = new VerticalLayout();
+  private VerticalLayout headerVerticalLayout = new VerticalLayout();
+  private VerticalLayout surveyVerticalLayout = new VerticalLayout();
 
   // -- TextContainers --
   private H1 h1;
@@ -43,7 +48,8 @@ public class ShowSurveyView extends VerticalLayout implements HasUrlParameter<Lo
 
   // -- Layout --
   public ShowSurveyView(SurveyRepository surveyRepository) {
-    mainVerticalLayout.addClassName("design");
+      // Using same ID as CreateSurveyView as of now.
+    setId("createsurvey");
     this.surveyRepository = surveyRepository;
     h1 = new H1("PlaceHolder // Survey Not Actually Found, Text not Updated");
     saveButton.setText("Send");
@@ -59,8 +65,12 @@ public class ShowSurveyView extends VerticalLayout implements HasUrlParameter<Lo
     mainVerticalLayout.setMinWidth("60%");
     mainVerticalLayout.setMaxWidth("80%");
 
+    headerVerticalLayout.setClassName("createheader");
+    surveyVerticalLayout.setClassName("questionpackage");
 
-    mainVerticalLayout.add(h1);
+    headerVerticalLayout.add(h1);
+    mainVerticalLayout.add(headerVerticalLayout);
+    mainVerticalLayout.add(surveyVerticalLayout);
     add(mainVerticalLayout);
   }
 
@@ -99,9 +109,8 @@ public class ShowSurveyView extends VerticalLayout implements HasUrlParameter<Lo
 //    for(Question q : surveyRepository.findByQuestionOrderPosition(survey, 0)){
     for (Question q: survey.getQuestionList()){
 
-      System.out.println(q.getQuestionTitle());
       if (q instanceof MultiQuestion) {
-        mainVerticalLayout.add(new H2(q.getQuestionTitle()));
+          surveyVerticalLayout.add(new H2(q.getQuestionTitle()));
         HorizontalLayout horLayout = new HorizontalLayout();
 //                CheckboxGroup questionCheckBoxGroup = new CheckboxGroup();
         MultiQuestion mq = (MultiQuestion) q;
@@ -126,19 +135,19 @@ public class ShowSurveyView extends VerticalLayout implements HasUrlParameter<Lo
           horLayout.add(checkBoxVertContainer);
 
         }
-        mainVerticalLayout.add(horLayout);
+        surveyVerticalLayout.add(horLayout);
       } else {
-        mainVerticalLayout.add(new H2(q.getQuestionTitle()));
+          surveyVerticalLayout.add(new H2(q.getQuestionTitle()));
         TextField textField2 = new TextField();
 
         binder.forField(textField2).bind(Question::getQuestionTitle, Question::setQuestionTitle);
 
         binder.readBean(q);
-        add(textField2);
+          surveyVerticalLayout.add(textField2);
       }
     }
 
-    add(saveButton);
+      surveyVerticalLayout.add(saveButton);
   }
 
   // -- Public Button Methods --
