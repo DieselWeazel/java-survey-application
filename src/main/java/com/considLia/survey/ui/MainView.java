@@ -3,10 +3,15 @@ package com.considLia.survey.ui;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import com.considLia.survey.custom_component.ConfirmDialog;
 import com.considLia.survey.model.Survey;
 import com.considLia.survey.repositories.SurveyRepository;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.HeaderRow;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.provider.ListDataProvider;
@@ -20,8 +25,10 @@ public class MainView extends VerticalLayout {
   private List<Survey> surveyList;
   private ListDataProvider<Survey> dataProvider;
   private TextField idField, titleField, creatorField, dateField;
+  private SurveyRepository surveyRepository;
 
   public MainView(SurveyRepository surveyRepository) {
+    this.surveyRepository = surveyRepository;
 
     surveyList = new ArrayList<>();
 
@@ -35,6 +42,7 @@ public class MainView extends VerticalLayout {
         grid.addColumn(Survey::getSurveyTitle).setHeader("Title").setFlexGrow(4);
     Grid.Column<Survey> creatorColumn = grid.addColumn(Survey::getCreator).setHeader("Creator");
     Grid.Column<Survey> dateColumng = grid.addColumn(Survey::getDate).setHeader("Date");
+    grid.addComponentColumn(item -> showButtons(grid, item));
 
     if (surveyList.isEmpty()) {
       grid.setHeight("80px");
@@ -151,4 +159,14 @@ public class MainView extends VerticalLayout {
     }
   }
 
+  public HorizontalLayout showButtons(Grid<Survey> grid, Survey item) {
+    Button showSurvey = new Button(new Icon(VaadinIcon.EYE));
+    Button editSurvey = new Button(new Icon(VaadinIcon.PENCIL));
+    Button deleteSurvey = new Button(new Icon(VaadinIcon.TRASH), onDelete -> {
+      ConfirmDialog confirmDialog = new ConfirmDialog("Confirm delete",
+          "Are you sure you want to delete the item?", surveyRepository, grid, item);
+    });
+
+    return new HorizontalLayout(showSurvey, editSurvey, deleteSurvey);
+  }
 }
