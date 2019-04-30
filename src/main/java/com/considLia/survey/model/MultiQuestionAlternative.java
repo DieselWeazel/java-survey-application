@@ -17,6 +17,7 @@ public class MultiQuestionAlternative {
   private Long alternativeId;
 
   private String alternativeTitle;
+  private int position;
 
   public MultiQuestionAlternative() {}
 
@@ -31,4 +32,13 @@ public class MultiQuestionAlternative {
   public void setAlternativeTitle(String alternativeTitle) {
     this.alternativeTitle = alternativeTitle;
   }
+
+  public int getPosition() {
+    return position;
+  }
+
+  public void setPosition(int position) {
+    this.position = position;
+  }
+
 }
