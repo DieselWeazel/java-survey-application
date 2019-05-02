@@ -1,10 +1,10 @@
-package com.considLia.survey;
+package com.considlia.survey;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import com.considLia.survey.repositories.SurveyRepository;
+import com.considlia.survey.repositories.SurveyRepository;
 
 @SpringBootApplication
 public class SurveyApplication {

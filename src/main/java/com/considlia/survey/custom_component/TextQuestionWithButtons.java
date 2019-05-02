@@ -1,6 +1,6 @@
-package com.considLia.survey.custom_component;
+package com.considlia.survey.custom_component;
 
-import com.considLia.survey.ui.CreateSurveyView;
+import com.considlia.survey.ui.CreateSurveyView;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H5;
 import com.vaadin.flow.component.icon.Icon;
@@ -13,13 +13,14 @@ public class TextQuestionWithButtons extends HorizontalLayout {
   private static final int MOVE_DOWN = 1;
 
   private String question;
+  private H5 title;
 
   public TextQuestionWithButtons(String question, CreateSurveyView survey) {
 
     this.question = question;
 
     setWidth("100%");
-    H5 title = new H5(question);
+    title = new H5(question);
     title.setHeightFull();
     title.setWidth("90%");
 
@@ -28,7 +29,7 @@ public class TextQuestionWithButtons extends HorizontalLayout {
         event -> survey.moveQuestion(event.getSource(), MOVE_UP)));
     add(new Button(new Icon(VaadinIcon.ARROW_DOWN),
         event -> survey.moveQuestion(event.getSource(), MOVE_DOWN)));
-    add(new Button(new Icon(VaadinIcon.PENCIL)));
+    add(new Button(new Icon(VaadinIcon.PENCIL), event -> survey.editQuesiton(event.getSource())));
     add(new Button(new Icon(VaadinIcon.TRASH), event -> survey.removeQuestion(event.getSource())));
 
   }
@@ -39,6 +40,11 @@ public class TextQuestionWithButtons extends HorizontalLayout {
 
   public void setQuestion(String question) {
     this.question = question;
+
+    H5 updatedTitle = new H5(question);
+    updatedTitle.setWidth("90%");
+
+    replace(title, updatedTitle);
   }
 
 }

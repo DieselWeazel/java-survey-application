@@ -1,15 +1,17 @@
-package com.considLia.survey.ui;
+package com.considlia.survey.ui;
 
 import java.time.LocalDate;
-import com.considLia.survey.custom_component.RadioQuestionWithButtons;
-import com.considLia.survey.custom_component.TextQuestionWithButtons;
-import com.considLia.survey.model.MultiQuestion;
-import com.considLia.survey.model.Question;
-import com.considLia.survey.model.Survey;
-import com.considLia.survey.model.TextQuestion;
-import com.considLia.survey.repositories.SurveyRepository;
+import com.considlia.survey.custom_component.RadioQuestionWithButtons;
+import com.considlia.survey.custom_component.TextQuestionWithButtons;
+import com.considlia.survey.model.MultiQuestion;
+import com.considlia.survey.model.MultiQuestionAlternative;
+import com.considlia.survey.model.Question;
+import com.considlia.survey.model.Survey;
+import com.considlia.survey.model.TextQuestion;
+import com.considlia.survey.repositories.SurveyRepository;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.StyleSheet;
+import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
@@ -127,20 +129,13 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
         }
       });
 
+      // Checks if the questionTitle and questionType is set
       questionTitleTextField.addValueChangeListener(event -> {
-        if (questionTitleTextField.isEmpty()) {
+        if (questionTitleTextField.isEmpty() || (radioButtons.getValue() == null)
+            || (radioButtons.getValue().isEmpty())) {
           addQuestionButton.setEnabled(false);
-        }
-        if (radioButtons.getValue() != null) {
-          if (radioButtons.getValue().equalsIgnoreCase("Text question")
-              && !questionTitleTextField.getValue().isEmpty()) {
-            addQuestionButton.setEnabled(true);
-            typeOfQuestion = TEXT_QUESTION;
-          } else if (radioButtons.getValue().equalsIgnoreCase("Multi question")) {
-            typeOfQuestion = RADIO_QUESTION;
-          } else if (radioButtons.getValue().equalsIgnoreCase("Checkbox Question")) {
-            typeOfQuestion = BOX_QUESTION;
-          }
+        } else {
+          addQuestionButton.setEnabled(true);
         }
       });
     }
@@ -159,6 +154,39 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
   public void removeQuestion(Button button) {
     questions.remove(button.getParent().get());
     checkFilledFields();
+  }
+
+  public void editQuesiton(Button button) {
+    Dialog dialog = new Dialog();
+    Button confirm = new Button("Confirm");
+    TextField newTitleTextField = new TextField();
+
+    dialog.open();
+    dialog.add(newTitleTextField);
+    if (button.getParent().get() instanceof TextQuestionWithButtons) {
+      TextQuestionWithButtons choosenQuestion = (TextQuestionWithButtons) button.getParent().get();
+
+      newTitleTextField.setValue(choosenQuestion.getQuestion());
+
+      confirm.addClickListener(event -> {
+        choosenQuestion.setQuestion(newTitleTextField.getValue());
+        dialog.close();
+      });
+
+    } else {
+      RadioQuestionWithButtons choosenQuestion =
+          (RadioQuestionWithButtons) button.getParent().get();
+
+      newTitleTextField.setValue(choosenQuestion.getQuestion());
+
+      for (MultiQuestionAlternative s : choosenQuestion.getAlternatives()) {
+        TextField alternative = new TextField();
+        alternative.setValue(s.getAlternativeTitle());
+        dialog.add(alternative);
+      }
+    }
+
+    dialog.add(new HorizontalLayout(new Button("Cancel", onCancel -> dialog.close()), confirm));
   }
 
   // Save survey with questions to database(multiquestion not implemented)
@@ -232,6 +260,7 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
         }
       }
       thisSurvey.getQuestionList().clear();
+      checkFilledFields();
     }
 
   }

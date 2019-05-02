@@ -1,4 +1,4 @@
-package com.considLia.survey.ui;
+package com.considlia.survey.ui;
 
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;

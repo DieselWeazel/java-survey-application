@@ -1,4 +1,4 @@
-package com.considLia.survey.model;
+package com.considlia.survey.model;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
