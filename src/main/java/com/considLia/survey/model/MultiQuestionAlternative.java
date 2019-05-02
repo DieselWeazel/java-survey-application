@@ -19,7 +19,8 @@ public class MultiQuestionAlternative {
   private String alternativeTitle;
   private int position;
 
-  public MultiQuestionAlternative() {}
+  public MultiQuestionAlternative() {
+  }
 
   public MultiQuestionAlternative(String questionTitle) {
     this.alternativeTitle = questionTitle;
@@ -36,7 +37,7 @@ public class MultiQuestionAlternative {
   @Override
   public String toString() {
     return position +
-            ": " + alternativeTitle;
+        ": " + alternativeTitle;
   }
 
   public int getPosition() {

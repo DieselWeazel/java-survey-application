@@ -7,6 +7,7 @@ import com.considLia.survey.model.Survey;
 import com.considLia.survey.model.TextQuestion;
 
 public interface SurveyRepository extends JpaRepository<Survey, Long> {
+
   Survey getSurveyBySurveyId(long surveyId);
 
   List<TextQuestion> getQuestionBySurveyId(long surveyId);
