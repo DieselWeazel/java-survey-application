@@ -1,11 +1,11 @@
-package com.considLia.survey.ui;
+package com.considlia.survey.ui;
 
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import com.considLia.survey.custom_component.ConfirmDialog;
-import com.considLia.survey.model.Survey;
-import com.considLia.survey.repositories.SurveyRepository;
+import com.considlia.survey.custom_component.ConfirmDialog;
+import com.considlia.survey.model.Survey;
+import com.considlia.survey.repositories.SurveyRepository;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.HeaderRow;

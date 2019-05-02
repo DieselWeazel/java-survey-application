@@ -1,4 +1,4 @@
-package com.considLia.survey.model;
+package com.considlia.survey.model;
 
 import java.time.LocalDate;
 import java.util.HashSet;

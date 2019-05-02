@@ -1,9 +1,9 @@
-package com.considLia.survey.custom_component;
+package com.considlia.survey.custom_component;
 
 import java.util.List;
 import java.util.Set;
-import com.considLia.survey.model.MultiQuestionAlternative;
-import com.considLia.survey.ui.CreateSurveyView;
+import com.considlia.survey.model.MultiQuestionAlternative;
+import com.considlia.survey.ui.CreateSurveyView;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H5;
 import com.vaadin.flow.component.icon.Icon;

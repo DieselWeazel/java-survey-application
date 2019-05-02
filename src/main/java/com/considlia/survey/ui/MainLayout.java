@@ -1,4 +1,4 @@
-package com.considLia.survey.ui;
+package com.considlia.survey.ui;
 
 import java.util.HashMap;
 import java.util.Map;
