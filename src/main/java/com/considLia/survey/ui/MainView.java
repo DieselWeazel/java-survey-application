@@ -23,6 +23,7 @@ public class MainView extends VerticalLayout {
   private Grid<Survey> grid;
   private List<Survey> surveyList;
   private TextField idField, titleField, creatorField, dateField;
+
   private SurveyRepository surveyRepository;
 
   public MainView(SurveyRepository surveyRepository) {
@@ -149,7 +150,9 @@ public class MainView extends VerticalLayout {
 
   public HorizontalLayout showButtons(Grid<Survey> grid, Survey item) {
     Button showSurvey = new Button(new Icon(VaadinIcon.EYE));
-    Button editSurvey = new Button(new Icon(VaadinIcon.PENCIL));
+    Button editSurvey = new Button(new Icon(VaadinIcon.PENCIL), onEdit -> {
+      getUI().ifPresent(ui -> ui.navigate(CreateSurveyView.class, item.getSurveyId()));
+    });
     Button deleteSurvey = new Button(new Icon(VaadinIcon.TRASH), onDelete -> {
       ConfirmDialog confirmDialog = new ConfirmDialog("Confirm delete",
           "Are you sure you want to delete the item?", surveyRepository, grid, item);
