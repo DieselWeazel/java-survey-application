@@ -1,24 +1,30 @@
-package com.considLia.survey.ui;
+package com.considlia.survey.ui;
 
+import com.considlia.survey.custom_component.RadioQuestionWithButtons;
+import com.considlia.survey.custom_component.TextQuestionWithButtons;
+import com.considlia.survey.model.MultiQuestion;
+import com.considlia.survey.model.MultiQuestionAlternative;
+import com.considlia.survey.model.Question;
+import com.considlia.survey.model.Survey;
+import com.considlia.survey.model.TextQuestion;
+import com.considlia.survey.repositories.SurveyRepository;
 import java.time.LocalDate;
-import com.considLia.survey.custom_component.RadioQuestionWithButtons;
-import com.considLia.survey.custom_component.TextQuestionWithButtons;
-import com.considLia.survey.model.MultiQuestion;
-import com.considLia.survey.model.Survey;
-import com.considLia.survey.model.TextQuestion;
-import com.considLia.survey.repositories.SurveyRepository;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.StyleSheet;
+import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
+import com.vaadin.flow.router.BeforeEvent;
+import com.vaadin.flow.router.HasUrlParameter;
+import com.vaadin.flow.router.OptionalParameter;
 import com.vaadin.flow.router.Route;
 
 @StyleSheet("css/app.css")
 @Route(value = "createsurvey", layout = MainLayout.class)
-public class CreateSurveyView extends VerticalLayout {
+public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<Long> {
 
   private Button addQuestionButton;
   private Button submitSurveyButton;
@@ -123,20 +129,13 @@ public class CreateSurveyView extends VerticalLayout {
         }
       });
 
+      // Checks if the questionTitle and questionType is set
       questionTitleTextField.addValueChangeListener(event -> {
-        if (questionTitleTextField.isEmpty()) {
+        if (questionTitleTextField.isEmpty() || (radioButtons.getValue() == null)
+            || (radioButtons.getValue().isEmpty())) {
           addQuestionButton.setEnabled(false);
-        }
-        if (radioButtons.getValue() != null) {
-          if (radioButtons.getValue().equalsIgnoreCase("Text question")
-              && !questionTitleTextField.getValue().isEmpty()) {
-            addQuestionButton.setEnabled(true);
-            typeOfQuestion = TEXT_QUESTION;
-          } else if (radioButtons.getValue().equalsIgnoreCase("Multi question")) {
-            typeOfQuestion = RADIO_QUESTION;
-          } else if (radioButtons.getValue().equalsIgnoreCase("Checkbox Question")) {
-            typeOfQuestion = BOX_QUESTION;
-          }
+        } else {
+          addQuestionButton.setEnabled(true);
         }
       });
     }
@@ -157,8 +156,43 @@ public class CreateSurveyView extends VerticalLayout {
     checkFilledFields();
   }
 
+  public void editQuesiton(Button button) {
+    Dialog dialog = new Dialog();
+    Button confirm = new Button("Confirm");
+    TextField newTitleTextField = new TextField();
+
+    dialog.open();
+    dialog.add(newTitleTextField);
+    if (button.getParent().get() instanceof TextQuestionWithButtons) {
+      TextQuestionWithButtons choosenQuestion = (TextQuestionWithButtons) button.getParent().get();
+
+      newTitleTextField.setValue(choosenQuestion.getQuestion());
+
+      confirm.addClickListener(event -> {
+        choosenQuestion.setQuestion(newTitleTextField.getValue());
+        dialog.close();
+      });
+
+    } else {
+      RadioQuestionWithButtons choosenQuestion =
+          (RadioQuestionWithButtons) button.getParent().get();
+
+      newTitleTextField.setValue(choosenQuestion.getQuestion());
+
+      for (MultiQuestionAlternative s : choosenQuestion.getAlternatives()) {
+        TextField alternative = new TextField();
+        alternative.setValue(s.getAlternativeTitle());
+        dialog.add(alternative);
+      }
+    }
+
+    dialog.add(new HorizontalLayout(new Button("Cancel", onCancel -> dialog.close()), confirm));
+  }
+
   // Save survey with questions to database(multiquestion not implemented)
   public void saveSurvey() {
+    thisSurvey.getQuestionList().clear();
+
     for (int position = 0; position < questions.getComponentCount(); position++) {
 
       if (questions.getComponentAt(position) instanceof TextQuestionWithButtons) {
@@ -192,25 +226,6 @@ public class CreateSurveyView extends VerticalLayout {
     getUI().ifPresent(ui -> ui.navigate(""));
   }
 
-  // Make custom question component and add it to questionscontainer
-  public void saveQuestion(String questionTitle, int typeOfQuestion) {
-
-    if (typeOfQuestion == TEXT_QUESTION) {
-
-    } else if (typeOfQuestion == RADIO_QUESTION) {
-
-    } else if (typeOfQuestion == BOX_QUESTION) {
-
-    } else {
-
-      /*
-       * Felhantering ifall typ av fråga inte är rätt gjord (?)
-       */
-
-    }
-
-  }
-
   // Control if questions list is not 0
   public boolean validateQuestionListLength() {
     return questions.getComponentCount() != 0;
@@ -224,5 +239,29 @@ public class CreateSurveyView extends VerticalLayout {
     } else {
       submitSurveyButton.setEnabled(false);
     }
+  }
+
+  // HasUrlParameter function, if parameter is null, do nothing but load the view as normal.
+  // If parameter has an surveyId, load questions, title and creator.
+  @Override
+  public void setParameter(BeforeEvent event, @OptionalParameter Long parameter) {
+    if (parameter == null) {
+      // Do nothing
+    } else {
+      thisSurvey = surveyRepository.getSurveyBySurveyId(parameter);
+
+      for (Question q : thisSurvey.getQuestionList()) {
+        surveyTitleTextField.setValue(thisSurvey.getSurveyTitle());
+        creatorNameTextField.setValue(thisSurvey.getCreator());
+        if (q instanceof TextQuestion) {
+          questions.add(new TextQuestionWithButtons(q.getQuestionTitle(), this));
+        } else {
+          // questions.add(new RadioQuestionWithButtons(questionTitleTextField.getValue(), this));
+        }
+      }
+      thisSurvey.getQuestionList().clear();
+      checkFilledFields();
+    }
+
   }
 }

@@ -1,4 +1,4 @@
-package com.considLia.survey.model;
+package com.considlia.survey.model;
 
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -17,7 +17,7 @@ public class Survey {
   private String surveyTitle, creator;
   private LocalDate date;
 
-  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+  @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   @JoinColumn(name = "survey_id")
   @OrderBy("position ASC")
   private Set<Question> questionList;

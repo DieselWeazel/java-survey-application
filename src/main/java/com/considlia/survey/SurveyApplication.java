@@ -1,15 +1,10 @@
-package com.considLia.survey;
+package com.considlia.survey;
 
-import com.considLia.survey.model.*;
+import com.considlia.survey.repositories.SurveyRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import com.considLia.survey.repositories.SurveyRepository;
-
-import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
 
 @SpringBootApplication
 public class SurveyApplication {

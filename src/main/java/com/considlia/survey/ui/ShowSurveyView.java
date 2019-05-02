@@ -1,18 +1,15 @@
-package com.considLia.survey.ui;
+package com.considlia.survey.ui;
 
-import com.considLia.survey.model.MultiQuestion;
-import com.considLia.survey.model.MultiQuestionAlternative;
-import com.considLia.survey.model.Question;
-import com.considLia.survey.model.Survey;
-import com.considLia.survey.repositories.SurveyRepository;
+import com.considlia.survey.model.MultiQuestion;
+import com.considlia.survey.model.MultiQuestionAlternative;
+import com.considlia.survey.model.Question;
+import com.considlia.survey.model.Survey;
+import com.considlia.survey.repositories.SurveyRepository;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.checkbox.CheckboxGroup;
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
-import com.vaadin.flow.component.html.H3;
-import com.vaadin.flow.component.html.H5;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
@@ -21,8 +18,6 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.Route;
-
-import javax.validation.constraints.Null;
 
 /*
 http://localhost:8080/showsurvey/1

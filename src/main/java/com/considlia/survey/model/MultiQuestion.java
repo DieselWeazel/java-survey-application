@@ -1,4 +1,4 @@
-package com.considLia.survey.model;
+package com.considlia.survey.model;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -16,7 +16,7 @@ public class MultiQuestion extends Question {
 
   private int questionType;
 
-  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+  @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   @JoinColumn(name = "question_id")
   @OrderBy("position ASC")
   private Set<MultiQuestionAlternative> alternativeList;
