@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import com.considLia.survey.custom_component.RadioQuestionWithButtons;
 import com.considLia.survey.custom_component.TextQuestionWithButtons;
 import com.considLia.survey.model.MultiQuestion;
+import com.considLia.survey.model.Question;
 import com.considLia.survey.model.Survey;
 import com.considLia.survey.model.TextQuestion;
 import com.considLia.survey.repositories.SurveyRepository;
@@ -14,11 +15,14 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
+import com.vaadin.flow.router.BeforeEvent;
+import com.vaadin.flow.router.HasUrlParameter;
+import com.vaadin.flow.router.OptionalParameter;
 import com.vaadin.flow.router.Route;
 
 @StyleSheet("css/app.css")
 @Route(value = "createsurvey", layout = MainLayout.class)
-public class CreateSurveyView extends VerticalLayout {
+public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<Long> {
 
   private Button addQuestionButton;
   private Button submitSurveyButton;
@@ -159,6 +163,8 @@ public class CreateSurveyView extends VerticalLayout {
 
   // Save survey with questions to database(multiquestion not implemented)
   public void saveSurvey() {
+    thisSurvey.getQuestionList().clear();
+
     for (int position = 0; position < questions.getComponentCount(); position++) {
 
       if (questions.getComponentAt(position) instanceof TextQuestionWithButtons) {
@@ -192,25 +198,6 @@ public class CreateSurveyView extends VerticalLayout {
     getUI().ifPresent(ui -> ui.navigate(""));
   }
 
-  // Make custom question component and add it to questionscontainer
-  public void saveQuestion(String questionTitle, int typeOfQuestion) {
-
-    if (typeOfQuestion == TEXT_QUESTION) {
-
-    } else if (typeOfQuestion == RADIO_QUESTION) {
-
-    } else if (typeOfQuestion == BOX_QUESTION) {
-
-    } else {
-
-      /*
-       * Felhantering ifall typ av fråga inte är rätt gjord (?)
-       */
-
-    }
-
-  }
-
   // Control if questions list is not 0
   public boolean validateQuestionListLength() {
     return questions.getComponentCount() != 0;
@@ -224,5 +211,28 @@ public class CreateSurveyView extends VerticalLayout {
     } else {
       submitSurveyButton.setEnabled(false);
     }
+  }
+
+  // HasUrlParameter function, if parameter is null, do nothing but load the view as normal.
+  // If parameter has an surveyId, load questions, title and creator.
+  @Override
+  public void setParameter(BeforeEvent event, @OptionalParameter Long parameter) {
+    if (parameter == null) {
+      // Do nothing
+    } else {
+      thisSurvey = surveyRepository.getSurveyBySurveyId(parameter);
+
+      for (Question q : thisSurvey.getQuestionList()) {
+        surveyTitleTextField.setValue(thisSurvey.getSurveyTitle());
+        creatorNameTextField.setValue(thisSurvey.getCreator());
+        if (q instanceof TextQuestion) {
+          questions.add(new TextQuestionWithButtons(q.getQuestionTitle(), this));
+        } else {
+          // questions.add(new RadioQuestionWithButtons(questionTitleTextField.getValue(), this));
+        }
+      }
+      thisSurvey.getQuestionList().clear();
+    }
+
   }
 }

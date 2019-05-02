@@ -27,7 +27,7 @@ public class Survey {
   private String surveyTitle, creator;
   private LocalDate date;
 
-  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+  @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   @JoinColumn(name = "survey_id")
   @OrderBy("position ASC")
   private Set<Question> questionList;
