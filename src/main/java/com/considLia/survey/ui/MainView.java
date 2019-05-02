@@ -44,6 +44,9 @@ public class MainView extends VerticalLayout {
     Grid.Column<Survey> dateColumng = grid.addColumn(Survey::getDate).setHeader("Date");
     grid.addComponentColumn(item -> showButtons(grid, item));
 
+    /*
+    test
+     */
     if (surveyList.isEmpty()) {
       grid.setHeight("80px");
     }
