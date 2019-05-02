@@ -14,7 +14,6 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Route;
 
@@ -23,7 +22,6 @@ public class MainView extends VerticalLayout {
 
   private Grid<Survey> grid;
   private List<Survey> surveyList;
-  private ListDataProvider<Survey> dataProvider;
   private TextField idField, titleField, creatorField, dateField;
   private SurveyRepository surveyRepository;
 
@@ -43,21 +41,13 @@ public class MainView extends VerticalLayout {
     Grid.Column<Survey> creatorColumn = grid.addColumn(Survey::getCreator).setHeader("Creator");
     Grid.Column<Survey> dateColumng = grid.addColumn(Survey::getDate).setHeader("Date");
     grid.addComponentColumn(item -> showButtons(grid, item));
-
-    if (surveyList.isEmpty()) {
-      grid.setHeight("80px");
-    }
     grid.setItems(surveyList);
     add(grid);
-
-    dataProvider = new ListDataProvider<>(surveyList);
-    grid.setDataProvider(dataProvider);
 
     HeaderRow filterRow = grid.appendHeaderRow();
 
     // ID filter
     idField = new TextField();
-    // idField.addValueChangeListener(e -> search(idField.getValue(), "idField"));
     idField.addValueChangeListener(e -> idSearcher(idField.getValue()));
     idField.setValueChangeMode(ValueChangeMode.EAGER);
     filterRow.getCell(idColumn).setComponent(idField);
@@ -65,7 +55,6 @@ public class MainView extends VerticalLayout {
 
     // Title filter
     titleField = new TextField();
-    // titleField.addValueChangeListener(e -> search(titleField.getValue(), "titleField"));
     titleField.addValueChangeListener(e -> titleSearcher(titleField.getValue()));
     titleField.setValueChangeMode(ValueChangeMode.EAGER);
     filterRow.getCell(titleColumn).setComponent(titleField);
@@ -73,7 +62,6 @@ public class MainView extends VerticalLayout {
 
     // Creator filter
     creatorField = new TextField();
-    // creatorField.addValueChangeListener(e -> search(creatorField.getValue(), "creatorField"));
     creatorField.addValueChangeListener(e -> creatorSearcher(creatorField.getValue()));
     creatorField.setValueChangeMode(ValueChangeMode.EAGER);
     filterRow.getCell(creatorColumn).setComponent(creatorField);
