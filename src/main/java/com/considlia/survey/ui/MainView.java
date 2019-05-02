@@ -149,7 +149,9 @@ public class MainView extends VerticalLayout {
   }
 
   public HorizontalLayout showButtons(Grid<Survey> grid, Survey item) {
-    Button showSurvey = new Button(new Icon(VaadinIcon.EYE));
+    Button showSurvey = new Button(new Icon(VaadinIcon.EYE), onShow -> {
+      getUI().ifPresent(ui -> ui.navigate(ShowSurveyView.class, item.getSurveyId()));
+    });
     Button editSurvey = new Button(new Icon(VaadinIcon.PENCIL), onEdit -> {
       getUI().ifPresent(ui -> ui.navigate(CreateSurveyView.class, item.getSurveyId()));
     });
