@@ -6,7 +6,6 @@ import java.util.List;
 import com.considLia.survey.custom_component.ConfirmDialog;
 import com.considLia.survey.model.Survey;
 import com.considLia.survey.repositories.SurveyRepository;
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.HeaderRow;

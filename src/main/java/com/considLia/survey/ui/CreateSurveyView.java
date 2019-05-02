@@ -86,6 +86,8 @@ public class CreateSurveyView extends VerticalLayout {
   // Create addQuestion-package with listeners, if already created: save the question
   public void addQuestion() {
 
+    questionTitleTextField.focus();
+
     if (radioButtons != null) {
       if (typeOfQuestion == TEXT_QUESTION) {
         questions.add(new TextQuestionWithButtons(questionTitleTextField.getValue(), this));
