@@ -1,6 +1,8 @@
 package com.considlia.survey.ui;
 
 import java.time.LocalDate;
+import java.util.List;
+import com.considlia.survey.custom_component.CreateAlternative;
 import com.considlia.survey.custom_component.RadioQuestionWithButtons;
 import com.considlia.survey.custom_component.TextQuestionWithButtons;
 import com.considlia.survey.model.MultiQuestion;
@@ -45,6 +47,9 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
   private static final int BOX_QUESTION = 2;
 
   private SurveyRepository surveyRepository;
+
+  private List<String> alternativeList;
+  private CreateAlternative ca;
 
   public CreateSurveyView(SurveyRepository surveyRepository) {
     setId("createsurvey");
@@ -91,14 +96,19 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
 
   // Create addQuestion-package with listeners, if already created: save the question
   public void addQuestion() {
-
     questionTitleTextField.focus();
 
     if (radioButtons != null) {
+
       if (typeOfQuestion == TEXT_QUESTION) {
         questions.add(new TextQuestionWithButtons(questionTitleTextField.getValue(), this));
       } else {
-        // questions.add(new RadioQuestionWithButtons(questionTitleTextField.getValue(), this));
+        questions.add(new RadioQuestionWithButtons(questionTitleTextField.getValue(), this,
+            alternativeList, typeOfQuestion));
+        for (String s : alternativeList) {
+          System.out.println(s.toString());
+          addQuestionPackage.remove(ca);
+        }
       }
       questionTitleTextField.setValue("");
       radioButtons.setValue("");
@@ -116,13 +126,26 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
         if (event.getValue().equalsIgnoreCase("Text question")
             && !questionTitleTextField.getValue().isEmpty()) {
           addQuestionButton.setEnabled(true);
-          if (event.getValue().equalsIgnoreCase("Text question")) {
-            typeOfQuestion = TEXT_QUESTION;
-          } else if (event.getValue().equalsIgnoreCase("Multi question")) {
-            typeOfQuestion = RADIO_QUESTION;
-          } else if (event.getValue().equalsIgnoreCase("Checkbox Question")) {
-            typeOfQuestion = BOX_QUESTION;
-          }
+          typeOfQuestion = TEXT_QUESTION;
+
+        } else if ((event.getValue().equalsIgnoreCase("Radio Question")
+            && !questionTitleTextField.getValue().isEmpty())) {
+          typeOfQuestion = RADIO_QUESTION;
+
+          // -------------------------------------HÄR-------------------------------------------------------------------------
+
+          ca = new CreateAlternative(typeOfQuestion);
+          addQuestionPackage.add(ca);
+          alternativeList = ca.getAlternativeList();
+
+          // -------------------------------------HÄR-------------------------------------------------------------------------
+          addQuestionButton.setEnabled(true);
+
+        } else if ((event.getValue().equalsIgnoreCase("Checkbox Question")
+            && !questionTitleTextField.getValue().isEmpty())) {
+          typeOfQuestion = BOX_QUESTION;
+          addQuestionButton.setEnabled(true);
+
         }
         if (questionTitleTextField.isEmpty()) {
           addQuestionButton.setEnabled(false);
