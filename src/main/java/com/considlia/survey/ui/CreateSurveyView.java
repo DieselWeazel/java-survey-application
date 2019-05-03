@@ -108,8 +108,6 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
         questions.add(new TextQuestionWithButtons(questionTitleTextField.getValue(), this));
       } else {
 
-        Set<MultiQuestionAlternative> set = new HashSet<>();
-
         // questions.add(new RadioQuestionWithButtons(questionTitleTextField.getValue(), this));
       }
       questionTitleTextField.setValue("");
