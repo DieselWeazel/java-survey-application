@@ -29,7 +29,7 @@ public class TextQuestionWithButtons extends HorizontalLayout {
         event -> survey.moveQuestion(event.getSource(), MOVE_UP)));
     add(new Button(new Icon(VaadinIcon.ARROW_DOWN),
         event -> survey.moveQuestion(event.getSource(), MOVE_DOWN)));
-    add(new Button(new Icon(VaadinIcon.PENCIL), event -> survey.editQuesiton(event.getSource())));
+    add(new Button(new Icon(VaadinIcon.PENCIL), event -> survey.editQuestion(event.getSource())));
     add(new Button(new Icon(VaadinIcon.TRASH), event -> survey.removeQuestion(event.getSource())));
 
   }
