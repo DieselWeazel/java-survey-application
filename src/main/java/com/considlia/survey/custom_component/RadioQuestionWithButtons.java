@@ -1,5 +1,6 @@
 package com.considlia.survey.custom_component;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import com.considlia.survey.model.MultiQuestionAlternative;
@@ -19,6 +20,7 @@ public class RadioQuestionWithButtons extends VerticalLayout {
 
   private String question;
   private Set<MultiQuestionAlternative> alternatives;
+  private List<String> stringAlternatives;
   private int questionType;
 
   private HorizontalLayout content;
@@ -26,16 +28,18 @@ public class RadioQuestionWithButtons extends VerticalLayout {
   public RadioQuestionWithButtons(String question, CreateSurveyView survey,
       List<String> stringAlternatives, int questionType) {
 
+    this.questionType = questionType;
+    this.question = question;
+    content = new HorizontalLayout();
+    alternatives = new HashSet<>();
+    this.stringAlternatives = stringAlternatives;
+
     for (int position = 0; position < stringAlternatives.size(); position++) {
       MultiQuestionAlternative alt = new MultiQuestionAlternative();
       alt.setPosition(position);
       alt.setAlternativeTitle(stringAlternatives.get(position));
       alternatives.add(alt);
     }
-
-    this.questionType = questionType;
-    this.question = question;
-    content = new HorizontalLayout();
 
     content.setWidth("100%");
     H5 title = new H5(question);
@@ -79,6 +83,14 @@ public class RadioQuestionWithButtons extends VerticalLayout {
 
   public void setQuestionType(int questionType) {
     this.questionType = questionType;
+  }
+
+  public List<String> getStringAlternatives() {
+    return stringAlternatives;
+  }
+
+  public void setStringAlternatives(List<String> stringAlternatives) {
+    this.stringAlternatives = stringAlternatives;
   }
 
 }
