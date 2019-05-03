@@ -33,12 +33,10 @@ public class CreateAlternative extends VerticalLayout {
 
   public List<String> createAlternative(int typeOfQuestion, List<String> alternativeList) {
     this.typeOfQuestion = typeOfQuestion;
-    System.out.println("createAlternative() invoked");
 
     if (alternativeList.isEmpty()) {
       textFieldList.add(alternativeTextField);
 
-      System.out.println("alternativeList is empty");
       alternativeTextField.setValueChangeMode(ValueChangeMode.EAGER);
       alternativeTextField.addValueChangeListener(event -> {
         try {
@@ -82,7 +80,6 @@ public class CreateAlternative extends VerticalLayout {
 
   public void bothListsNotEmpty() {
     // _________________________ALTERNATIVELIST AND TEXTFIELDLIST NOT EMPTY________________
-    System.out.println("both lists not empty");
 
     // checking if the lists are the same size and if the last textField i empty
     if (textFieldList.size() == alternativeList.size()
@@ -95,12 +92,10 @@ public class CreateAlternative extends VerticalLayout {
         try {
           alternativeList.set(currentSize, event.getValue());
           if (event.getSource().getValue().isEmpty()) {
-            System.out.println("IS EMPTY " + currentSize);
             alternativeList.remove(currentSize);
             textFieldList.remove(currentSize);
           }
         } catch (IndexOutOfBoundsException e) {
-          System.out.println("IndexOutOfBoundsException caught");
           alternativeList.add(currentSize, event.getValue());
         }
         createAlternative(typeOfQuestion, alternativeList);

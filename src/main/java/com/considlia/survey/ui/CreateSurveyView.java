@@ -1,6 +1,7 @@
 package com.considlia.survey.ui;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import com.considlia.survey.custom_component.CreateAlternative;
 import com.considlia.survey.custom_component.RadioQuestionWithButtons;
@@ -110,10 +111,8 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
       } else {
         questions.add(new RadioQuestionWithButtons(questionTitleTextField.getValue(), this,
             alternativeList, typeOfQuestion));
-        for (String s : alternativeList) {
-          System.out.println(s.toString());
-          addQuestionPackage.remove(ca);
-        }
+        addQuestionPackage.remove(ca);
+
       }
       questionTitleTextField.setValue("");
       radioButtons.setValue("");
@@ -210,16 +209,21 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
       });
 
     } else {
+      System.out.println(button.getParent().get().getParent().get().getClass().getSimpleName());
       RadioQuestionWithButtons choosenQuestion =
-          (RadioQuestionWithButtons) button.getParent().get();
-
+          (RadioQuestionWithButtons) button.getParent().get().getParent().get();
+      //
       newTitleTextField.setValue(choosenQuestion.getQuestion());
 
-      for (MultiQuestionAlternative s : choosenQuestion.getAlternatives()) {
+      VerticalLayout v = new VerticalLayout();
+      System.out.println("hej");
+      for (String s : choosenQuestion.getStringAlternatives()) {
+        System.out.println(s.toString());
         TextField alternative = new TextField();
-        alternative.setValue(s.getAlternativeTitle());
-        dialog.add(alternative);
+        alternative.setValue(s);
+        v.add(alternative);
       }
+      dialog.add(v);
     }
 
     dialog.add(new HorizontalLayout(new Button("Cancel", onCancel -> dialog.close()), confirm));
@@ -292,7 +296,15 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
         if (q instanceof TextQuestion) {
           questions.add(new TextQuestionWithButtons(q.getQuestionTitle(), this));
         } else {
-          // questions.add(new RadioQuestionWithButtons(questionTitleTextField.getValue(), this));
+          MultiQuestion mq = (MultiQuestion) q;
+
+          List<String> stringAlternatives = new ArrayList<>();
+          for (MultiQuestionAlternative mqa : mq.getAlternativeList()) {
+            stringAlternatives.add(mqa.getAlternativeTitle());
+          }
+
+          questions.add(new RadioQuestionWithButtons(mq.getQuestionTitle(), this,
+              stringAlternatives, mq.getQuestionType()));
         }
       }
       thisSurvey.getQuestionList().clear();
