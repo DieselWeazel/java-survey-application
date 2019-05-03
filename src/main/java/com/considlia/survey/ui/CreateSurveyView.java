@@ -1,6 +1,10 @@
 package com.considlia.survey.ui;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import com.considlia.survey.custom_component.RadioQuestionWithButtons;
 import com.considlia.survey.custom_component.TextQuestionWithButtons;
 import com.considlia.survey.model.MultiQuestion;
@@ -103,6 +107,7 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
       if (typeOfQuestion == TEXT_QUESTION) {
         questions.add(new TextQuestionWithButtons(questionTitleTextField.getValue(), this));
       } else {
+
         // questions.add(new RadioQuestionWithButtons(questionTitleTextField.getValue(), this));
       }
       questionTitleTextField.setValue("");
@@ -269,7 +274,15 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
         if (q instanceof TextQuestion) {
           questions.add(new TextQuestionWithButtons(q.getQuestionTitle(), this));
         } else {
-          // questions.add(new RadioQuestionWithButtons(questionTitleTextField.getValue(), this));
+          MultiQuestion mq = (MultiQuestion) q;
+
+          List<String> stringAlternatives = new ArrayList<>();
+          for (MultiQuestionAlternative mqa : mq.getAlternativeList()) {
+            stringAlternatives.add(mqa.getAlternativeTitle());
+          }
+
+          questions.add(new RadioQuestionWithButtons(mq.getQuestionTitle(), this,
+              stringAlternatives, mq.getQuestionType()));
         }
       }
       thisSurvey.getQuestionList().clear();
