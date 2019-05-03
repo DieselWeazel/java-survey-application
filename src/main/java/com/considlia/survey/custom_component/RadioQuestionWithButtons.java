@@ -52,7 +52,8 @@ public class RadioQuestionWithButtons extends VerticalLayout {
         event -> survey.moveQuestion(event.getSource(), MOVE_UP)));
     content.add(new Button(new Icon(VaadinIcon.ARROW_DOWN),
         event -> survey.moveQuestion(event.getSource(), MOVE_DOWN)));
-    content.add(new Button(new Icon(VaadinIcon.PENCIL)));
+    content.add(
+        new Button(new Icon(VaadinIcon.PENCIL), onEdit -> survey.editQuestion(onEdit.getSource())));
     content.add(
         new Button(new Icon(VaadinIcon.TRASH), event -> survey.removeQuestion(event.getSource())));
 
