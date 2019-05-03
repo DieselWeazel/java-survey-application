@@ -33,6 +33,15 @@
 
 #createsurvey .questionpackage {
 	width: 45%;
-	
-	
+}
+
+#textcustom {
+}
+
+#multicustom {
+	padding: 0px;
+}
+
+#multicustom .content {
+	padding: 0px;
 }

@@ -174,14 +174,27 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
 
   // Move question in questionscontainer, NOT COMPLETE for other than textquestion
   public void moveQuestion(Button button, int moveDirection) {
-    HorizontalLayout component = (HorizontalLayout) button.getParent().get();
-    if (questions.indexOf(component) == 0 && moveDirection == -1
-        || questions.indexOf(component) == questions.getComponentCount() - 1
-            && moveDirection == 1) {
-      return;
+    if (button.getParent().get() instanceof TextQuestionWithButtons) {
+      TextQuestionWithButtons component = (TextQuestionWithButtons) button.getParent().get();
+      if (questions.indexOf(component) == 0 && moveDirection == -1
+          || questions.indexOf(component) == questions.getComponentCount() - 1
+              && moveDirection == 1) {
+        return;
+      }
+      questions.replace(component,
+          questions.getComponentAt(questions.indexOf(component) + moveDirection));
+    } else {
+      RadioQuestionWithButtons component =
+          (RadioQuestionWithButtons) button.getParent().get().getParent().get();
+      if (questions.indexOf(component) == 0 && moveDirection == -1
+          || questions.indexOf(component) == questions.getComponentCount() - 1
+              && moveDirection == 1) {
+        return;
+      }
+      questions.replace(component,
+          questions.getComponentAt(questions.indexOf(component) + moveDirection));
     }
-    questions.replace(component,
-        questions.getComponentAt(questions.indexOf(component) + moveDirection));
+
   }
 
   // Remove questions from questionscontainer, NOT COMPLETE for other than textquestion
