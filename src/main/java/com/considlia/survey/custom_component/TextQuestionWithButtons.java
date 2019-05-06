@@ -20,6 +20,9 @@ public class TextQuestionWithButtons extends VerticalLayout {
   private H5 title;
   private TextField text;
 
+  private Button upButton;
+  private Button downButton;
+
   private HorizontalLayout content;
 
   public TextQuestionWithButtons(String question, CreateSurveyView survey) {
@@ -27,6 +30,8 @@ public class TextQuestionWithButtons extends VerticalLayout {
     setWidth("100%");
 
     this.question = question;
+    this.upButton = new Button(new Icon(VaadinIcon.ARROW_UP));
+    this.downButton = new Button(new Icon(VaadinIcon.ARROW_DOWN));
 
     content = new HorizontalLayout();
     content.setClassName("content");
@@ -39,10 +44,16 @@ public class TextQuestionWithButtons extends VerticalLayout {
     text.setEnabled(false);
 
     content.add(title);
-    content.add(new Button(new Icon(VaadinIcon.ARROW_UP),
-        event -> survey.moveQuestion(event.getSource(), MOVE_UP)));
-    content.add(new Button(new Icon(VaadinIcon.ARROW_DOWN),
-        event -> survey.moveQuestion(event.getSource(), MOVE_DOWN)));
+
+    upButton.addClickListener(e -> {
+      survey.moveQuestion(e.getSource(), MOVE_UP);
+    });
+    downButton.addClickListener(e -> {
+      survey.moveQuestion(e.getSource(), MOVE_DOWN);
+    });
+
+    content.add(upButton);
+    content.add(downButton);
     content.add(
         new Button(new Icon(VaadinIcon.PENCIL), event -> survey.editQuestion(event.getSource())));
     content.add(
@@ -67,4 +78,28 @@ public class TextQuestionWithButtons extends VerticalLayout {
     title = updatedTitle;
   }
 
+  public void hideUpButton(){
+    this.upButton.setVisible(false);
+  }
+
+  public void hideDownButton(){
+    this.downButton.setVisible(false);
+  }
+
+  public void setUpButton(Button upButton) {
+    this.upButton = upButton;
+  }
+
+  public void setDownButton(Button downButton) {
+    this.downButton = downButton;
+  }
+
+  public Button getUpButton() {
+    return upButton;
+  }
+
+  public Button getDownButton() {
+    return downButton;
+  }
 }
+

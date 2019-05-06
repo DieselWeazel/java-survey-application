@@ -30,6 +30,9 @@ public class RadioQuestionWithButtons extends VerticalLayout {
   private RadioButtonGroup<String> radioButtons;
   private CheckboxGroup<String> checkBoxButtons;
 
+  private Button upButton;
+  private Button downButton;
+
   private HorizontalLayout content;
 
   public RadioQuestionWithButtons(String question, CreateSurveyView survey,
@@ -39,6 +42,8 @@ public class RadioQuestionWithButtons extends VerticalLayout {
 
     this.questionType = questionType;
     this.question = question;
+    this.upButton = new Button(new Icon(VaadinIcon.ARROW_UP));
+    this.downButton = new Button(new Icon(VaadinIcon.ARROW_DOWN));
     this.stringAlternatives = stringAlternatives;
     content = new HorizontalLayout();
     content.setWidthFull();
@@ -55,10 +60,15 @@ public class RadioQuestionWithButtons extends VerticalLayout {
     }
 
     content.add(title);
-    content.add(new Button(new Icon(VaadinIcon.ARROW_UP),
-        event -> survey.moveQuestion(event.getSource(), MOVE_UP)));
-    content.add(new Button(new Icon(VaadinIcon.ARROW_DOWN),
-        event -> survey.moveQuestion(event.getSource(), MOVE_DOWN)));
+    upButton.addClickListener(e -> {
+      survey.moveQuestion(e.getSource(), MOVE_UP);
+    });
+    downButton.addClickListener(e -> {
+      survey.moveQuestion(e.getSource(), MOVE_DOWN);
+    });
+
+    content.add(upButton);
+    content.add(downButton);
     content.add(
         new Button(new Icon(VaadinIcon.PENCIL), onEdit -> survey.editQuestion(onEdit.getSource())));
     content.add(
@@ -111,4 +121,27 @@ public class RadioQuestionWithButtons extends VerticalLayout {
     this.stringAlternatives = stringAlternatives;
   }
 
+  public void hideUpButton(){
+    this.upButton.setVisible(false);
+  }
+
+  public void hideDownButton(){
+    this.downButton.setVisible(false);
+  }
+
+  public void setUpButton(Button upButton) {
+    this.upButton = upButton;
+  }
+
+  public void setDownButton(Button downButton) {
+    this.downButton = downButton;
+  }
+
+  public Button getUpButton() {
+    return upButton;
+  }
+
+  public Button getDownButton() {
+    return downButton;
+  }
 }
