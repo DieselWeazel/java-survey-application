@@ -3,7 +3,9 @@ package com.considlia.survey.custom_component;
 import com.considlia.survey.ui.CreateSurveyView;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.StyleSheet;
+import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.H5;
+import com.vaadin.flow.component.html.NativeButton;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -57,12 +59,29 @@ public class TextQuestionWithButtons extends VerticalLayout {
     content.add(
         new Button(new Icon(VaadinIcon.PENCIL), event -> survey.editQuestion(event.getSource())));
     content.add(
-        new Button(new Icon(VaadinIcon.TRASH), event -> survey.removeQuestion(event.getSource())));
+        new Button(new Icon(VaadinIcon.TRASH), event -> removeQuestion(survey)));
 
     add(content);
     add(text);
 
   }
+
+  public Dialog removeQuestion(CreateSurveyView survey){
+    Dialog dialog = new Dialog();
+    dialog.setCloseOnOutsideClick(false);
+    NativeButton confirmButton = new NativeButton("Are you sure you want to remove this question?", e-> {
+      survey.removeQuestion(this);
+      dialog.close();
+    });
+    NativeButton cancelButton = new NativeButton("Cancel", e->{
+      dialog.close();
+    });
+
+    dialog.add(confirmButton, cancelButton);
+    dialog.open();
+    return dialog;
+  }
+
 
   public String getQuestion() {
     return question;
@@ -76,22 +95,6 @@ public class TextQuestionWithButtons extends VerticalLayout {
 
     content.replace(title, updatedTitle);
     title = updatedTitle;
-  }
-
-  public void hideUpButton(){
-    this.upButton.setVisible(false);
-  }
-
-  public void hideDownButton(){
-    this.downButton.setVisible(false);
-  }
-
-  public void setUpButton(Button upButton) {
-    this.upButton = upButton;
-  }
-
-  public void setDownButton(Button downButton) {
-    this.downButton = downButton;
   }
 
   public Button getUpButton() {

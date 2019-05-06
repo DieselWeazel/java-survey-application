@@ -1,7 +1,7 @@
 package com.considlia.survey.ui;
 
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.HasElement;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -109,12 +109,12 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
 
       if (typeOfQuestion == TEXT_QUESTION) {
         questions.add(new TextQuestionWithButtons(questionTitleTextField.getValue(), this));
-        orderOfQuestions();
+        refreshQuestions();
       } else {
         questions.add(new RadioQuestionWithButtons(questionTitleTextField.getValue(), this,
             ca.getAlternativeList(), typeOfQuestion));
         addQuestionPackage.remove(ca);
-        orderOfQuestions();
+        refreshQuestions();
       }
       questionTitleTextField.setValue("");
       radioButtons.setValue("");
@@ -135,15 +135,15 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
         if (event.getValue().equalsIgnoreCase("Text question")) {
 
           createQuestion(TEXT_QUESTION);
-          orderOfQuestions();
+          refreshQuestions();
         } else if (event.getValue().equalsIgnoreCase("Radio Question")) {
 
           createQuestion(RADIO_QUESTION);
-          orderOfQuestions();
+          refreshQuestions();
         } else if (event.getValue().equalsIgnoreCase("Checkbox Question")) {
 
           createQuestion(BOX_QUESTION);
-          orderOfQuestions();
+          refreshQuestions();
         }
         if (questionTitleTextField.isEmpty()) {
           addQuestionButton.setEnabled(false);
@@ -160,22 +160,22 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
             && !questionTitleTextField.getValue().isEmpty()) {
 
           createQuestion(TEXT_QUESTION);
-          orderOfQuestions();
+          refreshQuestions();
         } else if ((radioButtons.getValue().equalsIgnoreCase("Radio Question")
             && !questionTitleTextField.getValue().isEmpty())) {
 
           createQuestion(RADIO_QUESTION);
-          orderOfQuestions();
+          refreshQuestions();
         } else if ((radioButtons.getValue().equalsIgnoreCase("Checkbox Question")
             && !questionTitleTextField.getValue().isEmpty())) {
 
           createQuestion(BOX_QUESTION);
-          orderOfQuestions();
+          refreshQuestions();
         }
       });
     }
     addQuestionButton.setEnabled(false);
-//    orderOfQuestions();
+//    refreshQuestions();
 
   }
 
@@ -212,21 +212,20 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
             button.getParent().get().getParent().get()) == questions.getComponentCount() - 1
             && moveDirection == 1) {
       // Do nothing
-      orderOfQuestions();
+      refreshQuestions();
       return;
     } else {
       questions.replace(button.getParent().get().getParent().get(), questions.getComponentAt(
           questions.indexOf(button.getParent().get().getParent().get()) + moveDirection));
-      orderOfQuestions();
+      refreshQuestions();
     }
 
   }
 
   // Remove questions from questionscontainer
-  public void removeQuestion(Button button) {
-    questions.remove(button.getParent().get().getParent().get());
-
-    orderOfQuestions();
+  public void removeQuestion(Component c) {
+    questions.remove(c);
+    refreshQuestions();
     checkFilledFields();
   }
 
@@ -321,14 +320,11 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
     }
   }
 
-  public void refreshQuestions() {
-
-  }
 /*
 REMEMBER JONATHAN:
 DELETE ALL UNUSED METHODS IN THE VERTICALALYOUT CRAP THINGS
  */
-  public void orderOfQuestions() {
+  public void refreshQuestions() {
     for (int i = 0; i < questions.getComponentCount(); i++) {
 //      questions.indexOf(button.getParent().get().getParent().get()) == 0
 //      if (questions.getComponentAt(position) instanceof TextQuestionWithButtons) {
@@ -378,6 +374,40 @@ DELETE ALL UNUSED METHODS IN THE VERTICALALYOUT CRAP THINGS
     }
   }
 
+  public void setLoadedQuestions(){
+    for (int i = 0; i < questions.getComponentCount(); i++) {
+//      questions.indexOf(button.getParent().get().getParent().get()) == 0
+//      if (questions.getComponentAt(position) instanceof TextQuestionWithButtons) {
+      if (questions.getComponentAt(i) instanceof TextQuestionWithButtons) {
+        TextQuestionWithButtons component =
+                (TextQuestionWithButtons) questions.getComponentAt(i);
+        if (questions.getComponentCount() <= 1) {
+          component.getUpButton().setEnabled(false);
+          component.getDownButton().setEnabled(false);
+        } else if (questions.getComponentCount() > 1) {
+          if (questions.indexOf(component) == 0) {
+            component.getUpButton().setEnabled(false);
+          } else if (questions.indexOf(component) == questions.getComponentCount() - 1) {
+            component.getDownButton().setEnabled(false);
+          }
+        }
+      } else if (questions.getComponentAt(i) instanceof RadioQuestionWithButtons) {
+        RadioQuestionWithButtons component =
+                (RadioQuestionWithButtons) questions.getComponentAt(i);
+        if (questions.getComponentCount() == 1) {
+          component.getUpButton().setEnabled(false);
+          component.getDownButton().setEnabled(false);
+        } else if (questions.getComponentCount() > 1) {
+          if (questions.indexOf(component) == 0) {
+            component.getUpButton().setEnabled(false);
+          } else if (questions.indexOf(component) == questions.getComponentCount() - 1) {
+            component.getDownButton().setEnabled(false);
+          }
+        }
+      }
+    }
+  }
+
 
   // HasUrlParameter function, if parameter is null, do nothing but load the view as normal.
   // If parameter has an surveyId, load questions, title and creator. Add Multiquestion
@@ -402,9 +432,11 @@ DELETE ALL UNUSED METHODS IN THE VERTICALALYOUT CRAP THINGS
           }
 
           questions.add(new RadioQuestionWithButtons(mq.getQuestionTitle(), this,
-              stringAlternatives, mq.getQuestionType()));
+                  stringAlternatives, mq.getQuestionType()));
         }
       }
+      submitSurveyButton.setText("Save");
+      setLoadedQuestions();
       thisSurvey.getQuestionList().clear();
       checkFilledFields();
     }
