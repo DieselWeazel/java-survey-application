@@ -123,8 +123,8 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
       radioButtons = new RadioButtonGroup<>();
       radioButtons.setItems("Text question", "Radio Question", "Checkbox Question");
       questionTitleTextField.setWidth("300px");
-      questionTitleTextField.setPlaceholder("Question title");
-      questionTitleTextField.setLabel("Question title");
+      questionTitleTextField.setPlaceholder("Question");
+      questionTitleTextField.setLabel("Question");
       addQuestionPackage.add(questionTitleTextField);
       addQuestionPackage.add(radioButtons);
 
