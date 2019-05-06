@@ -112,6 +112,13 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
             ca.getAlternativeList(), typeOfQuestion));
         addQuestionPackage.remove(ca);
       }
+      try {
+        ca.getAlternativeList().clear();
+        ca = null;
+        typeOfQuestion = 10;
+      } catch (NullPointerException e) {
+        System.out.println("NullPointerException error caught");
+      }
       questionTitleTextField.setValue("");
       radioButtons.setValue("");
       checkFilledFields();
@@ -133,11 +140,11 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
           createQuestion(TEXT_QUESTION);
 
         } else if (event.getValue().equalsIgnoreCase("Radio Question")) {
-
+          addQuestionButton.setEnabled(false);
           createQuestion(RADIO_QUESTION);
 
         } else if (event.getValue().equalsIgnoreCase("Checkbox Question")) {
-
+          addQuestionButton.setEnabled(false);
           createQuestion(BOX_QUESTION);
 
         }
@@ -157,16 +164,25 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
 
           createQuestion(TEXT_QUESTION);
 
+
         } else if ((radioButtons.getValue().equalsIgnoreCase("Radio Question")
             && !questionTitleTextField.getValue().isEmpty())) {
-
+          addQuestionButton.setEnabled(false);
           createQuestion(RADIO_QUESTION);
+
 
         } else if ((radioButtons.getValue().equalsIgnoreCase("Checkbox Question")
             && !questionTitleTextField.getValue().isEmpty())) {
-
+          addQuestionButton.setEnabled(false);
           createQuestion(BOX_QUESTION);
+        }
 
+        try {
+          if (!event.getValue().isEmpty() && !ca.getAlternativeList().isEmpty()) {
+            addQuestionButton.setEnabled(true);
+          }
+        } catch (NullPointerException e) {
+          System.out.println("NullPointerException error caught");
         }
       });
     }
@@ -179,19 +195,19 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
       try {
         addQuestionPackage.remove(ca);
       } catch (NullPointerException e) {
-        System.out.println(e.getMessage());
+        System.out.println("NullPointerException error caught");
       }
 
-      ca = new CreateAlternative(typeOfQuestion);
+      ca = new CreateAlternative(typeOfQuestion, this);
       addQuestionPackage.add(ca);
-      addQuestionButton.setEnabled(true);
+      // addQuestionButton.setEnabled(true);
       this.typeOfQuestion = typeOfQuestion;
 
     } else if (typeOfQuestion == TEXT_QUESTION) {
       try {
         addQuestionPackage.remove(ca);
       } catch (NullPointerException e) {
-        System.out.println(e.getMessage());
+        System.out.println("NullPointerException error caught");
       }
       addQuestionButton.setEnabled(true);
       this.typeOfQuestion = typeOfQuestion;
@@ -246,7 +262,6 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
       newTitleTextField.setValue(choosenQuestion.getQuestion());
 
       VerticalLayout v = new VerticalLayout();
-      System.out.println("hej");
       for (String s : choosenQuestion.getStringAlternatives()) {
         System.out.println(s.toString());
         TextField alternative = new TextField();
@@ -341,5 +356,13 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
       checkFilledFields();
     }
 
+  }
+
+  public Button getAddQuestionButton() {
+    return addQuestionButton;
+  }
+
+  public TextField getQuestionTitleTextField() {
+    return questionTitleTextField;
   }
 }
