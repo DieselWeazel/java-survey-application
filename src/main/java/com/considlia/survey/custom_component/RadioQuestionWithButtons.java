@@ -7,6 +7,7 @@ import com.considlia.survey.model.MultiQuestionAlternative;
 import com.considlia.survey.ui.CreateSurveyView;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.CheckboxGroup;
+import com.vaadin.flow.component.checkbox.CheckboxGroupVariant;
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.html.H5;
 import com.vaadin.flow.component.icon.Icon;
@@ -14,6 +15,7 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
+import com.vaadin.flow.component.radiobutton.RadioGroupVariant;
 
 @StyleSheet("css/app.css")
 public class RadioQuestionWithButtons extends VerticalLayout {
@@ -69,11 +71,13 @@ public class RadioQuestionWithButtons extends VerticalLayout {
     if (questionType == 1) {
       radioButtons = new RadioButtonGroup<>();
       radioButtons.setItems(stringAlternatives);
+      radioButtons.addThemeVariants(RadioGroupVariant.LUMO_VERTICAL);
       add(radioButtons);
 
     } else {
       checkBoxButtons = new CheckboxGroup<>();
       checkBoxButtons.setItems(stringAlternatives);
+      checkBoxButtons.addThemeVariants(CheckboxGroupVariant.LUMO_VERTICAL);
       add(checkBoxButtons);
     }
 
