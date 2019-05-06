@@ -6,6 +6,7 @@ import java.util.Set;
 import com.considlia.survey.model.MultiQuestionAlternative;
 import com.considlia.survey.ui.CreateSurveyView;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.checkbox.CheckboxGroup;
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.html.H5;
 import com.vaadin.flow.component.icon.Icon;
@@ -24,35 +25,34 @@ public class RadioQuestionWithButtons extends VerticalLayout {
   private Set<MultiQuestionAlternative> alternatives;
   private List<String> stringAlternatives;
   private int questionType;
+  private H5 title;
+
+  private RadioButtonGroup<String> radioButtons;
+  private CheckboxGroup<String> checkBoxButtons;
 
   private HorizontalLayout content;
 
   public RadioQuestionWithButtons(String question, CreateSurveyView survey,
       List<String> stringAlternatives, int questionType) {
-    setId("multicustom");
+    setId("custom");
     setWidth("100%");
 
     this.questionType = questionType;
     this.question = question;
+    this.stringAlternatives = stringAlternatives;
     content = new HorizontalLayout();
+    content.setWidthFull();
     content.setClassName("content");
     alternatives = new HashSet<>();
-    this.stringAlternatives = stringAlternatives;
+    title = new H5(question);
+    title.setWidth("90%");
 
     for (int position = 0; position < stringAlternatives.size(); position++) {
       MultiQuestionAlternative alt = new MultiQuestionAlternative();
       alt.setPosition(position);
       alt.setAlternativeTitle(stringAlternatives.get(position));
       alternatives.add(alt);
-
     }
-
-    content.setWidthFull();
-
-    H5 title = new H5(question);
-    title.setWidth("90%");
-    RadioButtonGroup<String> radioButtons = new RadioButtonGroup<>();
-    radioButtons.setItems(stringAlternatives);
 
     content.add(title);
     content.add(new Button(new Icon(VaadinIcon.ARROW_UP),
@@ -65,7 +65,17 @@ public class RadioQuestionWithButtons extends VerticalLayout {
         new Button(new Icon(VaadinIcon.TRASH), event -> survey.removeQuestion(event.getSource())));
 
     add(content);
-    add(radioButtons);
+
+    if (questionType == 1) {
+      radioButtons = new RadioButtonGroup<>();
+      radioButtons.setItems(stringAlternatives);
+      add(radioButtons);
+
+    } else {
+      checkBoxButtons = new CheckboxGroup<>();
+      checkBoxButtons.setItems(stringAlternatives);
+      add(checkBoxButtons);
+    }
 
   }
 
