@@ -166,38 +166,25 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
     addQuestionButton.setEnabled(false);
   }
 
-  // Move question in questionscontainer, NOT COMPLETE for other than textquestion
+  // Move question in questionscontainer
   public void moveQuestion(Button button, int moveDirection) {
-    if (button.getParent().get() instanceof TextQuestionWithButtons) {
-      TextQuestionWithButtons component = (TextQuestionWithButtons) button.getParent().get();
-      if (questions.indexOf(component) == 0 && moveDirection == -1
-          || questions.indexOf(component) == questions.getComponentCount() - 1
-              && moveDirection == 1) {
-        return;
-      }
-      questions.replace(component,
-          questions.getComponentAt(questions.indexOf(component) + moveDirection));
+
+    if (questions.indexOf(button.getParent().get().getParent().get()) == 0 && moveDirection == -1
+        || questions.indexOf(
+            button.getParent().get().getParent().get()) == questions.getComponentCount() - 1
+            && moveDirection == 1) {
+      // Do nothing
+      return;
     } else {
-      RadioQuestionWithButtons component =
-          (RadioQuestionWithButtons) button.getParent().get().getParent().get();
-      if (questions.indexOf(component) == 0 && moveDirection == -1
-          || questions.indexOf(component) == questions.getComponentCount() - 1
-              && moveDirection == 1) {
-        return;
-      }
-      questions.replace(component,
-          questions.getComponentAt(questions.indexOf(component) + moveDirection));
+      questions.replace(button.getParent().get().getParent().get(), questions.getComponentAt(
+          questions.indexOf(button.getParent().get().getParent().get()) + moveDirection));
     }
 
   }
 
   // Remove questions from questionscontainer
   public void removeQuestion(Button button) {
-    if (button.getParent().get() instanceof TextQuestionWithButtons) {
-      questions.remove(button.getParent().get());
-    } else {
-      questions.remove(button.getParent().get().getParent().get());
-    }
+    questions.remove(button.getParent().get().getParent().get());
     checkFilledFields();
   }
 
@@ -209,8 +196,9 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
 
     dialog.open();
     dialog.add(newTitleTextField);
-    if (button.getParent().get() instanceof TextQuestionWithButtons) {
-      TextQuestionWithButtons choosenQuestion = (TextQuestionWithButtons) button.getParent().get();
+    if (button.getParent().get().getParent().get() instanceof TextQuestionWithButtons) {
+      TextQuestionWithButtons choosenQuestion =
+          (TextQuestionWithButtons) button.getParent().get().getParent().get();
 
       newTitleTextField.setValue(choosenQuestion.getQuestion());
 
@@ -220,7 +208,6 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
       });
 
     } else {
-      System.out.println(button.getParent().get().getParent().get().getClass().getSimpleName());
       RadioQuestionWithButtons choosenQuestion =
           (RadioQuestionWithButtons) button.getParent().get().getParent().get();
       //
