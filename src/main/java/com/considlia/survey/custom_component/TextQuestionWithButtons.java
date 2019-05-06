@@ -63,7 +63,8 @@ public class TextQuestionWithButtons extends VerticalLayout {
     H5 updatedTitle = new H5(question);
     updatedTitle.setWidth("90%");
 
-    replace(title, updatedTitle);
+    content.replace(title, updatedTitle);
+    title = updatedTitle;
   }
 
 }
