@@ -197,9 +197,13 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
 
   }
 
-  // Remove questions from questionscontainer, NOT COMPLETE for other than textquestion
+  // Remove questions from questionscontainer
   public void removeQuestion(Button button) {
-    questions.remove(button.getParent().get());
+    if (button.getParent().get() instanceof TextQuestionWithButtons) {
+      questions.remove(button.getParent().get());
+    } else {
+      questions.remove(button.getParent().get().getParent().get());
+    }
     checkFilledFields();
   }
 
