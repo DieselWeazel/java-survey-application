@@ -53,7 +53,6 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
 
   private SurveyRepository surveyRepository;
 
-  private List<String> alternativeList;
   private CreateAlternative ca;
 
   public CreateSurveyView(SurveyRepository surveyRepository) {
@@ -110,7 +109,7 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
         questions.add(new TextQuestionWithButtons(questionTitleTextField.getValue(), this));
       } else {
         questions.add(new RadioQuestionWithButtons(questionTitleTextField.getValue(), this,
-            alternativeList, typeOfQuestion));
+            ca.getAlternativeList(), typeOfQuestion));
         addQuestionPackage.remove(ca);
 
       }
@@ -143,7 +142,6 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
 
           ca = new CreateAlternative(typeOfQuestion);
           addQuestionPackage.add(ca);
-          alternativeList = ca.getAlternativeList();
 
           // -------------------------------------HÄR-------------------------------------------------------------------------
           addQuestionButton.setEnabled(true);
