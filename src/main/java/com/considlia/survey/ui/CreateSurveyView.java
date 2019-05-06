@@ -138,12 +138,8 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
             && !questionTitleTextField.getValue().isEmpty())) {
           typeOfQuestion = RADIO_QUESTION;
 
-          // -------------------------------------HÄR-------------------------------------------------------------------------
-
           ca = new CreateAlternative(typeOfQuestion);
           addQuestionPackage.add(ca);
-
-          // -------------------------------------HÄR-------------------------------------------------------------------------
           addQuestionButton.setEnabled(true);
 
         } else if ((event.getValue().equalsIgnoreCase("Checkbox Question")
