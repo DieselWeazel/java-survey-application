@@ -8,8 +8,6 @@ import com.vaadin.flow.data.value.ValueChangeMode;
 
 public class CreateAlternative extends VerticalLayout {
 
-  private TextField alternativeTextField;
-  private TextField alternativeTextField2;
   private TextField dynamicTextField;
 
   private List<String> alternativeList;
@@ -17,12 +15,8 @@ public class CreateAlternative extends VerticalLayout {
   private int typeOfQuestion;
 
   public CreateAlternative(int typeOfQuestion) {
-    alternativeTextField = new TextField();
-    alternativeTextField2 = new TextField();
-    alternativeTextField2.setPlaceholder("Alternative " + "2");
 
     dynamicTextField = new TextField();
-    dynamicTextField.setPlaceholder("dynamicTextField");
 
     textFieldList = new ArrayList<>();
     alternativeList = new ArrayList<>();
@@ -31,106 +25,54 @@ public class CreateAlternative extends VerticalLayout {
 
   }
 
-  public List<String> createAlternative(int typeOfQuestion, List<String> alternativeList) {
+  public void createAlternative(int typeOfQuestion, List<String> alternativeList) {
     this.typeOfQuestion = typeOfQuestion;
 
-    if (alternativeList.isEmpty()) {
-      textFieldList.add(alternativeTextField);
+    if (textFieldList.isEmpty()) {
 
-      alternativeTextField.setValueChangeMode(ValueChangeMode.EAGER);
-      alternativeTextField.addValueChangeListener(event -> {
-        try {
-          alternativeList.set(0, textFieldList.get(0).getValue());
-          if (event.getSource().getValue().isEmpty()) {
-            alternativeList.remove(0);
-            textFieldList.remove(0);
-          }
-        } catch (IndexOutOfBoundsException e) {
-          alternativeList.add(0, textFieldList.get(0).getValue());
-        }
-        if (event.getSource().getValue().isEmpty() && alternativeList.size() < 3) {
-          alternativeTextField2.setEnabled(false);
-        } else {
-          alternativeTextField2.setEnabled(true);
-        }
-      });
-
-      textFieldList.add(alternativeTextField2);
-      alternativeTextField2.setEnabled(false);
-      alternativeTextField2.setValueChangeMode(ValueChangeMode.EAGER);
-      alternativeTextField2.addValueChangeListener(event -> {
-        try {
-          alternativeList.set(1, textFieldList.get(1).getValue());
-          if (event.getSource().getValue().isEmpty()) {
-            alternativeList.remove(1);
-            textFieldList.remove(1);
-          }
-        } catch (IndexOutOfBoundsException e) {
-          alternativeList.add(1, textFieldList.get(1).getValue());
-        }
-        createAlternative(typeOfQuestion, alternativeList);
-        alternativeTextField2.focus();
-      });
-      setTextFieldListGui();
-    } else {
-      bothListsNotEmpty();
-    }
-    return alternativeList;
-  }
-
-  public void bothListsNotEmpty() {
-    // _________________________ALTERNATIVELIST AND TEXTFIELDLIST NOT EMPTY________________
-
-    // checking if the lists are the same size and if the last textField i empty
-    if (textFieldList.size() == alternativeList.size()
-        && !textFieldList.get(textFieldList.size() - 1).isEmpty()) {
-      int currentSize = alternativeList.size();
-      dynamicTextField = new TextField();
       textFieldList.add(dynamicTextField);
+      add(dynamicTextField);
+
+      dynamicTextField.setPlaceholder("alternative");
       dynamicTextField.setValueChangeMode(ValueChangeMode.EAGER);
       dynamicTextField.addValueChangeListener(event -> {
-        try {
-          alternativeList.set(currentSize, event.getValue());
-          if (event.getSource().getValue().isEmpty()) {
-            alternativeList.remove(currentSize);
-            textFieldList.remove(currentSize);
-          }
-        } catch (IndexOutOfBoundsException e) {
-          alternativeList.add(currentSize, event.getValue());
+
+        if (event.getSource().getValue().isEmpty() && textFieldList.size() > 1) {
+          remove(event.getSource());
+          textFieldList.remove(0);
         }
         createAlternative(typeOfQuestion, alternativeList);
         event.getSource().focus();
       });
-      setTextFieldListGui();
-    }
-  }
+    } else if (!textFieldList.get(textFieldList.size() - 1).isEmpty()) {
+      // checked if the last textField in list is not empty
 
-  // retunera en verticallayour. lägg till allt i verticallayout istället
-  public void setTextFieldListGui() {
+      dynamicTextField = new TextField();
 
-    for (TextField t : textFieldList) {
-      remove(t);
-    }
+      textFieldList.add(dynamicTextField);
+      add(dynamicTextField);
 
-    if (textFieldList.size() <= 2) {
-      for (TextField t : textFieldList) {
-        add(t);
-      }
-    } else {
-      for (TextField t : textFieldList) {
-        if (!t.getValue().isEmpty() || textFieldList.get(textFieldList.size() - 1) == t) {
-          add(t);
+      dynamicTextField.setPlaceholder("alternative");
+      dynamicTextField.setValueChangeMode(ValueChangeMode.EAGER);
+      dynamicTextField.addValueChangeListener(event -> {
+        if (event.getSource().getValue().isEmpty() && textFieldList.size() > 1) {
+          remove(event.getSource());
+          textFieldList.remove(event.getSource());
         }
-      }
+        createAlternative(typeOfQuestion, alternativeList);
+        event.getSource().focus();
+      });
     }
   }
 
   public List<String> getAlternativeList() {
+    alternativeList.clear();
+    for (TextField t : textFieldList) {
+      if (!t.isEmpty()) {
+        alternativeList.add(t.getValue());
+      }
+    }
     return alternativeList;
-  }
-
-  public void setAlternativeList(List<String> alternativeList) {
-    this.alternativeList = alternativeList;
   }
 
 }
