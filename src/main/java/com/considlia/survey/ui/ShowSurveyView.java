@@ -1,5 +1,7 @@
 package com.considlia.survey.ui;
 
+import com.considlia.survey.custom_component.ReadMultiQuestionLayout;
+import com.considlia.survey.custom_component.ReadTextQuestionLayout;
 import com.considlia.survey.model.MultiQuestion;
 import com.considlia.survey.model.MultiQuestionAlternative;
 import com.considlia.survey.model.Question;
@@ -100,46 +102,46 @@ public class ShowSurveyView extends VerticalLayout implements HasUrlParameter<Lo
   public void loadSurvey(Survey survey) {
     // Should work outside of constructor as well, then methods outside with save etc should work
     // perfectly fine.
-    Binder<MultiQuestionAlternative> binderAlternatives =
-        new Binder<>(MultiQuestionAlternative.class);
+//    Binder<MultiQuestionAlternative> binderAlternatives =
+//        new Binder<>(MultiQuestionAlternative.class);
 
     // for(Question q : surveyRepository.findByQuestionOrderPosition(survey, 0)){
     for (Question q : survey.getQuestionList()) {
 
       if (q instanceof MultiQuestion) {
-        surveyVerticalLayout.add(new H2(q.getQuestionTitle()));
-        HorizontalLayout horLayout = new HorizontalLayout();
+//        surveyVerticalLayout.add(new H2(q.getQuestionTitle()));
+//        HorizontalLayout horLayout = new HorizontalLayout();
         // CheckboxGroup questionCheckBoxGroup = new CheckboxGroup();
         MultiQuestion mq = (MultiQuestion) q;
-        if (mq.getQuestionType() == 1) {
-          CheckboxGroup<MultiQuestionAlternative> multiQuestionCheckboxes = new CheckboxGroup<>();
-          multiQuestionCheckboxes.setItems(mq.getAlternativeList());
-          VerticalLayout checkBoxVertContainer = new VerticalLayout();
-          checkBoxVertContainer.add(multiQuestionCheckboxes);
-
-          horLayout.add(checkBoxVertContainer);
-
-          // else, if we want radiobutton
-        } else if (mq.getQuestionType() == 0) {
-
-          RadioButtonGroup<MultiQuestionAlternative> multiQuestionRadioButtons =
-              new RadioButtonGroup<>();
-          multiQuestionRadioButtons.setItems(mq.getAlternativeList());
-          VerticalLayout checkBoxVertContainer = new VerticalLayout();
-          checkBoxVertContainer.add(multiQuestionRadioButtons);
-
-          horLayout.add(checkBoxVertContainer);
-
-        }
-        surveyVerticalLayout.add(horLayout);
+//        if (mq.getQuestionType() == 0) {
+//          CheckboxGroup<MultiQuestionAlternative> multiQuestionCheckboxes = new CheckboxGroup<>();
+//          multiQuestionCheckboxes.setItems(mq.getAlternativeList());
+//          VerticalLayout checkBoxVertContainer = new VerticalLayout();
+//          checkBoxVertContainer.add(multiQuestionCheckboxes);
+//
+//          horLayout.add(checkBoxVertContainer);
+//
+//          // else, if we want radiobutton
+//        } else if (mq.getQuestionType() == 1) {
+//
+//          RadioButtonGroup<MultiQuestionAlternative> multiQuestionRadioButtons =
+//              new RadioButtonGroup<>();
+//          multiQuestionRadioButtons.setItems(mq.getAlternativeList());
+//          VerticalLayout checkBoxVertContainer = new VerticalLayout();
+//          checkBoxVertContainer.add(multiQuestionRadioButtons);
+//
+//          horLayout.add(checkBoxVertContainer);
+//
+//        }
+        ReadMultiQuestionLayout readMultiQuestionLayout = new ReadMultiQuestionLayout(mq);
+        surveyVerticalLayout.add(readMultiQuestionLayout);
       } else {
-        surveyVerticalLayout.add(new H2(q.getQuestionTitle()));
-        TextField textField2 = new TextField();
+        ReadTextQuestionLayout readTextQuestionLayout = new ReadTextQuestionLayout(q);
 
-        binder.forField(textField2).bind(Question::getQuestionTitle, Question::setQuestionTitle);
+//        binder.forField(textField2).bind(Question::getQuestionTitle, Question::setQuestionTitle);
 
-        binder.readBean(q);
-        surveyVerticalLayout.add(textField2);
+//        binder.readBean(q);
+        surveyVerticalLayout.add(readTextQuestionLayout);
       }
     }
 
