@@ -8,8 +8,6 @@ import com.vaadin.flow.data.value.ValueChangeMode;
 
 public class CreateAlternative extends VerticalLayout {
 
-  private TextField alternativeTextField;
-  private TextField alternativeTextField2;
   private TextField dynamicTextField;
 
   private List<String> alternativeList;
@@ -17,12 +15,8 @@ public class CreateAlternative extends VerticalLayout {
   private int typeOfQuestion;
 
   public CreateAlternative(int typeOfQuestion) {
-    alternativeTextField = new TextField();
-    alternativeTextField2 = new TextField();
-    alternativeTextField2.setPlaceholder("Alternative " + "2");
 
     dynamicTextField = new TextField();
-    dynamicTextField.setPlaceholder("dynamicTextField");
 
     textFieldList = new ArrayList<>();
     alternativeList = new ArrayList<>();
@@ -36,12 +30,12 @@ public class CreateAlternative extends VerticalLayout {
 
     if (textFieldList.isEmpty()) {
 
-      textFieldList.add(alternativeTextField);
-      add(alternativeTextField);
+      textFieldList.add(dynamicTextField);
+      add(dynamicTextField);
 
-      alternativeTextField.setPlaceholder("alternative");
-      alternativeTextField.setValueChangeMode(ValueChangeMode.EAGER);
-      alternativeTextField.addValueChangeListener(event -> {
+      dynamicTextField.setPlaceholder("alternative");
+      dynamicTextField.setValueChangeMode(ValueChangeMode.EAGER);
+      dynamicTextField.addValueChangeListener(event -> {
 
         if (event.getSource().getValue().isEmpty() && textFieldList.size() > 1) {
           remove(event.getSource());
