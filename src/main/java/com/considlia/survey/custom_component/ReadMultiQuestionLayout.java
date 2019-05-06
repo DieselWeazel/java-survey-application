@@ -18,48 +18,53 @@ public class ReadMultiQuestionLayout extends VerticalLayout {
 
     private HorizontalLayout horizontalLayout;
 
-    private Question question;
+//    private MultiQuestion question;
 
     private Set<MultiQuestionAlternative> alternatives;
-    private List<String> stringAlternatives;
+    private Set<MultiQuestionAlternative> stringAlternatives;
 
-    private RadioButtonGroup<String> radioButtons;
-    private CheckboxGroup<String> checkBoxButtons;
+    private RadioButtonGroup<MultiQuestionAlternative> radioButtons;
+    private CheckboxGroup<MultiQuestionAlternative> checkBoxButtons;
 
     private H5 title;
 
     private int questionType;
 
     public ReadMultiQuestionLayout(MultiQuestion question){
-        this.question = question;
+//        this.question = question;
         this.title = new H5(question.getQuestionTitle());
         this.horizontalLayout = new HorizontalLayout();
         this.alternatives = new HashSet<>();
-
+        this.stringAlternatives = stringAlternatives;
         title.setWidth("90%");
 
         add(title);
 
 
-
-
-        for (int position = 0; position < stringAlternatives.size(); position++){
-            MultiQuestionAlternative alt = new MultiQuestionAlternative();
-            alt.setPosition(position);
-            alt.setAlternativeTitle(stringAlternatives.get(position));
-            alternatives.add(alt);
+        for (MultiQuestionAlternative mqa : question.getAlternativeList()){
+            System.out.println(mqa.toString());
         }
 
+
+//        for (int position = 0; position < stringAlternatives.size(); position++){
+//            MultiQuestionAlternative alt = new MultiQuestionAlternative();
+//            alt.setPosition(position);
+////            alt.setAlternativeTitle(stringAlternatives.get(position));
+//            alternatives.add(alt);
+//        }
+
+        VerticalLayout choiceVerticalLayout = new VerticalLayout();
         if (question.getQuestionType() == 1) {
-            radioButtons = new RadioButtonGroup<>();
-            radioButtons.setItems(stringAlternatives);
-            horizontalLayout.add(radioButtons);
+            this.radioButtons = new RadioButtonGroup<>();
+            radioButtons.setItems(question.getAlternativeList());
+            choiceVerticalLayout.add(radioButtons);
 
         } else {
-            checkBoxButtons = new CheckboxGroup<>();
+            this.checkBoxButtons = new CheckboxGroup<>();
             checkBoxButtons.setItems(stringAlternatives);
-            horizontalLayout.add(checkBoxButtons);
+            choiceVerticalLayout.add(checkBoxButtons);
         }
+        horizontalLayout.add(choiceVerticalLayout);
         add(title, horizontalLayout);
     }
 }

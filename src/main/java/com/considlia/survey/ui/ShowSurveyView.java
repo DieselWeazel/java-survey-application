@@ -84,7 +84,7 @@ public class ShowSurveyView extends VerticalLayout implements HasUrlParameter<Lo
       }
       if (surveyRepository.findById(parameter).isPresent()) {
         Survey survey = surveyRepository.getSurveyBySurveyId(parameter);
-        h1.setText(survey.getSurveyTitle());
+
 
         loadSurvey(survey);
       } else {
@@ -104,10 +104,10 @@ public class ShowSurveyView extends VerticalLayout implements HasUrlParameter<Lo
     // perfectly fine.
 //    Binder<MultiQuestionAlternative> binderAlternatives =
 //        new Binder<>(MultiQuestionAlternative.class);
-
+    h1.setText(survey.getSurveyTitle());
     // for(Question q : surveyRepository.findByQuestionOrderPosition(survey, 0)){
     for (Question q : survey.getQuestionList()) {
-
+      System.out.println(q.toString());
       if (q instanceof MultiQuestion) {
 //        surveyVerticalLayout.add(new H2(q.getQuestionTitle()));
 //        HorizontalLayout horLayout = new HorizontalLayout();
@@ -146,6 +146,11 @@ public class ShowSurveyView extends VerticalLayout implements HasUrlParameter<Lo
     }
 
     surveyVerticalLayout.add(saveButton);
+
+    headerVerticalLayout.add(h1);
+    mainVerticalLayout.add(headerVerticalLayout);
+    mainVerticalLayout.add(surveyVerticalLayout);
+    add(mainVerticalLayout);
   }
 
   // -- Public Button Methods --
