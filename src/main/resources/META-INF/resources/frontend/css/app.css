@@ -35,13 +35,10 @@
 	width: 45%;
 }
 
-#textcustom {
-}
-
-#multicustom {
+#custom {
 	padding: 0px;
 }
 
-#multicustom .content {
+#custom .content {
 	padding: 0px;
 }

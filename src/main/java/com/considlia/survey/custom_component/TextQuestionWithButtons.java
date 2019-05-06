@@ -7,33 +7,49 @@ import com.vaadin.flow.component.html.H5;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.TextField;
 
 @StyleSheet("css/app.css")
-public class TextQuestionWithButtons extends HorizontalLayout {
+public class TextQuestionWithButtons extends VerticalLayout {
 
   private static final int MOVE_UP = -1;
   private static final int MOVE_DOWN = 1;
 
   private String question;
   private H5 title;
+  private TextField text;
+
+  private HorizontalLayout content;
 
   public TextQuestionWithButtons(String question, CreateSurveyView survey) {
-    setId("textcustom");
+    setId("custom");
+    setWidth("100%");
 
     this.question = question;
 
-    setWidth("100%");
+    content = new HorizontalLayout();
+    content.setClassName("content");
+    content.setWidthFull();
     title = new H5(question);
     title.setHeightFull();
     title.setWidth("90%");
+    text = new TextField();
+    text.setWidth("25%");
+    text.setEnabled(false);
 
-    add(title);
-    add(new Button(new Icon(VaadinIcon.ARROW_UP),
+    content.add(title);
+    content.add(new Button(new Icon(VaadinIcon.ARROW_UP),
         event -> survey.moveQuestion(event.getSource(), MOVE_UP)));
-    add(new Button(new Icon(VaadinIcon.ARROW_DOWN),
+    content.add(new Button(new Icon(VaadinIcon.ARROW_DOWN),
         event -> survey.moveQuestion(event.getSource(), MOVE_DOWN)));
-    add(new Button(new Icon(VaadinIcon.PENCIL), event -> survey.editQuestion(event.getSource())));
-    add(new Button(new Icon(VaadinIcon.TRASH), event -> survey.removeQuestion(event.getSource())));
+    content.add(
+        new Button(new Icon(VaadinIcon.PENCIL), event -> survey.editQuestion(event.getSource())));
+    content.add(
+        new Button(new Icon(VaadinIcon.TRASH), event -> survey.removeQuestion(event.getSource())));
+
+    add(content);
+    add(text);
 
   }
 
