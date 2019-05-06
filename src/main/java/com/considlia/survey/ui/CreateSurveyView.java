@@ -1,6 +1,7 @@
 package com.considlia.survey.ui;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import com.considlia.survey.custom_component.CreateAlternative;
 import com.considlia.survey.custom_component.RadioQuestionWithButtons;
@@ -28,18 +29,22 @@ import com.vaadin.flow.router.Route;
 @Route(value = "createsurvey", layout = MainLayout.class)
 public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<Long> {
 
+  // Buttons
   private Button addQuestionButton;
   private Button submitSurveyButton;
   private RadioButtonGroup<String> radioButtons;
 
+  // Textfields
   private TextField surveyTitleTextField;
   private TextField creatorNameTextField;
   private TextField questionTitleTextField;
 
+  // Containers
   private HorizontalLayout header;
   private VerticalLayout questions;
   private VerticalLayout addQuestionPackage;
 
+  // Private variables used when creating the survey
   private Survey thisSurvey;
   private int typeOfQuestion;
   private static final int TEXT_QUESTION = 0;
@@ -95,6 +100,7 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
   }
 
   // Create addQuestion-package with listeners, if already created: save the question
+  // Add handling for multiquestions
   public void addQuestion() {
     questionTitleTextField.focus();
 
@@ -105,15 +111,16 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
       } else {
         questions.add(new RadioQuestionWithButtons(questionTitleTextField.getValue(), this,
             alternativeList, typeOfQuestion));
-        for (String s : alternativeList) {
-          System.out.println(s.toString());
-          addQuestionPackage.remove(ca);
-        }
+        addQuestionPackage.remove(ca);
+
       }
       questionTitleTextField.setValue("");
       radioButtons.setValue("");
       checkFilledFields();
-    } else {
+    }
+    // Only enters here on the first time pressing the add question button
+    // Because radiobuttons is null only at that time
+    else {
       radioButtons = new RadioButtonGroup<>();
       radioButtons.setItems("Text question", "Radio Question", "Checkbox Question");
       questionTitleTextField.setWidth("300px");
@@ -165,12 +172,29 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
     addQuestionButton.setEnabled(false);
   }
 
-  // Move question in questionscontainer (add error handling), NOT COMPLETE for other than
-  // textquestion
+  // Move question in questionscontainer, NOT COMPLETE for other than textquestion
   public void moveQuestion(Button button, int moveDirection) {
-    HorizontalLayout component = (HorizontalLayout) button.getParent().get();
-    questions.replace(component,
-        questions.getComponentAt(questions.indexOf(component) + moveDirection));
+    if (button.getParent().get() instanceof TextQuestionWithButtons) {
+      TextQuestionWithButtons component = (TextQuestionWithButtons) button.getParent().get();
+      if (questions.indexOf(component) == 0 && moveDirection == -1
+          || questions.indexOf(component) == questions.getComponentCount() - 1
+              && moveDirection == 1) {
+        return;
+      }
+      questions.replace(component,
+          questions.getComponentAt(questions.indexOf(component) + moveDirection));
+    } else {
+      RadioQuestionWithButtons component =
+          (RadioQuestionWithButtons) button.getParent().get().getParent().get();
+      if (questions.indexOf(component) == 0 && moveDirection == -1
+          || questions.indexOf(component) == questions.getComponentCount() - 1
+              && moveDirection == 1) {
+        return;
+      }
+      questions.replace(component,
+          questions.getComponentAt(questions.indexOf(component) + moveDirection));
+    }
+
   }
 
   // Remove questions from questionscontainer, NOT COMPLETE for other than textquestion
@@ -179,7 +203,8 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
     checkFilledFields();
   }
 
-  public void editQuesiton(Button button) {
+  // Edit question via pencil buttons in custom components
+  public void editQuestion(Button button) {
     Dialog dialog = new Dialog();
     Button confirm = new Button("Confirm");
     TextField newTitleTextField = new TextField();
@@ -197,16 +222,21 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
       });
 
     } else {
+      System.out.println(button.getParent().get().getParent().get().getClass().getSimpleName());
       RadioQuestionWithButtons choosenQuestion =
-          (RadioQuestionWithButtons) button.getParent().get();
-
+          (RadioQuestionWithButtons) button.getParent().get().getParent().get();
+      //
       newTitleTextField.setValue(choosenQuestion.getQuestion());
 
-      for (MultiQuestionAlternative s : choosenQuestion.getAlternatives()) {
+      VerticalLayout v = new VerticalLayout();
+      System.out.println("hej");
+      for (String s : choosenQuestion.getStringAlternatives()) {
+        System.out.println(s.toString());
         TextField alternative = new TextField();
-        alternative.setValue(s.getAlternativeTitle());
-        dialog.add(alternative);
+        alternative.setValue(s);
+        v.add(alternative);
       }
+      dialog.add(v);
     }
 
     dialog.add(new HorizontalLayout(new Button("Cancel", onCancel -> dialog.close()), confirm));
@@ -265,7 +295,7 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
   }
 
   // HasUrlParameter function, if parameter is null, do nothing but load the view as normal.
-  // If parameter has an surveyId, load questions, title and creator.
+  // If parameter has an surveyId, load questions, title and creator. Add Multiquestion
   @Override
   public void setParameter(BeforeEvent event, @OptionalParameter Long parameter) {
     if (parameter == null) {
@@ -279,7 +309,15 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
         if (q instanceof TextQuestion) {
           questions.add(new TextQuestionWithButtons(q.getQuestionTitle(), this));
         } else {
-          // questions.add(new RadioQuestionWithButtons(questionTitleTextField.getValue(), this));
+          MultiQuestion mq = (MultiQuestion) q;
+
+          List<String> stringAlternatives = new ArrayList<>();
+          for (MultiQuestionAlternative mqa : mq.getAlternativeList()) {
+            stringAlternatives.add(mqa.getAlternativeTitle());
+          }
+
+          questions.add(new RadioQuestionWithButtons(mq.getQuestionTitle(), this,
+              stringAlternatives, mq.getQuestionType()));
         }
       }
       thisSurvey.getQuestionList().clear();
