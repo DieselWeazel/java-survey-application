@@ -111,7 +111,6 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
         questions.add(new RadioQuestionWithButtons(questionTitleTextField.getValue(), this,
             ca.getAlternativeList(), typeOfQuestion));
         addQuestionPackage.remove(ca);
-
       }
       questionTitleTextField.setValue("");
       radioButtons.setValue("");
@@ -129,23 +128,17 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
       addQuestionPackage.add(radioButtons);
 
       radioButtons.addValueChangeListener(event -> {
-        if (event.getValue().equalsIgnoreCase("Text question")
-            && !questionTitleTextField.getValue().isEmpty()) {
-          addQuestionButton.setEnabled(true);
-          typeOfQuestion = TEXT_QUESTION;
+        if (event.getValue().equalsIgnoreCase("Text question")) {
 
-        } else if ((event.getValue().equalsIgnoreCase("Radio Question")
-            && !questionTitleTextField.getValue().isEmpty())) {
-          typeOfQuestion = RADIO_QUESTION;
+          createQuestion(TEXT_QUESTION);
 
-          ca = new CreateAlternative(typeOfQuestion);
-          addQuestionPackage.add(ca);
-          addQuestionButton.setEnabled(true);
+        } else if (event.getValue().equalsIgnoreCase("Radio Question")) {
 
-        } else if ((event.getValue().equalsIgnoreCase("Checkbox Question")
-            && !questionTitleTextField.getValue().isEmpty())) {
-          typeOfQuestion = BOX_QUESTION;
-          addQuestionButton.setEnabled(true);
+          createQuestion(RADIO_QUESTION);
+
+        } else if (event.getValue().equalsIgnoreCase("Checkbox Question")) {
+
+          createQuestion(BOX_QUESTION);
 
         }
         if (questionTitleTextField.isEmpty()) {
@@ -155,15 +148,54 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
 
       // Checks if the questionTitle and questionType is set
       questionTitleTextField.addValueChangeListener(event -> {
-        if (questionTitleTextField.isEmpty() || (radioButtons.getValue() == null)
-            || (radioButtons.getValue().isEmpty())) {
+        if (questionTitleTextField.isEmpty() || radioButtons.getValue() == null) {
+
           addQuestionButton.setEnabled(false);
-        } else {
-          addQuestionButton.setEnabled(true);
+
+        } else if (radioButtons.getValue().equalsIgnoreCase("Text question")
+            && !questionTitleTextField.getValue().isEmpty()) {
+
+          createQuestion(TEXT_QUESTION);
+
+        } else if ((radioButtons.getValue().equalsIgnoreCase("Radio Question")
+            && !questionTitleTextField.getValue().isEmpty())) {
+
+          createQuestion(RADIO_QUESTION);
+
+        } else if ((radioButtons.getValue().equalsIgnoreCase("Checkbox Question")
+            && !questionTitleTextField.getValue().isEmpty())) {
+
+          createQuestion(BOX_QUESTION);
+
         }
       });
     }
     addQuestionButton.setEnabled(false);
+  }
+
+  public void createQuestion(int typeOfQuestion) {
+    if (typeOfQuestion != this.typeOfQuestion && typeOfQuestion != TEXT_QUESTION) {
+
+      try {
+        addQuestionPackage.remove(ca);
+      } catch (NullPointerException e) {
+        System.out.println(e.getMessage());
+      }
+
+      ca = new CreateAlternative(typeOfQuestion);
+      addQuestionPackage.add(ca);
+      addQuestionButton.setEnabled(true);
+      this.typeOfQuestion = typeOfQuestion;
+
+    } else if (typeOfQuestion == TEXT_QUESTION) {
+      try {
+        addQuestionPackage.remove(ca);
+      } catch (NullPointerException e) {
+        System.out.println(e.getMessage());
+      }
+      addQuestionButton.setEnabled(true);
+      this.typeOfQuestion = typeOfQuestion;
+    }
   }
 
   // Move question in questionscontainer, NOT COMPLETE for other than textquestion
