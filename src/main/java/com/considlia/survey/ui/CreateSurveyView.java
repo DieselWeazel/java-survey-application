@@ -126,7 +126,7 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
         ca = null;
         typeOfQuestion = 10;
       } catch (NullPointerException e) {
-        System.out.println("NullPointerException error caught");
+        System.out.println("NullPointerException error caught and handled");
       }
       questionTitleTextField.setValue("");
       radioButtons.setValue("");
@@ -202,13 +202,17 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
       try {
         addQuestionPackage.remove(ca);
       } catch (NullPointerException e) {
-        System.out.println("NullPointerException error caught");
+        System.out.println("NullPointerException error caught and handled");
       }
       addQuestionButton.setEnabled(true);
       this.typeOfQuestion = typeOfQuestion;
     }
-    if (!ca.getAlternativeList().isEmpty() && !questionTitleTextField.isEmpty()) {
-      addQuestionButton.setEnabled(true);
+    try {
+      if (!ca.getAlternativeList().isEmpty() && !questionTitleTextField.isEmpty()) {
+        addQuestionButton.setEnabled(true);
+      }
+    } catch (NullPointerException e) {
+      System.out.println("NullPointerException error caught and handled");
     }
   }
 
