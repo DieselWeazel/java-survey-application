@@ -1,5 +1,8 @@
 package com.considlia.survey.ui;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import com.considlia.survey.custom_component.CreateAlternative;
 import com.considlia.survey.custom_component.RadioQuestionWithButtons;
 import com.considlia.survey.custom_component.TextQuestionWithButtons;
@@ -22,9 +25,6 @@ import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.OptionalParameter;
 import com.vaadin.flow.router.Route;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 @StyleSheet("css/app.css")
 @Route(value = "createsurvey", layout = MainLayout.class)
@@ -181,7 +181,7 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
       });
     }
     addQuestionButton.setEnabled(false);
-//    refreshQuestions();
+    // refreshQuestions();
 
   }
 
@@ -197,10 +197,6 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
       } else {
         ca.setTypeOfQuestion(typeOfQuestion);
       }
-
-      if (!ca.getAlternativeList().isEmpty() && !questionTitleTextField.isEmpty()) {
-        addQuestionButton.setEnabled(true);
-      }
       this.typeOfQuestion = typeOfQuestion;
     } else if (typeOfQuestion == TEXT_QUESTION) {
       try {
@@ -211,6 +207,9 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
       addQuestionButton.setEnabled(true);
       this.typeOfQuestion = typeOfQuestion;
     }
+    if (!ca.getAlternativeList().isEmpty() && !questionTitleTextField.isEmpty()) {
+      addQuestionButton.setEnabled(true);
+    }
   }
 
   // Move question in questionscontainer
@@ -218,8 +217,8 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
 
     if (questions.indexOf(button.getParent().get().getParent().get()) == 0 && moveDirection == -1
         || questions.indexOf(
-        button.getParent().get().getParent().get()) == questions.getComponentCount() - 1
-        && moveDirection == 1) {
+            button.getParent().get().getParent().get()) == questions.getComponentCount() - 1
+            && moveDirection == 1) {
       // Do nothing
       refreshQuestions();
       return;
@@ -329,16 +328,14 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
   }
 
   /*
-  REMEMBER JONATHAN:
-  DELETE ALL UNUSED METHODS IN THE VERTICALALYOUT CRAP THINGS
+   * REMEMBER JONATHAN: DELETE ALL UNUSED METHODS IN THE VERTICALALYOUT CRAP THINGS
    */
   public void refreshQuestions() {
     for (int i = 0; i < questions.getComponentCount(); i++) {
-//      questions.indexOf(button.getParent().get().getParent().get()) == 0
-//      if (questions.getComponentAt(position) instanceof TextQuestionWithButtons) {
+      // questions.indexOf(button.getParent().get().getParent().get()) == 0
+      // if (questions.getComponentAt(position) instanceof TextQuestionWithButtons) {
       if (questions.getComponentAt(i) instanceof TextQuestionWithButtons) {
-        TextQuestionWithButtons component =
-            (TextQuestionWithButtons) questions.getComponentAt(i);
+        TextQuestionWithButtons component = (TextQuestionWithButtons) questions.getComponentAt(i);
         if (questions.getComponentCount() == 1) {
           component.getUpButton().setEnabled(false);
           component.getDownButton().setEnabled(false);
@@ -359,8 +356,7 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
           component.getDownButton().setEnabled(true);
         }
       } else if (questions.getComponentAt(i) instanceof RadioQuestionWithButtons) {
-        RadioQuestionWithButtons component =
-            (RadioQuestionWithButtons) questions.getComponentAt(i);
+        RadioQuestionWithButtons component = (RadioQuestionWithButtons) questions.getComponentAt(i);
         if (questions.getComponentCount() == 1) {
           component.getUpButton().setEnabled(false);
           component.getDownButton().setEnabled(false);
@@ -386,11 +382,10 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
 
   public void setLoadedQuestions() {
     for (int i = 0; i < questions.getComponentCount(); i++) {
-//      questions.indexOf(button.getParent().get().getParent().get()) == 0
-//      if (questions.getComponentAt(position) instanceof TextQuestionWithButtons) {
+      // questions.indexOf(button.getParent().get().getParent().get()) == 0
+      // if (questions.getComponentAt(position) instanceof TextQuestionWithButtons) {
       if (questions.getComponentAt(i) instanceof TextQuestionWithButtons) {
-        TextQuestionWithButtons component =
-            (TextQuestionWithButtons) questions.getComponentAt(i);
+        TextQuestionWithButtons component = (TextQuestionWithButtons) questions.getComponentAt(i);
         if (questions.getComponentCount() <= 1) {
           component.getUpButton().setEnabled(false);
           component.getDownButton().setEnabled(false);
@@ -403,8 +398,7 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
           }
         }
       } else if (questions.getComponentAt(i) instanceof RadioQuestionWithButtons) {
-        RadioQuestionWithButtons component =
-            (RadioQuestionWithButtons) questions.getComponentAt(i);
+        RadioQuestionWithButtons component = (RadioQuestionWithButtons) questions.getComponentAt(i);
         if (questions.getComponentCount() == 1) {
           component.getUpButton().setEnabled(false);
           component.getDownButton().setEnabled(false);
