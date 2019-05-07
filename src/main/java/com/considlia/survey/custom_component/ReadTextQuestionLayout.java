@@ -23,7 +23,7 @@ public class ReadTextQuestionLayout extends VerticalLayout {
     titleOfQuestion = new H5(question.getQuestionTitle());
 
     horizontalLayout.add(questionField);
-    verticalLayout.add(horizontalLayout);
+    verticalLayout.add(titleOfQuestion, horizontalLayout);
     add(verticalLayout);
   }
 }
