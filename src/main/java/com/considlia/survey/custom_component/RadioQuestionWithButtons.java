@@ -1,5 +1,8 @@
 package com.considlia.survey.custom_component;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import com.considlia.survey.model.MultiQuestionAlternative;
 import com.considlia.survey.ui.CreateSurveyView;
 import com.vaadin.flow.component.button.Button;
@@ -15,9 +18,6 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.radiobutton.RadioGroupVariant;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 @StyleSheet("css/app.css")
 public class RadioQuestionWithButtons extends VerticalLayout {
@@ -77,8 +77,7 @@ public class RadioQuestionWithButtons extends VerticalLayout {
     content.add(downButton);
     content.add(
         new Button(new Icon(VaadinIcon.PENCIL), onEdit -> survey.editQuestion(onEdit.getSource())));
-    content.add(
-        new Button(new Icon(VaadinIcon.TRASH), event -> removeQuestion(survey)));
+    content.add(new Button(new Icon(VaadinIcon.TRASH), event -> removeQuestion(survey)));
 
     add(content);
 
@@ -100,8 +99,8 @@ public class RadioQuestionWithButtons extends VerticalLayout {
   public Dialog removeQuestion(CreateSurveyView survey) {
     Dialog dialog = new Dialog();
     dialog.setCloseOnOutsideClick(false);
-    NativeButton confirmButton = new NativeButton("Are you sure you want to remove this question?",
-        e -> {
+    NativeButton confirmButton =
+        new NativeButton("Are you sure you want to remove this question?", e -> {
           survey.removeQuestion(this);
           dialog.close();
         });

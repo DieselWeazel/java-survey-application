@@ -33,6 +33,7 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
   // Buttons
   private Button addQuestionButton;
   private Button submitSurveyButton;
+  private Button cancelButton;
   private RadioButtonGroup<String> radioButtons;
 
   // Textfields
@@ -44,6 +45,7 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
   private HorizontalLayout header;
   private VerticalLayout questions;
   private VerticalLayout addQuestionPackage;
+  private HorizontalLayout footer;
 
   // Private variables used when creating the survey
   private Survey thisSurvey;
@@ -65,10 +67,12 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
     header = new HorizontalLayout();
     questions = new VerticalLayout();
     addQuestionPackage = new VerticalLayout();
+    footer = new HorizontalLayout();
 
     addQuestionButton = new Button("Add question", event -> addQuestion());
-    submitSurveyButton = new Button("submit", event -> saveSurvey());
+    submitSurveyButton = new Button("Submit survey", event -> saveSurvey());
     submitSurveyButton.setEnabled(false);
+    cancelButton = new Button("Cancel", event -> getUI().ifPresent(ui -> ui.navigate("")));
 
     surveyTitleTextField = new TextField();
     creatorNameTextField = new TextField();
@@ -87,6 +91,8 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
     header.setClassName("createheader");
     addQuestionPackage.setClassName("questionpackage");
     header.add(surveyTitleTextField, creatorNameTextField);
+    footer.add(submitSurveyButton);
+    footer.add(cancelButton);
 
     surveyTitleTextField.addValueChangeListener(titleChange -> checkFilledFields());
     creatorNameTextField.addValueChangeListener(titleChange -> checkFilledFields());
@@ -95,7 +101,7 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
     add(questions);
     add(addQuestionPackage);
     add(addQuestionButton);
-    add(submitSurveyButton);
+    add(footer);
 
   }
 
