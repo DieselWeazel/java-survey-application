@@ -38,16 +38,12 @@ public class ReadMultiQuestionLayout extends VerticalLayout {
 
     add(title);
 
-    for (MultiQuestionAlternative mqa : question.getAlternativeList()) {
-      System.out.println(mqa.toString());
-    }
-
-    // for (int position = 0; position < stringAlternatives.size(); position++){
-    // MultiQuestionAlternative alt = new MultiQuestionAlternative();
-    // alt.setPosition(position);
-    //// alt.setAlternativeTitle(stringAlternatives.get(position));
-    // alternatives.add(alt);
-    // }
+//        for (int position = 0; position < stringAlternatives.size(); position++){
+//            MultiQuestionAlternative alt = new MultiQuestionAlternative();
+//            alt.setPosition(position);
+////            alt.setAlternativeTitle(stringAlternatives.get(position));
+//            alternatives.add(alt);
+//        }
 
     choiceVerticalLayout = new VerticalLayout();
     if (question.getQuestionType() == 1) {
