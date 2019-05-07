@@ -19,7 +19,8 @@ public abstract class Question {
   private String questionTitle;
   private int position;
 
-  public Question() {}
+  public Question() {
+  }
 
   public Question(String questionTitle, int position) {
     this.questionTitle = questionTitle;

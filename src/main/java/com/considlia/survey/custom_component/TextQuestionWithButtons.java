@@ -3,7 +3,9 @@ package com.considlia.survey.custom_component;
 import com.considlia.survey.ui.CreateSurveyView;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.StyleSheet;
+import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.H5;
+import com.vaadin.flow.component.html.NativeButton;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -20,6 +22,9 @@ public class TextQuestionWithButtons extends VerticalLayout {
   private H5 title;
   private TextField text;
 
+  private Button upButton;
+  private Button downButton;
+
   private HorizontalLayout content;
 
   public TextQuestionWithButtons(String question, CreateSurveyView survey) {
@@ -27,6 +32,8 @@ public class TextQuestionWithButtons extends VerticalLayout {
     setWidth("100%");
 
     this.question = question;
+    this.upButton = new Button(new Icon(VaadinIcon.ARROW_UP));
+    this.downButton = new Button(new Icon(VaadinIcon.ARROW_DOWN));
 
     content = new HorizontalLayout();
     content.setClassName("content");
@@ -39,19 +46,43 @@ public class TextQuestionWithButtons extends VerticalLayout {
     text.setEnabled(false);
 
     content.add(title);
-    content.add(new Button(new Icon(VaadinIcon.ARROW_UP),
-        event -> survey.moveQuestion(event.getSource(), MOVE_UP)));
-    content.add(new Button(new Icon(VaadinIcon.ARROW_DOWN),
-        event -> survey.moveQuestion(event.getSource(), MOVE_DOWN)));
+
+    upButton.addClickListener(e -> {
+      survey.moveQuestion(e.getSource(), MOVE_UP);
+    });
+    downButton.addClickListener(e -> {
+      survey.moveQuestion(e.getSource(), MOVE_DOWN);
+    });
+
+    content.add(upButton);
+    content.add(downButton);
     content.add(
         new Button(new Icon(VaadinIcon.PENCIL), event -> survey.editQuestion(event.getSource())));
     content.add(
-        new Button(new Icon(VaadinIcon.TRASH), event -> survey.removeQuestion(event.getSource())));
+        new Button(new Icon(VaadinIcon.TRASH), event -> removeQuestion(survey)));
 
     add(content);
     add(text);
 
   }
+
+  public Dialog removeQuestion(CreateSurveyView survey) {
+    Dialog dialog = new Dialog();
+    dialog.setCloseOnOutsideClick(false);
+    NativeButton confirmButton = new NativeButton("Are you sure you want to remove this question?",
+        e -> {
+          survey.removeQuestion(this);
+          dialog.close();
+        });
+    NativeButton cancelButton = new NativeButton("Cancel", e -> {
+      dialog.close();
+    });
+
+    dialog.add(confirmButton, cancelButton);
+    dialog.open();
+    return dialog;
+  }
+
 
   public String getQuestion() {
     return question;
@@ -67,4 +98,12 @@ public class TextQuestionWithButtons extends VerticalLayout {
     title = updatedTitle;
   }
 
+  public Button getUpButton() {
+    return upButton;
+  }
+
+  public Button getDownButton() {
+    return downButton;
+  }
 }
+

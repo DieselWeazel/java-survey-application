@@ -1,18 +1,10 @@
 package com.considlia.survey;
 
-import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
+import com.considlia.survey.repositories.SurveyRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import com.considlia.survey.model.MultiQuestion;
-import com.considlia.survey.model.MultiQuestionAlternative;
-import com.considlia.survey.model.Question;
-import com.considlia.survey.model.Survey;
-import com.considlia.survey.model.TextQuestion;
-import com.considlia.survey.repositories.SurveyRepository;
 
 @SpringBootApplication
 public class SurveyApplication {
@@ -115,7 +107,6 @@ public class SurveyApplication {
 //      survey2.setQuestionList(questionListJonte);
 //
 //      surveyRepository.save(survey2);
-
 
     };
   }

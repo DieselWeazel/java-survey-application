@@ -1,11 +1,11 @@
 package com.considlia.survey.custom_component;
 
-import java.util.ArrayList;
-import java.util.List;
 import com.considlia.survey.ui.CreateSurveyView;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CreateAlternative extends VerticalLayout {
 
