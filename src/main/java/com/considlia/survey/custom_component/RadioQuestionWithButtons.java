@@ -66,9 +66,11 @@ public class RadioQuestionWithButtons extends VerticalLayout {
     content.add(title);
     upButton.addClickListener(e -> {
       survey.moveQuestion(e.getSource(), MOVE_UP);
+      survey.refreshQuestions();
     });
     downButton.addClickListener(e -> {
       survey.moveQuestion(e.getSource(), MOVE_DOWN);
+      survey.refreshQuestions();
     });
 
     content.add(upButton);
