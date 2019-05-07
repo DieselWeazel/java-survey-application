@@ -66,14 +66,15 @@ public class TextQuestionWithButtons extends VerticalLayout {
 
   }
 
-  public Dialog removeQuestion(CreateSurveyView survey){
+  public Dialog removeQuestion(CreateSurveyView survey) {
     Dialog dialog = new Dialog();
     dialog.setCloseOnOutsideClick(false);
-    NativeButton confirmButton = new NativeButton("Are you sure you want to remove this question?", e-> {
-      survey.removeQuestion(this);
-      dialog.close();
-    });
-    NativeButton cancelButton = new NativeButton("Cancel", e->{
+    NativeButton confirmButton = new NativeButton("Are you sure you want to remove this question?",
+        e -> {
+          survey.removeQuestion(this);
+          dialog.close();
+        });
+    NativeButton cancelButton = new NativeButton("Cancel", e -> {
       dialog.close();
     });
 

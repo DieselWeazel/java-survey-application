@@ -1,10 +1,5 @@
 package com.considlia.survey.ui;
 
-import com.vaadin.flow.component.Component;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import com.considlia.survey.custom_component.CreateAlternative;
 import com.considlia.survey.custom_component.RadioQuestionWithButtons;
 import com.considlia.survey.custom_component.TextQuestionWithButtons;
@@ -14,6 +9,7 @@ import com.considlia.survey.model.Question;
 import com.considlia.survey.model.Survey;
 import com.considlia.survey.model.TextQuestion;
 import com.considlia.survey.repositories.SurveyRepository;
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.dialog.Dialog;
@@ -26,6 +22,9 @@ import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.OptionalParameter;
 import com.vaadin.flow.router.Route;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @StyleSheet("css/app.css")
 @Route(value = "createsurvey", layout = MainLayout.class)
@@ -116,6 +115,13 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
         addQuestionPackage.remove(ca);
         refreshQuestions();
       }
+      try {
+        ca.getAlternativeList().clear();
+        ca = null;
+        typeOfQuestion = 10;
+      } catch (NullPointerException e) {
+        System.out.println("NullPointerException error caught");
+      }
       questionTitleTextField.setValue("");
       radioButtons.setValue("");
       checkFilledFields();
@@ -137,11 +143,11 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
           createQuestion(TEXT_QUESTION);
           refreshQuestions();
         } else if (event.getValue().equalsIgnoreCase("Radio Question")) {
-
+          addQuestionButton.setEnabled(false);
           createQuestion(RADIO_QUESTION);
           refreshQuestions();
         } else if (event.getValue().equalsIgnoreCase("Checkbox Question")) {
-
+          addQuestionButton.setEnabled(false);
           createQuestion(BOX_QUESTION);
           refreshQuestions();
         }
@@ -163,12 +169,12 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
           refreshQuestions();
         } else if ((radioButtons.getValue().equalsIgnoreCase("Radio Question")
             && !questionTitleTextField.getValue().isEmpty())) {
-
+          addQuestionButton.setEnabled(false);
           createQuestion(RADIO_QUESTION);
           refreshQuestions();
         } else if ((radioButtons.getValue().equalsIgnoreCase("Checkbox Question")
             && !questionTitleTextField.getValue().isEmpty())) {
-
+          addQuestionButton.setEnabled(false);
           createQuestion(BOX_QUESTION);
           refreshQuestions();
         }
@@ -185,19 +191,19 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
       try {
         addQuestionPackage.remove(ca);
       } catch (NullPointerException e) {
-        System.out.println(e.getMessage());
+        System.out.println("NullPointerException error caught");
       }
 
-      ca = new CreateAlternative(typeOfQuestion);
+      ca = new CreateAlternative(typeOfQuestion, this);
       addQuestionPackage.add(ca);
-      addQuestionButton.setEnabled(true);
+      // addQuestionButton.setEnabled(true);
       this.typeOfQuestion = typeOfQuestion;
 
     } else if (typeOfQuestion == TEXT_QUESTION) {
       try {
         addQuestionPackage.remove(ca);
       } catch (NullPointerException e) {
-        System.out.println(e.getMessage());
+        System.out.println("NullPointerException error caught");
       }
       addQuestionButton.setEnabled(true);
       this.typeOfQuestion = typeOfQuestion;
@@ -209,8 +215,8 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
 
     if (questions.indexOf(button.getParent().get().getParent().get()) == 0 && moveDirection == -1
         || questions.indexOf(
-            button.getParent().get().getParent().get()) == questions.getComponentCount() - 1
-            && moveDirection == 1) {
+        button.getParent().get().getParent().get()) == questions.getComponentCount() - 1
+        && moveDirection == 1) {
       // Do nothing
       refreshQuestions();
       return;
@@ -255,7 +261,6 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
       newTitleTextField.setValue(choosenQuestion.getQuestion());
 
       VerticalLayout v = new VerticalLayout();
-      System.out.println("hej");
       for (String s : choosenQuestion.getStringAlternatives()) {
         System.out.println(s.toString());
         TextField alternative = new TextField();
@@ -320,10 +325,10 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
     }
   }
 
-/*
-REMEMBER JONATHAN:
-DELETE ALL UNUSED METHODS IN THE VERTICALALYOUT CRAP THINGS
- */
+  /*
+  REMEMBER JONATHAN:
+  DELETE ALL UNUSED METHODS IN THE VERTICALALYOUT CRAP THINGS
+   */
   public void refreshQuestions() {
     for (int i = 0; i < questions.getComponentCount(); i++) {
 //      questions.indexOf(button.getParent().get().getParent().get()) == 0
@@ -374,13 +379,13 @@ DELETE ALL UNUSED METHODS IN THE VERTICALALYOUT CRAP THINGS
     }
   }
 
-  public void setLoadedQuestions(){
+  public void setLoadedQuestions() {
     for (int i = 0; i < questions.getComponentCount(); i++) {
 //      questions.indexOf(button.getParent().get().getParent().get()) == 0
 //      if (questions.getComponentAt(position) instanceof TextQuestionWithButtons) {
       if (questions.getComponentAt(i) instanceof TextQuestionWithButtons) {
         TextQuestionWithButtons component =
-                (TextQuestionWithButtons) questions.getComponentAt(i);
+            (TextQuestionWithButtons) questions.getComponentAt(i);
         if (questions.getComponentCount() <= 1) {
           component.getUpButton().setEnabled(false);
           component.getDownButton().setEnabled(false);
@@ -393,7 +398,7 @@ DELETE ALL UNUSED METHODS IN THE VERTICALALYOUT CRAP THINGS
         }
       } else if (questions.getComponentAt(i) instanceof RadioQuestionWithButtons) {
         RadioQuestionWithButtons component =
-                (RadioQuestionWithButtons) questions.getComponentAt(i);
+            (RadioQuestionWithButtons) questions.getComponentAt(i);
         if (questions.getComponentCount() == 1) {
           component.getUpButton().setEnabled(false);
           component.getDownButton().setEnabled(false);
@@ -432,7 +437,7 @@ DELETE ALL UNUSED METHODS IN THE VERTICALALYOUT CRAP THINGS
           }
 
           questions.add(new RadioQuestionWithButtons(mq.getQuestionTitle(), this,
-                  stringAlternatives, mq.getQuestionType()));
+              stringAlternatives, mq.getQuestionType()));
         }
       }
       submitSurveyButton.setText("Save");
@@ -441,5 +446,13 @@ DELETE ALL UNUSED METHODS IN THE VERTICALALYOUT CRAP THINGS
       checkFilledFields();
     }
 
+  }
+
+  public Button getAddQuestionButton() {
+    return addQuestionButton;
+  }
+
+  public TextField getQuestionTitleTextField() {
+    return questionTitleTextField;
   }
 }

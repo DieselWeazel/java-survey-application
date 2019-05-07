@@ -10,6 +10,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class SurveyApplicationTests {
 
   @Test
-  public void contextLoads() {}
+  public void contextLoads() {
+  }
 
 }

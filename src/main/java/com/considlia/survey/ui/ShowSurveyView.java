@@ -15,7 +15,6 @@ import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
-import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.HasUrlParameter;
@@ -38,18 +37,21 @@ public class ShowSurveyView extends VerticalLayout implements HasUrlParameter<Lo
   private H1 h1;
 
   // -- Buttons --
-  private Button saveButton = new Button();
+  private Button saveButton;
 
   // -- Serializement --
   private SurveyRepository surveyRepository;
   private Binder<Question> binder = new Binder<>(Question.class);
+
+  private Survey survey;
 
   // -- Layout --
   public ShowSurveyView(SurveyRepository surveyRepository) {
     // Using same ID as CreateSurveyView as of now.
     setId("createsurvey");
     this.surveyRepository = surveyRepository;
-    h1 = new H1("PlaceHolder // Survey Not Actually Found, Text not Updated");
+    this.h1 = new H1("PlaceHolder // Survey Not Actually Found, Text not Updated");
+    this.saveButton = new Button();
     saveButton.setText("Send");
     saveButton.addClickListener(e -> saveResponse());
 
@@ -83,8 +85,8 @@ public class ShowSurveyView extends VerticalLayout implements HasUrlParameter<Lo
         goHome();
       }
       if (surveyRepository.findById(parameter).isPresent()) {
-        Survey survey = surveyRepository.getSurveyBySurveyId(parameter);
-
+        survey = surveyRepository.getSurveyBySurveyId(parameter);
+        h1.setText(survey.getSurveyTitle());
 
         loadSurvey(survey);
       } else {
@@ -104,16 +106,18 @@ public class ShowSurveyView extends VerticalLayout implements HasUrlParameter<Lo
     // perfectly fine.
 //    Binder<MultiQuestionAlternative> binderAlternatives =
 //        new Binder<>(MultiQuestionAlternative.class);
-    h1.setText(survey.getSurveyTitle());
+
+
     // for(Question q : surveyRepository.findByQuestionOrderPosition(survey, 0)){
     for (Question q : survey.getQuestionList()) {
-      System.out.println(q.toString());
+      System.out.println("loadsurvey: " + q.getQuestionTitle() + q.toString());
       if (q instanceof MultiQuestion) {
-//        surveyVerticalLayout.add(new H2(q.getQuestionTitle()));
-//        HorizontalLayout horLayout = new HorizontalLayout();
-        // CheckboxGroup questionCheckBoxGroup = new CheckboxGroup();
         MultiQuestion mq = (MultiQuestion) q;
-//        if (mq.getQuestionType() == 0) {
+//        surveyVerticalLayout.add(new H2(q.getQuestionTitle()));
+        HorizontalLayout horLayout = new HorizontalLayout();
+//         CheckboxGroup questionCheckBoxGroup = new CheckboxGroup();
+//
+//        if (mq.getQuestionType() == 2) {
 //          CheckboxGroup<MultiQuestionAlternative> multiQuestionCheckboxes = new CheckboxGroup<>();
 //          multiQuestionCheckboxes.setItems(mq.getAlternativeList());
 //          VerticalLayout checkBoxVertContainer = new VerticalLayout();
@@ -133,8 +137,11 @@ public class ShowSurveyView extends VerticalLayout implements HasUrlParameter<Lo
 //          horLayout.add(checkBoxVertContainer);
 //
 //        }
+//        mainVerticalLayout.add(horLayout);
+
         ReadMultiQuestionLayout readMultiQuestionLayout = new ReadMultiQuestionLayout(mq);
-        surveyVerticalLayout.add(readMultiQuestionLayout);
+        horLayout.add(readMultiQuestionLayout);
+        surveyVerticalLayout.add(horLayout);
       } else {
         ReadTextQuestionLayout readTextQuestionLayout = new ReadTextQuestionLayout(q);
 
@@ -147,10 +154,10 @@ public class ShowSurveyView extends VerticalLayout implements HasUrlParameter<Lo
 
     surveyVerticalLayout.add(saveButton);
 
-    headerVerticalLayout.add(h1);
-    mainVerticalLayout.add(headerVerticalLayout);
-    mainVerticalLayout.add(surveyVerticalLayout);
-    add(mainVerticalLayout);
+//    headerVerticalLayout.add(h1);
+//    mainVerticalLayout.add(headerVerticalLayout);
+//    mainVerticalLayout.add(surveyVerticalLayout);
+//    add(mainVerticalLayout);
   }
 
   // -- Public Button Methods --
