@@ -1,21 +1,23 @@
 package com.considlia.survey.custom_component;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 import com.considlia.survey.model.MultiQuestionAlternative;
 import com.considlia.survey.ui.CreateSurveyView;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.CheckboxGroup;
 import com.vaadin.flow.component.checkbox.CheckboxGroupVariant;
 import com.vaadin.flow.component.dependency.StyleSheet;
+import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.H5;
+import com.vaadin.flow.component.html.NativeButton;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.radiobutton.RadioGroupVariant;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @StyleSheet("css/app.css")
 public class RadioQuestionWithButtons extends VerticalLayout {
@@ -32,6 +34,9 @@ public class RadioQuestionWithButtons extends VerticalLayout {
   private RadioButtonGroup<String> radioButtons;
   private CheckboxGroup<String> checkBoxButtons;
 
+  private Button upButton;
+  private Button downButton;
+
   private HorizontalLayout content;
 
   public RadioQuestionWithButtons(String question, CreateSurveyView survey,
@@ -41,6 +46,8 @@ public class RadioQuestionWithButtons extends VerticalLayout {
 
     this.questionType = questionType;
     this.question = question;
+    this.upButton = new Button(new Icon(VaadinIcon.ARROW_UP));
+    this.downButton = new Button(new Icon(VaadinIcon.ARROW_DOWN));
     this.stringAlternatives = stringAlternatives;
     content = new HorizontalLayout();
     content.setWidthFull();
@@ -57,14 +64,19 @@ public class RadioQuestionWithButtons extends VerticalLayout {
     }
 
     content.add(title);
-    content.add(new Button(new Icon(VaadinIcon.ARROW_UP),
-        event -> survey.moveQuestion(event.getSource(), MOVE_UP)));
-    content.add(new Button(new Icon(VaadinIcon.ARROW_DOWN),
-        event -> survey.moveQuestion(event.getSource(), MOVE_DOWN)));
+    upButton.addClickListener(e -> {
+      survey.moveQuestion(e.getSource(), MOVE_UP);
+    });
+    downButton.addClickListener(e -> {
+      survey.moveQuestion(e.getSource(), MOVE_DOWN);
+    });
+
+    content.add(upButton);
+    content.add(downButton);
     content.add(
         new Button(new Icon(VaadinIcon.PENCIL), onEdit -> survey.editQuestion(onEdit.getSource())));
     content.add(
-        new Button(new Icon(VaadinIcon.TRASH), event -> survey.removeQuestion(event.getSource())));
+        new Button(new Icon(VaadinIcon.TRASH), event -> removeQuestion(survey)));
 
     add(content);
 
@@ -81,6 +93,23 @@ public class RadioQuestionWithButtons extends VerticalLayout {
       add(checkBoxButtons);
     }
 
+  }
+
+  public Dialog removeQuestion(CreateSurveyView survey) {
+    Dialog dialog = new Dialog();
+    dialog.setCloseOnOutsideClick(false);
+    NativeButton confirmButton = new NativeButton("Are you sure you want to remove this question?",
+        e -> {
+          survey.removeQuestion(this);
+          dialog.close();
+        });
+    NativeButton cancelButton = new NativeButton("Cancel", e -> {
+      dialog.close();
+    });
+
+    dialog.add(confirmButton, cancelButton);
+    dialog.open();
+    return dialog;
   }
 
   public String getQuestion() {
@@ -115,4 +144,11 @@ public class RadioQuestionWithButtons extends VerticalLayout {
     this.stringAlternatives = stringAlternatives;
   }
 
+  public Button getUpButton() {
+    return upButton;
+  }
+
+  public Button getDownButton() {
+    return downButton;
+  }
 }
