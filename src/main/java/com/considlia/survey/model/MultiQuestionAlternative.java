@@ -49,20 +49,4 @@ public class MultiQuestionAlternative {
   }
 
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    MultiQuestionAlternative that = (MultiQuestionAlternative) o;
-    return alternativeId.equals(that.alternativeId);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(alternativeId);
-  }
 }
