@@ -45,7 +45,7 @@ public class MultiQuestionAlternative {
 
   @Override
   public String toString() {
-    return position + ": " + alternativeTitle;
+    return alternativeTitle;
   }
 
 
