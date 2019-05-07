@@ -197,10 +197,6 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
       } else {
         ca.setTypeOfQuestion(typeOfQuestion);
       }
-
-      if (!ca.getAlternativeList().isEmpty() && !questionTitleTextField.isEmpty()) {
-        addQuestionButton.setEnabled(true);
-      }
       this.typeOfQuestion = typeOfQuestion;
     } else if (typeOfQuestion == TEXT_QUESTION) {
       try {
@@ -211,6 +207,9 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
       addQuestionButton.setEnabled(true);
       this.typeOfQuestion = typeOfQuestion;
     }
+    if (!ca.getAlternativeList().isEmpty() && !questionTitleTextField.isEmpty()) {
+      addQuestionButton.setEnabled(true);
+    }
   }
 
   // Move question in questionscontainer
@@ -218,7 +217,7 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
 
     questions.replace(button.getParent().get().getParent().get(), questions.getComponentAt(
         questions.indexOf(button.getParent().get().getParent().get()) + moveDirection));
-
+        
   }
 
   // Remove questions from questionscontainer
