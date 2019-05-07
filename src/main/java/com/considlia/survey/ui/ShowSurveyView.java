@@ -110,7 +110,6 @@ public class ShowSurveyView extends VerticalLayout implements HasUrlParameter<Lo
 
     // for(Question q : surveyRepository.findByQuestionOrderPosition(survey, 0)){
     for (Question q : survey.getQuestionList()) {
-      System.out.println("loadsurvey: " + q.getQuestionTitle() + q.toString());
       if (q instanceof MultiQuestion) {
         MultiQuestion mq = (MultiQuestion) q;
 //        surveyVerticalLayout.add(new H2(q.getQuestionTitle()));
