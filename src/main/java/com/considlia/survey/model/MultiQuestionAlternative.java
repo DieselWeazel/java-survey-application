@@ -1,5 +1,6 @@
 package com.considlia.survey.model;
 
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -46,5 +47,6 @@ public class MultiQuestionAlternative {
   public String toString() {
     return position + ": " + alternativeTitle;
   }
+
 
 }

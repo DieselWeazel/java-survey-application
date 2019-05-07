@@ -228,7 +228,7 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
           questions.indexOf(button.getParent().get().getParent().get()) + moveDirection));
       refreshQuestions();
     }
-
+    refreshQuestions();
   }
 
   // Remove questions from questionscontainer
@@ -339,7 +339,7 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
       if (questions.getComponentAt(i) instanceof TextQuestionWithButtons) {
         TextQuestionWithButtons component =
             (TextQuestionWithButtons) questions.getComponentAt(i);
-        if (questions.getComponentCount() <= 1) {
+        if (questions.getComponentCount() == 1) {
           component.getUpButton().setEnabled(false);
           component.getDownButton().setEnabled(false);
         } else if (questions.getComponentCount() > 1) {
@@ -347,6 +347,7 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
             component.getUpButton().setEnabled(false);
             component.getDownButton().setEnabled(true);
           } else if (questions.indexOf(component) == questions.getComponentCount() - 1) {
+            component.getUpButton().setEnabled(true);
             component.getDownButton().setEnabled(false);
           } else {
             // These are probably just duplicates (scroll down)
@@ -368,6 +369,7 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
             component.getUpButton().setEnabled(false);
             component.getDownButton().setEnabled(true);
           } else if (questions.indexOf(component) == questions.getComponentCount() - 1) {
+            component.getUpButton().setEnabled(true);
             component.getDownButton().setEnabled(false);
           } else {
             // These are probably just duplicates and can be cleaned up but leaving this "for now".
@@ -396,6 +398,7 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
           if (questions.indexOf(component) == 0) {
             component.getUpButton().setEnabled(false);
           } else if (questions.indexOf(component) == questions.getComponentCount() - 1) {
+            component.getUpButton().setEnabled(true);
             component.getDownButton().setEnabled(false);
           }
         }
@@ -409,6 +412,7 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
           if (questions.indexOf(component) == 0) {
             component.getUpButton().setEnabled(false);
           } else if (questions.indexOf(component) == questions.getComponentCount() - 1) {
+            component.getUpButton().setEnabled(true);
             component.getDownButton().setEnabled(false);
           }
         }

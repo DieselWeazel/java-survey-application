@@ -1,6 +1,7 @@
 package com.considlia.survey.model;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -54,5 +55,6 @@ public class MultiQuestion extends Question {
     return "MultiQuestion [alternativeList=" + alternativeList + ", questionType=" + questionType
         + "]";
   }
+
 
 }

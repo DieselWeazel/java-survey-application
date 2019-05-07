@@ -2,6 +2,7 @@ package com.considlia.survey.model;
 
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -86,4 +87,20 @@ public class Survey {
         + ", date=" + date + ", questionList=" + questionList + "]";
   }
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    Survey survey = (Survey) o;
+    return Objects.equals(surveyId, survey.surveyId);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(surveyId);
+  }
 }
