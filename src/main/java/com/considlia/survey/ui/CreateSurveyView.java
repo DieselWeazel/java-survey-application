@@ -188,17 +188,20 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
   public void createQuestion(int typeOfQuestion) {
     if (typeOfQuestion != this.typeOfQuestion && typeOfQuestion != TEXT_QUESTION) {
 
-      try {
-        addQuestionPackage.remove(ca);
-      } catch (NullPointerException e) {
-        System.out.println("NullPointerException error caught");
+      if (ca == null) {
+        ca = new CreateAlternative(typeOfQuestion, this);
+        addQuestionPackage.add(ca);
+      } else if (this.typeOfQuestion == TEXT_QUESTION) {
+        ca.setTypeOfQuestion(typeOfQuestion);
+        addQuestionPackage.add(ca);
+      } else {
+        ca.setTypeOfQuestion(typeOfQuestion);
       }
 
-      ca = new CreateAlternative(typeOfQuestion, this);
-      addQuestionPackage.add(ca);
-      // addQuestionButton.setEnabled(true);
+      if (!ca.getAlternativeList().isEmpty() && !questionTitleTextField.isEmpty()) {
+        addQuestionButton.setEnabled(true);
+      }
       this.typeOfQuestion = typeOfQuestion;
-
     } else if (typeOfQuestion == TEXT_QUESTION) {
       try {
         addQuestionPackage.remove(ca);

@@ -88,4 +88,12 @@ public class CreateAlternative extends VerticalLayout {
     return alternativeList;
   }
 
+  public int getTypeOfQuestion() {
+    return typeOfQuestion;
+  }
+
+  public void setTypeOfQuestion(int typeOfQuestion) {
+    this.typeOfQuestion = typeOfQuestion;
+  }
+
 }
