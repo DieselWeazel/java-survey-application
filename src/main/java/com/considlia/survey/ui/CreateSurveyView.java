@@ -215,19 +215,9 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
   // Move question in questionscontainer
   public void moveQuestion(Button button, int moveDirection) {
 
-    if (questions.indexOf(button.getParent().get().getParent().get()) == 0 && moveDirection == -1
-        || questions.indexOf(
-            button.getParent().get().getParent().get()) == questions.getComponentCount() - 1
-            && moveDirection == 1) {
-      // Do nothing
-      refreshQuestions();
-      return;
-    } else {
-      questions.replace(button.getParent().get().getParent().get(), questions.getComponentAt(
-          questions.indexOf(button.getParent().get().getParent().get()) + moveDirection));
-      refreshQuestions();
-    }
-    refreshQuestions();
+    questions.replace(button.getParent().get().getParent().get(), questions.getComponentAt(
+        questions.indexOf(button.getParent().get().getParent().get()) + moveDirection));
+        
   }
 
   // Remove questions from questionscontainer
@@ -413,7 +403,6 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
       }
     }
   }
-
 
   // HasUrlParameter function, if parameter is null, do nothing but load the view as normal.
   // If parameter has an surveyId, load questions, title and creator. Add Multiquestion
