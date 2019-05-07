@@ -141,15 +141,12 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
         if (event.getValue().equalsIgnoreCase("Text question")) {
 
           createQuestion(TEXT_QUESTION);
-          refreshQuestions();
         } else if (event.getValue().equalsIgnoreCase("Radio Question")) {
           addQuestionButton.setEnabled(false);
           createQuestion(RADIO_QUESTION);
-          refreshQuestions();
         } else if (event.getValue().equalsIgnoreCase("Checkbox Question")) {
           addQuestionButton.setEnabled(false);
           createQuestion(BOX_QUESTION);
-          refreshQuestions();
         }
         if (questionTitleTextField.isEmpty()) {
           addQuestionButton.setEnabled(false);
@@ -166,17 +163,14 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
             && !questionTitleTextField.getValue().isEmpty()) {
 
           createQuestion(TEXT_QUESTION);
-          refreshQuestions();
         } else if ((radioButtons.getValue().equalsIgnoreCase("Radio Question")
             && !questionTitleTextField.getValue().isEmpty())) {
           addQuestionButton.setEnabled(false);
           createQuestion(RADIO_QUESTION);
-          refreshQuestions();
         } else if ((radioButtons.getValue().equalsIgnoreCase("Checkbox Question")
             && !questionTitleTextField.getValue().isEmpty())) {
           addQuestionButton.setEnabled(false);
           createQuestion(BOX_QUESTION);
-          refreshQuestions();
         }
       });
     }
