@@ -8,6 +8,7 @@ import com.considlia.survey.repositories.SurveyRepository;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.CheckboxGroup;
 import com.vaadin.flow.component.dependency.StyleSheet;
+import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -15,6 +16,8 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
+import com.vaadin.flow.router.BeforeEnterEvent;
+import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.Route;
@@ -22,9 +25,11 @@ import com.vaadin.flow.router.Route;
 /*
  * http://localhost:8080/showsurvey/1
  */
-@StyleSheet("css/app.css")
+// @StyleSheet("css/app.css")
+@StyleSheet("applicationlayout.css")
 @Route(value = "showsurvey", layout = MainLayout.class)
-public class ShowSurveyView extends VerticalLayout implements HasUrlParameter<Long> {
+public class ShowSurveyView extends FormLayout
+    implements BeforeEnterObserver, HasUrlParameter<Long> {
 
   // -- Private Variables --
   // -- Containers --
@@ -43,7 +48,7 @@ public class ShowSurveyView extends VerticalLayout implements HasUrlParameter<Lo
   private Binder<Question> binder = new Binder<>(Question.class);
 
   // -- Layout --
-  public ShowSurveyView(SurveyRepository surveyRepository) {
+  public ShowSurveyView(final SurveyRepository surveyRepository) {
     // Using same ID as CreateSurveyView as of now.
     setId("createsurvey");
     this.surveyRepository = surveyRepository;
@@ -72,7 +77,7 @@ public class ShowSurveyView extends VerticalLayout implements HasUrlParameter<Lo
   // -- Data methods --
   // -- Parameter Method, finding Survey --
   @Override
-  public void setParameter(BeforeEvent event, Long parameter) {
+  public void setParameter(final BeforeEvent event, final Long parameter) {
     try {
       if (parameter == null) {
         // Null Pointer Exception? (Survey Null Pointer Exception)
@@ -81,7 +86,7 @@ public class ShowSurveyView extends VerticalLayout implements HasUrlParameter<Lo
         goHome();
       }
       if (surveyRepository.findById(parameter).isPresent()) {
-        Survey survey = surveyRepository.getSurveyBySurveyId(parameter);
+        final Survey survey = surveyRepository.getSurveyBySurveyId(parameter);
         h1.setText(survey.getSurveyTitle());
 
         loadSurvey(survey);
@@ -91,30 +96,31 @@ public class ShowSurveyView extends VerticalLayout implements HasUrlParameter<Lo
 
         goHome();
       }
-    } catch (NullPointerException e) {
+    } catch (final NullPointerException e) {
       h1.setText(e.getMessage());
     }
   }
 
   // -- Loading Survey to Layout
-  public void loadSurvey(Survey survey) {
+  public void loadSurvey(final Survey survey) {
     // Should work outside of constructor as well, then methods outside with save etc should work
     // perfectly fine.
-    Binder<MultiQuestionAlternative> binderAlternatives =
+    final Binder<MultiQuestionAlternative> binderAlternatives =
         new Binder<>(MultiQuestionAlternative.class);
 
     // for(Question q : surveyRepository.findByQuestionOrderPosition(survey, 0)){
-    for (Question q : survey.getQuestionList()) {
+    for (final Question q : survey.getQuestionList()) {
 
       if (q instanceof MultiQuestion) {
         surveyVerticalLayout.add(new H2(q.getQuestionTitle()));
-        HorizontalLayout horLayout = new HorizontalLayout();
+        final HorizontalLayout horLayout = new HorizontalLayout();
         // CheckboxGroup questionCheckBoxGroup = new CheckboxGroup();
-        MultiQuestion mq = (MultiQuestion) q;
+        final MultiQuestion mq = (MultiQuestion) q;
         if (mq.getQuestionType() == 1) {
-          CheckboxGroup<MultiQuestionAlternative> multiQuestionCheckboxes = new CheckboxGroup<>();
+          final CheckboxGroup<MultiQuestionAlternative> multiQuestionCheckboxes =
+              new CheckboxGroup<>();
           multiQuestionCheckboxes.setItems(mq.getAlternativeList());
-          VerticalLayout checkBoxVertContainer = new VerticalLayout();
+          final VerticalLayout checkBoxVertContainer = new VerticalLayout();
           checkBoxVertContainer.add(multiQuestionCheckboxes);
 
           horLayout.add(checkBoxVertContainer);
@@ -122,10 +128,10 @@ public class ShowSurveyView extends VerticalLayout implements HasUrlParameter<Lo
           // else, if we want radiobutton
         } else if (mq.getQuestionType() == 0) {
 
-          RadioButtonGroup<MultiQuestionAlternative> multiQuestionRadioButtons =
+          final RadioButtonGroup<MultiQuestionAlternative> multiQuestionRadioButtons =
               new RadioButtonGroup<>();
           multiQuestionRadioButtons.setItems(mq.getAlternativeList());
-          VerticalLayout checkBoxVertContainer = new VerticalLayout();
+          final VerticalLayout checkBoxVertContainer = new VerticalLayout();
           checkBoxVertContainer.add(multiQuestionRadioButtons);
 
           horLayout.add(checkBoxVertContainer);
@@ -134,7 +140,7 @@ public class ShowSurveyView extends VerticalLayout implements HasUrlParameter<Lo
         surveyVerticalLayout.add(horLayout);
       } else {
         surveyVerticalLayout.add(new H2(q.getQuestionTitle()));
-        TextField textField2 = new TextField();
+        final TextField textField2 = new TextField();
 
         binder.forField(textField2).bind(Question::getQuestionTitle, Question::setQuestionTitle);
 
@@ -155,5 +161,11 @@ public class ShowSurveyView extends VerticalLayout implements HasUrlParameter<Lo
     saveButton.setText("Go To Mainview");
     saveButton.addClickListener(e -> getUI().ifPresent(ui -> ui.navigate("")));
     add(saveButton);
+  }
+
+  @Override
+  public void beforeEnter(final BeforeEnterEvent event) {
+    // TODO Auto-generated method stub
+
   }
 }

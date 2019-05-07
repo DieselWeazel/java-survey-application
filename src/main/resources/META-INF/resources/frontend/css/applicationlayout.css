@@ -1,0 +1,29 @@
+#mainlayout {
+	display: flex;
+	min-height: 100vh;
+	flex-direction: column;
+}
+#mainlayout .header {
+	padding: 10px;
+}
+#mainlayoutlayout .content {
+	flex: 1;
+	padding: 10px;
+}
+#mainlayoutlayout .navigation {
+	float: left;
+}
+#mainlayoutlayout .navigation vaadin-button {
+	margin-right: 10px;
+}
+#applicationlayout .localeswitch {
+	float: right;
+}
+#mainlayoutlayout .localeswitch vaadin-button {
+	margin-left: 10px;
+}
+#mainlayoutlayout .footer {
+	border-top: 1px dashed;
+	text-align: center;
+	padding: 10px;
+}

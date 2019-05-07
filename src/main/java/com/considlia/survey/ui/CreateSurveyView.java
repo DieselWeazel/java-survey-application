@@ -15,20 +15,27 @@ import com.considlia.survey.repositories.SurveyRepository;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
+import com.vaadin.flow.router.BeforeEnterEvent;
+import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.OptionalParameter;
 import com.vaadin.flow.router.Route;
 
-@StyleSheet("css/app.css")
+// @StyleSheet("css/app.css")
+@StyleSheet("applicationlayout.css")
 @Route(value = "createsurvey", layout = MainLayout.class)
-public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<Long> {
 
+public class CreateSurveyView extends FormLayout
+    implements BeforeEnterObserver, HasUrlParameter<Long> {
+
+  private static final long serialVersionUID = 1L;
   // Buttons
   private Button addQuestionButton;
   private Button submitSurveyButton;
@@ -40,7 +47,7 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
   private TextField questionTitleTextField;
 
   // Containers
-  private HorizontalLayout header;
+  // private HorizontalLayout header;
   private VerticalLayout questions;
   private VerticalLayout addQuestionPackage;
 
@@ -55,13 +62,13 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
 
   private CreateAlternative ca;
 
-  public CreateSurveyView(SurveyRepository surveyRepository) {
+  public CreateSurveyView(final SurveyRepository surveyRepository) {
     setId("createsurvey");
 
     this.surveyRepository = surveyRepository;
     thisSurvey = new Survey();
 
-    header = new HorizontalLayout();
+    // header = new HorizontalLayout();
     questions = new VerticalLayout();
     addQuestionPackage = new VerticalLayout();
 
@@ -83,14 +90,14 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
     creatorNameTextField.setWidth("250px");
     creatorNameTextField.setValueChangeMode(ValueChangeMode.EAGER);
 
-    header.setClassName("createheader");
+    // header.setClassName("createheader");
     addQuestionPackage.setClassName("questionpackage");
-    header.add(surveyTitleTextField, creatorNameTextField);
+    // header.add(surveyTitleTextField, creatorNameTextField);
 
     surveyTitleTextField.addValueChangeListener(titleChange -> checkFilledFields());
     creatorNameTextField.addValueChangeListener(titleChange -> checkFilledFields());
 
-    add(header);
+    // add(header);
     add(questions);
     add(addQuestionPackage);
     add(addQuestionButton);
@@ -134,16 +141,16 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
           addQuestionButton.setEnabled(true);
           typeOfQuestion = TEXT_QUESTION;
 
-        } else if ((event.getValue().equalsIgnoreCase("Radio Question")
-            && !questionTitleTextField.getValue().isEmpty())) {
+        } else if (event.getValue().equalsIgnoreCase("Radio Question")
+            && !questionTitleTextField.getValue().isEmpty()) {
           typeOfQuestion = RADIO_QUESTION;
 
           ca = new CreateAlternative(typeOfQuestion);
           addQuestionPackage.add(ca);
           addQuestionButton.setEnabled(true);
 
-        } else if ((event.getValue().equalsIgnoreCase("Checkbox Question")
-            && !questionTitleTextField.getValue().isEmpty())) {
+        } else if (event.getValue().equalsIgnoreCase("Checkbox Question")
+            && !questionTitleTextField.getValue().isEmpty()) {
           typeOfQuestion = BOX_QUESTION;
           addQuestionButton.setEnabled(true);
 
@@ -155,8 +162,8 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
 
       // Checks if the questionTitle and questionType is set
       questionTitleTextField.addValueChangeListener(event -> {
-        if (questionTitleTextField.isEmpty() || (radioButtons.getValue() == null)
-            || (radioButtons.getValue().isEmpty())) {
+        if (questionTitleTextField.isEmpty() || radioButtons.getValue() == null
+            || radioButtons.getValue().isEmpty()) {
           addQuestionButton.setEnabled(false);
         } else {
           addQuestionButton.setEnabled(true);
@@ -167,9 +174,9 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
   }
 
   // Move question in questionscontainer, NOT COMPLETE for other than textquestion
-  public void moveQuestion(Button button, int moveDirection) {
+  public void moveQuestion(final Button button, final int moveDirection) {
     if (button.getParent().get() instanceof TextQuestionWithButtons) {
-      TextQuestionWithButtons component = (TextQuestionWithButtons) button.getParent().get();
+      final TextQuestionWithButtons component = (TextQuestionWithButtons) button.getParent().get();
       if (questions.indexOf(component) == 0 && moveDirection == -1
           || questions.indexOf(component) == questions.getComponentCount() - 1
               && moveDirection == 1) {
@@ -178,7 +185,7 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
       questions.replace(component,
           questions.getComponentAt(questions.indexOf(component) + moveDirection));
     } else {
-      RadioQuestionWithButtons component =
+      final RadioQuestionWithButtons component =
           (RadioQuestionWithButtons) button.getParent().get().getParent().get();
       if (questions.indexOf(component) == 0 && moveDirection == -1
           || questions.indexOf(component) == questions.getComponentCount() - 1
@@ -192,7 +199,7 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
   }
 
   // Remove questions from questionscontainer
-  public void removeQuestion(Button button) {
+  public void removeQuestion(final Button button) {
     if (button.getParent().get() instanceof TextQuestionWithButtons) {
       questions.remove(button.getParent().get());
     } else {
@@ -202,15 +209,16 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
   }
 
   // Edit question via pencil buttons in custom components
-  public void editQuestion(Button button) {
-    Dialog dialog = new Dialog();
-    Button confirm = new Button("Confirm");
-    TextField newTitleTextField = new TextField();
+  public void editQuestion(final Button button) {
+    final Dialog dialog = new Dialog();
+    final Button confirm = new Button("Confirm");
+    final TextField newTitleTextField = new TextField();
 
     dialog.open();
     dialog.add(newTitleTextField);
     if (button.getParent().get() instanceof TextQuestionWithButtons) {
-      TextQuestionWithButtons choosenQuestion = (TextQuestionWithButtons) button.getParent().get();
+      final TextQuestionWithButtons choosenQuestion =
+          (TextQuestionWithButtons) button.getParent().get();
 
       newTitleTextField.setValue(choosenQuestion.getQuestion());
 
@@ -221,16 +229,16 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
 
     } else {
       System.out.println(button.getParent().get().getParent().get().getClass().getSimpleName());
-      RadioQuestionWithButtons choosenQuestion =
+      final RadioQuestionWithButtons choosenQuestion =
           (RadioQuestionWithButtons) button.getParent().get().getParent().get();
       //
       newTitleTextField.setValue(choosenQuestion.getQuestion());
 
-      VerticalLayout v = new VerticalLayout();
+      final VerticalLayout v = new VerticalLayout();
       System.out.println("hej");
-      for (String s : choosenQuestion.getStringAlternatives()) {
+      for (final String s : choosenQuestion.getStringAlternatives()) {
         System.out.println(s.toString());
-        TextField alternative = new TextField();
+        final TextField alternative = new TextField();
         alternative.setValue(s);
         v.add(alternative);
       }
@@ -247,17 +255,17 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
     for (int position = 0; position < questions.getComponentCount(); position++) {
 
       if (questions.getComponentAt(position) instanceof TextQuestionWithButtons) {
-        TextQuestionWithButtons component =
+        final TextQuestionWithButtons component =
             (TextQuestionWithButtons) questions.getComponentAt(position);
-        TextQuestion question = new TextQuestion();
+        final TextQuestion question = new TextQuestion();
         question.setQuestionTitle(component.getQuestion());
         question.setPosition(position);
         thisSurvey.getQuestionList().add(question);
 
       } else if (questions.getComponentAt(position) instanceof RadioQuestionWithButtons) {
-        RadioQuestionWithButtons component =
+        final RadioQuestionWithButtons component =
             (RadioQuestionWithButtons) questions.getComponentAt(position);
-        MultiQuestion question = new MultiQuestion();
+        final MultiQuestion question = new MultiQuestion();
         question.setQuestionTitle(component.getQuestion());
         question.setPosition(position);
         question.setQuestionType(component.getQuestionType());
@@ -295,22 +303,22 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
   // HasUrlParameter function, if parameter is null, do nothing but load the view as normal.
   // If parameter has an surveyId, load questions, title and creator. Add Multiquestion
   @Override
-  public void setParameter(BeforeEvent event, @OptionalParameter Long parameter) {
+  public void setParameter(final BeforeEvent event, @OptionalParameter final Long parameter) {
     if (parameter == null) {
       // Do nothing
     } else {
       thisSurvey = surveyRepository.getSurveyBySurveyId(parameter);
 
-      for (Question q : thisSurvey.getQuestionList()) {
+      for (final Question q : thisSurvey.getQuestionList()) {
         surveyTitleTextField.setValue(thisSurvey.getSurveyTitle());
         creatorNameTextField.setValue(thisSurvey.getCreator());
         if (q instanceof TextQuestion) {
           questions.add(new TextQuestionWithButtons(q.getQuestionTitle(), this));
         } else {
-          MultiQuestion mq = (MultiQuestion) q;
+          final MultiQuestion mq = (MultiQuestion) q;
 
-          List<String> stringAlternatives = new ArrayList<>();
-          for (MultiQuestionAlternative mqa : mq.getAlternativeList()) {
+          final List<String> stringAlternatives = new ArrayList<>();
+          for (final MultiQuestionAlternative mqa : mq.getAlternativeList()) {
             stringAlternatives.add(mqa.getAlternativeTitle());
           }
 
@@ -321,6 +329,12 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
       thisSurvey.getQuestionList().clear();
       checkFilledFields();
     }
+
+  }
+
+  @Override
+  public void beforeEnter(final BeforeEnterEvent event) {
+    // TODO Auto-generated method stub
 
   }
 }
