@@ -1,5 +1,6 @@
 package com.considlia.survey.model;
 
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -47,4 +48,21 @@ public class MultiQuestionAlternative {
     return position + ": " + alternativeTitle;
   }
 
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    MultiQuestionAlternative that = (MultiQuestionAlternative) o;
+    return alternativeId.equals(that.alternativeId);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(alternativeId);
+  }
 }
