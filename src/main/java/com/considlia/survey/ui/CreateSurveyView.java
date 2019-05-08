@@ -400,9 +400,7 @@ public class CreateSurveyView extends VerticalLayout
   // If parameter has an surveyId, load questions, title and creator. Add Multiquestion
   @Override
   public void setParameter(BeforeEvent event, @OptionalParameter Long parameter) {
-    if (parameter == null) {
-      // Do nothing
-    } else {
+    if (parameter != null) {
       thisSurvey = surveyRepository.getSurveyBySurveyId(parameter);
 
       for (Question q : thisSurvey.getQuestionList()) {
