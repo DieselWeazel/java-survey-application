@@ -8,6 +8,7 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.H5;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.router.BeforeLeaveEvent.ContinueNavigationAction;
 
 public class ConfirmDialog extends Dialog {
 
@@ -29,4 +30,19 @@ public class ConfirmDialog extends Dialog {
     add(new HorizontalLayout(cancelBtn, confirmBtn));
     open();
   }
+
+  public ConfirmDialog(ContinueNavigationAction action) {
+
+    Button cancelBtn = new Button("No", onCancel -> {
+      close();
+    });
+    Button confirmBtn = new Button("Yes", onConfirm -> {
+      action.proceed();
+      close();
+    });
+
+    add(new H5("Are you sure you want to leave without saving?"));
+    add(new HorizontalLayout(confirmBtn, cancelBtn));
+  }
+
 }

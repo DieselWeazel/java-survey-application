@@ -3,6 +3,7 @@ package com.considlia.survey.ui;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import com.considlia.survey.custom_component.ConfirmDialog;
 import com.considlia.survey.custom_component.CreateAlternative;
 import com.considlia.survey.custom_component.RadioQuestionWithButtons;
 import com.considlia.survey.custom_component.TextQuestionWithButtons;
@@ -22,13 +23,17 @@ import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.BeforeEvent;
+import com.vaadin.flow.router.BeforeLeaveEvent;
+import com.vaadin.flow.router.BeforeLeaveEvent.ContinueNavigationAction;
+import com.vaadin.flow.router.BeforeLeaveObserver;
 import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.OptionalParameter;
 import com.vaadin.flow.router.Route;
 
 @StyleSheet("css/app.css")
 @Route(value = "createsurvey", layout = MainLayout.class)
-public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<Long> {
+public class CreateSurveyView extends VerticalLayout
+    implements HasUrlParameter<Long>, BeforeLeaveObserver {
 
   // Buttons
   private Button addQuestionButton;
@@ -53,6 +58,7 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
   private static final int TEXT_QUESTION = 0;
   private static final int RADIO_QUESTION = 1;
   private static final int BOX_QUESTION = 2;
+  private boolean hasChanges;
 
   private SurveyRepository surveyRepository;
 
@@ -63,6 +69,7 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
 
     this.surveyRepository = surveyRepository;
     thisSurvey = new Survey();
+    hasChanges = false;
 
     header = new HorizontalLayout();
     questions = new VerticalLayout();
@@ -94,8 +101,14 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
     footer.add(submitSurveyButton);
     footer.add(cancelButton);
 
-    surveyTitleTextField.addValueChangeListener(titleChange -> checkFilledFields());
-    creatorNameTextField.addValueChangeListener(titleChange -> checkFilledFields());
+    surveyTitleTextField.addValueChangeListener(titleChange -> {
+      checkFilledFields();
+      hasChanges = true;
+    });
+    creatorNameTextField.addValueChangeListener(titleChange -> {
+      checkFilledFields();
+      hasChanges = true;
+    });
 
     add(header);
     add(questions);
@@ -131,6 +144,7 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
       questionTitleTextField.setValue("");
       radioButtons.setValue("");
       checkFilledFields();
+      hasChanges = true;
     }
     // Only enters here on the first time pressing the add question button
     // Because radiobuttons is null only at that time
@@ -181,7 +195,6 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
       });
     }
     addQuestionButton.setEnabled(false);
-    // refreshQuestions();
 
   }
 
@@ -221,7 +234,7 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
 
     questions.replace(button.getParent().get().getParent().get(), questions.getComponentAt(
         questions.indexOf(button.getParent().get().getParent().get()) + moveDirection));
-
+    hasChanges = true;
   }
 
   // Remove questions from questionscontainer
@@ -229,6 +242,7 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
     questions.remove(c);
     refreshQuestions();
     checkFilledFields();
+    hasChanges = true;
   }
 
   // Edit question via pencil buttons in custom components
@@ -253,7 +267,7 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
     } else {
       RadioQuestionWithButtons choosenQuestion =
           (RadioQuestionWithButtons) button.getParent().get().getParent().get();
-      //
+
       newTitleTextField.setValue(choosenQuestion.getQuestion());
 
       VerticalLayout v = new VerticalLayout();
@@ -267,6 +281,7 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
     }
 
     dialog.add(new HorizontalLayout(new Button("Cancel", onCancel -> dialog.close()), confirm));
+    hasChanges = true;
   }
 
   // Save survey with questions to database(multiquestion not implemented)
@@ -303,6 +318,7 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
 
     surveyRepository.save(thisSurvey);
 
+    hasChanges = false;
     getUI().ifPresent(ui -> ui.navigate(""));
   }
 
@@ -438,8 +454,8 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
       setLoadedQuestions();
       thisSurvey.getQuestionList().clear();
       checkFilledFields();
+      hasChanges = false;
     }
-
   }
 
   public Button getAddQuestionButton() {
@@ -448,5 +464,14 @@ public class CreateSurveyView extends VerticalLayout implements HasUrlParameter<
 
   public TextField getQuestionTitleTextField() {
     return questionTitleTextField;
+  }
+
+  @Override
+  public void beforeLeave(BeforeLeaveEvent event) {
+    if (hasChanges) {
+      ContinueNavigationAction action = event.postpone();
+      ConfirmDialog dialog = new ConfirmDialog(action);
+      dialog.open();
+    }
   }
 }
