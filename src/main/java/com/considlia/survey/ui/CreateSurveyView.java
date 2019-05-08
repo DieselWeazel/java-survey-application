@@ -17,6 +17,7 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
@@ -175,6 +176,10 @@ public class CreateSurveyView extends VerticalLayout
 
       // Checks if the questionTitle and questionType is set
       questionTitleTextField.addValueChangeListener(event -> {
+        if (event.getSource().getValue().length() > 255) {
+          event.getSource().setValue(event.getSource().getValue().substring(0, 255));
+          Notification.show("Question can max contain 255 characters");
+        }
         if (questionTitleTextField.isEmpty() || radioButtons.getValue() == null) {
 
           addQuestionButton.setEnabled(false);
