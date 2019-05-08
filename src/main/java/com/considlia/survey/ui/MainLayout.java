@@ -1,5 +1,7 @@
 package com.considlia.survey.ui;
 
+import java.util.HashMap;
+import java.util.Map;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasElement;
 import com.vaadin.flow.component.button.Button;
@@ -10,8 +12,6 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.RouterLayout;
 import com.vaadin.flow.router.RouterLink;
-import java.util.HashMap;
-import java.util.Map;
 
 @StyleSheet("css/app.css")
 public class MainLayout extends VerticalLayout implements RouterLayout {
@@ -38,13 +38,10 @@ public class MainLayout extends VerticalLayout implements RouterLayout {
 
   }
 
-  private RouterLink createRouterLink(Class<? extends Component> targetViewClass, String text,
+  private Button createRouterLink(Class<? extends Component> targetViewClass, String text,
       VaadinIcon icon) {
-    RouterLink routerLink = new RouterLink(null, targetViewClass);
-    targets.put(targetViewClass, routerLink);
-    targetPaths.put(routerLink.getHref(), targetViewClass);
-    routerLink.add(new Button(text, new Icon(icon)));
-    return routerLink;
+    return new Button(text, new Icon(icon),
+        event -> getUI().ifPresent(ui -> ui.navigate(targetViewClass)));
   }
 
   @Override
