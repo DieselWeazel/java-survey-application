@@ -442,7 +442,7 @@ public class CreateSurveyView extends VerticalLayout
   public void beforeLeave(BeforeLeaveEvent event) {
     if (hasChanges) {
       ContinueNavigationAction action = event.postpone();
-      ConfirmDialog dialog = new ConfirmDialog(action);
+      ConfirmDialog dialog = new ConfirmDialog(action, this);
       dialog.open();
     }
   }
