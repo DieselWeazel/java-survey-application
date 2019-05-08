@@ -2,6 +2,7 @@ package com.considlia.survey.custom_component;
 
 import com.considlia.survey.model.Survey;
 import com.considlia.survey.repositories.SurveyRepository;
+import com.considlia.survey.ui.CreateSurveyView;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
@@ -31,18 +32,26 @@ public class ConfirmDialog extends Dialog {
     open();
   }
 
-  public ConfirmDialog(ContinueNavigationAction action) {
+  public ConfirmDialog(ContinueNavigationAction action, CreateSurveyView survey) {
 
-    Button cancelBtn = new Button("No", onCancel -> {
+    Button cancelBtn = new Button("Cancel", onCancel -> {
       close();
     });
-    Button confirmBtn = new Button("Yes", onConfirm -> {
+    Button confirmBtn = new Button("Discard", onDiscard -> {
+      action.proceed();
+      close();
+    });
+    Button saveBtn = new Button("Save", onSave -> {
+      survey.saveSurvey();
       action.proceed();
       close();
     });
 
-    add(new H5("Are you sure you want to leave without saving?"));
-    add(new HorizontalLayout(confirmBtn, cancelBtn));
+    HorizontalLayout buttonContainer = new HorizontalLayout();
+    buttonContainer.add(saveBtn, confirmBtn, cancelBtn);
+
+    add(new H5("Do you want to save or discard your changes before navigating away?"));
+    add(buttonContainer);
   }
 
 }
