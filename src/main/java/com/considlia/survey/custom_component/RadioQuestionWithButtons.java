@@ -119,6 +119,12 @@ public class RadioQuestionWithButtons extends VerticalLayout {
 
   public void setQuestion(String question) {
     this.question = question;
+
+    H5 updatedTitle = new H5(question);
+    updatedTitle.setWidth("90%");
+
+    content.replace(title, updatedTitle);
+    title = updatedTitle;
   }
 
   public Set<MultiQuestionAlternative> getAlternatives() {
@@ -135,6 +141,7 @@ public class RadioQuestionWithButtons extends VerticalLayout {
 
   public void setQuestionType(int questionType) {
     this.questionType = questionType;
+
   }
 
   public List<String> getStringAlternatives() {
@@ -143,6 +150,22 @@ public class RadioQuestionWithButtons extends VerticalLayout {
 
   public void setStringAlternatives(List<String> stringAlternatives) {
     this.stringAlternatives = stringAlternatives;
+    alternatives.clear();
+
+    for (int position = 0; position < stringAlternatives.size(); position++) {
+      MultiQuestionAlternative alt = new MultiQuestionAlternative();
+      alt.setPosition(position);
+      alt.setAlternativeTitle(stringAlternatives.get(position));
+      alternatives.add(alt);
+    }
+
+    if (questionType == 1) {
+      radioButtons.setItems(stringAlternatives);
+
+    } else {
+      checkBoxButtons.setItems(stringAlternatives);
+    }
+
   }
 
   public Button getUpButton() {
