@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import com.considlia.survey.custom_component.ConfirmDialog;
 import com.considlia.survey.custom_component.CreateAlternative;
+import com.considlia.survey.custom_component.EditDialog;
 import com.considlia.survey.custom_component.RadioQuestionWithButtons;
 import com.considlia.survey.custom_component.TextQuestionWithButtons;
 import com.considlia.survey.model.MultiQuestion;
@@ -16,7 +17,6 @@ import com.considlia.survey.repositories.SurveyRepository;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.StyleSheet;
-import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
@@ -247,40 +247,7 @@ public class CreateSurveyView extends VerticalLayout
 
   // Edit question via pencil buttons in custom components
   public void editQuestion(Button button) {
-    Dialog dialog = new Dialog();
-    Button confirm = new Button("Confirm");
-    TextField newTitleTextField = new TextField();
-
-    dialog.open();
-    dialog.add(newTitleTextField);
-    if (button.getParent().get().getParent().get() instanceof TextQuestionWithButtons) {
-      TextQuestionWithButtons choosenQuestion =
-          (TextQuestionWithButtons) button.getParent().get().getParent().get();
-
-      newTitleTextField.setValue(choosenQuestion.getQuestion());
-
-      confirm.addClickListener(event -> {
-        choosenQuestion.setQuestion(newTitleTextField.getValue());
-        dialog.close();
-      });
-
-    } else {
-      RadioQuestionWithButtons choosenQuestion =
-          (RadioQuestionWithButtons) button.getParent().get().getParent().get();
-
-      newTitleTextField.setValue(choosenQuestion.getQuestion());
-
-      VerticalLayout v = new VerticalLayout();
-      for (String s : choosenQuestion.getStringAlternatives()) {
-        System.out.println(s.toString());
-        TextField alternative = new TextField();
-        alternative.setValue(s);
-        v.add(alternative);
-      }
-      dialog.add(v);
-    }
-
-    dialog.add(new HorizontalLayout(new Button("Cancel", onCancel -> dialog.close()), confirm));
+    new EditDialog(button);
     hasChanges = true;
   }
 
