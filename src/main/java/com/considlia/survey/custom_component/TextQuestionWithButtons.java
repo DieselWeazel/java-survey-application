@@ -60,8 +60,7 @@ public class TextQuestionWithButtons extends VerticalLayout {
     content.add(downButton);
     content.add(
         new Button(new Icon(VaadinIcon.PENCIL), event -> survey.editQuestion(event.getSource())));
-    content.add(
-        new Button(new Icon(VaadinIcon.TRASH), event -> removeQuestion(survey)));
+    content.add(new Button(new Icon(VaadinIcon.TRASH), event -> removeQuestion(survey)));
 
     add(content);
     add(text);
@@ -71,8 +70,8 @@ public class TextQuestionWithButtons extends VerticalLayout {
   public Dialog removeQuestion(CreateSurveyView survey) {
     Dialog dialog = new Dialog();
     dialog.setCloseOnOutsideClick(false);
-    NativeButton confirmButton = new NativeButton("Are you sure you want to remove this question?",
-        e -> {
+    NativeButton confirmButton =
+        new NativeButton("Are you sure you want to remove this question?", e -> {
           survey.removeQuestion(this);
           dialog.close();
         });
@@ -84,7 +83,6 @@ public class TextQuestionWithButtons extends VerticalLayout {
     dialog.open();
     return dialog;
   }
-
 
   public String getQuestion() {
     return question;
@@ -108,4 +106,3 @@ public class TextQuestionWithButtons extends VerticalLayout {
     return downButton;
   }
 }
-
