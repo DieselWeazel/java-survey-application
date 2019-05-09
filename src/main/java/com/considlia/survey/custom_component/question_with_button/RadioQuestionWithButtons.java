@@ -3,6 +3,7 @@ package com.considlia.survey.custom_component.question_with_button;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import com.considlia.survey.custom_component.QuestionType;
 import com.considlia.survey.model.MultiQuestionAlternative;
 import com.considlia.survey.ui.CreateSurveyView;
 import com.vaadin.flow.component.checkbox.CheckboxGroup;
@@ -16,13 +17,13 @@ public class RadioQuestionWithButtons extends QuestionWithButtons {
 
   private Set<MultiQuestionAlternative> alternatives;
   private List<String> stringAlternatives;
-  private int questionType;
+  private QuestionType questionType;
 
   private RadioButtonGroup<String> radioButtons;
   private CheckboxGroup<String> checkBoxButtons;
 
   public RadioQuestionWithButtons(String question, CreateSurveyView survey,
-      List<String> stringAlternatives, int questionType) {
+      List<String> stringAlternatives, QuestionType questionType) {
     super(question, survey);
 
     this.questionType = questionType;
@@ -32,13 +33,13 @@ public class RadioQuestionWithButtons extends QuestionWithButtons {
 
     updateAlternatives();
 
-    if (questionType == 1) {
+    if (questionType == QuestionType.RADIO) {
       radioButtons = new RadioButtonGroup<>();
       radioButtons.setItems(stringAlternatives);
       radioButtons.addThemeVariants(RadioGroupVariant.LUMO_VERTICAL);
       add(radioButtons);
 
-    } else {
+    } else if (questionType == QuestionType.CHECKBOX) {
       checkBoxButtons = new CheckboxGroup<>();
       checkBoxButtons.setItems(stringAlternatives);
       checkBoxButtons.addThemeVariants(CheckboxGroupVariant.LUMO_VERTICAL);
@@ -65,11 +66,11 @@ public class RadioQuestionWithButtons extends QuestionWithButtons {
     this.alternatives = alternatives;
   }
 
-  public int getQuestionType() {
+  public QuestionType getQuestionType() {
     return questionType;
   }
 
-  public void setQuestionType(int questionType) {
+  public void setQuestionType(QuestionType questionType) {
     this.questionType = questionType;
 
   }
@@ -83,7 +84,7 @@ public class RadioQuestionWithButtons extends QuestionWithButtons {
 
     updateAlternatives();
 
-    if (questionType == 1) {
+    if (questionType == QuestionType.RADIO) {
       radioButtons.setItems(stringAlternatives);
     } else {
       checkBoxButtons.setItems(stringAlternatives);

@@ -14,22 +14,22 @@ public class CreateAlternative extends VerticalLayout {
 
   private List<String> alternativeList;
   private List<TextField> textFieldList;
-  private int typeOfQuestion;
+  private QuestionType questionType;
 
-  public CreateAlternative(int typeOfQuestion, CreateSurveyView csv) {
+  public CreateAlternative(QuestionType questionType, CreateSurveyView csv) {
 
     dynamicTextField = new TextField();
 
     textFieldList = new ArrayList<>();
     alternativeList = new ArrayList<>();
 
-    createAlternative(typeOfQuestion, alternativeList, csv);
+    createAlternative(questionType, alternativeList, csv);
 
   }
 
-  public void createAlternative(int typeOfQuestion, List<String> alternativeList,
+  public void createAlternative(QuestionType questionType, List<String> alternativeList,
       CreateSurveyView csv) {
-    this.typeOfQuestion = typeOfQuestion;
+    this.questionType = questionType;
 
     if (textFieldList.isEmpty()) {
 
@@ -48,7 +48,7 @@ public class CreateAlternative extends VerticalLayout {
           event.getSource().setValue(event.getSource().getValue().substring(0, 255));
           Notification.show("Alternative can max contain 255 characters");
         }
-        createAlternative(typeOfQuestion, alternativeList, csv);
+        createAlternative(questionType, alternativeList, csv);
         event.getSource().focus();
         if (!getAlternativeList().isEmpty() && !csv.getQuestionTitleTextField().isEmpty()) {
           csv.getAddQuestionButton().setEnabled(true);
@@ -76,7 +76,7 @@ public class CreateAlternative extends VerticalLayout {
           event.getSource().setValue(event.getSource().getValue().substring(0, 255));
           Notification.show("Alternative can max contain 255 characters");
         }
-        createAlternative(typeOfQuestion, alternativeList, csv);
+        createAlternative(questionType, alternativeList, csv);
         event.getSource().focus();
         if (!getAlternativeList().isEmpty() && !csv.getQuestionTitleTextField().isEmpty()) {
           csv.getAddQuestionButton().setEnabled(true);
@@ -97,12 +97,12 @@ public class CreateAlternative extends VerticalLayout {
     return alternativeList;
   }
 
-  public int getTypeOfQuestion() {
-    return typeOfQuestion;
+  public QuestionType getQuestionType() {
+    return questionType;
   }
 
-  public void setTypeOfQuestion(int typeOfQuestion) {
-    this.typeOfQuestion = typeOfQuestion;
+  public void setQuestionType(QuestionType questionType) {
+    this.questionType = questionType;
   }
 
 }

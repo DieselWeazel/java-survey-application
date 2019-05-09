@@ -46,7 +46,7 @@ public class ReadMultiQuestionLayout extends VerticalLayout {
     // }
 
     choiceVerticalLayout = new VerticalLayout();
-    if (question.getQuestionType() == 1) {
+    if (question.getQuestionType() == QuestionType.RADIO) {
       this.radioButtons = new RadioButtonGroup<>();
       radioButtons.setItems(question.getAlternatives());
       choiceVerticalLayout.add(radioButtons);
