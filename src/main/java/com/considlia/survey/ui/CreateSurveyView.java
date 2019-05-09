@@ -251,7 +251,7 @@ public class CreateSurveyView extends VerticalLayout
 
   // Save survey with questions to database
   public void saveSurvey() {
-    thisSurvey.getQuestionList().clear();
+    thisSurvey.getQuestions().clear();
 
     for (int position = 0; position < questions.getComponentCount(); position++) {
 
@@ -259,26 +259,26 @@ public class CreateSurveyView extends VerticalLayout
         TextQuestionWithButtons component =
             (TextQuestionWithButtons) questions.getComponentAt(position);
         TextQuestion question = new TextQuestion();
-        question.setQuestionTitle(component.getQuestion());
+        question.setTitle(component.getQuestion());
         question.setPosition(position);
-        thisSurvey.getQuestionList().add(question);
+        thisSurvey.getQuestions().add(question);
 
       } else if (questions.getComponentAt(position) instanceof RadioQuestionWithButtons) {
         RadioQuestionWithButtons component =
             (RadioQuestionWithButtons) questions.getComponentAt(position);
         MultiQuestion question = new MultiQuestion();
-        question.setQuestionTitle(component.getQuestion());
+        question.setTitle(component.getQuestion());
         question.setPosition(position);
         question.setQuestionType(component.getQuestionType());
-        question.getAlternativeList().addAll(component.getAlternatives());
+        question.getAlternatives().addAll(component.getAlternatives());
 
-        thisSurvey.getQuestionList().add(question);
+        thisSurvey.getQuestions().add(question);
 
       }
 
     }
     thisSurvey.setCreator(creatorNameTextField.getValue());
-    thisSurvey.setSurveyTitle(surveyTitleTextField.getValue());
+    thisSurvey.setTitle(surveyTitleTextField.getValue());
     thisSurvey.setDate(LocalDate.now());
 
     surveyRepository.save(thisSurvey);
@@ -395,28 +395,28 @@ public class CreateSurveyView extends VerticalLayout
   @Override
   public void setParameter(BeforeEvent event, @OptionalParameter Long parameter) {
     if (parameter != null) {
-      thisSurvey = surveyRepository.getSurveyBySurveyId(parameter);
+      thisSurvey = surveyRepository.getSurveyById(parameter);
 
-      for (Question q : thisSurvey.getQuestionList()) {
-        surveyTitleTextField.setValue(thisSurvey.getSurveyTitle());
+      for (Question q : thisSurvey.getQuestions()) {
+        surveyTitleTextField.setValue(thisSurvey.getTitle());
         creatorNameTextField.setValue(thisSurvey.getCreator());
         if (q instanceof TextQuestion) {
-          questions.add(new TextQuestionWithButtons(q.getQuestionTitle(), this));
+          questions.add(new TextQuestionWithButtons(q.getTitle(), this));
         } else {
           MultiQuestion mq = (MultiQuestion) q;
 
           List<String> stringAlternatives = new ArrayList<>();
-          for (MultiQuestionAlternative mqa : mq.getAlternativeList()) {
-            stringAlternatives.add(mqa.getAlternativeTitle());
+          for (MultiQuestionAlternative mqa : mq.getAlternatives()) {
+            stringAlternatives.add(mqa.getTitle());
           }
 
-          questions.add(new RadioQuestionWithButtons(mq.getQuestionTitle(), this,
-              stringAlternatives, mq.getQuestionType()));
+          questions.add(new RadioQuestionWithButtons(mq.getTitle(), this, stringAlternatives,
+              mq.getQuestionType()));
         }
       }
       submitSurveyButton.setText("Save");
       setLoadedQuestions();
-      thisSurvey.getQuestionList().clear();
+      thisSurvey.getQuestions().clear();
       checkFilledFields();
       hasChanges = false;
     }
