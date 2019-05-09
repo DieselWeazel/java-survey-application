@@ -126,20 +126,18 @@ public class CreateSurveyView extends VerticalLayout
 
       if (typeOfQuestion == TEXT_QUESTION) {
         questions.add(new TextQuestionWithButtons(questionTitleTextField.getValue(), this));
-        refreshQuestions();
       } else {
         questions.add(new RadioQuestionWithButtons(questionTitleTextField.getValue(), this,
             ca.getAlternativeList(), typeOfQuestion));
         addQuestionPackage.remove(ca);
-        refreshQuestions();
       }
-      try {
+      refreshQuestions();
+      if (ca != null) {
         ca.getAlternativeList().clear();
         ca = null;
         typeOfQuestion = 10;
-      } catch (NullPointerException e) {
-        System.out.println("NullPointerException error caught and handled");
       }
+
       questionTitleTextField.setValue("");
       radioButtons.setValue("");
       checkFilledFields();
@@ -214,20 +212,19 @@ public class CreateSurveyView extends VerticalLayout
       }
       this.typeOfQuestion = typeOfQuestion;
     } else if (typeOfQuestion == TEXT_QUESTION) {
-      try {
-        addQuestionPackage.remove(ca);
-      } catch (NullPointerException e) {
-        System.out.println("NullPointerException error caught and handled");
+      for (int i = 0; i < addQuestionPackage.getComponentCount(); i++) {
+        Component c = addQuestionPackage.getComponentAt(i);
+        if (c == ca) {
+          addQuestionPackage.remove(ca);
+        }
       }
       addQuestionButton.setEnabled(true);
       this.typeOfQuestion = typeOfQuestion;
     }
-    try {
+    if (ca != null) {
       if (!ca.getAlternativeList().isEmpty() && !questionTitleTextField.isEmpty()) {
         addQuestionButton.setEnabled(true);
       }
-    } catch (NullPointerException e) {
-      System.out.println("NullPointerException error caught and handled");
     }
   }
 
