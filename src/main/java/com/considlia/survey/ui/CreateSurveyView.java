@@ -7,6 +7,7 @@ import com.considlia.survey.custom_component.ConfirmDialog;
 import com.considlia.survey.custom_component.CreateAlternative;
 import com.considlia.survey.custom_component.EditDialog;
 import com.considlia.survey.custom_component.QuestionType;
+import com.considlia.survey.custom_component.question_with_button.QuestionWithButtons;
 import com.considlia.survey.custom_component.question_with_button.RadioQuestionWithButtons;
 import com.considlia.survey.custom_component.question_with_button.TextQuestionWithButtons;
 import com.considlia.survey.model.MultiQuestion;
@@ -306,79 +307,35 @@ public class CreateSurveyView extends VerticalLayout
     hasChanges = true;
   }
 
-  /*
-   * REMEMBER JONATHAN: DELETE ALL UNUSED METHODS IN THE VERTICALALYOUT CRAP THINGS
-   */
   public void refreshQuestions() {
     for (int i = 0; i < questions.getComponentCount(); i++) {
-      // questions.indexOf(button.getParent().get().getParent().get()) == 0
-      // if (questions.getComponentAt(position) instanceof TextQuestionWithButtons) {
-      if (questions.getComponentAt(i) instanceof TextQuestionWithButtons) {
-        TextQuestionWithButtons component = (TextQuestionWithButtons) questions.getComponentAt(i);
-        if (questions.getComponentCount() == 1) {
+      QuestionWithButtons component = (QuestionWithButtons) questions.getComponentAt(i);
+      if (questions.getComponentCount() == 1) {
+        component.getUpButton().setEnabled(false);
+        component.getDownButton().setEnabled(false);
+      } else if (questions.getComponentCount() > 1) {
+        if (questions.indexOf(component) == 0) {
           component.getUpButton().setEnabled(false);
+          component.getDownButton().setEnabled(true);
+        } else if (questions.indexOf(component) == questions.getComponentCount() - 1) {
+          component.getUpButton().setEnabled(true);
           component.getDownButton().setEnabled(false);
-        } else if (questions.getComponentCount() > 1) {
-          if (questions.indexOf(component) == 0) {
-            component.getUpButton().setEnabled(false);
-            component.getDownButton().setEnabled(true);
-          } else if (questions.indexOf(component) == questions.getComponentCount() - 1) {
-            component.getUpButton().setEnabled(true);
-            component.getDownButton().setEnabled(false);
-          } else {
-            // These are probably just duplicates (scroll down)
-            component.getUpButton().setEnabled(true);
-            component.getDownButton().setEnabled(true);
-          }
         } else {
           component.getUpButton().setEnabled(true);
           component.getDownButton().setEnabled(true);
         }
-      } else if (questions.getComponentAt(i) instanceof RadioQuestionWithButtons) {
-        RadioQuestionWithButtons component = (RadioQuestionWithButtons) questions.getComponentAt(i);
-        if (questions.getComponentCount() == 1) {
-          component.getUpButton().setEnabled(false);
-          component.getDownButton().setEnabled(false);
-        } else if (questions.getComponentCount() > 1) {
-          if (questions.indexOf(component) == 0) {
-            component.getUpButton().setEnabled(false);
-            component.getDownButton().setEnabled(true);
-          } else if (questions.indexOf(component) == questions.getComponentCount() - 1) {
-            component.getUpButton().setEnabled(true);
-            component.getDownButton().setEnabled(false);
-          } else {
-            // These are probably just duplicates and can be cleaned up but leaving this "for now".
-            component.getUpButton().setEnabled(true);
-            component.getDownButton().setEnabled(true);
-          }
-        } else {
-          component.getUpButton().setEnabled(true);
-          component.getDownButton().setEnabled(true);
-        }
+      } else {
+        component.getUpButton().setEnabled(true);
+        component.getDownButton().setEnabled(true);
       }
     }
   }
 
   public void setLoadedQuestions() {
     for (int i = 0; i < questions.getComponentCount(); i++) {
-      // questions.indexOf(button.getParent().get().getParent().get()) == 0
-      // if (questions.getComponentAt(position) instanceof TextQuestionWithButtons) {
-      if (questions.getComponentAt(i) instanceof TextQuestionWithButtons) {
-        TextQuestionWithButtons component = (TextQuestionWithButtons) questions.getComponentAt(i);
+      if (questions.getComponentAt(i) instanceof QuestionWithButtons) {
+        QuestionWithButtons component = (QuestionWithButtons) questions.getComponentAt(i);
         if (questions.getComponentCount() <= 1) {
-          component.getUpButton().setEnabled(false);
-          component.getDownButton().setEnabled(false);
-        } else if (questions.getComponentCount() > 1) {
-          if (questions.indexOf(component) == 0) {
-            component.getUpButton().setEnabled(false);
-          } else if (questions.indexOf(component) == questions.getComponentCount() - 1) {
-            component.getUpButton().setEnabled(true);
-            component.getDownButton().setEnabled(false);
-          }
-        }
-      } else if (questions.getComponentAt(i) instanceof RadioQuestionWithButtons) {
-        RadioQuestionWithButtons component = (RadioQuestionWithButtons) questions.getComponentAt(i);
-        if (questions.getComponentCount() == 1) {
           component.getUpButton().setEnabled(false);
           component.getDownButton().setEnabled(false);
         } else if (questions.getComponentCount() > 1) {
