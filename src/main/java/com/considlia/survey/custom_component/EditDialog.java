@@ -68,7 +68,7 @@ public class EditDialog extends Dialog {
         MultiQuestionAlternative m2) -> m1.getPosition() - m2.getPosition());
 
     for (MultiQuestionAlternative alternative : alternativeList) {
-      addNewTextField(alternative.getAlternativeTitle());
+      addNewTextField(alternative.getTitle());
     }
 
     footer.add(new Button(new Icon(VaadinIcon.PLUS_CIRCLE), event -> addNewTextField(null)));
