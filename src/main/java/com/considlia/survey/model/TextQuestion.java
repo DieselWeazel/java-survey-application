@@ -7,8 +7,4 @@ import javax.persistence.Table;
 @Table(name = "textquestion")
 public class TextQuestion extends Question {
 
-  public TextQuestion() {
-    super();
-  }
-
 }

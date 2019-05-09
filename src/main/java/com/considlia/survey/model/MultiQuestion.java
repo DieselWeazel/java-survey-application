@@ -1,7 +1,6 @@
 package com.considlia.survey.model;
 
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -20,26 +19,22 @@ public class MultiQuestion extends Question {
   @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   @JoinColumn(name = "question_id")
   @OrderBy("position ASC")
-  private Set<MultiQuestionAlternative> alternativeList;
+  private Set<MultiQuestionAlternative> alternatives = new HashSet<>();
 
-  public MultiQuestion() {
-    super();
-    alternativeList = new HashSet<>();
-  }
+  public MultiQuestion() {}
 
   public MultiQuestion(String questionTitle, int position, int questionType) {
     super(questionTitle, position);
     this.questionType = questionType;
-    alternativeList = new HashSet<>();
 
   }
 
-  public Set<MultiQuestionAlternative> getAlternativeList() {
-    return alternativeList;
+  public Set<MultiQuestionAlternative> getAlternatives() {
+    return alternatives;
   }
 
-  public void setAlternativeList(Set<MultiQuestionAlternative> alternativeList) {
-    this.alternativeList = alternativeList;
+  public void setAlternatives(Set<MultiQuestionAlternative> alternatives) {
+    this.alternatives = alternatives;
   }
 
   public int getQuestionType() {
@@ -50,11 +45,18 @@ public class MultiQuestion extends Question {
     this.questionType = questionType;
   }
 
-  @Override
-  public String toString() {
-    return "MultiQuestion [alternativeList=" + alternativeList + ", questionType=" + questionType
-        + "]";
+  public void addAlternative(MultiQuestionAlternative mqa) {
+    getAlternatives().add(mqa);
   }
 
+  public void moveAlternative(MultiQuestionAlternative mqa, int moveDirection) {
+    mqa.setPosition(mqa.getPosition() + moveDirection);
+  }
+
+  @Override
+  public String toString() {
+    return "MultiQuestion [alternativeList=" + alternatives + ", questionType=" + questionType
+        + "]";
+  }
 
 }

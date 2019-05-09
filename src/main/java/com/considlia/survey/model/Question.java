@@ -15,23 +15,23 @@ public abstract class Question {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "question_id")
-  private Long questionId;
-  private String questionTitle;
+  private Long id;
+  private String title;
   private int position;
 
   public Question() {}
 
   public Question(String questionTitle, int position) {
-    this.questionTitle = questionTitle;
+    this.title = questionTitle;
     this.position = position;
   }
 
-  public String getQuestionTitle() {
-    return questionTitle;
+  public String getTitle() {
+    return title;
   }
 
-  public void setQuestionTitle(String questionTitle) {
-    this.questionTitle = questionTitle;
+  public void setTitle(String title) {
+    this.title = title;
   }
 
   public int getPosition() {
@@ -42,12 +42,12 @@ public abstract class Question {
     this.position = position;
   }
 
-  public Long getQuestionId() {
-    return questionId;
+  public Long getId() {
+    return id;
   }
 
   @Override
   public String toString() {
-    return getQuestionTitle();
+    return getTitle();
   }
 }

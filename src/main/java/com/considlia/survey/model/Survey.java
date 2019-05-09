@@ -22,38 +22,33 @@ public class Survey {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "survey_id")
-  private Long surveyId;
+  private Long id;
 
-  private String surveyTitle, creator;
-  private LocalDate date;
+  private String title, creator;
+  private LocalDate date = LocalDate.now();
 
   @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   @JoinColumn(name = "survey_id")
   @OrderBy("position ASC")
-  private Set<Question> questionList;
+  private Set<Question> questions = new HashSet<>();
 
-  public Survey() {
-    questionList = new HashSet<>();
-    date = LocalDate.now();
-  }
+  public Survey() {}
 
   public Survey(String surveyTitle, String creator) {
-    setSurveyTitle(surveyTitle);
+    setTitle(surveyTitle);
     setCreator(creator);
-    questionList = new HashSet<>();
-    date = LocalDate.now();
   }
 
-  public Long getSurveyId() {
-    return surveyId;
+  public Long getId() {
+    return id;
   }
 
-  public String getSurveyTitle() {
-    return surveyTitle;
+  public String getTitle() {
+    return title;
   }
 
-  public void setSurveyTitle(String surveyTitle) {
-    this.surveyTitle = surveyTitle;
+  public void setTitle(String title) {
+    this.title = title;
   }
 
   public String getCreator() {
@@ -72,17 +67,25 @@ public class Survey {
     this.date = date;
   }
 
-  public Set<Question> getQuestionList() {
-    return questionList;
+  public Set<Question> getQuestions() {
+    return questions;
   }
 
-  public void setQuestionList(Set<Question> questionList) {
-    this.questionList = questionList;
+  public void setQuestions(Set<Question> questions) {
+    this.questions = questions;
+  }
+
+  public void addQuestion(Question question) {
+    getQuestions().add(question);
+  }
+
+  public void moveQuestion(Question question, int moveDirection) {
+    question.setPosition(question.getPosition() + moveDirection);
   }
 
   @Override
   public String toString() {
-    return "Survey [surveyId=" + surveyId + ", surveyTitle=" + surveyTitle + ", creator=" + creator
-        + ", date=" + date + ", questionList=" + questionList + "]";
+    return "Survey [surveyId=" + id + ", surveyTitle=" + title + ", creator=" + creator + ", date="
+        + date + ", questionList=" + questions + "]";
   }
 }
