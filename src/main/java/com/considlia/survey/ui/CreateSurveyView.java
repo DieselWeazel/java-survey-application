@@ -104,11 +104,9 @@ public class CreateSurveyView extends VerticalLayout
 
     surveyTitleTextField.addValueChangeListener(titleChange -> {
       checkFilledFields();
-      hasChanges = true;
     });
     creatorNameTextField.addValueChangeListener(titleChange -> {
       checkFilledFields();
-      hasChanges = true;
     });
 
     add(header);
@@ -145,7 +143,6 @@ public class CreateSurveyView extends VerticalLayout
       questionTitleTextField.setValue("");
       radioButtons.setValue("");
       checkFilledFields();
-      hasChanges = true;
     }
     // Only enters here on the first time pressing the add question button
     // Because radiobuttons is null only at that time
@@ -234,7 +231,7 @@ public class CreateSurveyView extends VerticalLayout
     }
   }
 
-  // Move question in questionscontainer
+  // Move question in questions container
   public void moveQuestion(Button button, int moveDirection) {
 
     questions.replace(button.getParent().get().getParent().get(), questions.getComponentAt(
@@ -242,12 +239,11 @@ public class CreateSurveyView extends VerticalLayout
     hasChanges = true;
   }
 
-  // Remove questions from questionscontainer
+  // Remove questions from questions container
   public void removeQuestion(Component c) {
     questions.remove(c);
     refreshQuestions();
     checkFilledFields();
-    hasChanges = true;
   }
 
   // Edit question via pencil buttons in custom components
@@ -256,7 +252,7 @@ public class CreateSurveyView extends VerticalLayout
     hasChanges = true;
   }
 
-  // Save survey with questions to database(multiquestion not implemented)
+  // Save survey with questions to database
   public void saveSurvey() {
     thisSurvey.getQuestionList().clear();
 
@@ -307,6 +303,7 @@ public class CreateSurveyView extends VerticalLayout
     } else {
       submitSurveyButton.setEnabled(false);
     }
+    hasChanges = true;
   }
 
   /*
