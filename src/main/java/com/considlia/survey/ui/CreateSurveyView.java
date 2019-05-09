@@ -7,7 +7,7 @@ import com.considlia.survey.custom_component.ConfirmDialog;
 import com.considlia.survey.custom_component.CreateAlternative;
 import com.considlia.survey.custom_component.EditDialog;
 import com.considlia.survey.custom_component.QuestionType;
-import com.considlia.survey.custom_component.RadioQuestionWithButtons;
+import com.considlia.survey.custom_component.question_with_button.RadioQuestionWithButtons;
 import com.considlia.survey.custom_component.question_with_button.TextQuestionWithButtons;
 import com.considlia.survey.model.MultiQuestion;
 import com.considlia.survey.model.MultiQuestionAlternative;
