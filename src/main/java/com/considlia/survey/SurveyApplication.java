@@ -17,29 +17,29 @@ public class SurveyApplication {
   public CommandLineRunner initDb(SurveyRepository surveyRepository) {
     return args -> {
       // Survey survey1 = new Survey();
-      // survey1.setSurveyTitle("Test");
+      // survey1.setTitle("Test");
       // survey1.setCreator("Jens");
       // survey1.setDate(LocalDate.now());
       // //
       // MultiQuestion multi = new MultiQuestion();
-      // multi.setQuestionTitle("aTest multi");
+      // multi.setTitle("aTest multi");
       // multi.setQuestionType(1);
       //
       // MultiQuestionAlternative multiAlt = new MultiQuestionAlternative();
-      // multiAlt.setAlternativeTitle("Första");
+      // multiAlt.setTitle("Första");
       // multiAlt.setPosition(1);
       // MultiQuestionAlternative multiAlt2 = new MultiQuestionAlternative();
-      // multiAlt2.setAlternativeTitle("Andra");
+      // multiAlt2.setTitle("Andra");
       // multiAlt2.setPosition(2);
       // MultiQuestionAlternative multiAlt3 = new MultiQuestionAlternative();
-      // multiAlt3.setAlternativeTitle("Tredje");
+      // multiAlt3.setTitle("Tredje");
       // multiAlt3.setPosition(3);
       // MultiQuestionAlternative multiAlt4 = new MultiQuestionAlternative();
-      // multiAlt4.setAlternativeTitle("Fjärde");
+      // multiAlt4.setTitle("Fjärde");
       // multiAlt4.setPosition(4);
       //
       // TextQuestion text = new TextQuestion();
-      // text.setQuestionTitle("bTest textfråga");
+      // text.setTitle("bTest textfråga");
       //
       // Set<MultiQuestionAlternative> alternativeList = new HashSet<>();
       // alternativeList.add(multiAlt);
@@ -47,23 +47,23 @@ public class SurveyApplication {
       // alternativeList.add(multiAlt3);
       // alternativeList.add(multiAlt4);
       //
-      // multi.setAlternativeList(alternativeList);
+      // multi.setAlternatives(alternativeList);
       //
       // MultiQuestion multi2 = new MultiQuestion();
-      // multi2.setQuestionTitle("cTest multi // one response only");
+      // multi2.setTitle("cTest multi // one response only");
       // multi2.setQuestionType(0);
       //
       // MultiQuestionAlternative singleAlt = new MultiQuestionAlternative();
-      // singleAlt.setAlternativeTitle("AAAAAAA");
+      // singleAlt.setTitle("AAAAAAA");
       // singleAlt.setPosition(1);
       // MultiQuestionAlternative singleAlt2 = new MultiQuestionAlternative();
-      // singleAlt2.setAlternativeTitle("BBBBB");
+      // singleAlt2.setTitle("BBBBB");
       // singleAlt2.setPosition(2);
       // MultiQuestionAlternative singleAlt3 = new MultiQuestionAlternative();
-      // singleAlt3.setAlternativeTitle("CCCCCCC");
+      // singleAlt3.setTitle("CCCCCCC");
       // singleAlt3.setPosition(3);
       // MultiQuestionAlternative singleAlt4 = new MultiQuestionAlternative();
-      // singleAlt4.setAlternativeTitle("DDDDDDD");
+      // singleAlt4.setTitle("DDDDDDD");
       // singleAlt4.setPosition(4);
       //
       // Set<MultiQuestionAlternative> alternativeList2 = new HashSet<>();
@@ -72,7 +72,7 @@ public class SurveyApplication {
       // alternativeList2.add(singleAlt3);
       // alternativeList2.add(singleAlt4);
       //
-      // multi2.setAlternativeList(alternativeList2);
+      // multi2.setAlternatives(alternativeList2);
       //
       // text.setPosition(1);
       // multi.setPosition(2);
@@ -83,28 +83,28 @@ public class SurveyApplication {
       // questionList.add(text);
       // questionList.add(multi2);
       //
-      // survey1.setQuestionList(questionList);
+      // survey1.setQuestions(questionList);
       //
       // surveyRepository.save(survey1);
       //
       // Survey survey2 = new Survey();
-      // survey2.setSurveyTitle("Test");
+      // survey2.setTitle("Test");
       // survey2.setCreator("Jontes Test");
       // survey2.setDate(LocalDate.now());
       //
       // Question jonteQuestion1 = new TextQuestion();
-      // jonteQuestion1.setQuestionTitle("FRÅGA 1");
+      // jonteQuestion1.setTitle("FRÅGA 1");
       // jonteQuestion1.setPosition(1);
       //
       // Question jonteQuestion2 = new TextQuestion();
-      // jonteQuestion2.setQuestionTitle("FRÅGA 2");
+      // jonteQuestion2.setTitle("FRÅGA 2");
       // jonteQuestion2.setPosition(2);
       //
       // Set<Question> questionListJonte = new HashSet<>();
       // questionListJonte.add(jonteQuestion1);
       // questionListJonte.add(jonteQuestion2);
       //
-      // survey2.setQuestionList(questionListJonte);
+      // survey2.setQuestions(questionListJonte);
       //
       // surveyRepository.save(survey2);
 
