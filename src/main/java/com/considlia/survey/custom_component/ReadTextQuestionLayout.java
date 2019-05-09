@@ -18,7 +18,7 @@ public class ReadTextQuestionLayout extends VerticalLayout {
     this.horizontalLayout = new HorizontalLayout();
     this.question = question;
     questionField = new TextField();
-    titleOfQuestion = new H5(question.getQuestionTitle());
+    titleOfQuestion = new H5(question.getTitle());
 
     horizontalLayout.add(questionField);
     add(titleOfQuestion, horizontalLayout);

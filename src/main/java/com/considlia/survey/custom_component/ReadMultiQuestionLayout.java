@@ -30,7 +30,7 @@ public class ReadMultiQuestionLayout extends VerticalLayout {
 
   public ReadMultiQuestionLayout(MultiQuestion question) {
     // this.question = question;
-    this.title = new H5(question.getQuestionTitle());
+    this.title = new H5(question.getTitle());
     this.horizontalLayout = new HorizontalLayout();
     this.alternatives = new HashSet<>();
     this.stringAlternatives = stringAlternatives;
@@ -38,23 +38,23 @@ public class ReadMultiQuestionLayout extends VerticalLayout {
 
     add(title);
 
-//        for (int position = 0; position < stringAlternatives.size(); position++){
-//            MultiQuestionAlternative alt = new MultiQuestionAlternative();
-//            alt.setPosition(position);
-////            alt.setAlternativeTitle(stringAlternatives.get(position));
-//            alternatives.add(alt);
-//        }
+    // for (int position = 0; position < stringAlternatives.size(); position++){
+    // MultiQuestionAlternative alt = new MultiQuestionAlternative();
+    // alt.setPosition(position);
+    //// alt.setAlternativeTitle(stringAlternatives.get(position));
+    // alternatives.add(alt);
+    // }
 
     choiceVerticalLayout = new VerticalLayout();
     if (question.getQuestionType() == 1) {
       this.radioButtons = new RadioButtonGroup<>();
-      radioButtons.setItems(question.getAlternativeList());
+      radioButtons.setItems(question.getAlternatives());
       choiceVerticalLayout.add(radioButtons);
       radioButtons.addThemeVariants(RadioGroupVariant.LUMO_VERTICAL);
 
     } else {
       this.checkBoxButtons = new CheckboxGroup<>();
-      checkBoxButtons.setItems(question.getAlternativeList());
+      checkBoxButtons.setItems(question.getAlternatives());
       choiceVerticalLayout.add(checkBoxButtons);
       checkBoxButtons.addThemeVariants(CheckboxGroupVariant.LUMO_VERTICAL);
 

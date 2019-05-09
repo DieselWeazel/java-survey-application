@@ -1,5 +1,8 @@
 package com.considlia.survey.ui;
 
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import com.considlia.survey.custom_component.ConfirmDialog;
 import com.considlia.survey.model.Survey;
 import com.considlia.survey.repositories.SurveyRepository;
@@ -13,9 +16,6 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Route;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
 
 @Route(value = "", layout = MainLayout.class)
 public class MainView extends VerticalLayout {
@@ -35,10 +35,9 @@ public class MainView extends VerticalLayout {
     surveyList = surveyRepository.findAll();
 
     grid = new Grid<>();
-    Grid.Column<Survey> idColumn =
-        grid.addColumn(Survey::getSurveyId).setHeader("Id").setWidth("1px");
+    Grid.Column<Survey> idColumn = grid.addColumn(Survey::getId).setHeader("Id").setWidth("1px");
     Grid.Column<Survey> titleColumn =
-        grid.addColumn(Survey::getSurveyTitle).setHeader("Title").setFlexGrow(4);
+        grid.addColumn(Survey::getTitle).setHeader("Title").setFlexGrow(4);
     Grid.Column<Survey> creatorColumn = grid.addColumn(Survey::getCreator).setHeader("Creator");
     Grid.Column<Survey> dateColumng = grid.addColumn(Survey::getDate).setHeader("Date");
     grid.addComponentColumn(item -> showButtons(grid, item));
@@ -84,7 +83,7 @@ public class MainView extends VerticalLayout {
       dateField.clear();
       List<Survey> filteredList = new ArrayList<Survey>();
       for (Survey s : surveyList) {
-        if (Long.parseLong(fromFilter) == s.getSurveyId()) {
+        if (Long.parseLong(fromFilter) == s.getId()) {
           filteredList.add(s);
         }
         grid.setItems(filteredList);
@@ -101,7 +100,7 @@ public class MainView extends VerticalLayout {
       dateField.clear();
       List<Survey> filteredList = new ArrayList<Survey>();
       for (Survey s : surveyList) {
-        if (s.getSurveyTitle().toUpperCase().contains(fromFilter.toUpperCase())) {
+        if (s.getTitle().toUpperCase().contains(fromFilter.toUpperCase())) {
           filteredList.add(s);
         }
         grid.setItems(filteredList);
@@ -150,10 +149,10 @@ public class MainView extends VerticalLayout {
 
   public HorizontalLayout showButtons(Grid<Survey> grid, Survey item) {
     Button showSurvey = new Button(new Icon(VaadinIcon.EYE), onShow -> {
-      getUI().ifPresent(ui -> ui.navigate(ShowSurveyView.class, item.getSurveyId()));
+      getUI().ifPresent(ui -> ui.navigate(ShowSurveyView.class, item.getId()));
     });
     Button editSurvey = new Button(new Icon(VaadinIcon.PENCIL), onEdit -> {
-      getUI().ifPresent(ui -> ui.navigate(CreateSurveyView.class, item.getSurveyId()));
+      getUI().ifPresent(ui -> ui.navigate(CreateSurveyView.class, item.getId()));
     });
     Button deleteSurvey = new Button(new Icon(VaadinIcon.TRASH), onDelete -> {
       ConfirmDialog confirmDialog = new ConfirmDialog("Confirm delete",

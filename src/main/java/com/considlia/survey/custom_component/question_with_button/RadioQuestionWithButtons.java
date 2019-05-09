@@ -52,7 +52,7 @@ public class RadioQuestionWithButtons extends QuestionWithButtons {
     for (int position = 0; position < stringAlternatives.size(); position++) {
       MultiQuestionAlternative alt = new MultiQuestionAlternative();
       alt.setPosition(position);
-      alt.setAlternativeTitle(stringAlternatives.get(position));
+      alt.setTitle(stringAlternatives.get(position));
       alternatives.add(alt);
     }
   }

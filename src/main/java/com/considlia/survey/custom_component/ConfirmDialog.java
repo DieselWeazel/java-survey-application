@@ -34,17 +34,25 @@ public class ConfirmDialog extends Dialog {
     open();
   }
 
-  public ConfirmDialog(ContinueNavigationAction action) {
+  public ConfirmDialog(ContinueNavigationAction action, CreateSurveyView survey) {
 
     initCancelBtn();
 
-    Button confirmBtn = new Button("Yes", onConfirm -> {
+    Button confirmBtn = new Button("Discard", onDiscard -> {
+      action.proceed();
+      close();
+    });
+    Button saveBtn = new Button("Save", onSave -> {
+      survey.saveSurvey();
       action.proceed();
       close();
     });
 
-    add(new H5("Are you sure you want to leave without saving?"));
-    add(new HorizontalLayout(confirmBtn, cancelBtn));
+    HorizontalLayout buttonContainer = new HorizontalLayout();
+    buttonContainer.add(saveBtn, confirmBtn, cancelBtn);
+
+    add(new H5("Do you want to save or discard your changes before navigating away?"));
+    add(buttonContainer);
   }
 
   public ConfirmDialog(CreateSurveyView survey, QuestionWithButtons question) {

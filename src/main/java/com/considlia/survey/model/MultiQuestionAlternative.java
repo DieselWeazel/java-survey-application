@@ -1,6 +1,5 @@
 package com.considlia.survey.model;
 
-import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,24 +14,23 @@ public class MultiQuestionAlternative {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "alternative_id")
-  private Long alternativeId;
+  private Long id;
 
-  private String alternativeTitle;
+  private String title;
   private int position;
 
-  public MultiQuestionAlternative() {
-  }
+  public MultiQuestionAlternative() {}
 
   public MultiQuestionAlternative(String questionTitle) {
-    this.alternativeTitle = questionTitle;
+    this.title = questionTitle;
   }
 
-  public String getAlternativeTitle() {
-    return alternativeTitle;
+  public String getTitle() {
+    return title;
   }
 
-  public void setAlternativeTitle(String alternativeTitle) {
-    this.alternativeTitle = alternativeTitle;
+  public void setTitle(String title) {
+    this.title = title;
   }
 
   public int getPosition() {
@@ -45,8 +43,7 @@ public class MultiQuestionAlternative {
 
   @Override
   public String toString() {
-    return alternativeTitle;
+    return title;
   }
-
 
 }
