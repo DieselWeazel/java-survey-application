@@ -1,7 +1,9 @@
 package com.considlia.survey.custom_component;
 
+import com.considlia.survey.custom_component.question_with_button.QuestionWithButtons;
 import com.considlia.survey.model.Survey;
 import com.considlia.survey.repositories.SurveyRepository;
+import com.considlia.survey.ui.CreateSurveyView;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
@@ -12,14 +14,15 @@ import com.vaadin.flow.router.BeforeLeaveEvent.ContinueNavigationAction;
 
 public class ConfirmDialog extends Dialog {
 
+  private Button cancelBtn;
+
   public ConfirmDialog(String headerText, String contentText, SurveyRepository surveyRepository,
       Grid<Survey> grid, Survey item) {
     setCloseOnEsc(false);
     setCloseOnOutsideClick(false);
 
-    Button cancelBtn = new Button("Cancel", onCancel -> {
-      close();
-    });
+    initCancelBtn();
+
     Button confirmBtn = new Button("Confirm", onConfirm -> {
       surveyRepository.delete(item);
       grid.setItems(surveyRepository.findAll());
@@ -33,9 +36,8 @@ public class ConfirmDialog extends Dialog {
 
   public ConfirmDialog(ContinueNavigationAction action) {
 
-    Button cancelBtn = new Button("No", onCancel -> {
-      close();
-    });
+    initCancelBtn();
+
     Button confirmBtn = new Button("Yes", onConfirm -> {
       action.proceed();
       close();
@@ -43,6 +45,25 @@ public class ConfirmDialog extends Dialog {
 
     add(new H5("Are you sure you want to leave without saving?"));
     add(new HorizontalLayout(confirmBtn, cancelBtn));
+  }
+
+  public ConfirmDialog(CreateSurveyView survey, QuestionWithButtons question) {
+
+    initCancelBtn();
+
+    Button confirmBtn = new Button("Confirm", onConfirm -> {
+      survey.removeQuestion(question);
+      close();
+    });
+    add(new H5("Are you sure you want to remove this question?"));
+    add(new HorizontalLayout(cancelBtn, confirmBtn));
+    open();
+  }
+
+  public void initCancelBtn() {
+    cancelBtn = new Button("Cancel", onCancel -> {
+      close();
+    });
   }
 
 }
