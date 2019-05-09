@@ -28,7 +28,7 @@ public class RadioQuestionWithButtons extends VerticalLayout {
   private String question;
   private Set<MultiQuestionAlternative> alternatives;
   private List<String> stringAlternatives;
-  private int questionType;
+  private QuestionType questionType;
   private H5 title;
 
   private RadioButtonGroup<String> radioButtons;
@@ -40,7 +40,7 @@ public class RadioQuestionWithButtons extends VerticalLayout {
   private HorizontalLayout content;
 
   public RadioQuestionWithButtons(String question, CreateSurveyView survey,
-      List<String> stringAlternatives, int questionType) {
+      List<String> stringAlternatives, QuestionType questionType) {
     setId("custom");
     setWidth("100%");
 
@@ -81,7 +81,7 @@ public class RadioQuestionWithButtons extends VerticalLayout {
 
     add(content);
 
-    if (questionType == 1) {
+    if (questionType == QuestionType.RADIO) {
       radioButtons = new RadioButtonGroup<>();
       radioButtons.setItems(stringAlternatives);
       radioButtons.addThemeVariants(RadioGroupVariant.LUMO_VERTICAL);
@@ -135,11 +135,11 @@ public class RadioQuestionWithButtons extends VerticalLayout {
     this.alternatives = alternatives;
   }
 
-  public int getQuestionType() {
+  public QuestionType getQuestionType() {
     return questionType;
   }
 
-  public void setQuestionType(int questionType) {
+  public void setQuestionType(QuestionType questionType) {
     this.questionType = questionType;
 
   }
@@ -159,10 +159,10 @@ public class RadioQuestionWithButtons extends VerticalLayout {
       alternatives.add(alt);
     }
 
-    if (questionType == 1) {
+    if (questionType == QuestionType.RADIO) {
       radioButtons.setItems(stringAlternatives);
 
-    } else {
+    } else if (questionType == QuestionType.CHECKBOX) {
       checkBoxButtons.setItems(stringAlternatives);
     }
 
