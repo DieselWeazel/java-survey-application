@@ -63,10 +63,9 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
     surveyVerticalLayout.setId("questionpackage");
 
     Label mandatoryLabel = new Label("* = Mandatory question");
-    mandatoryLabel.setId("mandatoryLabel");
     headerHorizontalLayout.setDefaultVerticalComponentAlignment(Alignment.BASELINE);
-    headerHorizontalLayout.add(h1, mandatoryLabel);
-    mainVerticalLayout.add(headerHorizontalLayout, surveyVerticalLayout);
+    headerHorizontalLayout.add(h1);
+    mainVerticalLayout.add(headerHorizontalLayout, mandatoryLabel, surveyVerticalLayout);
     add(mainVerticalLayout);
   }
 
