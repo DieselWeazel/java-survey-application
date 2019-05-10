@@ -23,8 +23,8 @@ public class RadioQuestionWithButtons extends QuestionWithButtons {
   private CheckboxGroup<String> checkBoxButtons;
 
   public RadioQuestionWithButtons(String question, CreateSurveyView survey,
-      List<String> stringAlternatives, QuestionType questionType) {
-    super(question, survey);
+      List<String> stringAlternatives, QuestionType questionType, boolean mandatory) {
+    super(question, survey, mandatory);
 
     this.questionType = questionType;
     this.stringAlternatives = stringAlternatives;

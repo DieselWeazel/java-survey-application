@@ -18,6 +18,7 @@ import com.considlia.survey.model.TextQuestion;
 import com.considlia.survey.repositories.SurveyRepository;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -43,6 +44,8 @@ public class CreateSurveyView extends VerticalLayout
   private Button submitSurveyButton;
   private Button cancelButton;
   private RadioButtonGroup<String> radioButtons;
+  private Checkbox mandatory;
+
 
   // Textfields
   private TextField surveyTitleTextField;
@@ -152,6 +155,9 @@ public class CreateSurveyView extends VerticalLayout
         addQuestionButton.setEnabled(false);
       }
     });
+
+    mandatory = new Checkbox("Mandatory Question");
+
   }
 
   public void initLayout() {
@@ -159,7 +165,7 @@ public class CreateSurveyView extends VerticalLayout
     header.add(submitSurveyButton);
     header.add(cancelButton);
 
-    addQuestionHorizontalContainer.add(questionTitleTextField, addQuestionButton);
+    addQuestionHorizontalContainer.add(questionTitleTextField, addQuestionButton, mandatory);
     addQuestionContainer.add(addQuestionHorizontalContainer, radioButtons);
 
     add(header);
@@ -174,16 +180,17 @@ public class CreateSurveyView extends VerticalLayout
 
     switch (questionType) {
       case TEXT:
-        questions.add(new TextQuestionWithButtons(questionTitleTextField.getValue(), this));
+        questions.add(new TextQuestionWithButtons(questionTitleTextField.getValue(), this,
+            mandatory.getValue()));
         break;
       case RADIO:
         questions.add(new RadioQuestionWithButtons(questionTitleTextField.getValue(), this,
-            createAlternative.getAlternativeList(), QuestionType.RADIO));
+            createAlternative.getAlternativeList(), QuestionType.RADIO, mandatory.getValue()));
         addQuestionContainer.remove(createAlternative);
         break;
       case CHECKBOX:
         questions.add(new RadioQuestionWithButtons(questionTitleTextField.getValue(), this,
-            createAlternative.getAlternativeList(), QuestionType.CHECKBOX));
+            createAlternative.getAlternativeList(), QuestionType.CHECKBOX, mandatory.getValue()));
         addQuestionContainer.remove(createAlternative);
         break;
     }
@@ -265,6 +272,7 @@ public class CreateSurveyView extends VerticalLayout
         TextQuestion question = new TextQuestion();
         question.setTitle(component.getQuestion());
         question.setPosition(position);
+        question.setMandatory(component.isMandatory());
         thisSurvey.getQuestions().add(question);
 
       } else if (questions.getComponentAt(position) instanceof RadioQuestionWithButtons) {
@@ -273,6 +281,7 @@ public class CreateSurveyView extends VerticalLayout
         MultiQuestion question = new MultiQuestion();
         question.setTitle(component.getQuestion());
         question.setPosition(position);
+        question.setMandatory(component.isMandatory());
         question.setQuestionType(component.getQuestionType());
         question.getAlternatives().addAll(component.getAlternatives());
 
@@ -334,7 +343,7 @@ public class CreateSurveyView extends VerticalLayout
         surveyTitleTextField.setValue(thisSurvey.getTitle());
         creatorNameTextField.setValue(thisSurvey.getCreator());
         if (q instanceof TextQuestion) {
-          questions.add(new TextQuestionWithButtons(q.getTitle(), this));
+          questions.add(new TextQuestionWithButtons(q.getTitle(), this, q.isMandatory()));
         } else {
           MultiQuestion mq = (MultiQuestion) q;
 
@@ -344,7 +353,7 @@ public class CreateSurveyView extends VerticalLayout
           }
 
           questions.add(new RadioQuestionWithButtons(mq.getTitle(), this, stringAlternatives,
-              mq.getQuestionType()));
+              mq.getQuestionType(), mq.isMandatory()));
         }
       }
       submitSurveyButton.setText("Save");
