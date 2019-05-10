@@ -15,6 +15,7 @@ public abstract class QuestionWithButtons extends VerticalLayout {
   private static final int MOVE_DOWN = 1;
 
   private String question;
+  private boolean mandatory;
   private H5 title;
 
   private Button upButton;
@@ -23,7 +24,7 @@ public abstract class QuestionWithButtons extends VerticalLayout {
   private HorizontalLayout content;
   private CreateSurveyView survey;
 
-  public QuestionWithButtons(String question, CreateSurveyView survey) {
+  public QuestionWithButtons(String question, CreateSurveyView survey, boolean mandatory) {
     setId("custom");
     setWidth("100%");
 
@@ -31,12 +32,13 @@ public abstract class QuestionWithButtons extends VerticalLayout {
     this.survey = survey;
     this.upButton = new Button(new Icon(VaadinIcon.ARROW_UP));
     this.downButton = new Button(new Icon(VaadinIcon.ARROW_DOWN));
+    setMandatory(mandatory);
 
     content = new HorizontalLayout();
     content.setWidthFull();
     content.setClassName("content");
 
-    title = new H5(question);
+    title = new H5(question + (mandatory ? "*" : ""));
     title.setWidth("90%");
 
     initButtonEvent(upButton, MOVE_UP);
@@ -82,6 +84,14 @@ public abstract class QuestionWithButtons extends VerticalLayout {
 
   public void setTitle(H5 title) {
     this.title = title;
+  }
+
+  public boolean isMandatory() {
+    return mandatory;
+  }
+
+  public void setMandatory(boolean mandatory) {
+    this.mandatory = mandatory;
   }
 
   public Button getUpButton() {

@@ -18,12 +18,14 @@ public abstract class Question {
   private Long id;
   private String title;
   private int position;
+  private boolean mandatory;
 
   public Question() {}
 
-  public Question(String questionTitle, int position) {
+  public Question(String questionTitle, int position, boolean mandatory) {
     this.title = questionTitle;
     this.position = position;
+    this.mandatory = mandatory;
   }
 
   public String getTitle() {
@@ -40,6 +42,14 @@ public abstract class Question {
 
   public void setPosition(int position) {
     this.position = position;
+  }
+
+  public boolean isMandatory() {
+    return mandatory;
+  }
+
+  public void setMandatory(boolean mandatory) {
+    this.mandatory = mandatory;
   }
 
   public Long getId() {

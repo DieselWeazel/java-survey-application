@@ -18,6 +18,7 @@ import com.considlia.survey.ui.custom_component.question_with_button.QuestionWit
 import com.considlia.survey.ui.custom_component.question_with_button.TextQuestionWithButtons;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -44,6 +45,8 @@ public class CreateSurveyView extends BaseView
   private Button submitSurveyButton;
   private Button cancelButton;
   private RadioButtonGroup<String> radioButtons;
+  private Checkbox mandatory;
+
 
   // Textfields
   private TextField surveyTitleTextField;
@@ -161,6 +164,9 @@ public class CreateSurveyView extends BaseView
         addQuestionButton.setEnabled(false);
       }
     });
+
+    mandatory = new Checkbox("Mandatory Question");
+
   }
 
   public void initLayout() {
@@ -169,7 +175,7 @@ public class CreateSurveyView extends BaseView
     header.add(titleContainer);
     header.add(descriptionTextArea);
 
-    addQuestionHorizontalContainer.add(questionTitleTextField, addQuestionButton);
+    addQuestionHorizontalContainer.add(questionTitleTextField, addQuestionButton, mandatory);
     addQuestionContainer.add(addQuestionHorizontalContainer, radioButtons);
 
     add(header);
@@ -184,16 +190,17 @@ public class CreateSurveyView extends BaseView
 
     switch (questionType) {
       case TEXT:
-        questions.add(new TextQuestionWithButtons(questionTitleTextField.getValue(), this));
+        questions.add(new TextQuestionWithButtons(questionTitleTextField.getValue(), this,
+            mandatory.getValue()));
         break;
       case RADIO:
         questions.add(new MultiQuestionWithButtons(questionTitleTextField.getValue(), this,
-            createAlternative.getAlternativeList(), QuestionType.RADIO));
+            createAlternative.getAlternativeList(), QuestionType.RADIO, mandatory.getValue()));
         addQuestionContainer.remove(createAlternative);
         break;
       case CHECKBOX:
         questions.add(new MultiQuestionWithButtons(questionTitleTextField.getValue(), this,
-            createAlternative.getAlternativeList(), QuestionType.CHECKBOX));
+            createAlternative.getAlternativeList(), QuestionType.CHECKBOX, mandatory.getValue()));
         addQuestionContainer.remove(createAlternative);
         break;
     }
@@ -275,6 +282,7 @@ public class CreateSurveyView extends BaseView
         TextQuestion question = new TextQuestion();
         question.setTitle(component.getQuestion());
         question.setPosition(position);
+        question.setMandatory(component.isMandatory());
         thisSurvey.getQuestions().add(question);
 
       } else if (questions.getComponentAt(position) instanceof MultiQuestionWithButtons) {
@@ -283,6 +291,7 @@ public class CreateSurveyView extends BaseView
         MultiQuestion question = new MultiQuestion();
         question.setTitle(component.getQuestion());
         question.setPosition(position);
+        question.setMandatory(component.isMandatory());
         question.setQuestionType(component.getQuestionType());
         question.getAlternatives().addAll(component.getAlternatives());
 
@@ -346,7 +355,7 @@ public class CreateSurveyView extends BaseView
         creatorNameTextField.setValue(thisSurvey.getCreator());
         descriptionTextArea.setValue(thisSurvey.getDescription());
         if (q instanceof TextQuestion) {
-          questions.add(new TextQuestionWithButtons(q.getTitle(), this));
+          questions.add(new TextQuestionWithButtons(q.getTitle(), this, q.isMandatory()));
         } else {
           MultiQuestion mq = (MultiQuestion) q;
 
@@ -354,9 +363,8 @@ public class CreateSurveyView extends BaseView
           for (MultiQuestionAlternative mqa : mq.getAlternatives()) {
             stringAlternatives.add(mqa.getTitle());
           }
-
           questions.add(new MultiQuestionWithButtons(mq.getTitle(), this, stringAlternatives,
-              mq.getQuestionType()));
+              mq.getQuestionType(), mq.isMandatory()));
         }
       }
       submitSurveyButton.setText("Save");

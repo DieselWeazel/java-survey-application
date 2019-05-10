@@ -9,8 +9,8 @@ public class TextQuestionWithButtons extends QuestionWithButtons {
 
   private TextField text;
 
-  public TextQuestionWithButtons(String question, CreateSurveyView survey) {
-    super(question, survey);
+  public TextQuestionWithButtons(String question, CreateSurveyView survey, boolean mandatory) {
+    super(question, survey, mandatory);
 
     text = new TextField();
     text.setWidth("25%");
