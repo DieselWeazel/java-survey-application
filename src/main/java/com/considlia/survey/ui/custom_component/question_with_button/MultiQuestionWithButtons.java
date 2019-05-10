@@ -1,11 +1,11 @@
-package com.considlia.survey.custom_component.question_with_button;
+package com.considlia.survey.ui.custom_component.question_with_button;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import com.considlia.survey.custom_component.QuestionType;
 import com.considlia.survey.model.MultiQuestionAlternative;
 import com.considlia.survey.ui.CreateSurveyView;
+import com.considlia.survey.ui.custom_component.QuestionType;
 import com.vaadin.flow.component.checkbox.CheckboxGroup;
 import com.vaadin.flow.component.checkbox.CheckboxGroupVariant;
 import com.vaadin.flow.component.dependency.StyleSheet;

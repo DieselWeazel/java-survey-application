@@ -1,10 +1,10 @@
-package com.considlia.survey.custom_component;
+package com.considlia.survey.ui.custom_component;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.considlia.survey.custom_component.question_with_button.MultiQuestionWithButtons;
-import com.considlia.survey.custom_component.question_with_button.TextQuestionWithButtons;
 import com.considlia.survey.model.MultiQuestionAlternative;
+import com.considlia.survey.ui.custom_component.question_with_button.MultiQuestionWithButtons;
+import com.considlia.survey.ui.custom_component.question_with_button.TextQuestionWithButtons;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.icon.Icon;

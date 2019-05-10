@@ -1,4 +1,4 @@
-package com.considlia.survey.custom_component.question_with_button;
+package com.considlia.survey.ui.custom_component.question_with_button;
 
 import com.considlia.survey.ui.CreateSurveyView;
 import com.vaadin.flow.component.dependency.StyleSheet;
