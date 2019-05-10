@@ -1,4 +1,4 @@
-package com.considlia.survey.custom_component;
+package com.considlia.survey.ui.custom_component;
 
 import com.considlia.survey.model.MultiQuestion;
 import com.considlia.survey.model.MultiQuestionAlternative;

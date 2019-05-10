@@ -3,19 +3,20 @@ package com.considlia.survey.ui;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import com.considlia.survey.custom_component.ConfirmDialog;
-import com.considlia.survey.custom_component.CreateAlternative;
-import com.considlia.survey.custom_component.EditDialog;
-import com.considlia.survey.custom_component.QuestionType;
-import com.considlia.survey.custom_component.question_with_button.MultiQuestionWithButtons;
-import com.considlia.survey.custom_component.question_with_button.QuestionWithButtons;
-import com.considlia.survey.custom_component.question_with_button.TextQuestionWithButtons;
 import com.considlia.survey.model.MultiQuestion;
 import com.considlia.survey.model.MultiQuestionAlternative;
 import com.considlia.survey.model.Question;
+import com.considlia.survey.model.QuestionFactory;
 import com.considlia.survey.model.Survey;
 import com.considlia.survey.model.TextQuestion;
 import com.considlia.survey.repositories.SurveyRepository;
+import com.considlia.survey.ui.custom_component.ConfirmDialog;
+import com.considlia.survey.ui.custom_component.CreateAlternative;
+import com.considlia.survey.ui.custom_component.EditDialog;
+import com.considlia.survey.ui.custom_component.QuestionType;
+import com.considlia.survey.ui.custom_component.question_with_button.MultiQuestionWithButtons;
+import com.considlia.survey.ui.custom_component.question_with_button.QuestionWithButtons;
+import com.considlia.survey.ui.custom_component.question_with_button.TextQuestionWithButtons;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
@@ -46,7 +47,6 @@ public class CreateSurveyView extends BaseView
   private Button cancelButton;
   private RadioButtonGroup<String> radioButtons;
   private Checkbox mandatory;
-
 
   // Textfields
   private TextField surveyTitleTextField;
@@ -274,32 +274,13 @@ public class CreateSurveyView extends BaseView
   // Save survey with questions to database
   public void saveSurvey() {
     thisSurvey.getQuestions().clear();
+    QuestionFactory qf = new QuestionFactory();
 
     for (int position = 0; position < questions.getComponentCount(); position++) {
-      if (questions.getComponentAt(position) instanceof TextQuestionWithButtons) {
-        TextQuestionWithButtons component =
-            (TextQuestionWithButtons) questions.getComponentAt(position);
-        TextQuestion question = new TextQuestion();
-        question.setTitle(component.getQuestion());
-        question.setPosition(position);
-        question.setMandatory(component.isMandatory());
-        thisSurvey.getQuestions().add(question);
-
-      } else if (questions.getComponentAt(position) instanceof MultiQuestionWithButtons) {
-        MultiQuestionWithButtons component =
-            (MultiQuestionWithButtons) questions.getComponentAt(position);
-        MultiQuestion question = new MultiQuestion();
-        question.setTitle(component.getQuestion());
-        question.setPosition(position);
-        question.setMandatory(component.isMandatory());
-        question.setQuestionType(component.getQuestionType());
-        question.getAlternatives().addAll(component.getAlternatives());
-
-        thisSurvey.getQuestions().add(question);
-
-      }
-
+      Question question = qf.createQuestion(questions.getComponentAt(position), position);
+      thisSurvey.getQuestions().add(question);
     }
+
     thisSurvey.setCreator(creatorNameTextField.getValue());
     thisSurvey.setTitle(surveyTitleTextField.getValue());
     thisSurvey.setDescription(descriptionTextArea.getValue());
