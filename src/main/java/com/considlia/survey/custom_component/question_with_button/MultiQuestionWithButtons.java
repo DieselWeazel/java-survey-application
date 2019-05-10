@@ -12,6 +12,7 @@ import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.radiobutton.RadioGroupVariant;
 
+
 @StyleSheet("css/app.css")
 public class MultiQuestionWithButtons extends QuestionWithButtons {
 
@@ -23,8 +24,8 @@ public class MultiQuestionWithButtons extends QuestionWithButtons {
   private CheckboxGroup<String> checkBoxButtons;
 
   public MultiQuestionWithButtons(String question, CreateSurveyView survey,
-      List<String> stringAlternatives, QuestionType questionType) {
-    super(question, survey);
+      List<String> stringAlternatives, QuestionType questionType, boolean mandatory) {
+    super(question, survey, mandatory);
 
     this.questionType = questionType;
     this.stringAlternatives = stringAlternatives;

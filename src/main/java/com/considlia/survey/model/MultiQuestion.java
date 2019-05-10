@@ -24,8 +24,9 @@ public class MultiQuestion extends Question {
 
   public MultiQuestion() {}
 
-  public MultiQuestion(String questionTitle, int position, QuestionType questionType) {
-    super(questionTitle, position);
+  public MultiQuestion(String questionTitle, int position, QuestionType questionType,
+      boolean mandatory) {
+    super(questionTitle, position, mandatory);
     this.questionType = questionType;
 
   }
