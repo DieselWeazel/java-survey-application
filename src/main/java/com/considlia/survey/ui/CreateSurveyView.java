@@ -188,7 +188,7 @@ public class CreateSurveyView extends VerticalLayout
         break;
     }
 
-    refreshQuestions();
+    updateMoveButtonStatus();
     if (createAlternative != null) {
       createAlternative.getAlternativeList().clear();
       createAlternative = null;
@@ -244,7 +244,7 @@ public class CreateSurveyView extends VerticalLayout
   // Remove questions from questions container
   public void removeQuestion(Component c) {
     questions.remove(c);
-    refreshQuestions();
+    updateMoveButtonStatus();
     checkFilledFields();
   }
 
@@ -307,16 +307,7 @@ public class CreateSurveyView extends VerticalLayout
     hasChanges = true;
   }
 
-  public void refreshQuestions() {
-    moveButtonStatus();
-
-  }
-
-  public void setLoadedQuestions() {
-    moveButtonStatus();
-  }
-
-  public void moveButtonStatus() {
+  public void updateMoveButtonStatus() {
     for (int i = 0; i < questions.getComponentCount(); i++) {
       QuestionWithButtons component = (QuestionWithButtons) questions.getComponentAt(i);
       component.getUpButton().setEnabled(true);
@@ -357,7 +348,7 @@ public class CreateSurveyView extends VerticalLayout
         }
       }
       submitSurveyButton.setText("Save");
-      setLoadedQuestions();
+      updateMoveButtonStatus();
       thisSurvey.getQuestions().clear();
       checkFilledFields();
       hasChanges = false;
