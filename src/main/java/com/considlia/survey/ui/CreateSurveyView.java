@@ -308,44 +308,26 @@ public class CreateSurveyView extends VerticalLayout
   }
 
   public void refreshQuestions() {
-    for (int i = 0; i < questions.getComponentCount(); i++) {
-      QuestionWithButtons component = (QuestionWithButtons) questions.getComponentAt(i);
-      if (questions.getComponentCount() == 1) {
-        component.getUpButton().setEnabled(false);
-        component.getDownButton().setEnabled(false);
-      } else if (questions.getComponentCount() > 1) {
-        if (questions.indexOf(component) == 0) {
-          component.getUpButton().setEnabled(false);
-          component.getDownButton().setEnabled(true);
-        } else if (questions.indexOf(component) == questions.getComponentCount() - 1) {
-          component.getUpButton().setEnabled(true);
-          component.getDownButton().setEnabled(false);
-        } else {
-          component.getUpButton().setEnabled(true);
-          component.getDownButton().setEnabled(true);
-        }
-      } else {
-        component.getUpButton().setEnabled(true);
-        component.getDownButton().setEnabled(true);
-      }
-    }
+    moveButtonStatus();
+
   }
 
   public void setLoadedQuestions() {
+    moveButtonStatus();
+  }
+
+  public void moveButtonStatus() {
     for (int i = 0; i < questions.getComponentCount(); i++) {
-      if (questions.getComponentAt(i) instanceof QuestionWithButtons) {
-        QuestionWithButtons component = (QuestionWithButtons) questions.getComponentAt(i);
-        if (questions.getComponentCount() <= 1) {
-          component.getUpButton().setEnabled(false);
-          component.getDownButton().setEnabled(false);
-        } else if (questions.getComponentCount() > 1) {
-          if (questions.indexOf(component) == 0) {
-            component.getUpButton().setEnabled(false);
-          } else if (questions.indexOf(component) == questions.getComponentCount() - 1) {
-            component.getUpButton().setEnabled(true);
-            component.getDownButton().setEnabled(false);
-          }
-        }
+      QuestionWithButtons component = (QuestionWithButtons) questions.getComponentAt(i);
+      component.getUpButton().setEnabled(true);
+      component.getDownButton().setEnabled(true);
+
+      if (i == 0) {
+        component.getUpButton().setEnabled(false);
+      }
+
+      if (i == questions.getComponentCount() - 1) {
+        component.getDownButton().setEnabled(false);
       }
     }
   }
