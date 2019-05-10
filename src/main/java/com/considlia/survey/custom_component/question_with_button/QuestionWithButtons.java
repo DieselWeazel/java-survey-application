@@ -54,7 +54,7 @@ public abstract class QuestionWithButtons extends VerticalLayout {
   public void initButtonEvent(Button button, int move) {
     button.addClickListener(onClick -> {
       survey.moveQuestion(onClick.getSource(), move);
-      survey.refreshQuestions();
+      survey.updateMoveButtonStatus();
     });
   }
 
