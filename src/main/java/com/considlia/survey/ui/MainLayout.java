@@ -26,7 +26,7 @@ public class MainLayout extends VerticalLayout implements RouterLayout {
     setId("mainlayout");
 
     navigation = new HorizontalLayout();
-    navigation.add(createRouterLink(MainView.class, "Home", VaadinIcon.HOME));
+    navigation.add(createRouterLink(HomeView.class, "Home", VaadinIcon.HOME));
     navigation
         .add(createRouterLink(CreateSurveyView.class, "Create New Survey", VaadinIcon.PLUS_CIRCLE));
     navigation.setClassName("header");

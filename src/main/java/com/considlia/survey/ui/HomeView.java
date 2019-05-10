@@ -12,13 +12,12 @@ import com.vaadin.flow.component.grid.HeaderRow;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Route;
 
 @Route(value = "", layout = MainLayout.class)
-public class MainView extends VerticalLayout {
+public class HomeView extends BaseView {
 
   private Grid<Survey> grid;
   private List<Survey> surveyList;
@@ -26,7 +25,8 @@ public class MainView extends VerticalLayout {
 
   private SurveyRepository surveyRepository;
 
-  public MainView(SurveyRepository surveyRepository) {
+  public HomeView(SurveyRepository surveyRepository) {
+    super("Home");
     this.surveyRepository = surveyRepository;
 
     surveyList = new ArrayList<>();

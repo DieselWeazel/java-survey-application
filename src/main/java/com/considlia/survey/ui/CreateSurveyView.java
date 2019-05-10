@@ -7,8 +7,8 @@ import com.considlia.survey.custom_component.ConfirmDialog;
 import com.considlia.survey.custom_component.CreateAlternative;
 import com.considlia.survey.custom_component.EditDialog;
 import com.considlia.survey.custom_component.QuestionType;
+import com.considlia.survey.custom_component.question_with_button.MultiQuestionWithButtons;
 import com.considlia.survey.custom_component.question_with_button.QuestionWithButtons;
-import com.considlia.survey.custom_component.question_with_button.RadioQuestionWithButtons;
 import com.considlia.survey.custom_component.question_with_button.TextQuestionWithButtons;
 import com.considlia.survey.model.MultiQuestion;
 import com.considlia.survey.model.MultiQuestionAlternative;
@@ -35,7 +35,7 @@ import com.vaadin.flow.router.Route;
 
 @StyleSheet("css/app.css")
 @Route(value = "createsurvey", layout = MainLayout.class)
-public class CreateSurveyView extends VerticalLayout
+public class CreateSurveyView extends BaseView
     implements HasUrlParameter<Long>, BeforeLeaveObserver {
 
   // Buttons
@@ -63,6 +63,7 @@ public class CreateSurveyView extends VerticalLayout
   private CreateAlternative createAlternative;
 
   public CreateSurveyView(SurveyRepository surveyRepository) {
+    super("Create Survey");
     setId("createsurvey");
 
     this.surveyRepository = surveyRepository;
@@ -177,12 +178,12 @@ public class CreateSurveyView extends VerticalLayout
         questions.add(new TextQuestionWithButtons(questionTitleTextField.getValue(), this));
         break;
       case RADIO:
-        questions.add(new RadioQuestionWithButtons(questionTitleTextField.getValue(), this,
+        questions.add(new MultiQuestionWithButtons(questionTitleTextField.getValue(), this,
             createAlternative.getAlternativeList(), QuestionType.RADIO));
         addQuestionContainer.remove(createAlternative);
         break;
       case CHECKBOX:
-        questions.add(new RadioQuestionWithButtons(questionTitleTextField.getValue(), this,
+        questions.add(new MultiQuestionWithButtons(questionTitleTextField.getValue(), this,
             createAlternative.getAlternativeList(), QuestionType.CHECKBOX));
         addQuestionContainer.remove(createAlternative);
         break;
@@ -267,9 +268,9 @@ public class CreateSurveyView extends VerticalLayout
         question.setPosition(position);
         thisSurvey.getQuestions().add(question);
 
-      } else if (questions.getComponentAt(position) instanceof RadioQuestionWithButtons) {
-        RadioQuestionWithButtons component =
-            (RadioQuestionWithButtons) questions.getComponentAt(position);
+      } else if (questions.getComponentAt(position) instanceof MultiQuestionWithButtons) {
+        MultiQuestionWithButtons component =
+            (MultiQuestionWithButtons) questions.getComponentAt(position);
         MultiQuestion question = new MultiQuestion();
         question.setTitle(component.getQuestion());
         question.setPosition(position);
@@ -343,7 +344,7 @@ public class CreateSurveyView extends VerticalLayout
             stringAlternatives.add(mqa.getTitle());
           }
 
-          questions.add(new RadioQuestionWithButtons(mq.getTitle(), this, stringAlternatives,
+          questions.add(new MultiQuestionWithButtons(mq.getTitle(), this, stringAlternatives,
               mq.getQuestionType()));
         }
       }
