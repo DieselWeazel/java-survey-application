@@ -9,9 +9,9 @@ import com.considlia.survey.repositories.SurveyRepository;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.Route;
@@ -26,7 +26,7 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
   // -- Private Variables --
   // -- Containers --
   private VerticalLayout mainVerticalLayout = new VerticalLayout();
-  private VerticalLayout headerVerticalLayout = new VerticalLayout();
+  private HorizontalLayout headerHorizontalLayout = new HorizontalLayout();
   private VerticalLayout surveyVerticalLayout = new VerticalLayout();
 
   // -- TextContainers --
@@ -37,7 +37,6 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
 
   // -- Serializement --
   private SurveyRepository surveyRepository;
-  private Binder<Question> binder = new Binder<>(Question.class);
 
   private Survey survey;
 
@@ -60,12 +59,14 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
     mainVerticalLayout.setMinWidth("60%");
     mainVerticalLayout.setMaxWidth("80%");
 
-    headerVerticalLayout.setClassName("createheader");
-    surveyVerticalLayout.setClassName("questionpackage");
+    headerHorizontalLayout.setId("createheader");
+    surveyVerticalLayout.setId("questionpackage");
 
-    headerVerticalLayout.add(h1);
-    mainVerticalLayout.add(headerVerticalLayout);
-    mainVerticalLayout.add(surveyVerticalLayout);
+    Label mandatoryLabel = new Label("* = Mandatory question");
+    mandatoryLabel.setId("mandatoryLabel");
+    headerHorizontalLayout.setDefaultVerticalComponentAlignment(Alignment.BASELINE);
+    headerHorizontalLayout.add(h1, mandatoryLabel);
+    mainVerticalLayout.add(headerHorizontalLayout, surveyVerticalLayout);
     add(mainVerticalLayout);
   }
 
@@ -98,40 +99,12 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
 
   // -- Loading Survey to Layout
   public void loadSurvey(Survey survey) {
-    // Should work outside of constructor as well, then methods outside with save etc should work
-    // perfectly fine.
-    // Binder<MultiQuestionAlternative> binderAlternatives =
-    // new Binder<>(MultiQuestionAlternative.class);
 
-    // for(Question q : surveyRepository.findByQuestionOrderPosition(survey, 0)){
     for (Question q : survey.getQuestions()) {
       if (q instanceof MultiQuestion) {
         MultiQuestion mq = (MultiQuestion) q;
-        // surveyVerticalLayout.add(new H2(q.getQuestionTitle()));
+
         HorizontalLayout horLayout = new HorizontalLayout();
-        // CheckboxGroup questionCheckBoxGroup = new CheckboxGroup();
-        //
-        // if (mq.getQuestionType() == 2) {
-        // CheckboxGroup<MultiQuestionAlternative> multiQuestionCheckboxes = new CheckboxGroup<>();
-        // multiQuestionCheckboxes.setItems(mq.getAlternativeList());
-        // VerticalLayout checkBoxVertContainer = new VerticalLayout();
-        // checkBoxVertContainer.add(multiQuestionCheckboxes);
-        //
-        // horLayout.add(checkBoxVertContainer);
-        //
-        // // else, if we want radiobutton
-        // } else if (mq.getQuestionType() == 1) {
-        //
-        // RadioButtonGroup<MultiQuestionAlternative> multiQuestionRadioButtons =
-        // new RadioButtonGroup<>();
-        // multiQuestionRadioButtons.setItems(mq.getAlternativeList());
-        // VerticalLayout checkBoxVertContainer = new VerticalLayout();
-        // checkBoxVertContainer.add(multiQuestionRadioButtons);
-        //
-        // horLayout.add(checkBoxVertContainer);
-        //
-        // }
-        // mainVerticalLayout.add(horLayout);
 
         ReadMultiQuestionLayout readMultiQuestionLayout = new ReadMultiQuestionLayout(mq);
         horLayout.add(readMultiQuestionLayout);
@@ -139,19 +112,12 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
       } else {
         ReadTextQuestionLayout readTextQuestionLayout = new ReadTextQuestionLayout(q);
 
-        // binder.forField(textField2).bind(Question::getQuestionTitle, Question::setQuestionTitle);
-
-        // binder.readBean(q);
         surveyVerticalLayout.add(readTextQuestionLayout);
       }
     }
 
     surveyVerticalLayout.add(saveButton);
 
-    // headerVerticalLayout.add(h1);
-    // mainVerticalLayout.add(headerVerticalLayout);
-    // mainVerticalLayout.add(surveyVerticalLayout);
-    // add(mainVerticalLayout);
   }
 
   // -- Public Button Methods --

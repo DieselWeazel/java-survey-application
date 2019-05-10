@@ -83,13 +83,13 @@ public class CreateSurveyView extends BaseView
 
   public void initSurvey() {
     header = new VerticalLayout();
-    header.setClassName("createheader");
+    header.setId("createheader");
     titleContainer = new HorizontalLayout();
     titleContainer.setWidthFull();
     titleContainer.setDefaultVerticalComponentAlignment(Alignment.BASELINE);
 
     addQuestionContainer = new VerticalLayout();
-    addQuestionContainer.setClassName("questionpackage");
+    addQuestionContainer.setId("questionpackage");
     addQuestionHorizontalContainer = new HorizontalLayout();
     addQuestionHorizontalContainer.setDefaultVerticalComponentAlignment(Alignment.BASELINE);
 
