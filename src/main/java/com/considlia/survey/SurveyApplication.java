@@ -6,6 +6,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import com.considlia.survey.repositories.SurveyRepository;
 
+/*
+no users yet, login view showing however!
+
+Add a user and try the functionality
+ */
 @SpringBootApplication
 public class SurveyApplication {
 
