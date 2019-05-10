@@ -1,7 +1,7 @@
 package com.considlia.survey.model;
 
-import com.considlia.survey.custom_component.question_with_button.MultiQuestionWithButtons;
-import com.considlia.survey.custom_component.question_with_button.TextQuestionWithButtons;
+import com.considlia.survey.ui.custom_component.question_with_button.MultiQuestionWithButtons;
+import com.considlia.survey.ui.custom_component.question_with_button.TextQuestionWithButtons;
 import com.vaadin.flow.component.Component;
 
 public class QuestionFactory {

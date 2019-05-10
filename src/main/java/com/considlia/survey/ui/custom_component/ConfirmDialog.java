@@ -1,9 +1,9 @@
-package com.considlia.survey.custom_component;
+package com.considlia.survey.ui.custom_component;
 
-import com.considlia.survey.custom_component.question_with_button.QuestionWithButtons;
 import com.considlia.survey.model.Survey;
 import com.considlia.survey.repositories.SurveyRepository;
 import com.considlia.survey.ui.CreateSurveyView;
+import com.considlia.survey.ui.custom_component.question_with_button.QuestionWithButtons;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;

@@ -1,11 +1,11 @@
 package com.considlia.survey.ui;
 
-import com.considlia.survey.custom_component.ReadMultiQuestionLayout;
-import com.considlia.survey.custom_component.ReadTextQuestionLayout;
 import com.considlia.survey.model.MultiQuestion;
 import com.considlia.survey.model.Question;
 import com.considlia.survey.model.Survey;
 import com.considlia.survey.repositories.SurveyRepository;
+import com.considlia.survey.ui.custom_component.ReadMultiQuestionLayout;
+import com.considlia.survey.ui.custom_component.ReadTextQuestionLayout;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.html.H1;

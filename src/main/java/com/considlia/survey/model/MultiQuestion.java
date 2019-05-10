@@ -9,7 +9,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
-import com.considlia.survey.custom_component.QuestionType;
+import com.considlia.survey.ui.custom_component.QuestionType;
 
 @Entity
 @Table(name = "multiquestion")

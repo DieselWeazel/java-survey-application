@@ -1,4 +1,4 @@
-package com.considlia.survey.custom_component;
+package com.considlia.survey.ui.custom_component;
 
 import java.util.ArrayList;
 import java.util.List;
