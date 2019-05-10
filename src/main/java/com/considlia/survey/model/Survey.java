@@ -24,7 +24,7 @@ public class Survey {
   @Column(name = "survey_id")
   private Long id;
 
-  private String title, creator;
+  private String title, creator, description;
   private LocalDate date = LocalDate.now();
 
   @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -73,6 +73,14 @@ public class Survey {
 
   public void setQuestions(Set<Question> questions) {
     this.questions = questions;
+  }
+
+  public String getDescription() {
+    return description;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
   }
 
   public void addQuestion(Question question) {
