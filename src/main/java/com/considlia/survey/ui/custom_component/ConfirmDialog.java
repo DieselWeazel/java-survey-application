@@ -4,6 +4,7 @@ import com.considlia.survey.model.Survey;
 import com.considlia.survey.repositories.SurveyRepository;
 import com.considlia.survey.ui.CreateSurveyView;
 import com.considlia.survey.ui.custom_component.question_with_button.QuestionWithButtons;
+import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
@@ -49,9 +50,15 @@ public class ConfirmDialog extends Dialog {
     });
 
     HorizontalLayout buttonContainer = new HorizontalLayout();
-    buttonContainer.add(saveBtn, confirmBtn, cancelBtn);
+    if (!survey.checkFilledFields()) {
+      saveBtn.setEnabled(false);
+      add(new Text(
+          "You have to fill out required fields and have at least one question. Fill them out or discard changes"));
+    } else {
+      add(new H5("Do you want to save or discard your changes before navigating away?"));
+    }
 
-    add(new H5("Do you want to save or discard your changes before navigating away?"));
+    buttonContainer.add(saveBtn, confirmBtn, cancelBtn);
     add(buttonContainer);
   }
 

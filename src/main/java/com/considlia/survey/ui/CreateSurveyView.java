@@ -116,10 +116,12 @@ public class CreateSurveyView extends BaseView
     surveyTitleTextField.setPlaceholder("Survey title");
     surveyTitleTextField.setWidth("400px");
     surveyTitleTextField.setValueChangeMode(ValueChangeMode.EAGER);
+    surveyTitleTextField.setRequired(true);
     creatorNameTextField.setLabel("Created by");
     creatorNameTextField.setPlaceholder("Created by");
     creatorNameTextField.setWidth("250px");
     creatorNameTextField.setValueChangeMode(ValueChangeMode.EAGER);
+    creatorNameTextField.setRequired(true);
     descriptionTextArea.setLabel("Description");
     descriptionTextArea.setWidth("600px");
   }
@@ -298,14 +300,16 @@ public class CreateSurveyView extends BaseView
   }
 
   // Check if title and creator textfields are filled out
-  public void checkFilledFields() {
+  public boolean checkFilledFields() {
+    hasChanges = true;
     if (!(surveyTitleTextField.isEmpty() || creatorNameTextField.isEmpty())
         && validateQuestionListLength()) {
       submitSurveyButton.setEnabled(true);
+      return true;
     } else {
       submitSurveyButton.setEnabled(false);
+      return false;
     }
-    hasChanges = true;
   }
 
   public void updateMoveButtonStatus() {
