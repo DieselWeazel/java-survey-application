@@ -23,6 +23,7 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
+import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.BeforeEvent;
@@ -48,11 +49,13 @@ public class CreateSurveyView extends VerticalLayout
   private TextField surveyTitleTextField;
   private TextField creatorNameTextField;
   private TextField questionTitleTextField;
+  private TextArea descriptionTextArea;
 
   // Containers
-  private HorizontalLayout header;
-  private HorizontalLayout addQuestionHorizontalContainer;
+  private VerticalLayout header;
+  private HorizontalLayout titleContainer;
   private VerticalLayout addQuestionContainer;
+  private HorizontalLayout addQuestionHorizontalContainer;
   private VerticalLayout questions;
 
   // Private variables used when creating the survey
@@ -75,16 +78,18 @@ public class CreateSurveyView extends VerticalLayout
   }
 
   public void initSurvey() {
-    header = new HorizontalLayout();
-    header.setWidthFull();
-    header.setDefaultVerticalComponentAlignment(Alignment.BASELINE);
+    header = new VerticalLayout();
     header.setClassName("createheader");
+    titleContainer = new HorizontalLayout();
+    titleContainer.setWidthFull();
+    titleContainer.setDefaultVerticalComponentAlignment(Alignment.BASELINE);
 
-    questions = new VerticalLayout();
     addQuestionContainer = new VerticalLayout();
     addQuestionContainer.setClassName("questionpackage");
     addQuestionHorizontalContainer = new HorizontalLayout();
     addQuestionHorizontalContainer.setDefaultVerticalComponentAlignment(Alignment.BASELINE);
+
+    questions = new VerticalLayout();
 
     addQuestionButton = new Button("Add question", event -> addQuestion());
     addQuestionButton.setEnabled(false);
@@ -94,6 +99,7 @@ public class CreateSurveyView extends VerticalLayout
 
     surveyTitleTextField = new TextField();
     creatorNameTextField = new TextField();
+    descriptionTextArea = new TextArea();
 
     surveyTitleTextField.addValueChangeListener(titleChange -> {
       checkFilledFields();
@@ -110,6 +116,8 @@ public class CreateSurveyView extends VerticalLayout
     creatorNameTextField.setPlaceholder("Created by");
     creatorNameTextField.setWidth("250px");
     creatorNameTextField.setValueChangeMode(ValueChangeMode.EAGER);
+    descriptionTextArea.setLabel("Description");
+    descriptionTextArea.setWidth("600px");
   }
 
   public void initAddQuestionContainer() {
@@ -155,9 +163,10 @@ public class CreateSurveyView extends VerticalLayout
   }
 
   public void initLayout() {
-    header.add(surveyTitleTextField, creatorNameTextField);
-    header.add(submitSurveyButton);
-    header.add(cancelButton);
+    titleContainer.add(surveyTitleTextField, creatorNameTextField, submitSurveyButton,
+        cancelButton);
+    header.add(titleContainer);
+    header.add(descriptionTextArea);
 
     addQuestionHorizontalContainer.add(questionTitleTextField, addQuestionButton);
     addQuestionContainer.add(addQuestionHorizontalContainer, radioButtons);
@@ -283,6 +292,7 @@ public class CreateSurveyView extends VerticalLayout
     }
     thisSurvey.setCreator(creatorNameTextField.getValue());
     thisSurvey.setTitle(surveyTitleTextField.getValue());
+    thisSurvey.setDescription(descriptionTextArea.getValue());
     thisSurvey.setDate(LocalDate.now());
 
     surveyRepository.save(thisSurvey);
@@ -333,6 +343,7 @@ public class CreateSurveyView extends VerticalLayout
       for (Question q : thisSurvey.getQuestions()) {
         surveyTitleTextField.setValue(thisSurvey.getTitle());
         creatorNameTextField.setValue(thisSurvey.getCreator());
+        descriptionTextArea.setValue(thisSurvey.getDescription());
         if (q instanceof TextQuestion) {
           questions.add(new TextQuestionWithButtons(q.getTitle(), this));
         } else {
