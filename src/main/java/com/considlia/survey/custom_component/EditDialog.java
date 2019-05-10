@@ -2,7 +2,7 @@ package com.considlia.survey.custom_component;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.considlia.survey.custom_component.question_with_button.RadioQuestionWithButtons;
+import com.considlia.survey.custom_component.question_with_button.MultiQuestionWithButtons;
 import com.considlia.survey.custom_component.question_with_button.TextQuestionWithButtons;
 import com.considlia.survey.model.MultiQuestionAlternative;
 import com.vaadin.flow.component.button.Button;
@@ -56,8 +56,8 @@ public class EditDialog extends Dialog {
   }
 
   public void radioQuestion() {
-    RadioQuestionWithButtons choosenQuestion =
-        (RadioQuestionWithButtons) inputButton.getParent().get().getParent().get();
+    MultiQuestionWithButtons choosenQuestion =
+        (MultiQuestionWithButtons) inputButton.getParent().get().getParent().get();
     question.setValue(choosenQuestion.getQuestion());
 
     List<MultiQuestionAlternative> alternativeList = new ArrayList<>();

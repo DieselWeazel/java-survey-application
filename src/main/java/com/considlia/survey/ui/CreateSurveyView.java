@@ -7,8 +7,8 @@ import com.considlia.survey.custom_component.ConfirmDialog;
 import com.considlia.survey.custom_component.CreateAlternative;
 import com.considlia.survey.custom_component.EditDialog;
 import com.considlia.survey.custom_component.QuestionType;
+import com.considlia.survey.custom_component.question_with_button.MultiQuestionWithButtons;
 import com.considlia.survey.custom_component.question_with_button.QuestionWithButtons;
-import com.considlia.survey.custom_component.question_with_button.RadioQuestionWithButtons;
 import com.considlia.survey.custom_component.question_with_button.TextQuestionWithButtons;
 import com.considlia.survey.model.MultiQuestion;
 import com.considlia.survey.model.MultiQuestionAlternative;
@@ -24,6 +24,7 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
+import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.BeforeEvent;
@@ -36,7 +37,7 @@ import com.vaadin.flow.router.Route;
 
 @StyleSheet("css/app.css")
 @Route(value = "createsurvey", layout = MainLayout.class)
-public class CreateSurveyView extends VerticalLayout
+public class CreateSurveyView extends BaseView
     implements HasUrlParameter<Long>, BeforeLeaveObserver {
 
   // Buttons
@@ -51,11 +52,13 @@ public class CreateSurveyView extends VerticalLayout
   private TextField surveyTitleTextField;
   private TextField creatorNameTextField;
   private TextField questionTitleTextField;
+  private TextArea descriptionTextArea;
 
   // Containers
-  private HorizontalLayout header;
-  private HorizontalLayout addQuestionHorizontalContainer;
+  private VerticalLayout header;
+  private HorizontalLayout titleContainer;
   private VerticalLayout addQuestionContainer;
+  private HorizontalLayout addQuestionHorizontalContainer;
   private VerticalLayout questions;
 
   // Private variables used when creating the survey
@@ -66,6 +69,7 @@ public class CreateSurveyView extends VerticalLayout
   private CreateAlternative createAlternative;
 
   public CreateSurveyView(SurveyRepository surveyRepository) {
+    super("Create Survey");
     setId("createsurvey");
 
     this.surveyRepository = surveyRepository;
@@ -78,16 +82,18 @@ public class CreateSurveyView extends VerticalLayout
   }
 
   public void initSurvey() {
-    header = new HorizontalLayout();
-    header.setWidthFull();
-    header.setDefaultVerticalComponentAlignment(Alignment.BASELINE);
+    header = new VerticalLayout();
     header.setClassName("createheader");
+    titleContainer = new HorizontalLayout();
+    titleContainer.setWidthFull();
+    titleContainer.setDefaultVerticalComponentAlignment(Alignment.BASELINE);
 
-    questions = new VerticalLayout();
     addQuestionContainer = new VerticalLayout();
     addQuestionContainer.setClassName("questionpackage");
     addQuestionHorizontalContainer = new HorizontalLayout();
     addQuestionHorizontalContainer.setDefaultVerticalComponentAlignment(Alignment.BASELINE);
+
+    questions = new VerticalLayout();
 
     addQuestionButton = new Button("Add question", event -> addQuestion());
     addQuestionButton.setEnabled(false);
@@ -97,6 +103,7 @@ public class CreateSurveyView extends VerticalLayout
 
     surveyTitleTextField = new TextField();
     creatorNameTextField = new TextField();
+    descriptionTextArea = new TextArea();
 
     surveyTitleTextField.addValueChangeListener(titleChange -> {
       checkFilledFields();
@@ -113,6 +120,8 @@ public class CreateSurveyView extends VerticalLayout
     creatorNameTextField.setPlaceholder("Created by");
     creatorNameTextField.setWidth("250px");
     creatorNameTextField.setValueChangeMode(ValueChangeMode.EAGER);
+    descriptionTextArea.setLabel("Description");
+    descriptionTextArea.setWidth("600px");
   }
 
   public void initAddQuestionContainer() {
@@ -161,9 +170,10 @@ public class CreateSurveyView extends VerticalLayout
   }
 
   public void initLayout() {
-    header.add(surveyTitleTextField, creatorNameTextField);
-    header.add(submitSurveyButton);
-    header.add(cancelButton);
+    titleContainer.add(surveyTitleTextField, creatorNameTextField, submitSurveyButton,
+        cancelButton);
+    header.add(titleContainer);
+    header.add(descriptionTextArea);
 
     addQuestionHorizontalContainer.add(questionTitleTextField, addQuestionButton, mandatory);
     addQuestionContainer.add(addQuestionHorizontalContainer, radioButtons);
@@ -184,12 +194,12 @@ public class CreateSurveyView extends VerticalLayout
             mandatory.getValue()));
         break;
       case RADIO:
-        questions.add(new RadioQuestionWithButtons(questionTitleTextField.getValue(), this,
+        questions.add(new MultiQuestionWithButtons(questionTitleTextField.getValue(), this,
             createAlternative.getAlternativeList(), QuestionType.RADIO, mandatory.getValue()));
         addQuestionContainer.remove(createAlternative);
         break;
       case CHECKBOX:
-        questions.add(new RadioQuestionWithButtons(questionTitleTextField.getValue(), this,
+        questions.add(new MultiQuestionWithButtons(questionTitleTextField.getValue(), this,
             createAlternative.getAlternativeList(), QuestionType.CHECKBOX, mandatory.getValue()));
         addQuestionContainer.remove(createAlternative);
         break;
@@ -275,9 +285,9 @@ public class CreateSurveyView extends VerticalLayout
         question.setMandatory(component.isMandatory());
         thisSurvey.getQuestions().add(question);
 
-      } else if (questions.getComponentAt(position) instanceof RadioQuestionWithButtons) {
-        RadioQuestionWithButtons component =
-            (RadioQuestionWithButtons) questions.getComponentAt(position);
+      } else if (questions.getComponentAt(position) instanceof MultiQuestionWithButtons) {
+        MultiQuestionWithButtons component =
+            (MultiQuestionWithButtons) questions.getComponentAt(position);
         MultiQuestion question = new MultiQuestion();
         question.setTitle(component.getQuestion());
         question.setPosition(position);
@@ -292,6 +302,7 @@ public class CreateSurveyView extends VerticalLayout
     }
     thisSurvey.setCreator(creatorNameTextField.getValue());
     thisSurvey.setTitle(surveyTitleTextField.getValue());
+    thisSurvey.setDescription(descriptionTextArea.getValue());
     thisSurvey.setDate(LocalDate.now());
 
     surveyRepository.save(thisSurvey);
@@ -342,6 +353,7 @@ public class CreateSurveyView extends VerticalLayout
       for (Question q : thisSurvey.getQuestions()) {
         surveyTitleTextField.setValue(thisSurvey.getTitle());
         creatorNameTextField.setValue(thisSurvey.getCreator());
+        descriptionTextArea.setValue(thisSurvey.getDescription());
         if (q instanceof TextQuestion) {
           questions.add(new TextQuestionWithButtons(q.getTitle(), this, q.isMandatory()));
         } else {
@@ -351,8 +363,7 @@ public class CreateSurveyView extends VerticalLayout
           for (MultiQuestionAlternative mqa : mq.getAlternatives()) {
             stringAlternatives.add(mqa.getTitle());
           }
-
-          questions.add(new RadioQuestionWithButtons(mq.getTitle(), this, stringAlternatives,
+          questions.add(new MultiQuestionWithButtons(mq.getTitle(), this, stringAlternatives,
               mq.getQuestionType(), mq.isMandatory()));
         }
       }

@@ -21,7 +21,7 @@ import com.vaadin.flow.router.Route;
  */
 @StyleSheet("css/app.css")
 @Route(value = "showsurvey", layout = MainLayout.class)
-public class ShowSurveyView extends VerticalLayout implements HasUrlParameter<Long> {
+public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
 
   // -- Private Variables --
   // -- Containers --

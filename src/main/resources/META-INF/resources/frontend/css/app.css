@@ -29,12 +29,17 @@
 #createsurvey .createheader {
 	width: 45%;
 	margin-bottom: 0px;
+	padding: 0px;
 	padding-bottom: 10px;
 	border-bottom: 2px solid gray;
 }
 
 #createsurvey .questionpackage {
 	width: 45%;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	padding-top: 0px;
+	padding-bottom: 0px;
 }
 
 #custom {
