@@ -2,6 +2,7 @@ package com.considlia.survey.ui.UserViews;
 
 import com.considlia.survey.model.User;
 import com.considlia.survey.repositories.UserRepository;
+import com.considlia.survey.security.UserDetailsServiceImpl;
 import com.considlia.survey.ui.BaseView;
 import com.considlia.survey.ui.HomeView;
 import com.considlia.survey.ui.MainLayout;
@@ -22,6 +23,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Route (value = "registration", layout = MainLayout.class)
@@ -49,6 +51,9 @@ public class RegistrationView extends BaseView {
   @Autowired
   private UserRepository userRepository;
 
+  @Autowired
+  private UserDetailsServiceImpl userDetailsService;
+
   public RegistrationView(){
     super("Registration");
     initUI("580px");
@@ -67,7 +72,8 @@ public class RegistrationView extends BaseView {
 Sign in function doesn't work properly now.
  */
   private void signIn() {
-    Authentication request=new UsernamePasswordAuthenticationToken(username,user.getPassword());
+    System.out.println(user.getUsername() + " " + user.getPassword());
+    Authentication request=new UsernamePasswordAuthenticationToken(user.getUsername(), passwordString);
     Authentication result= authenticationManagerBean.authenticate(request);
     SecurityContextHolder.getContext().setAuthentication(result);
     UI.getCurrent().navigate(HomeView.class);

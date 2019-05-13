@@ -46,7 +46,7 @@ public class User {
 
   //Currently removes surveys owned by User, might want something else here.
   @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-  @JoinColumn(name = "survey_id")
+  @JoinColumn(name = "user_id")
   private Set<Survey> surveys = new HashSet<>();
   /*
   Could add a private boolean if user is banned/blocked.
