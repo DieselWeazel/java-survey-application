@@ -321,7 +321,6 @@ public class CreateSurveyView extends BaseView
       if (i == 0) {
         component.getUpButton().setEnabled(false);
       }
-
       if (i == questions.getComponentCount() - 1) {
         component.getDownButton().setEnabled(false);
       }
@@ -352,7 +351,7 @@ public class CreateSurveyView extends BaseView
               mq.getQuestionType(), mq.isMandatory()));
         }
       }
-      submitSurveyButton.setText("Save");
+      submitSurveyButton.setText("Save Survey");
       updateMoveButtonStatus();
       thisSurvey.getQuestions().clear();
       checkFilledFields();

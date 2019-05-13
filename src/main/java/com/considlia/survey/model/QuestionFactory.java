@@ -8,24 +8,23 @@ public class QuestionFactory {
 
   public Question createQuestion(Component component, int position) {
     if (component instanceof TextQuestionWithButtons) {
-      TextQuestionWithButtons component2 = (TextQuestionWithButtons) component;
+      TextQuestionWithButtons castComponent = (TextQuestionWithButtons) component;
       TextQuestion question = new TextQuestion();
-      question.setTitle(component2.getQuestion());
+      question.setTitle(castComponent.getQuestion());
       question.setPosition(position);
-      question.setMandatory(component2.isMandatory());
+      question.setMandatory(castComponent.isMandatory());
       return question;
     } else if (component instanceof MultiQuestionWithButtons) {
-      MultiQuestionWithButtons component2 = (MultiQuestionWithButtons) component;
+      MultiQuestionWithButtons castComponent = (MultiQuestionWithButtons) component;
       MultiQuestion question = new MultiQuestion();
-      question.setTitle(component2.getQuestion());
+      question.setTitle(castComponent.getQuestion());
       question.setPosition(position);
-      question.setMandatory(component2.isMandatory());
-      question.setQuestionType(component2.getQuestionType());
-      question.getAlternatives().addAll(component2.getAlternatives());
+      question.setMandatory(castComponent.isMandatory());
+      question.setQuestionType(castComponent.getQuestionType());
+      question.getAlternatives().addAll(castComponent.getAlternatives());
       return question;
     } else {
       return null;
     }
   }
-
 }
