@@ -6,24 +6,29 @@ import com.considlia.survey.security.SecurityUtils;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import com.considlia.survey.custom_component.ConfirmDialog;
-import com.considlia.survey.custom_component.CreateAlternative;
-import com.considlia.survey.custom_component.EditDialog;
-import com.considlia.survey.custom_component.RadioQuestionWithButtons;
-import com.considlia.survey.custom_component.TextQuestionWithButtons;
 import com.considlia.survey.model.MultiQuestion;
 import com.considlia.survey.model.MultiQuestionAlternative;
 import com.considlia.survey.model.Question;
+import com.considlia.survey.model.QuestionFactory;
 import com.considlia.survey.model.Survey;
 import com.considlia.survey.model.TextQuestion;
 import com.considlia.survey.repositories.SurveyRepository;
+import com.considlia.survey.ui.custom_component.ConfirmDialog;
+import com.considlia.survey.ui.custom_component.CreateAlternative;
+import com.considlia.survey.ui.custom_component.EditDialog;
+import com.considlia.survey.ui.custom_component.QuestionType;
+import com.considlia.survey.ui.custom_component.question_with_button.MultiQuestionWithButtons;
+import com.considlia.survey.ui.custom_component.question_with_button.QuestionWithButtons;
+import com.considlia.survey.ui.custom_component.question_with_button.TextQuestionWithButtons;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
+import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.BeforeEvent;
@@ -41,8 +46,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 @StyleSheet("css/app.css")
 @Route(value = "createsurvey", layout = MainLayout.class)
-@Secured(Role.ADMIN)
-public class CreateSurveyView extends VerticalLayout
+@Secured(Role.USER)
+public class CreateSurveyView extends BaseView
     implements HasUrlParameter<Long>, BeforeLeaveObserver {
 
   // Buttons
@@ -50,63 +55,88 @@ public class CreateSurveyView extends VerticalLayout
   private Button submitSurveyButton;
   private Button cancelButton;
   private RadioButtonGroup<String> radioButtons;
+  private Checkbox mandatory;
 
   // Textfields
   private TextField surveyTitleTextField;
   private TextField creatorNameTextField;
   private TextField questionTitleTextField;
+  private TextArea descriptionTextArea;
 
   // Containers
-  private HorizontalLayout header;
+  private VerticalLayout header;
+  private HorizontalLayout titleContainer;
+  private VerticalLayout addQuestionContainer;
+  private HorizontalLayout addQuestionHorizontalContainer;
   private VerticalLayout questions;
-  private VerticalLayout addQuestionPackage;
-  private HorizontalLayout footer;
 
   // Private variables used when creating the survey
   private Survey thisSurvey;
-  private int typeOfQuestion;
-  private static final int TEXT_QUESTION = 0;
-  private static final int RADIO_QUESTION = 1;
-  private static final int BOX_QUESTION = 2;
   private boolean hasChanges;
-
+  private QuestionType questionType;
   private SurveyRepository surveyRepository;
-
-  private CreateAlternative ca;
+  private CreateAlternative createAlternative;
 
   public CreateSurveyView(SurveyRepository surveyRepository) {
+    super("Create Survey");
     setId("createsurvey");
 
     this.surveyRepository = surveyRepository;
     thisSurvey = new Survey();
     hasChanges = false;
 
-    header = new HorizontalLayout();
+    initSurvey();
+    initAddQuestionContainer();
+    initLayout();
+  }
+
+  public void initSurvey() {
+    header = new VerticalLayout();
+    header.setId("createheader");
+    titleContainer = new HorizontalLayout();
+    titleContainer.setWidthFull();
+    titleContainer.setDefaultVerticalComponentAlignment(Alignment.BASELINE);
+
+    addQuestionContainer = new VerticalLayout();
+    addQuestionContainer.setId("questionpackage");
+    addQuestionHorizontalContainer = new HorizontalLayout();
+    addQuestionHorizontalContainer.setDefaultVerticalComponentAlignment(Alignment.BASELINE);
+
     questions = new VerticalLayout();
-    addQuestionPackage = new VerticalLayout();
-    footer = new HorizontalLayout();
 
     addQuestionButton = new Button("Add question", event -> addQuestion());
+    addQuestionButton.setEnabled(false);
     submitSurveyButton = new Button("Submit survey", event -> saveSurvey());
     submitSurveyButton.setEnabled(false);
     cancelButton = new Button("Cancel", event -> getUI().ifPresent(ui -> ui.navigate("")));
 
     surveyTitleTextField = new TextField();
     creatorNameTextField = new TextField();
-    questionTitleTextField = new TextField();
-    questionTitleTextField.setValueChangeMode(ValueChangeMode.EAGER);
+    descriptionTextArea = new TextArea();
+
+    surveyTitleTextField.addValueChangeListener(titleChange -> {
+      checkFilledFields();
+    });
+    creatorNameTextField.addValueChangeListener(titleChange -> {
+      checkFilledFields();
+    });
 
     surveyTitleTextField.setLabel("Survey title");
     surveyTitleTextField.setPlaceholder("Survey title");
     surveyTitleTextField.setWidth("400px");
     surveyTitleTextField.setValueChangeMode(ValueChangeMode.EAGER);
+    surveyTitleTextField.setRequired(true);
     creatorNameTextField.setLabel("Created by");
     creatorNameTextField.setPlaceholder("Created by");
     creatorNameTextField.setWidth("250px");
     creatorNameTextField.setValueChangeMode(ValueChangeMode.EAGER);
+    creatorNameTextField.setRequired(true);
+    descriptionTextArea.setLabel("Description");
+    descriptionTextArea.setWidth("600px");
 
-    header.setClassName("createheader");
-    addQuestionPackage.setClassName("questionpackage");
+
+    // Show User, just for show
+    // TODO delete me
     Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
     if (principal instanceof UserDetails) {
@@ -126,23 +156,65 @@ public class CreateSurveyView extends VerticalLayout
       creatorNameTextField.setPlaceholder(username);
 
     }
-    header.add(surveyTitleTextField, creatorNameTextField);
-    footer.add(submitSurveyButton);
-    footer.add(cancelButton);
+  }
 
-    surveyTitleTextField.addValueChangeListener(titleChange -> {
-      checkFilledFields();
+  public void initAddQuestionContainer() {
+    questionTitleTextField = new TextField();
+    questionTitleTextField.setValueChangeMode(ValueChangeMode.EAGER);
+    questionTitleTextField.setWidth("300px");
+    questionTitleTextField.setPlaceholder("Question");
+    questionTitleTextField.setLabel("Question");
+
+    questionTitleTextField.addValueChangeListener(event -> {
+      if (event.getSource().getValue().length() > 255) {
+        event.getSource().setValue(event.getSource().getValue().substring(0, 255));
+        Notification.show("Question can max contain 255 characters");
+      }
+      if (questionTitleTextField.isEmpty() || radioButtons.getValue() == null) {
+        addQuestionButton.setEnabled(false);
+      } else if (radioButtons.getValue().equalsIgnoreCase("Text question")
+          && !questionTitleTextField.getValue().isEmpty()) {
+        createQuestion(QuestionType.TEXT);
+      } else if ((radioButtons.getValue().equalsIgnoreCase("Radio Question")
+          && !questionTitleTextField.getValue().isEmpty())) {
+        createQuestion(QuestionType.RADIO);
+      } else if ((radioButtons.getValue().equalsIgnoreCase("Checkbox Question")
+          && !questionTitleTextField.getValue().isEmpty())) {
+        createQuestion(QuestionType.CHECKBOX);
+      }
     });
-    creatorNameTextField.addValueChangeListener(titleChange -> {
-      checkFilledFields();
+
+    radioButtons = new RadioButtonGroup<>();
+    radioButtons.setItems("Text question", "Radio Question", "Checkbox Question");
+    radioButtons.addValueChangeListener(event -> {
+      if (event.getValue().equalsIgnoreCase("Text question")) {
+        createQuestion(QuestionType.TEXT);
+      } else if (event.getValue().equalsIgnoreCase("Radio Question")) {
+        createQuestion(QuestionType.RADIO);
+      } else if (event.getValue().equalsIgnoreCase("Checkbox Question")) {
+        createQuestion(QuestionType.CHECKBOX);
+      }
+      if (questionTitleTextField.isEmpty()) {
+        addQuestionButton.setEnabled(false);
+      }
     });
+
+    mandatory = new Checkbox("Mandatory Question");
+
+  }
+
+  public void initLayout() {
+    titleContainer.add(surveyTitleTextField, creatorNameTextField, submitSurveyButton,
+        cancelButton);
+    header.add(titleContainer);
+    header.add(descriptionTextArea);
+
+    addQuestionHorizontalContainer.add(questionTitleTextField, addQuestionButton, mandatory);
+    addQuestionContainer.add(addQuestionHorizontalContainer, radioButtons);
 
     add(header);
+    add(addQuestionContainer);
     add(questions);
-    add(addQuestionPackage);
-    add(addQuestionButton);
-    add(footer);
-
   }
 
   // Create addQuestion-package with listeners, if already created: save the question
@@ -150,108 +222,67 @@ public class CreateSurveyView extends VerticalLayout
   public void addQuestion() {
     questionTitleTextField.focus();
 
-    if (radioButtons != null) {
-
-      if (typeOfQuestion == TEXT_QUESTION) {
-        questions.add(new TextQuestionWithButtons(questionTitleTextField.getValue(), this));
-      } else {
-        questions.add(new RadioQuestionWithButtons(questionTitleTextField.getValue(), this,
-            ca.getAlternativeList(), typeOfQuestion));
-        addQuestionPackage.remove(ca);
-      }
-      refreshQuestions();
-      if (ca != null) {
-        ca.getAlternativeList().clear();
-        ca = null;
-        typeOfQuestion = 10;
-      }
-
-      questionTitleTextField.setValue("");
-      radioButtons.setValue("");
-      checkFilledFields();
+    switch (questionType) {
+      case TEXT:
+        questions.add(new TextQuestionWithButtons(questionTitleTextField.getValue(), this,
+            mandatory.getValue()));
+        break;
+      case RADIO:
+        questions.add(new MultiQuestionWithButtons(questionTitleTextField.getValue(), this,
+            createAlternative.getAlternativeList(), QuestionType.RADIO, mandatory.getValue()));
+        addQuestionContainer.remove(createAlternative);
+        break;
+      case CHECKBOX:
+        questions.add(new MultiQuestionWithButtons(questionTitleTextField.getValue(), this,
+            createAlternative.getAlternativeList(), QuestionType.CHECKBOX, mandatory.getValue()));
+        addQuestionContainer.remove(createAlternative);
+        break;
     }
-    // Only enters here on the first time pressing the add question button
-    // Because radiobuttons is null only at that time
-    else {
-      radioButtons = new RadioButtonGroup<>();
-      radioButtons.setItems("Text question", "Radio Question", "Checkbox Question");
-      questionTitleTextField.setWidth("300px");
-      questionTitleTextField.setPlaceholder("Question");
-      questionTitleTextField.setLabel("Question");
-      addQuestionPackage.add(questionTitleTextField);
-      addQuestionPackage.add(radioButtons);
 
-      radioButtons.addValueChangeListener(event -> {
-        if (event.getValue().equalsIgnoreCase("Text question")) {
-
-          createQuestion(TEXT_QUESTION);
-        } else if (event.getValue().equalsIgnoreCase("Radio Question")) {
-          addQuestionButton.setEnabled(false);
-          createQuestion(RADIO_QUESTION);
-        } else if (event.getValue().equalsIgnoreCase("Checkbox Question")) {
-          addQuestionButton.setEnabled(false);
-          createQuestion(BOX_QUESTION);
-        }
-        if (questionTitleTextField.isEmpty()) {
-          addQuestionButton.setEnabled(false);
-        }
-      });
-
-      // Checks if the questionTitle and questionType is set
-      questionTitleTextField.addValueChangeListener(event -> {
-        if (event.getSource().getValue().length() > 255) {
-          event.getSource().setValue(event.getSource().getValue().substring(0, 255));
-          Notification.show("Question can max contain 255 characters");
-        }
-        if (questionTitleTextField.isEmpty() || radioButtons.getValue() == null) {
-
-          addQuestionButton.setEnabled(false);
-
-        } else if (radioButtons.getValue().equalsIgnoreCase("Text question")
-            && !questionTitleTextField.getValue().isEmpty()) {
-
-          createQuestion(TEXT_QUESTION);
-        } else if ((radioButtons.getValue().equalsIgnoreCase("Radio Question")
-            && !questionTitleTextField.getValue().isEmpty())) {
-          addQuestionButton.setEnabled(false);
-          createQuestion(RADIO_QUESTION);
-        } else if ((radioButtons.getValue().equalsIgnoreCase("Checkbox Question")
-            && !questionTitleTextField.getValue().isEmpty())) {
-          addQuestionButton.setEnabled(false);
-          createQuestion(BOX_QUESTION);
-        }
-      });
+    updateMoveButtonStatus();
+    if (createAlternative != null) {
+      createAlternative.getAlternativeList().clear();
+      createAlternative = null;
+      questionType = null;
     }
+
+    questionTitleTextField.setValue("");
+    radioButtons.setValue("");
+    checkFilledFields();
+
+    addQuestionContainer.setVisible(true);
     addQuestionButton.setEnabled(false);
-
   }
 
-  public void createQuestion(int typeOfQuestion) {
-    if (typeOfQuestion != this.typeOfQuestion && typeOfQuestion != TEXT_QUESTION) {
+  public void createQuestion(QuestionType questionType) {
+    if (questionType != this.questionType && questionType != QuestionType.TEXT) {
 
-      if (ca == null) {
-        ca = new CreateAlternative(typeOfQuestion, this);
-        addQuestionPackage.add(ca);
-      } else if (this.typeOfQuestion == TEXT_QUESTION) {
-        ca.setTypeOfQuestion(typeOfQuestion);
-        addQuestionPackage.add(ca);
+      if (createAlternative == null) {
+        createAlternative = new CreateAlternative(questionType, this);
+        addQuestionContainer.add(createAlternative);
+      } else if (this.questionType == QuestionType.TEXT) {
+        createAlternative.setQuestionType(questionType);
+        addQuestionContainer.add(createAlternative);
       } else {
-        ca.setTypeOfQuestion(typeOfQuestion);
+        createAlternative.setQuestionType(questionType);
       }
-      this.typeOfQuestion = typeOfQuestion;
-    } else if (typeOfQuestion == TEXT_QUESTION) {
-      for (int i = 0; i < addQuestionPackage.getComponentCount(); i++) {
-        Component c = addQuestionPackage.getComponentAt(i);
-        if (c == ca) {
-          addQuestionPackage.remove(ca);
+      this.questionType = questionType;
+    } else if (questionType == QuestionType.TEXT) {
+      for (int i = 0; i < addQuestionContainer.getComponentCount(); i++) {
+        Component c = addQuestionContainer.getComponentAt(i);
+        if (c == createAlternative) {
+          addQuestionContainer.remove(createAlternative);
         }
       }
       addQuestionButton.setEnabled(true);
-      this.typeOfQuestion = typeOfQuestion;
+      this.questionType = questionType;
     }
-    if (ca != null) {
-      if (!ca.getAlternativeList().isEmpty() && !questionTitleTextField.isEmpty()) {
+    if (createAlternative != null) {
+      if (!createAlternative.getAlternativeList().isEmpty() && !questionTitleTextField.isEmpty()) {
         addQuestionButton.setEnabled(true);
+      } else if ((createAlternative.getAlternativeList().isEmpty()
+          || questionTitleTextField.isEmpty()) && questionType != QuestionType.TEXT) {
+        addQuestionButton.setEnabled(false);
       }
     }
   }
@@ -267,7 +298,7 @@ public class CreateSurveyView extends VerticalLayout
   // Remove questions from questions container
   public void removeQuestion(Component c) {
     questions.remove(c);
-    refreshQuestions();
+    updateMoveButtonStatus();
     checkFilledFields();
   }
 
@@ -280,33 +311,16 @@ public class CreateSurveyView extends VerticalLayout
   // Save survey with questions to database
   public void saveSurvey() {
     thisSurvey.getQuestions().clear();
+    QuestionFactory qf = new QuestionFactory();
 
     for (int position = 0; position < questions.getComponentCount(); position++) {
-
-      if (questions.getComponentAt(position) instanceof TextQuestionWithButtons) {
-        TextQuestionWithButtons component =
-            (TextQuestionWithButtons) questions.getComponentAt(position);
-        TextQuestion question = new TextQuestion();
-        question.setTitle(component.getQuestion());
-        question.setPosition(position);
-        thisSurvey.getQuestions().add(question);
-
-      } else if (questions.getComponentAt(position) instanceof RadioQuestionWithButtons) {
-        RadioQuestionWithButtons component =
-            (RadioQuestionWithButtons) questions.getComponentAt(position);
-        MultiQuestion question = new MultiQuestion();
-        question.setTitle(component.getQuestion());
-        question.setPosition(position);
-        question.setQuestionType(component.getQuestionType());
-        question.getAlternatives().addAll(component.getAlternatives());
-
-        thisSurvey.getQuestions().add(question);
-
-      }
-
+      Question question = qf.createQuestion(questions.getComponentAt(position), position);
+      thisSurvey.getQuestions().add(question);
     }
+
     thisSurvey.setCreator(creatorNameTextField.getValue());
     thisSurvey.setTitle(surveyTitleTextField.getValue());
+    thisSurvey.setDescription(descriptionTextArea.getValue());
     thisSurvey.setDate(LocalDate.now());
 
     surveyRepository.save(thisSurvey);
@@ -321,99 +335,29 @@ public class CreateSurveyView extends VerticalLayout
   }
 
   // Check if title and creator textfields are filled out
-  public void checkFilledFields() {
+  public boolean checkFilledFields() {
+    hasChanges = true;
     if (!(surveyTitleTextField.isEmpty() || creatorNameTextField.isEmpty())
         && validateQuestionListLength()) {
       submitSurveyButton.setEnabled(true);
+      return true;
     } else {
       submitSurveyButton.setEnabled(false);
+      return false;
     }
-    hasChanges = true;
   }
 
-  /*
-   * REMEMBER JONATHAN: DELETE ALL UNUSED METHODS IN THE VERTICALALYOUT CRAP THINGS
-   */
-  public void refreshQuestions() {
+  public void updateMoveButtonStatus() {
     for (int i = 0; i < questions.getComponentCount(); i++) {
-      // questions.indexOf(button.getParent().get().getParent().get()) == 0
-      // if (questions.getComponentAt(position) instanceof TextQuestionWithButtons) {
-      if (questions.getComponentAt(i) instanceof TextQuestionWithButtons) {
-        TextQuestionWithButtons component = (TextQuestionWithButtons) questions.getComponentAt(i);
-        if (questions.getComponentCount() == 1) {
-          component.getUpButton().setEnabled(false);
-          component.getDownButton().setEnabled(false);
-        } else if (questions.getComponentCount() > 1) {
-          if (questions.indexOf(component) == 0) {
-            component.getUpButton().setEnabled(false);
-            component.getDownButton().setEnabled(true);
-          } else if (questions.indexOf(component) == questions.getComponentCount() - 1) {
-            component.getUpButton().setEnabled(true);
-            component.getDownButton().setEnabled(false);
-          } else {
-            // These are probably just duplicates (scroll down)
-            component.getUpButton().setEnabled(true);
-            component.getDownButton().setEnabled(true);
-          }
-        } else {
-          component.getUpButton().setEnabled(true);
-          component.getDownButton().setEnabled(true);
-        }
-      } else if (questions.getComponentAt(i) instanceof RadioQuestionWithButtons) {
-        RadioQuestionWithButtons component = (RadioQuestionWithButtons) questions.getComponentAt(i);
-        if (questions.getComponentCount() == 1) {
-          component.getUpButton().setEnabled(false);
-          component.getDownButton().setEnabled(false);
-        } else if (questions.getComponentCount() > 1) {
-          if (questions.indexOf(component) == 0) {
-            component.getUpButton().setEnabled(false);
-            component.getDownButton().setEnabled(true);
-          } else if (questions.indexOf(component) == questions.getComponentCount() - 1) {
-            component.getUpButton().setEnabled(true);
-            component.getDownButton().setEnabled(false);
-          } else {
-            // These are probably just duplicates and can be cleaned up but leaving this "for now".
-            component.getUpButton().setEnabled(true);
-            component.getDownButton().setEnabled(true);
-          }
-        } else {
-          component.getUpButton().setEnabled(true);
-          component.getDownButton().setEnabled(true);
-        }
+      QuestionWithButtons component = (QuestionWithButtons) questions.getComponentAt(i);
+      component.getUpButton().setEnabled(true);
+      component.getDownButton().setEnabled(true);
+
+      if (i == 0) {
+        component.getUpButton().setEnabled(false);
       }
-    }
-  }
-
-  public void setLoadedQuestions() {
-    for (int i = 0; i < questions.getComponentCount(); i++) {
-      // questions.indexOf(button.getParent().get().getParent().get()) == 0
-      // if (questions.getComponentAt(position) instanceof TextQuestionWithButtons) {
-      if (questions.getComponentAt(i) instanceof TextQuestionWithButtons) {
-        TextQuestionWithButtons component = (TextQuestionWithButtons) questions.getComponentAt(i);
-        if (questions.getComponentCount() <= 1) {
-          component.getUpButton().setEnabled(false);
-          component.getDownButton().setEnabled(false);
-        } else if (questions.getComponentCount() > 1) {
-          if (questions.indexOf(component) == 0) {
-            component.getUpButton().setEnabled(false);
-          } else if (questions.indexOf(component) == questions.getComponentCount() - 1) {
-            component.getUpButton().setEnabled(true);
-            component.getDownButton().setEnabled(false);
-          }
-        }
-      } else if (questions.getComponentAt(i) instanceof RadioQuestionWithButtons) {
-        RadioQuestionWithButtons component = (RadioQuestionWithButtons) questions.getComponentAt(i);
-        if (questions.getComponentCount() == 1) {
-          component.getUpButton().setEnabled(false);
-          component.getDownButton().setEnabled(false);
-        } else if (questions.getComponentCount() > 1) {
-          if (questions.indexOf(component) == 0) {
-            component.getUpButton().setEnabled(false);
-          } else if (questions.indexOf(component) == questions.getComponentCount() - 1) {
-            component.getUpButton().setEnabled(true);
-            component.getDownButton().setEnabled(false);
-          }
-        }
+      if (i == questions.getComponentCount() - 1) {
+        component.getDownButton().setEnabled(false);
       }
     }
   }
@@ -428,8 +372,9 @@ public class CreateSurveyView extends VerticalLayout
       for (Question q : thisSurvey.getQuestions()) {
         surveyTitleTextField.setValue(thisSurvey.getTitle());
         creatorNameTextField.setValue(thisSurvey.getCreator());
+        descriptionTextArea.setValue(thisSurvey.getDescription());
         if (q instanceof TextQuestion) {
-          questions.add(new TextQuestionWithButtons(q.getTitle(), this));
+          questions.add(new TextQuestionWithButtons(q.getTitle(), this, q.isMandatory()));
         } else {
           MultiQuestion mq = (MultiQuestion) q;
 
@@ -437,13 +382,12 @@ public class CreateSurveyView extends VerticalLayout
           for (MultiQuestionAlternative mqa : mq.getAlternatives()) {
             stringAlternatives.add(mqa.getTitle());
           }
-
-          questions.add(new RadioQuestionWithButtons(mq.getTitle(), this, stringAlternatives,
-              mq.getQuestionType()));
+          questions.add(new MultiQuestionWithButtons(mq.getTitle(), this, stringAlternatives,
+              mq.getQuestionType(), mq.isMandatory()));
         }
       }
-      submitSurveyButton.setText("Save");
-      setLoadedQuestions();
+      submitSurveyButton.setText("Save Survey");
+      updateMoveButtonStatus();
       thisSurvey.getQuestions().clear();
       checkFilledFields();
       hasChanges = false;

@@ -1,9 +1,12 @@
-package com.considlia.survey.custom_component;
+package com.considlia.survey.ui.custom_component;
 
 import java.util.ArrayList;
 import java.util.List;
 import com.considlia.survey.model.MultiQuestionAlternative;
+import com.considlia.survey.ui.custom_component.question_with_button.MultiQuestionWithButtons;
+import com.considlia.survey.ui.custom_component.question_with_button.TextQuestionWithButtons;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -19,6 +22,7 @@ public class EditDialog extends Dialog {
   private TextField question;
   private Button confirm, inputButton;
   private List<TextField> textFieldList = new ArrayList<>();
+  private Checkbox mandatory;
 
   public EditDialog(Button button) {
     open();
@@ -28,6 +32,9 @@ public class EditDialog extends Dialog {
     inputButton = button;
     question = new TextField("Question:");
     contentBox.add(question);
+
+    mandatory = new Checkbox("Mandatory Question");
+    contentBox.add(mandatory);
 
     if (button.getParent().get().getParent().get() instanceof TextQuestionWithButtons) {
       textQuestion();
@@ -44,19 +51,23 @@ public class EditDialog extends Dialog {
     TextQuestionWithButtons choosenQuestion =
         (TextQuestionWithButtons) inputButton.getParent().get().getParent().get();
     question.setValue(choosenQuestion.getQuestion());
+    mandatory.setValue(choosenQuestion.isMandatory());
 
     confirm = new Button("Confirm");
     confirm.addClickListener(onConfirm -> {
+      choosenQuestion.setMandatory(mandatory.getValue());
       choosenQuestion.setQuestion(question.getValue());
+
       close();
     });
 
   }
 
   public void radioQuestion() {
-    RadioQuestionWithButtons choosenQuestion =
-        (RadioQuestionWithButtons) inputButton.getParent().get().getParent().get();
+    MultiQuestionWithButtons choosenQuestion =
+        (MultiQuestionWithButtons) inputButton.getParent().get().getParent().get();
     question.setValue(choosenQuestion.getQuestion());
+    mandatory.setValue(choosenQuestion.isMandatory());
 
     List<MultiQuestionAlternative> alternativeList = new ArrayList<>();
     for (MultiQuestionAlternative alternative : choosenQuestion.getAlternatives()) {
@@ -74,6 +85,7 @@ public class EditDialog extends Dialog {
     footer.add(new Button(new Icon(VaadinIcon.PLUS_CIRCLE), event -> addNewTextField(null)));
     confirm = new Button("Confirm");
     confirm.addClickListener(onConfirm -> {
+      choosenQuestion.setMandatory(mandatory.getValue());
       choosenQuestion.setQuestion(question.getValue());
 
       List<String> strings = new ArrayList<>();

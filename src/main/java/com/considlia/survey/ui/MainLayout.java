@@ -28,7 +28,7 @@ public class MainLayout extends VerticalLayout implements RouterLayout {
 
     navigation = new HorizontalLayout();
 
-    navigation.add(createRouterLink(MainView.class, "Home", VaadinIcon.HOME));
+    navigation.add(createRouterLink(HomeView.class, "Home", VaadinIcon.HOME));
     if (SecurityUtils.isUserLoggedIn()){
       if (SecurityUtils.hasAccess(CreateSurveyView.class)){
         navigation
@@ -61,7 +61,4 @@ public class MainLayout extends VerticalLayout implements RouterLayout {
     }
   }
 
-  public HorizontalLayout getNavigation() {
-    return navigation;
-  }
 }

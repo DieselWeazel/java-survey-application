@@ -9,12 +9,13 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
+import com.considlia.survey.ui.custom_component.QuestionType;
 
 @Entity
 @Table(name = "multiquestion")
 public class MultiQuestion extends Question {
 
-  private int questionType;
+  private QuestionType questionType;
 
   @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   @JoinColumn(name = "question_id")
@@ -23,8 +24,9 @@ public class MultiQuestion extends Question {
 
   public MultiQuestion() {}
 
-  public MultiQuestion(String questionTitle, int position, int questionType) {
-    super(questionTitle, position);
+  public MultiQuestion(String questionTitle, int position, QuestionType questionType,
+      boolean mandatory) {
+    super(questionTitle, position, mandatory);
     this.questionType = questionType;
 
   }
@@ -37,11 +39,11 @@ public class MultiQuestion extends Question {
     this.alternatives = alternatives;
   }
 
-  public int getQuestionType() {
+  public QuestionType getQuestionType() {
     return questionType;
   }
 
-  public void setQuestionType(int questionType) {
+  public void setQuestionType(QuestionType questionType) {
     this.questionType = questionType;
   }
 

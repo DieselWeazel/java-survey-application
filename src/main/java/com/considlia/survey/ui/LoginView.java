@@ -32,8 +32,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-@Route(value = "login", layout = MainLayout.class)
-public class LoginView extends VerticalLayout {
+@Route(value = "login")
+public class LoginView extends BaseView {
 
   // -- Login Components --
   private TextField username;
@@ -47,11 +47,10 @@ public class LoginView extends VerticalLayout {
   private VerticalLayout loginView;
 
   public LoginView(AuthenticationManager authenticationManagerBean){
+    super("Login");
     this.authenticationManagerBean = authenticationManagerBean;
-    add(new H1("Test Login, not finished"));
     username = new TextField();
     password = new PasswordField();
-//    loginButton = new NativeButton("Login (native)");
     submitButton = new Button("Login");
 
     username.setLabel("Username");
@@ -59,9 +58,7 @@ public class LoginView extends VerticalLayout {
 
     submitButton.addClickListener(event -> {
       if (setCurrentUser(username.getValue(),password.getValue())){
-//        UI.getCurrent().getPage().getHistory().replaceState(null, "");
-        UI.getCurrent().getPage().reload();
-//        UI.getCurrent().navigate(MainView.class);
+        UI.getCurrent().navigate(HomeView.class);
       }
     });
 
@@ -72,7 +69,7 @@ public class LoginView extends VerticalLayout {
 
     loginView.setWidth("400px");
     loginView.setAlignItems(Alignment.CENTER);
-
+    setAlignItems(Alignment.CENTER);
   }
 
   public boolean setCurrentUser(String login,String password){
