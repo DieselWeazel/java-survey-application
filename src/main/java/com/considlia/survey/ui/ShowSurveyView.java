@@ -25,7 +25,6 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
 
   // -- Private Variables --
   // -- Containers --
-  private VerticalLayout mainVerticalLayout = new VerticalLayout();
   private HorizontalLayout headerHorizontalLayout = new HorizontalLayout();
   private VerticalLayout surveyVerticalLayout = new VerticalLayout();
 
@@ -56,17 +55,13 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
   // -- UI method, adding, etc.
   private void initUI() {
 
-    mainVerticalLayout.setMinWidth("60%");
-    mainVerticalLayout.setMaxWidth("80%");
-
     headerHorizontalLayout.setId("createheader");
     surveyVerticalLayout.setId("questionpackage");
 
     Label mandatoryLabel = new Label("* = Mandatory question");
     headerHorizontalLayout.setDefaultVerticalComponentAlignment(Alignment.BASELINE);
     headerHorizontalLayout.add(h1);
-    mainVerticalLayout.add(headerHorizontalLayout, mandatoryLabel, surveyVerticalLayout);
-    add(mainVerticalLayout);
+    add(headerHorizontalLayout, mandatoryLabel, surveyVerticalLayout);
   }
 
   // -- Data methods --
