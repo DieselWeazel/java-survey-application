@@ -109,7 +109,7 @@ public class EditDialog extends Dialog {
 
   public void addNewTextField(String title) {
     HorizontalLayout horizontalBox = new HorizontalLayout();
-    TextField txtAlternative = new TextField("Alternative " + (contentBox.getComponentCount()));
+    TextField txtAlternative = new TextField("Alternative " + (contentBox.getComponentCount() - 1));
     if (title != null) {
       txtAlternative.setValue(title);
     }
