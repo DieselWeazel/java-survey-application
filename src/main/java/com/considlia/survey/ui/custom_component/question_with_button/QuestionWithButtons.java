@@ -71,7 +71,7 @@ public abstract class QuestionWithButtons extends VerticalLayout {
   public void setQuestion(String question) {
     this.question = question;
 
-    H5 updatedTitle = new H5(question);
+    H5 updatedTitle = new H5(question + (mandatory ? "*" : ""));
     updatedTitle.setWidth("90%");
 
     content.replace(title, updatedTitle);
