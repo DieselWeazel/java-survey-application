@@ -248,6 +248,9 @@ public class CreateSurveyView extends BaseView
     if (createAlternative != null) {
       if (!createAlternative.getAlternativeList().isEmpty() && !questionTitleTextField.isEmpty()) {
         addQuestionButton.setEnabled(true);
+      } else if ((createAlternative.getAlternativeList().isEmpty()
+          || questionTitleTextField.isEmpty()) && questionType != QuestionType.TEXT) {
+        addQuestionButton.setEnabled(false);
       }
     }
   }
