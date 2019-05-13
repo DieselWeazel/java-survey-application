@@ -1,10 +1,14 @@
 package com.considlia.survey;
 
+import com.considlia.survey.model.User;
+import com.considlia.survey.repositories.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import com.considlia.survey.repositories.SurveyRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 /*
 no users yet, login view showing however!
@@ -14,12 +18,16 @@ Add a user and try the functionality
 @SpringBootApplication
 public class SurveyApplication {
 
+
+  @Autowired
+  private PasswordEncoder passwordEncoder;
+
   public static void main(String[] args) {
     SpringApplication.run(SurveyApplication.class, args);
   }
 
   @Bean
-  public CommandLineRunner initDb(SurveyRepository surveyRepository) {
+  public CommandLineRunner initDb(SurveyRepository surveyRepository, UserRepository userRepository) {
     return args -> {
       // Survey survey1 = new Survey();
       // survey1.setSurveyTitle("Test");
@@ -113,6 +121,16 @@ public class SurveyApplication {
       //
       // surveyRepository.save(survey2);
 
+
+      User user = new User();
+      user.setFirstName("admin");
+      user.setLastName("admin");
+      user.setEmail("jonathan@gmail.com");
+      user.setRole("ADMIN");
+      user.setUsername("admin");
+      user.setPassword(passwordEncoder.encode("admin"));
+
+      userRepository.save(user);
     };
   }
 }

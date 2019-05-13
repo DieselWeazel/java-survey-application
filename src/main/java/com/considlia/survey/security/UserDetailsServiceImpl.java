@@ -3,6 +3,7 @@ package com.considlia.survey.security;
 import com.considlia.survey.model.User;
 import com.considlia.survey.repositories.UserRepository;
 import java.util.Collections;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -12,20 +13,42 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
-//@Primary
+@Primary
 public class UserDetailsServiceImpl implements UserDetailsService {
 
   @Autowired
   private UserRepository userRepository;
 
+  @Autowired
+  public UserDetailsServiceImpl(UserRepository userRepository) {
+    this.userRepository = userRepository;
+  }
+
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    User user = userRepository.findByEmail(username);
+//    Optional<User> optionalUsers = userRepository.findByName(username);
+//
+//    optionalUsers
+//        .orElseThrow(() -> new UsernameNotFoundException("Username not found"));
+//    return optionalUsers
+//        .map(CustomUserDetails::new).get();
+//    User user = userRepository.findByEmailIgnoreCase(username);
+//    if (null == user) {
+//      throw new UsernameNotFoundException("No user present with username: " + username);
+//    } else {
+//      return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPasswordHash(),
+//          Collections.singletonList(new SimpleGrantedAuthority(user.getRole())));
+//    }
+
+    User user = userRepository.findByUsername(username);
     if (null == user) {
-      throw new UsernameNotFoundException(username + " does not exist.");
+      throw new UsernameNotFoundException("No user found // Create Something else here!");
     } else {
       return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(),
           Collections.singletonList(new SimpleGrantedAuthority(user.getRole())));
     }
+
+
+
   }
 }

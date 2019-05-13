@@ -1,5 +1,6 @@
 package com.considlia.survey.ui;
 
+import com.considlia.survey.model.User;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +31,9 @@ import com.vaadin.flow.router.BeforeLeaveObserver;
 import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.OptionalParameter;
 import com.vaadin.flow.router.Route;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 
 @StyleSheet("css/app.css")
 @Route(value = "createsurvey", layout = MainLayout.class)
@@ -98,6 +102,19 @@ public class CreateSurveyView extends VerticalLayout
 
     header.setClassName("createheader");
     addQuestionPackage.setClassName("questionpackage");
+    Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+    if (principal instanceof UserDetails) {
+      String username = ((UserDetails)principal).getUsername();
+      System.out.println(principal.toString() + username);
+      creatorNameTextField.setPlaceholder(principal.toString() + username);
+
+    } else {
+      String username = principal.toString();
+      System.out.println(username);
+      creatorNameTextField.setPlaceholder(username);
+
+    }
     header.add(surveyTitleTextField, creatorNameTextField);
     footer.add(submitSurveyButton);
     footer.add(cancelButton);

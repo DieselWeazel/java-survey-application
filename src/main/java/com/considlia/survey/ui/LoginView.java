@@ -1,5 +1,11 @@
 package com.considlia.survey.ui;
 
+import static org.springframework.security.web.context.HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY;
+
+import com.considlia.survey.model.User;
+import com.considlia.survey.repositories.UserRepository;
+import com.considlia.survey.security.SecurityConfiguration;
+import com.considlia.survey.security.UserDetailsServiceImpl;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H1;
@@ -8,56 +14,144 @@ import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.dom.Element;
 import com.vaadin.flow.router.Route;
+import java.util.Collection;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Route(value = "login", layout = MainLayout.class)
+//@HtmlImport("frontend://bower_components/iron-form/iron-form.html")
 public class LoginView extends VerticalLayout {
 
   // -- Login Components --
-  private TextField userNameTextField;
-  private PasswordField passwordField;
+  private TextField username;
+  private PasswordField password;
   //submitButton(?)
-  private Button loginButton;
+//  private NativeButton loginButton;
+  private Button submitButton;
 
   // -- Backend Components --
   private Element formElement;
   private Element ironForm;
 
+  private DaoAuthenticationProvider authenticationProvider;
+  private UserRepository userRepository;
+  private UserDetailsServiceImpl userdetailsService;
   private VerticalLayout loginView;
 
-  public LoginView(){
+
+  private AuthenticationManager  authenticationManagerBean;
+
+  @Autowired
+  public LoginView(AuthenticationManager authenticationManagerBean){
+    this.authenticationManagerBean = authenticationManagerBean;
     add(new H1("Test Login, not finished"));
-    userNameTextField = new TextField();
-    passwordField = new PasswordField();
-    loginButton = new Button("Login");
+    username = new TextField();
+    password = new PasswordField();
+//    loginButton = new NativeButton("Login (native)");
+    submitButton = new Button("Login");
 
-    userNameTextField.getElement().setAttribute("name", "username");
-    passwordField.getElement().setAttribute("name", "password");
 
-    UI.getCurrent().getPage().executeJavaScript("document.getElementById('loginbutton').addEventListener('click', () => document.getElementById('ironform').submit());");
+//    username.getElement().setAttribute("name", "username");
+//    password.getElement().setAttribute("name", "password");
+//    loginButton.setId("submitbutton");
+//    submitButton.setId("submitbutton");
+//    UI.getCurrent().getPage().executeJavaScript("document.getElementById('submitbutton').addEventListener('click', () => document.getElementById('ironform').submit());");
+//    UI.getCurrent().getPage().executeJavaScript("document.getElementById('submitbutton').addEventListener('click', () => document.getElementById('ironform').submit());");
     // Am I moveable?
-    loginView = new VerticalLayout(userNameTextField, passwordField, loginButton);
 
-    userNameTextField.setLabel("Username");
-    passwordField.setLabel("Password");
-    loginButton.setId("loginbutton");
 
-    userNameTextField.setWidth("380px");
-    passwordField.setWidth("380px");
+    username.setLabel("Username");
+    password.setLabel("Password");
+//    loginButton.getElement().setAttribute("type", "login");
+//    submitButton.getElement().setAttribute("type", "login");
 
-    formElement = new Element("form");
-    formElement.setAttribute("method", "post");
-    formElement.setAttribute("action", "login");
-    formElement.appendChild(loginView.getElement());
 
-    ironForm = new Element("iron-form");
-    ironForm.setAttribute("id", "ironform");
-    ironForm.setAttribute("allow-redirect", true);
-    ironForm.appendChild(formElement);
+    submitButton.addClickListener(event -> {
+//      User user = new User();
+//      user.setUsername(username.getValue());
+//      user.setPassword(password.getValue());
+//      Authentication authentication = authenticationManagerBean.
+//          authenticate(new UsernamePasswordAuthenticationToken(username.getValue(),
+//      password.getValue()));
 
-    getElement().appendChild(ironForm);
+      BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+      if (setCurrentUser(username.getValue(),password.getValue())){
+          UI.getCurrent().navigate(CreateSurveyView.class);
+      }
 
+
+//      try {
+//        if (authentication!=null){
+//          SecurityContextHolder.getContext().setAuthentication(authentication);
+//          UI.getCurrent().navigate("/createsurvey");
+//        }
+//      } catch (AuthenticationException e){
+//        System.out.println(e.getMessage());
+//        submitButton.setText("Wrong credentials");
+//      }
+
+    });
+
+    username.setWidth("380px");
+    password.setWidth("380px");
+    loginView = new VerticalLayout(username, password, submitButton);
+    add(loginView);
 
     loginView.setWidth("400px");
     loginView.setAlignItems(Alignment.CENTER);
+
   }
+
+  public boolean setCurrentUser(String login,String password){
+    try {
+      Authentication request=new UsernamePasswordAuthenticationToken(login,password);
+      Authentication result= authenticationManagerBean.authenticate(request);
+      SecurityContextHolder.getContext().setAuthentication(result);
+    }
+    catch (  BadCredentialsException e) {
+      return false;
+    }
+    return true;
+  }
+
+//  public LoginView(){
+//    username = new TextField();
+//    password = new PasswordField();
+//    submitButton = new Button("Login");
+//  }
+
+//  public Authentication authenticate(Authentication auth){
+//    User user = userRepository.findByUsername(auth.getName());
+//    if (user == null) {
+//      throw new BadCredentialsException("User not found");
+//    }
+//    String password = (String) auth.getCredentials();
+//    if (!SecurityConfiguration.getPasswordEncoder().matches(password, user.getPassword())) {
+//      throw new BadCredentialsException("Wrong password");
+//    }
+//
+//    List<GrantedAuthority> roles = new ArrayList<>();
+//    for (String role : user.getRol()) {
+//      roles.add(new SimpleGrantedAuthority(role));
+//    }
+//    return new UsernamePasswordAuthenticationToken(user.getEmail(), password, roles);
+//  }
+
+//  public void
 }
+
+

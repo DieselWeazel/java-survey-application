@@ -7,6 +7,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -15,6 +17,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 
@@ -26,21 +29,39 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 
   @Autowired
-  private final UserDetailsService userDetailsService;
+  private final UserDetailsServiceImpl userDetailsService;
 
-  @Autowired
+//  @Autowired
+//  private PasswordEncoder passwordEncoder;
+
+//  @Autowired
+//  public SecurityConfiguration(
+//      UserDetailsService userDetailsService) {
+//    this.userDetailsService = userDetailsService;
+//  }
+
+//  @Bean
+//  @Override
+//  public AuthenticationManager authenticationManagerBean() throws Exception {
+//    return super.authenticationManagerBean();
+//  }
+
   public SecurityConfiguration(
-      UserDetailsService userDetailsService) {
+    UserDetailsServiceImpl userDetailsService) {
     this.userDetailsService = userDetailsService;
   }
 
   @Override
   protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-
-    auth.userDetailsService(userDetailsService)
-        .passwordEncoder(getPasswordEncoder());
+    super.configure(auth);
+    auth.authenticationProvider(authProvider());
+    auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
   }
-
+  @Bean
+  @Override
+  public AuthenticationManager authenticationManagerBean() throws Exception {
+    return super.authenticationManagerBean();
+  }
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
@@ -48,32 +69,29 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         .requestCache().requestCache(new CustomRequestCache())
         .and().authorizeRequests()
         .requestMatchers(SecurityUtils::isFrameworkInternalRequest).permitAll()
-        .antMatchers("/createsurvey", "/createsurvey/*").hasAuthority("USER")
+        .antMatchers("/createsurvey", "/createsurvey/*").hasAuthority("ADMIN")
 //        .anyRequest().hasAnyAuthority(Role.getAllRoles())
         .and().formLogin().loginPage("/login").permitAll()
         .failureUrl("/failedlogin")
         .successHandler(new SavedRequestAwareAuthenticationSuccessHandler())
-        .and().logout().logoutSuccessUrl("/");
+        .and().logout().logoutSuccessUrl("/*");
 
 
   }
 
-  /*
-  Might be the wrong signature for method, also wrong package, not sure.
-   */
-  private PasswordEncoder getPasswordEncoder() {
-    return new PasswordEncoder() {
-      @Override
-      public String encode(CharSequence charSequence) {
-        return charSequence.toString();
-      }
+  @Bean
+  public DaoAuthenticationProvider authProvider() {
+    DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+    authProvider.setUserDetailsService(userDetailsService);
+    authProvider.setPasswordEncoder(passwordEncoder());
+    return authProvider;
+    }
 
-      @Override
-      public boolean matches(CharSequence charSequence, String s) {
-        return true;
-      }
-    };
-  }
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+  return new BCryptPasswordEncoder();
+}
+
 
   @Override
   public void configure(WebSecurity web) throws Exception {

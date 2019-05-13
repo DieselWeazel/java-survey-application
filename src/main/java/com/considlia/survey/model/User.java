@@ -118,4 +118,11 @@ public class User {
   public void setSurveys(Set<Survey> surveys) {
     this.surveys = surveys;
   }
+
+  @Override
+  public String toString() {
+    return "User{" +
+        "username='" + username + '\'' +
+        '}';
+  }
 }
