@@ -134,21 +134,25 @@ public class CreateSurveyView extends BaseView
     questionTitleTextField.setLabel("Question");
 
     questionTitleTextField.addValueChangeListener(event -> {
+
+      // checks if the the string contains more than 255 characters. If true cuts string after index
+      // 255
       if (event.getSource().getValue().length() > 255) {
         event.getSource().setValue(event.getSource().getValue().substring(0, 255));
         Notification.show("Question can max contain 255 characters");
       }
+
       if (questionTitleTextField.isEmpty() || selectOptions.getValue() == null) {
         addQuestionButton.setEnabled(false);
       } else if (selectOptions.getValue().equalsIgnoreCase("Text question")
           && !questionTitleTextField.getValue().isEmpty()) {
-        createQuestion(QuestionType.TEXT);
+        userCreationQuestion(QuestionType.TEXT);
       } else if ((selectOptions.getValue().equalsIgnoreCase("Radio Question")
           && !questionTitleTextField.getValue().isEmpty())) {
-        createQuestion(QuestionType.RADIO);
+        userCreationQuestion(QuestionType.RADIO);
       } else if ((selectOptions.getValue().equalsIgnoreCase("Checkbox Question")
           && !questionTitleTextField.getValue().isEmpty())) {
-        createQuestion(QuestionType.CHECKBOX);
+        userCreationQuestion(QuestionType.CHECKBOX);
       }
     });
 
@@ -157,11 +161,11 @@ public class CreateSurveyView extends BaseView
     selectOptions.setItems("Text question", "Radio Question", "Checkbox Question");
     selectOptions.addValueChangeListener(event -> {
       if (event.getValue().equalsIgnoreCase("Text question")) {
-        createQuestion(QuestionType.TEXT);
+        userCreationQuestion(QuestionType.TEXT);
       } else if (event.getValue().equalsIgnoreCase("Radio Question")) {
-        createQuestion(QuestionType.RADIO);
+        userCreationQuestion(QuestionType.RADIO);
       } else if (event.getValue().equalsIgnoreCase("Checkbox Question")) {
-        createQuestion(QuestionType.CHECKBOX);
+        userCreationQuestion(QuestionType.CHECKBOX);
       }
       if (questionTitleTextField.isEmpty()) {
         addQuestionButton.setEnabled(false);
@@ -223,29 +227,49 @@ public class CreateSurveyView extends BaseView
     addQuestionButton.setEnabled(false);
   }
 
-  public void createQuestion(QuestionType questionType) {
+  public void userCreationQuestion(QuestionType questionType) {
+
+    // if questionType was previously radio and now check and the other way around
     if (questionType != this.questionType && questionType != QuestionType.TEXT) {
 
+      /*
+       * For every new question created createAlternative will be null the first time
+       * userCreationQuestion() is invoked
+       */
       if (createAlternative == null) {
         createAlternative = new CreateAlternative(questionType, this);
         addQuestionContainer.add(createAlternative);
-      } else if (this.questionType == QuestionType.TEXT) {
+      }
+
+      /*
+       * if the previous questionType was a textquestion the alternative textfields must be
+       * displayed.
+       */
+      else if (this.questionType == QuestionType.TEXT) {
         createAlternative.setQuestionType(questionType);
         addQuestionContainer.add(createAlternative);
-      } else {
+      }
+
+      /*
+       * If just switching between radio and check, nothing in the gui has to change. Just the
+       * questionType in createAlternative for Question to have the right type when addQuestion() is
+       * invoked.
+       */
+      else {
         createAlternative.setQuestionType(questionType);
       }
-      this.questionType = questionType;
     } else if (questionType == QuestionType.TEXT) {
-      for (int i = 0; i < addQuestionContainer.getComponentCount(); i++) {
-        Component c = addQuestionContainer.getComponentAt(i);
-        if (c == createAlternative) {
-          addQuestionContainer.remove(createAlternative);
-        }
+      if (verticalLayoutContainsComponent(addQuestionContainer, createAlternative)) {
+        addQuestionContainer.remove(createAlternative);
       }
+
       addQuestionButton.setEnabled(true);
-      this.questionType = questionType;
+
     }
+
+    // regarding of what happens this.questionType will be updated
+    this.questionType = questionType;
+
     if (createAlternative != null) {
       if (!createAlternative.getAlternativeList().isEmpty() && !questionTitleTextField.isEmpty()) {
         addQuestionButton.setEnabled(true);
@@ -378,5 +402,16 @@ public class CreateSurveyView extends BaseView
       ConfirmDialog dialog = new ConfirmDialog(action, this);
       dialog.open();
     }
+  }
+
+  public boolean verticalLayoutContainsComponent(VerticalLayout vLayout, Component component) {
+    for (int i = 0; i < vLayout.getComponentCount(); i++) {
+      Component c = addQuestionContainer.getComponentAt(i);
+      if (c == component) {
+        return true;
+      }
+    }
+
+    return false;
   }
 }
