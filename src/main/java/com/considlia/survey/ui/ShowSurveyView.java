@@ -23,7 +23,8 @@ import com.vaadin.flow.router.Route;
 @Route(value = "showsurvey", layout = MainLayout.class)
 public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
 
-  private VerticalLayout mainVerticalLayout = new VerticalLayout();
+  // -- Private Variables --
+  // -- Containers --
   private HorizontalLayout headerHorizontalLayout = new HorizontalLayout();
   private VerticalLayout surveyVerticalLayout = new VerticalLayout();
 
@@ -50,9 +51,6 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
   // -- UI method, adding, etc.
   private void initUI() {
 
-    mainVerticalLayout.setMinWidth("60%");
-    mainVerticalLayout.setMaxWidth("80%");
-
     headerHorizontalLayout.setId("createheader");
     surveyVerticalLayout.setId("questionpackage");
 
@@ -62,13 +60,10 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
 
     if (containsMandatory) {
       Label mandatoryLabel = new Label("* = Mandatory question");
-      mainVerticalLayout.add(headerHorizontalLayout, mandatoryLabel, surveyVerticalLayout);
-      System.out.println(containsMandatory);
+      add(headerHorizontalLayout, mandatoryLabel, surveyVerticalLayout);
     } else {
-      mainVerticalLayout.add(headerHorizontalLayout, surveyVerticalLayout);
+      add(headerHorizontalLayout, surveyVerticalLayout);
     }
-
-    add(mainVerticalLayout);
   }
 
   // -- Data methods --
@@ -106,14 +101,10 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
       if (q instanceof MultiQuestion) {
         MultiQuestion mq = (MultiQuestion) q;
 
-        HorizontalLayout horLayout = new HorizontalLayout();
-
         ReadMultiQuestionLayout readMultiQuestionLayout = new ReadMultiQuestionLayout(mq);
-        horLayout.add(readMultiQuestionLayout);
-        surveyVerticalLayout.add(horLayout);
+        surveyVerticalLayout.add(readMultiQuestionLayout);
       } else {
         ReadTextQuestionLayout readTextQuestionLayout = new ReadTextQuestionLayout(q);
-
         surveyVerticalLayout.add(readTextQuestionLayout);
       }
       if (q.isMandatory()) {
