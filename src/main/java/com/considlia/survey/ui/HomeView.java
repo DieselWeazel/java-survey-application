@@ -23,7 +23,6 @@ public class HomeView extends BaseView {
   private Grid<Survey> grid;
   private List<Survey> surveyList;
   private TextField idField, titleField, creatorField, dateField;
-
   private SurveyRepository surveyRepository;
 
   public HomeView(SurveyRepository surveyRepository) {
@@ -32,7 +31,7 @@ public class HomeView extends BaseView {
 
     surveyList = new ArrayList<>();
 
-    // Hämtar lista från Databasen
+    // Gets the list from the Database
     surveyList = surveyRepository.findAll();
 
     grid = new Grid<>();
@@ -46,19 +45,18 @@ public class HomeView extends BaseView {
         "<div style='border: 1px solid gray; padding: 10px; width: 100%;box-sizing: border-box;'>"
             + "<div> <b>[[item.description]]</b></div>" + "</div>")
         .withProperty("description", Survey::getDescription)
-        // This is now how we open the details
         .withEventHandler("handleClick", survey -> {
           grid.getDataProvider().refreshItem(survey);
         }));
 
     Grid.Column<Survey> creatorColumn = grid.addColumn(Survey::getCreator).setHeader("Creator");
     Grid.Column<Survey> dateColumn = grid.addColumn(Survey::getDate).setHeader("Date");
-    grid.addComponentColumn(item -> showButtons(grid, item));
 
+    grid.addComponentColumn(item -> showButtons(grid, item));
     grid.setDetailsVisibleOnClick(false);
     grid.setSelectionMode(Grid.SelectionMode.NONE);
-
     grid.setItems(surveyList);
+
     add(grid);
 
     HeaderRow filterRow = grid.appendHeaderRow();
@@ -66,7 +64,7 @@ public class HomeView extends BaseView {
     // ID filter
     idField = createFilterField(filterRow, idColumn);
     idField.addValueChangeListener(e -> idSearcher(idField.getValue()));
-    idField.setMaxWidth("50%");
+    idField.setMaxWidth("30%");
 
     // Title filter
     titleField = createFilterField(filterRow, titleColumn);
@@ -180,7 +178,6 @@ public class HomeView extends BaseView {
       ConfirmDialog confirmDialog = new ConfirmDialog("Confirm delete",
           "Are you sure you want to delete the item?", surveyRepository, grid, item);
     });
-
     return new HorizontalLayout(showSurvey, editSurvey, deleteSurvey);
   }
 }
