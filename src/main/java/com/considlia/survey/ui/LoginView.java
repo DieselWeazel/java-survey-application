@@ -33,29 +33,19 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Route(value = "login", layout = MainLayout.class)
-//@HtmlImport("frontend://bower_components/iron-form/iron-form.html")
 public class LoginView extends VerticalLayout {
 
   // -- Login Components --
   private TextField username;
   private PasswordField password;
-  //submitButton(?)
-//  private NativeButton loginButton;
   private Button submitButton;
 
   // -- Backend Components --
-  private Element formElement;
-  private Element ironForm;
+  @Autowired
+  private AuthenticationManager authenticationManagerBean;
 
-  private DaoAuthenticationProvider authenticationProvider;
-  private UserRepository userRepository;
-  private UserDetailsServiceImpl userdetailsService;
   private VerticalLayout loginView;
 
-
-  private AuthenticationManager  authenticationManagerBean;
-
-  @Autowired
   public LoginView(AuthenticationManager authenticationManagerBean){
     this.authenticationManagerBean = authenticationManagerBean;
     add(new H1("Test Login, not finished"));
@@ -64,46 +54,15 @@ public class LoginView extends VerticalLayout {
 //    loginButton = new NativeButton("Login (native)");
     submitButton = new Button("Login");
 
-
-//    username.getElement().setAttribute("name", "username");
-//    password.getElement().setAttribute("name", "password");
-//    loginButton.setId("submitbutton");
-//    submitButton.setId("submitbutton");
-//    UI.getCurrent().getPage().executeJavaScript("document.getElementById('submitbutton').addEventListener('click', () => document.getElementById('ironform').submit());");
-//    UI.getCurrent().getPage().executeJavaScript("document.getElementById('submitbutton').addEventListener('click', () => document.getElementById('ironform').submit());");
-    // Am I moveable?
-
-
     username.setLabel("Username");
     password.setLabel("Password");
-//    loginButton.getElement().setAttribute("type", "login");
-//    submitButton.getElement().setAttribute("type", "login");
-
 
     submitButton.addClickListener(event -> {
-//      User user = new User();
-//      user.setUsername(username.getValue());
-//      user.setPassword(password.getValue());
-//      Authentication authentication = authenticationManagerBean.
-//          authenticate(new UsernamePasswordAuthenticationToken(username.getValue(),
-//      password.getValue()));
-
-      BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
       if (setCurrentUser(username.getValue(),password.getValue())){
-          UI.getCurrent().navigate(CreateSurveyView.class);
+//        UI.getCurrent().getPage().getHistory().replaceState(null, "");
+        UI.getCurrent().getPage().reload();
+//        UI.getCurrent().navigate(MainView.class);
       }
-
-
-//      try {
-//        if (authentication!=null){
-//          SecurityContextHolder.getContext().setAuthentication(authentication);
-//          UI.getCurrent().navigate("/createsurvey");
-//        }
-//      } catch (AuthenticationException e){
-//        System.out.println(e.getMessage());
-//        submitButton.setText("Wrong credentials");
-//      }
-
     });
 
     username.setWidth("380px");
@@ -127,31 +86,6 @@ public class LoginView extends VerticalLayout {
     }
     return true;
   }
-
-//  public LoginView(){
-//    username = new TextField();
-//    password = new PasswordField();
-//    submitButton = new Button("Login");
-//  }
-
-//  public Authentication authenticate(Authentication auth){
-//    User user = userRepository.findByUsername(auth.getName());
-//    if (user == null) {
-//      throw new BadCredentialsException("User not found");
-//    }
-//    String password = (String) auth.getCredentials();
-//    if (!SecurityConfiguration.getPasswordEncoder().matches(password, user.getPassword())) {
-//      throw new BadCredentialsException("Wrong password");
-//    }
-//
-//    List<GrantedAuthority> roles = new ArrayList<>();
-//    for (String role : user.getRol()) {
-//      roles.add(new SimpleGrantedAuthority(role));
-//    }
-//    return new UsernamePasswordAuthenticationToken(user.getEmail(), password, roles);
-//  }
-
-//  public void
 }
 
 

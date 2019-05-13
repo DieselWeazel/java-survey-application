@@ -1,6 +1,8 @@
 package com.considlia.survey.ui;
 
+import com.considlia.survey.model.Role;
 import com.considlia.survey.model.User;
+import com.considlia.survey.security.SecurityUtils;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,12 +33,15 @@ import com.vaadin.flow.router.BeforeLeaveObserver;
 import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.OptionalParameter;
 import com.vaadin.flow.router.Route;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @StyleSheet("css/app.css")
 @Route(value = "createsurvey", layout = MainLayout.class)
+@Secured(Role.ADMIN)
 public class CreateSurveyView extends VerticalLayout
     implements HasUrlParameter<Long>, BeforeLeaveObserver {
 
@@ -107,10 +112,16 @@ public class CreateSurveyView extends VerticalLayout
     if (principal instanceof UserDetails) {
       String username = ((UserDetails)principal).getUsername();
       System.out.println(principal.toString() + username);
-      creatorNameTextField.setPlaceholder(principal.toString() + username);
+      System.out.println("\n\n0 method signature" + SecurityUtils.isUserLoggedIn());
+      System.out.println("\n\n1 method signature" + SecurityUtils.isUserLoggedIn(
+          SecurityContextHolder.getContext().getAuthentication()));
+      creatorNameTextField.setPlaceholder(username);
 
     } else {
       String username = principal.toString();
+      System.out.println("\n\n0 method signature" + SecurityUtils.isUserLoggedIn());
+      System.out.println("\n\n1 method signature" + SecurityUtils.isUserLoggedIn(
+          SecurityContextHolder.getContext().getAuthentication()));
       System.out.println(username);
       creatorNameTextField.setPlaceholder(username);
 

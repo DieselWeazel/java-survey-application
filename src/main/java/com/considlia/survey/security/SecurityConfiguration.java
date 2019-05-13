@@ -1,5 +1,6 @@
 package com.considlia.survey.security;
 
+import com.considlia.survey.model.Role;
 import com.considlia.survey.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -27,24 +28,8 @@ import org.springframework.security.web.authentication.SavedRequestAwareAuthenti
 @Configuration
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-
   @Autowired
   private final UserDetailsServiceImpl userDetailsService;
-
-//  @Autowired
-//  private PasswordEncoder passwordEncoder;
-
-//  @Autowired
-//  public SecurityConfiguration(
-//      UserDetailsService userDetailsService) {
-//    this.userDetailsService = userDetailsService;
-//  }
-
-//  @Bean
-//  @Override
-//  public AuthenticationManager authenticationManagerBean() throws Exception {
-//    return super.authenticationManagerBean();
-//  }
 
   public SecurityConfiguration(
     UserDetailsServiceImpl userDetailsService) {
@@ -54,9 +39,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
   @Override
   protected void configure(AuthenticationManagerBuilder auth) throws Exception {
     super.configure(auth);
-    auth.authenticationProvider(authProvider());
+//    auth.authenticationProvider(authProvider());
     auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
   }
+
   @Bean
   @Override
   public AuthenticationManager authenticationManagerBean() throws Exception {
@@ -69,23 +55,25 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         .requestCache().requestCache(new CustomRequestCache())
         .and().authorizeRequests()
         .requestMatchers(SecurityUtils::isFrameworkInternalRequest).permitAll()
-        .antMatchers("/createsurvey", "/createsurvey/*").hasAuthority("ADMIN")
-//        .anyRequest().hasAnyAuthority(Role.getAllRoles())
-        .and().formLogin().loginPage("/login").permitAll()
+//        .antMatchers("/createsurvey", "/createsurvey/*", "/createsurvey/**").hasAuthority("ADMIN")
+        .anyRequest().hasAnyAuthority(Role.getAllRoles())
+        .and().formLogin().loginPage("/login").permitAll().loginProcessingUrl("/login")
         .failureUrl("/failedlogin")
-        .successHandler(new SavedRequestAwareAuthenticationSuccessHandler())
+//        .defaultSuccessUrl("/", true)
+
+        // Register the success handler that redirects users to the page they last tried
+        // to access
+//        .successHandler(new SavedRequestAwareAuthenticationSuccessHandler())
         .and().logout().logoutSuccessUrl("/*");
-
-
   }
 
-  @Bean
-  public DaoAuthenticationProvider authProvider() {
-    DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-    authProvider.setUserDetailsService(userDetailsService);
-    authProvider.setPasswordEncoder(passwordEncoder());
-    return authProvider;
-    }
+//  @Bean
+//  public DaoAuthenticationProvider authProvider() {
+//    DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+//    authProvider.setUserDetailsService(userDetailsService);
+//    authProvider.setPasswordEncoder(passwordEncoder());
+//    return authProvider;
+//    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {

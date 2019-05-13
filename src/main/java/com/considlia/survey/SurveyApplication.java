@@ -131,6 +131,16 @@ public class SurveyApplication {
       user.setPassword(passwordEncoder.encode("admin"));
 
       userRepository.save(user);
+
+      User noob = new User();
+      noob.setFirstName("noob");
+      noob.setLastName("scrub");
+      noob.setEmail("newbie@gmail.com");
+      noob.setRole("USER");
+      noob.setUsername("user");
+      noob.setPassword(passwordEncoder.encode("user"));
+
+      userRepository.save(noob);
     };
   }
 }

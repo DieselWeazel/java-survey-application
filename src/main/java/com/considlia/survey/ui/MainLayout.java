@@ -1,5 +1,6 @@
 package com.considlia.survey.ui;
 
+import com.considlia.survey.security.SecurityUtils;
 import java.util.HashMap;
 import java.util.Map;
 import com.vaadin.flow.component.Component;
@@ -26,11 +27,19 @@ public class MainLayout extends VerticalLayout implements RouterLayout {
     setId("mainlayout");
 
     navigation = new HorizontalLayout();
-    navigation.add(createRouterLink(MainView.class, "Home", VaadinIcon.HOME));
-    navigation
-        .add(createRouterLink(CreateSurveyView.class, "Create New Survey", VaadinIcon.PLUS_CIRCLE));
-    navigation.setClassName("header");
 
+    navigation.add(createRouterLink(MainView.class, "Home", VaadinIcon.HOME));
+    if (SecurityUtils.isUserLoggedIn()){
+      if (SecurityUtils.hasAccess(CreateSurveyView.class)){
+        navigation
+            .add(createRouterLink(CreateSurveyView.class, "Create New Survey", VaadinIcon.PLUS_CIRCLE));
+      }
+    } else {
+      navigation.add(createRouterLink(LoginView.class, "Login", VaadinIcon.OPTION));
+    }
+
+
+    navigation.setClassName("header");
     contentContainer = new VerticalLayout();
     contentContainer.setClassName("content");
 
@@ -52,4 +61,7 @@ public class MainLayout extends VerticalLayout implements RouterLayout {
     }
   }
 
+  public HorizontalLayout getNavigation() {
+    return navigation;
+  }
 }
