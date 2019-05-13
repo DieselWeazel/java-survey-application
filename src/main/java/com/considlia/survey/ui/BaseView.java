@@ -10,7 +10,11 @@ public abstract class BaseView extends VerticalLayout {
   }
 
   public BaseView(String viewName) {
-    add(new H1(viewName));
+    H1 title = new H1(viewName);
+    title.getStyle().set("margin-top", "20px");
+    title.getStyle().set("margin-bottom", "-10px");
+
+    add(title);
     setStyle();
   }
 

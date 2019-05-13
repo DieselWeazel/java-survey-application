@@ -24,7 +24,7 @@ import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
+import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
@@ -45,7 +45,7 @@ public class CreateSurveyView extends BaseView
   private Button addQuestionButton;
   private Button submitSurveyButton;
   private Button cancelButton;
-  private RadioButtonGroup<String> radioButtons;
+  private Select<String> selectOptions;
   private Checkbox mandatory;
 
   // Textfields
@@ -138,23 +138,24 @@ public class CreateSurveyView extends BaseView
         event.getSource().setValue(event.getSource().getValue().substring(0, 255));
         Notification.show("Question can max contain 255 characters");
       }
-      if (questionTitleTextField.isEmpty() || radioButtons.getValue() == null) {
+      if (questionTitleTextField.isEmpty() || selectOptions.getValue() == null) {
         addQuestionButton.setEnabled(false);
-      } else if (radioButtons.getValue().equalsIgnoreCase("Text question")
+      } else if (selectOptions.getValue().equalsIgnoreCase("Text question")
           && !questionTitleTextField.getValue().isEmpty()) {
         createQuestion(QuestionType.TEXT);
-      } else if ((radioButtons.getValue().equalsIgnoreCase("Radio Question")
+      } else if ((selectOptions.getValue().equalsIgnoreCase("Radio Question")
           && !questionTitleTextField.getValue().isEmpty())) {
         createQuestion(QuestionType.RADIO);
-      } else if ((radioButtons.getValue().equalsIgnoreCase("Checkbox Question")
+      } else if ((selectOptions.getValue().equalsIgnoreCase("Checkbox Question")
           && !questionTitleTextField.getValue().isEmpty())) {
         createQuestion(QuestionType.CHECKBOX);
       }
     });
 
-    radioButtons = new RadioButtonGroup<>();
-    radioButtons.setItems("Text question", "Radio Question", "Checkbox Question");
-    radioButtons.addValueChangeListener(event -> {
+    selectOptions = new Select<>();
+    selectOptions.setPlaceholder("Type of question");
+    selectOptions.setItems("Text question", "Radio Question", "Checkbox Question");
+    selectOptions.addValueChangeListener(event -> {
       if (event.getValue().equalsIgnoreCase("Text question")) {
         createQuestion(QuestionType.TEXT);
       } else if (event.getValue().equalsIgnoreCase("Radio Question")) {
@@ -178,7 +179,7 @@ public class CreateSurveyView extends BaseView
     header.add(descriptionTextArea);
 
     addQuestionHorizontalContainer.add(questionTitleTextField, addQuestionButton, mandatory);
-    addQuestionContainer.add(addQuestionHorizontalContainer, radioButtons);
+    addQuestionContainer.add(addQuestionHorizontalContainer, selectOptions);
 
     add(header);
     add(addQuestionContainer);
@@ -215,7 +216,7 @@ public class CreateSurveyView extends BaseView
     }
 
     questionTitleTextField.setValue("");
-    radioButtons.setValue("");
+    selectOptions.setValue("");
     checkFilledFields();
 
     addQuestionContainer.setVisible(true);
