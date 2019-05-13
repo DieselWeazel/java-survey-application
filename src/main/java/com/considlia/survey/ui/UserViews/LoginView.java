@@ -1,4 +1,4 @@
-package com.considlia.survey.ui;
+package com.considlia.survey.ui.UserViews;
 
 import static org.springframework.security.web.context.HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY;
 
@@ -6,6 +6,8 @@ import com.considlia.survey.model.User;
 import com.considlia.survey.repositories.UserRepository;
 import com.considlia.survey.security.SecurityConfiguration;
 import com.considlia.survey.security.UserDetailsServiceImpl;
+import com.considlia.survey.ui.BaseView;
+import com.considlia.survey.ui.HomeView;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H1;

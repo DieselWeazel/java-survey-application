@@ -1,6 +1,6 @@
 package com.considlia.survey.security;
 
-import com.considlia.survey.ui.LoginView;
+import com.considlia.survey.ui.UserViews.LoginView;
 import com.considlia.survey.ui.HomeView;
 import com.considlia.survey.ui.ShowSurveyView;
 import com.vaadin.flow.server.ServletHelper.RequestType;
