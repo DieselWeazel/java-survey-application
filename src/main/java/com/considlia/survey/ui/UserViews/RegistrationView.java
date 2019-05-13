@@ -1,26 +1,34 @@
 package com.considlia.survey.ui.UserViews;
 
 import com.considlia.survey.model.User;
+import com.considlia.survey.repositories.UserRepository;
 import com.considlia.survey.ui.BaseView;
+import com.considlia.survey.ui.HomeView;
 import com.considlia.survey.ui.MainLayout;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasSize;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
+import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.data.validator.EmailValidator;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Route (value = "registration", layout = MainLayout.class)
 public class RegistrationView extends BaseView {
 
   private EmailField email;
-  private PasswordField password;
+  private PasswordField passwordField;
   private TextField firstName;
   private TextField lastName;
   private TextField username;
@@ -32,33 +40,59 @@ public class RegistrationView extends BaseView {
 
   @Autowired
   private PasswordEncoder passwordEncoder;
+  private String passwordString = null;
+
+  private User user;
+  @Autowired
+  private AuthenticationManager authenticationManagerBean;
 
   @Autowired
-  private User user;
+  private UserRepository userRepository;
 
   public RegistrationView(){
     super("Registration");
     initUI("580px");
   }
 
-//  private void emptyFieldChecker(){
-//    for (int i = 0; i < registrationLayout.getComponentCount(); i++){
-//
-//    }
-//  }
+  private void registerUser() throws ValidationException {
+    userBinder.writeBean(user);
+    passwordString = passwordField.getValue();
+    user.setPassword(passwordEncoder.encode(passwordString));
+    user.setRole("USER");
+    userRepository.save(user);
+    signIn();
+
+  }
+/*
+Sign in function doesn't work properly now.
+ */
+  private void signIn() {
+    Authentication request=new UsernamePasswordAuthenticationToken(username,user.getPassword());
+    Authentication result= authenticationManagerBean.authenticate(request);
+    SecurityContextHolder.getContext().setAuthentication(result);
+    UI.getCurrent().navigate(HomeView.class);
+  }
 
   private void initUI(String width) {
     this.registrationLayout = new VerticalLayout();
     this.email = new EmailField("Email");
-    this.password = new PasswordField("Password");
+    this.passwordField = new PasswordField("Password");
     this.firstName = new TextField("First Name");
     this.lastName = new TextField("Last Name");
     this.username = new TextField("Username");
     this.submitButton = new Button("Submit");
-    this.userBinder = new Binder<>();
-    
-    bindFields();
-    registrationLayout.add(email, firstName, lastName, username, password, submitButton);
+    this.userBinder = new Binder<>(User.class);
+    this.user = new User();
+
+    submitButton.addClickListener(e -> {
+      try {
+        registerUser();
+      } catch (ValidationException e1) {
+        e1.printStackTrace();
+      }
+    });
+
+    registrationLayout.add(email, firstName, lastName, username, passwordField, submitButton);
     for (int i = 0; i < registrationLayout.getComponentCount(); i++){
       Component c = registrationLayout.getComponentAt(i);
       if (c instanceof HasSize){
@@ -69,6 +103,8 @@ public class RegistrationView extends BaseView {
     setAlignItems(Alignment.CENTER);
     registrationLayout.setAlignItems(Alignment.CENTER);
     add(registrationLayout);
+
+    bindFields();
   }
 
   private void bindFields() {
