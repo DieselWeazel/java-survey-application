@@ -98,20 +98,15 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
       if (q instanceof MultiQuestion) {
         MultiQuestion mq = (MultiQuestion) q;
 
-        HorizontalLayout horLayout = new HorizontalLayout();
-
         ReadMultiQuestionLayout readMultiQuestionLayout = new ReadMultiQuestionLayout(mq);
-        horLayout.add(readMultiQuestionLayout);
-        surveyVerticalLayout.add(horLayout);
+        surveyVerticalLayout.add(readMultiQuestionLayout);
       } else {
         ReadTextQuestionLayout readTextQuestionLayout = new ReadTextQuestionLayout(q);
-
         surveyVerticalLayout.add(readTextQuestionLayout);
       }
     }
 
     surveyVerticalLayout.add(saveButton);
-
   }
 
   // -- Public Button Methods --
