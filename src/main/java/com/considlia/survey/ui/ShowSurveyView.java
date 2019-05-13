@@ -23,24 +23,20 @@ import com.vaadin.flow.router.Route;
 @Route(value = "showsurvey", layout = MainLayout.class)
 public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
 
-  // -- Private Variables --
-  // -- Containers --
   private VerticalLayout mainVerticalLayout = new VerticalLayout();
   private HorizontalLayout headerHorizontalLayout = new HorizontalLayout();
   private VerticalLayout surveyVerticalLayout = new VerticalLayout();
 
-  // -- TextContainers --
   private H1 h1;
 
-  // -- Buttons --
   private Button saveButton;
 
-  // -- Serializement --
   private SurveyRepository surveyRepository;
 
   private Survey survey;
 
-  // -- Layout --
+  private boolean containsMandatory = false;
+
   public ShowSurveyView(SurveyRepository surveyRepository) {
     // Using same ID as CreateSurveyView as of now.
     setId("createsurvey");
@@ -49,8 +45,6 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
     this.saveButton = new Button();
     saveButton.setText("Send");
     saveButton.addClickListener(e -> saveResponse());
-
-    initUI();
   }
 
   // -- UI method, adding, etc.
@@ -62,10 +56,18 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
     headerHorizontalLayout.setId("createheader");
     surveyVerticalLayout.setId("questionpackage");
 
-    Label mandatoryLabel = new Label("* = Mandatory question");
+
     headerHorizontalLayout.setDefaultVerticalComponentAlignment(Alignment.BASELINE);
     headerHorizontalLayout.add(h1);
-    mainVerticalLayout.add(headerHorizontalLayout, mandatoryLabel, surveyVerticalLayout);
+
+    if (containsMandatory) {
+      Label mandatoryLabel = new Label("* = Mandatory question");
+      mainVerticalLayout.add(headerHorizontalLayout, mandatoryLabel, surveyVerticalLayout);
+      System.out.println(containsMandatory);
+    } else {
+      mainVerticalLayout.add(headerHorizontalLayout, surveyVerticalLayout);
+    }
+
     add(mainVerticalLayout);
   }
 
@@ -100,6 +102,7 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
   public void loadSurvey(Survey survey) {
 
     for (Question q : survey.getQuestions()) {
+
       if (q instanceof MultiQuestion) {
         MultiQuestion mq = (MultiQuestion) q;
 
@@ -113,10 +116,14 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
 
         surveyVerticalLayout.add(readTextQuestionLayout);
       }
+      if (q.isMandatory()) {
+        containsMandatory = true;
+      }
     }
 
     surveyVerticalLayout.add(saveButton);
 
+    initUI();
   }
 
   // -- Public Button Methods --
