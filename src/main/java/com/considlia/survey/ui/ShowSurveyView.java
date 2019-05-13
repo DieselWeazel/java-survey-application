@@ -9,6 +9,7 @@ import com.considlia.survey.ui.custom_component.ReadTextQuestionLayout;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.H5;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -29,13 +30,10 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
   private VerticalLayout surveyVerticalLayout = new VerticalLayout();
 
   private H1 h1;
-
+  private H5 h5;
   private Button saveButton;
-
   private SurveyRepository surveyRepository;
-
   private Survey survey;
-
   private boolean containsMandatory = false;
 
   public ShowSurveyView(SurveyRepository surveyRepository) {
@@ -43,6 +41,7 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
     setId("createsurvey");
     this.surveyRepository = surveyRepository;
     this.h1 = new H1("PlaceHolder // Survey Not Actually Found, Text not Updated");
+    this.h5 = new H5();
     this.saveButton = new Button();
     saveButton.setText("Send");
     saveButton.addClickListener(e -> saveResponse());
@@ -53,10 +52,11 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
 
     headerHorizontalLayout.setId("createheader");
     surveyVerticalLayout.setId("questionpackage");
-
+    h1.setMinWidth("70%");
 
     headerHorizontalLayout.setDefaultVerticalComponentAlignment(Alignment.BASELINE);
-    headerHorizontalLayout.add(h1);
+    headerHorizontalLayout.setVerticalComponentAlignment(Alignment.CENTER, h5);
+    headerHorizontalLayout.add(h1, h5);
 
     if (containsMandatory) {
       Label mandatoryLabel = new Label("* = Mandatory question");
@@ -80,6 +80,7 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
       if (surveyRepository.findById(parameter).isPresent()) {
         survey = surveyRepository.getSurveyById(parameter);
         h1.setText(survey.getTitle());
+        h5.setText(survey.getDescription());
 
         loadSurvey(survey);
       } else {
