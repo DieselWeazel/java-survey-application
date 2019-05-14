@@ -28,4 +28,13 @@ public class ReadMultiQuestionLayout extends ReadQuestionLayout {
 
     }
   }
+
+  public RadioButtonGroup<MultiQuestionAlternative> getRadioButtons() {
+    return radioButtons;
+  }
+
+  public CheckboxGroup<MultiQuestionAlternative> getCheckBoxButtons() {
+    return checkBoxButtons;
+  }
+
 }

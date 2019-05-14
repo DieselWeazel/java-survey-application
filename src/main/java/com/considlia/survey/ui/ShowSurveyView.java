@@ -1,10 +1,15 @@
 package com.considlia.survey.ui;
 
+import java.time.LocalDate;
+import com.considlia.survey.model.Answers;
 import com.considlia.survey.model.MultiQuestion;
 import com.considlia.survey.model.Question;
 import com.considlia.survey.model.Survey;
+import com.considlia.survey.model.SurveyResponses;
+import com.considlia.survey.repositories.ResponseRepository;
 import com.considlia.survey.repositories.SurveyRepository;
 import com.considlia.survey.ui.custom_component.ReadMultiQuestionLayout;
+import com.considlia.survey.ui.custom_component.ReadQuestionLayout;
 import com.considlia.survey.ui.custom_component.ReadTextQuestionLayout;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.StyleSheet;
@@ -33,13 +38,15 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
   private H5 h5;
   private Button saveButton;
   private SurveyRepository surveyRepository;
+  private ResponseRepository responseRepository;
   private Survey survey;
   private boolean containsMandatory = false;
 
-  public ShowSurveyView(SurveyRepository surveyRepository) {
+  public ShowSurveyView(SurveyRepository surveyRepository, ResponseRepository responseRepository) {
     // Using same ID as CreateSurveyView as of now.
     setId("createsurvey");
     this.surveyRepository = surveyRepository;
+    this.responseRepository = responseRepository;
     this.h1 = new H1("PlaceHolder // Survey Not Actually Found, Text not Updated");
     this.h5 = new H5();
     this.saveButton = new Button();
@@ -64,6 +71,7 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
     } else {
       add(headerHorizontalLayout, surveyVerticalLayout);
     }
+    add(saveButton);
   }
 
   // -- Data methods --
@@ -112,15 +120,47 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
         containsMandatory = true;
       }
     }
-
-    surveyVerticalLayout.add(saveButton);
-
     initUI();
   }
 
   // -- Public Button Methods --
+  // Demo för hur ett svar kan kunnas skicka in.
   public void saveResponse() {
-    saveButton.setText("Survey Response cannot be saved yet!");
+
+    SurveyResponses sr = new SurveyResponses();
+    sr.setSurveyId(survey.getId());
+    sr.setDate(LocalDate.now());
+
+    for (int position = 0; position < surveyVerticalLayout.getComponentCount(); position++) {
+      ReadQuestionLayout component =
+          (ReadQuestionLayout) surveyVerticalLayout.getComponentAt(position);
+      switch (component.getQuestion().getQuestionType()) {
+        case TEXTFIELD:
+          ReadTextQuestionLayout castTextComponent = (ReadTextQuestionLayout) component;
+          sr.addAnswer(new Answers(castTextComponent.getQuestionField().getValue(),
+              castTextComponent.getQuestion()));
+          break;
+        case RADIO:
+          ReadMultiQuestionLayout castRadioComponent = (ReadMultiQuestionLayout) component;
+          sr.addAnswer(new Answers(castRadioComponent.getRadioButtons().getValue().getTitle(),
+              castRadioComponent.getQuestion()));
+          break;
+        case CHECKBOX:
+
+          break;
+        case TEXTAREA:
+          break;
+      }
+    }
+    responseRepository.save(sr);
+
+    for (SurveyResponses srPrint : responseRepository.findAllBySurveyId(survey.getId())) {
+      for (Answers aPrint : srPrint.getAnswers()) {
+        System.out.println(aPrint.getQuestion().getTitle() + ": " + aPrint.getAnswer());
+      }
+      System.out.println();
+    }
+    getUI().ifPresent(ui -> ui.navigate(""));
   }
 
   public void goHome() {

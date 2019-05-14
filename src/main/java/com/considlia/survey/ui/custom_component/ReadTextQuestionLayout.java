@@ -13,4 +13,8 @@ public class ReadTextQuestionLayout extends ReadQuestionLayout {
 
     add(questionField);
   }
+
+  public TextField getQuestionField() {
+    return questionField;
+  }
 }
