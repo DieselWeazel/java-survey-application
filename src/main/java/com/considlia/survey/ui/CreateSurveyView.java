@@ -2,7 +2,9 @@ package com.considlia.survey.ui;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import com.considlia.survey.model.MultiQuestion;
 import com.considlia.survey.model.MultiQuestionAlternative;
 import com.considlia.survey.model.Question;
@@ -12,6 +14,7 @@ import com.considlia.survey.model.TextQuestion;
 import com.considlia.survey.repositories.SurveyRepository;
 import com.considlia.survey.ui.custom_component.ConfirmDialog;
 import com.considlia.survey.ui.custom_component.CreateAlternative;
+import com.considlia.survey.ui.custom_component.CreateRatioComponents;
 import com.considlia.survey.ui.custom_component.EditDialog;
 import com.considlia.survey.ui.custom_component.QuestionType;
 import com.considlia.survey.ui.custom_component.question_with_button.MultiQuestionWithButtons;
@@ -60,6 +63,7 @@ public class CreateSurveyView extends BaseView
   private VerticalLayout addQuestionContainer;
   private HorizontalLayout addQuestionHorizontalContainer;
   private VerticalLayout questions;
+  private VerticalLayout extraComponents;
 
   // Private variables used when creating the survey
   private Survey thisSurvey;
@@ -67,6 +71,7 @@ public class CreateSurveyView extends BaseView
   private QuestionType questionType;
   private SurveyRepository surveyRepository;
   private CreateAlternative createAlternative;
+  private CreateRatioComponents createRatioComponents;
 
   public CreateSurveyView(SurveyRepository surveyRepository) {
     super("Create Survey");
@@ -94,6 +99,7 @@ public class CreateSurveyView extends BaseView
     addQuestionHorizontalContainer.setDefaultVerticalComponentAlignment(Alignment.BASELINE);
 
     questions = new VerticalLayout();
+    extraComponents = new VerticalLayout();
 
     addQuestionButton = new Button("Add question", event -> addQuestion());
     addQuestionButton.setEnabled(false);
@@ -157,12 +163,16 @@ public class CreateSurveyView extends BaseView
       } else if ((selectOptions.getValue().equalsIgnoreCase("Checkbox Question")
           && !questionTitleTextField.getValue().isEmpty())) {
         userCreationQuestion(QuestionType.CHECKBOX);
+      } else if ((selectOptions.getValue().equalsIgnoreCase("Ratio Question")
+          && !questionTitleTextField.getValue().isEmpty())) {
+        userCreationQuestion(QuestionType.RATIO);
       }
     });
 
     selectOptions = new Select<>();
     selectOptions.setPlaceholder("Type of question");
-    selectOptions.setItems("Text question", "Radio Question", "Checkbox Question");
+    selectOptions.setItems("Text question", "Radio Question", "Checkbox Question",
+        "Ratio Question");
     selectOptions.addValueChangeListener(event -> {
       if (event.getValue().equalsIgnoreCase("Text question")) {
         userCreationQuestion(QuestionType.TEXTFIELD);
@@ -170,7 +180,10 @@ public class CreateSurveyView extends BaseView
         userCreationQuestion(QuestionType.RADIO);
       } else if (event.getValue().equalsIgnoreCase("Checkbox Question")) {
         userCreationQuestion(QuestionType.CHECKBOX);
+      } else if (event.getValue().equalsIgnoreCase("Ratio Question")) {
+        userCreationQuestion(QuestionType.RATIO);
       }
+
       if (questionTitleTextField.isEmpty()) {
         addQuestionButton.setEnabled(false);
       }
@@ -187,7 +200,7 @@ public class CreateSurveyView extends BaseView
     header.add(descriptionTextArea);
 
     addQuestionHorizontalContainer.add(questionTitleTextField, addQuestionButton, mandatory);
-    addQuestionContainer.add(addQuestionHorizontalContainer, selectOptions);
+    addQuestionContainer.add(addQuestionHorizontalContainer, selectOptions, extraComponents);
 
     add(header);
     add(addQuestionContainer);
@@ -206,13 +219,20 @@ public class CreateSurveyView extends BaseView
         break;
       case RADIO:
         questions.add(new MultiQuestionWithButtons(questionTitleTextField.getValue(), this,
-            createAlternative.getAlternativeList(), questionType, mandatory.getValue()));
-        addQuestionContainer.remove(createAlternative);
+            createAlternative.getAlternativeList(), QuestionType.RADIO, mandatory.getValue()));
+        extraComponents.remove(createAlternative);
         break;
       case CHECKBOX:
         questions.add(new MultiQuestionWithButtons(questionTitleTextField.getValue(), this,
-            createAlternative.getAlternativeList(), questionType, mandatory.getValue()));
-        addQuestionContainer.remove(createAlternative);
+            createAlternative.getAlternativeList(), QuestionType.CHECKBOX, mandatory.getValue()));
+        extraComponents.remove(createAlternative);
+        break;
+      case RATIO:
+        // questions.add(new RatioQuestionWithButtons(questionTitleTextField.getValue(), this,
+        // mandatory.getValue()));
+        extraComponents.remove(createRatioComponents);
+        break;
+      case TEXTAREA:
         break;
     }
 
@@ -233,54 +253,47 @@ public class CreateSurveyView extends BaseView
 
   public void userCreationQuestion(QuestionType questionType) {
 
-    // if questionType was previously radio and now check and the other way around
-    if (questionType != this.questionType && questionType != QuestionType.TEXTFIELD) {
+    // Clears the extraComponentLayout
+    extraComponents.removeAll();
 
-      /*
-       * For every new question created createAlternative will be null the first time
-       * userCreationQuestion() is invoked
-       */
+    if (questionType == QuestionType.RATIO) {
+      if (createRatioComponents == null) {
+        createRatioComponents = new CreateRatioComponents(this);
+      }
+      extraComponents.add(createRatioComponents);
+
+    } else if (questionType != QuestionType.TEXTFIELD) {
       if (createAlternative == null) {
         createAlternative = new CreateAlternative(questionType, this);
-        addQuestionContainer.add(createAlternative);
       }
-
-      /*
-       * if the previous questionType was a textquestion the alternative textfields must be
-       * displayed.
-       */
-      else if (this.questionType == QuestionType.TEXTFIELD) {
-        createAlternative.setQuestionType(questionType);
-        addQuestionContainer.add(createAlternative);
-      }
-
-      /*
-       * If just switching between radio and check, nothing in the gui has to change. Just the
-       * questionType in createAlternative for Question to have the right type when addQuestion() is
-       * invoked.
-       */
-      else {
-        createAlternative.setQuestionType(questionType);
-      }
-    } else if (questionType == QuestionType.TEXTFIELD) {
-      if (verticalLayoutContainsComponent(addQuestionContainer, createAlternative)) {
-        addQuestionContainer.remove(createAlternative);
-      }
-
-      addQuestionButton.setEnabled(true);
-
+      createAlternative.setQuestionType(questionType);
+      extraComponents.add(createAlternative);
     }
 
-    // regarding of what happens this.questionType will be updated
     this.questionType = questionType;
 
-    if (createAlternative != null) {
-      if (!createAlternative.getAlternativeList().isEmpty() && !questionTitleTextField.isEmpty()) {
-        addQuestionButton.setEnabled(true);
-      } else if ((createAlternative.getAlternativeList().isEmpty()
-          || questionTitleTextField.isEmpty()) && questionType != QuestionType.TEXTFIELD) {
+    changeBtn();
+  }
+
+  public void changeBtn() {
+    switch (questionType) {
+      case TEXTFIELD:
+        addQuestionButton.setEnabled(!questionTitleTextField.isEmpty());
+        break;
+      case RATIO:
+        addQuestionButton
+            .setEnabled(!createRatioComponents.isLimitEmpty() && !questionTitleTextField.isEmpty());
+        break;
+      case RADIO:
+      case CHECKBOX:
+        Set<String> set = new LinkedHashSet<>();
+        set.addAll(createAlternative.getAlternativeList());
+        addQuestionButton.setEnabled(
+            !createAlternative.getAlternativeList().isEmpty() && !questionTitleTextField.isEmpty()
+                && createAlternative.getAlternativeList().size() == set.size());
+        break;
+      default:
         addQuestionButton.setEnabled(false);
-      }
     }
   }
 
