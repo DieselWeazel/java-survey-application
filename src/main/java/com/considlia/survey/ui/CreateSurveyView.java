@@ -150,7 +150,7 @@ public class CreateSurveyView extends BaseView
         addQuestionButton.setEnabled(false);
       } else if (selectOptions.getValue().equalsIgnoreCase("Text question")
           && !questionTitleTextField.getValue().isEmpty()) {
-        userCreationQuestion(QuestionType.TEXT);
+        userCreationQuestion(QuestionType.TEXTFIELD);
       } else if ((selectOptions.getValue().equalsIgnoreCase("Radio Question")
           && !questionTitleTextField.getValue().isEmpty())) {
         userCreationQuestion(QuestionType.RADIO);
@@ -165,7 +165,7 @@ public class CreateSurveyView extends BaseView
     selectOptions.setItems("Text question", "Radio Question", "Checkbox Question");
     selectOptions.addValueChangeListener(event -> {
       if (event.getValue().equalsIgnoreCase("Text question")) {
-        userCreationQuestion(QuestionType.TEXT);
+        userCreationQuestion(QuestionType.TEXTFIELD);
       } else if (event.getValue().equalsIgnoreCase("Radio Question")) {
         userCreationQuestion(QuestionType.RADIO);
       } else if (event.getValue().equalsIgnoreCase("Checkbox Question")) {
@@ -200,7 +200,7 @@ public class CreateSurveyView extends BaseView
     questionTitleTextField.focus();
 
     switch (questionType) {
-      case TEXT:
+      case TEXTFIELD:
         questions.add(new TextQuestionWithButtons(questionTitleTextField.getValue(), this,
             mandatory.getValue()));
         break;
@@ -234,7 +234,7 @@ public class CreateSurveyView extends BaseView
   public void userCreationQuestion(QuestionType questionType) {
 
     // if questionType was previously radio and now check and the other way around
-    if (questionType != this.questionType && questionType != QuestionType.TEXT) {
+    if (questionType != this.questionType && questionType != QuestionType.TEXTFIELD) {
 
       /*
        * For every new question created createAlternative will be null the first time
@@ -249,7 +249,7 @@ public class CreateSurveyView extends BaseView
        * if the previous questionType was a textquestion the alternative textfields must be
        * displayed.
        */
-      else if (this.questionType == QuestionType.TEXT) {
+      else if (this.questionType == QuestionType.TEXTFIELD) {
         createAlternative.setQuestionType(questionType);
         addQuestionContainer.add(createAlternative);
       }
@@ -262,7 +262,7 @@ public class CreateSurveyView extends BaseView
       else {
         createAlternative.setQuestionType(questionType);
       }
-    } else if (questionType == QuestionType.TEXT) {
+    } else if (questionType == QuestionType.TEXTFIELD) {
       if (verticalLayoutContainsComponent(addQuestionContainer, createAlternative)) {
         addQuestionContainer.remove(createAlternative);
       }
@@ -278,7 +278,7 @@ public class CreateSurveyView extends BaseView
       if (!createAlternative.getAlternativeList().isEmpty() && !questionTitleTextField.isEmpty()) {
         addQuestionButton.setEnabled(true);
       } else if ((createAlternative.getAlternativeList().isEmpty()
-          || questionTitleTextField.isEmpty()) && questionType != QuestionType.TEXT) {
+          || questionTitleTextField.isEmpty()) && questionType != QuestionType.TEXTFIELD) {
         addQuestionButton.setEnabled(false);
       }
     }
