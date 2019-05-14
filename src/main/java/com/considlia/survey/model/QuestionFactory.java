@@ -13,6 +13,7 @@ public class QuestionFactory {
       question.setTitle(castComponent.getQuestion());
       question.setPosition(position);
       question.setMandatory(castComponent.isMandatory());
+      question.setQuestionType(castComponent.getQuestionType());
       return question;
     } else if (component instanceof MultiQuestionWithButtons) {
       MultiQuestionWithButtons castComponent = (MultiQuestionWithButtons) component;

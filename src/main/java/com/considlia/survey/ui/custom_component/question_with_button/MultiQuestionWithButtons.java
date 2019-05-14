@@ -17,16 +17,14 @@ public class MultiQuestionWithButtons extends QuestionWithButtons {
 
   private Set<MultiQuestionAlternative> alternatives;
   private List<String> stringAlternatives;
-  private QuestionType questionType;
 
   private RadioButtonGroup<String> radioButtons;
   private CheckboxGroup<String> checkBoxButtons;
 
   public MultiQuestionWithButtons(String question, CreateSurveyView survey,
       List<String> stringAlternatives, QuestionType questionType, boolean mandatory) {
-    super(question, survey, mandatory);
+    super(question, survey, mandatory, questionType);
 
-    this.questionType = questionType;
     this.stringAlternatives = stringAlternatives;
 
     alternatives = new HashSet<>();
@@ -66,15 +64,6 @@ public class MultiQuestionWithButtons extends QuestionWithButtons {
     this.alternatives = alternatives;
   }
 
-  public QuestionType getQuestionType() {
-    return questionType;
-  }
-
-  public void setQuestionType(QuestionType questionType) {
-    this.questionType = questionType;
-
-  }
-
   public List<String> getStringAlternatives() {
     return stringAlternatives;
   }
@@ -84,7 +73,7 @@ public class MultiQuestionWithButtons extends QuestionWithButtons {
 
     updateAlternatives();
 
-    if (questionType == QuestionType.RADIO) {
+    if (getQuestionType() == QuestionType.RADIO) {
       radioButtons.setItems(stringAlternatives);
     } else {
       checkBoxButtons.setItems(stringAlternatives);

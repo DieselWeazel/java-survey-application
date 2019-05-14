@@ -2,6 +2,7 @@ package com.considlia.survey.ui.custom_component.question_with_button;
 
 import com.considlia.survey.ui.CreateSurveyView;
 import com.considlia.survey.ui.custom_component.ConfirmDialog;
+import com.considlia.survey.ui.custom_component.QuestionType;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H5;
 import com.vaadin.flow.component.icon.Icon;
@@ -15,6 +16,7 @@ public abstract class QuestionWithButtons extends VerticalLayout {
   private static final int MOVE_DOWN = 1;
 
   private String question;
+  private QuestionType questionType;
   private boolean mandatory;
   private H5 title;
 
@@ -24,11 +26,13 @@ public abstract class QuestionWithButtons extends VerticalLayout {
   private HorizontalLayout content;
   private CreateSurveyView survey;
 
-  public QuestionWithButtons(String question, CreateSurveyView survey, boolean mandatory) {
+  public QuestionWithButtons(String question, CreateSurveyView survey, boolean mandatory,
+      QuestionType questionType) {
     setId("custom");
     setWidth("100%");
 
     this.question = question;
+    this.questionType = questionType;
     this.survey = survey;
     this.upButton = new Button(new Icon(VaadinIcon.ARROW_UP));
     this.downButton = new Button(new Icon(VaadinIcon.ARROW_DOWN));
@@ -116,6 +120,14 @@ public abstract class QuestionWithButtons extends VerticalLayout {
 
   public void setContent(HorizontalLayout content) {
     this.content = content;
+  }
+
+  public QuestionType getQuestionType() {
+    return questionType;
+  }
+
+  public void setQuestionType(QuestionType questionType) {
+    this.questionType = questionType;
   }
 
 }

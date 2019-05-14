@@ -215,7 +215,7 @@ public class CreateSurveyView extends BaseView
     switch (questionType) {
       case TEXTFIELD:
         questions.add(new TextQuestionWithButtons(questionTitleTextField.getValue(), this,
-            mandatory.getValue()));
+            mandatory.getValue(), questionType));
         break;
       case RADIO:
         questions.add(new MultiQuestionWithButtons(questionTitleTextField.getValue(), this,
@@ -385,7 +385,8 @@ public class CreateSurveyView extends BaseView
 
       for (Question q : thisSurvey.getQuestions()) {
         if (q instanceof TextQuestion) {
-          questions.add(new TextQuestionWithButtons(q.getTitle(), this, q.isMandatory()));
+          questions.add(new TextQuestionWithButtons(q.getTitle(), this, q.isMandatory(),
+              q.getQuestionType()));
         } else {
           MultiQuestion mq = (MultiQuestion) q;
 
