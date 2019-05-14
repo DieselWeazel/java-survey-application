@@ -108,7 +108,10 @@ public class CreateSurveyView extends BaseView
     surveyTitleTextField.addValueChangeListener(titleChange -> {
       checkFilledFields();
     });
-    creatorNameTextField.addValueChangeListener(titleChange -> {
+    creatorNameTextField.addValueChangeListener(creatorChange -> {
+      checkFilledFields();
+    });
+    descriptionTextArea.addValueChangeListener(descChange -> {
       checkFilledFields();
     });
 
