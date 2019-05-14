@@ -2,6 +2,7 @@ package com.considlia.survey.ui;
 
 import com.considlia.survey.model.Role;
 import com.considlia.survey.model.User;
+import com.considlia.survey.repositories.UserRepository;
 import com.considlia.survey.security.SecurityUtils;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -38,6 +39,7 @@ import com.vaadin.flow.router.BeforeLeaveObserver;
 import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.OptionalParameter;
 import com.vaadin.flow.router.Route;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -46,7 +48,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 @StyleSheet("css/app.css")
 @Route(value = "createsurvey", layout = MainLayout.class)
-@Secured(Role.USER)
+@Secured({Role.USER, Role.ADMIN})
 public class CreateSurveyView extends BaseView
     implements HasUrlParameter<Long>, BeforeLeaveObserver {
 
@@ -76,6 +78,9 @@ public class CreateSurveyView extends BaseView
   private QuestionType questionType;
   private SurveyRepository surveyRepository;
   private CreateAlternative createAlternative;
+
+  @Autowired
+  private UserRepository userRepository;
 
   public CreateSurveyView(SurveyRepository surveyRepository) {
     super("Create Survey");
@@ -136,23 +141,17 @@ public class CreateSurveyView extends BaseView
 
 
     // Show User, just for show
-    // TODO delete me
+    // TODO move me (separate method?)
     Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
     if (principal instanceof UserDetails) {
       String username = ((UserDetails)principal).getUsername();
-      System.out.println(principal.toString() + username);
-      System.out.println("\n\n0 method signature" + SecurityUtils.isUserLoggedIn());
-      System.out.println("\n\n1 method signature" + SecurityUtils.isUserLoggedIn(
-          SecurityContextHolder.getContext().getAuthentication()));
-      creatorNameTextField.setPlaceholder(username);
+      creatorNameTextField.setValue(username);
+      creatorNameTextField.setEnabled(false);
+//      creatorNameTextField.setPlaceholder(username);
 
     } else {
       String username = principal.toString();
-      System.out.println("\n\n0 method signature" + SecurityUtils.isUserLoggedIn());
-      System.out.println("\n\n1 method signature" + SecurityUtils.isUserLoggedIn(
-          SecurityContextHolder.getContext().getAuthentication()));
-      System.out.println(username);
       creatorNameTextField.setPlaceholder(username);
 
     }
@@ -348,7 +347,15 @@ public class CreateSurveyView extends BaseView
     thisSurvey.setDescription(descriptionTextArea.getValue());
     thisSurvey.setDate(LocalDate.now());
 
-    surveyRepository.save(thisSurvey);
+    /*
+    TODO find a method to replace this process when merging?
+
+    We now save Survey to the User instead.
+     */
+    User user = userRepository.findByUsername(creatorNameTextField.getValue());
+    user.getSurveys().add(thisSurvey);
+    userRepository.save(user);
+//    surveyRepository.save(thisSurvey);
 
     hasChanges = false;
     getUI().ifPresent(ui -> ui.navigate(""));

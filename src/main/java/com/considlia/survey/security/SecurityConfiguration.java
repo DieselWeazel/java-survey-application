@@ -57,7 +57,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         .requestMatchers(SecurityUtils::isFrameworkInternalRequest).permitAll()
         .antMatchers("/createsurvey", "/createsurvey/*", "/createsurvey/**").hasAuthority("ADMIN")
 //        .anyRequest().hasAnyAuthority(Role.getAllRoles())
-        .and().formLogin().loginPage("/login").permitAll().loginProcessingUrl("/login")
+        .and().formLogin().loginPage("/login").permitAll().loginProcessingUrl("/loginprocess")
         .failureUrl("/failedlogin")
 //        .defaultSuccessUrl("/", true)
 

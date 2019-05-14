@@ -13,7 +13,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
-//@Primary
 public class UserDetailsServiceImpl implements UserDetailsService {
 
   @Autowired
@@ -30,7 +29,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     if (null == user) {
       throw new UsernameNotFoundException("No user found // Create Something else here!");
     } else {
-      return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(),
+      return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
           Collections.singletonList(new SimpleGrantedAuthority(user.getRole())));
     }
 

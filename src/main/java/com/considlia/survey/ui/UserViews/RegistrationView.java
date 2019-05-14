@@ -25,7 +25,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
+/*
+There is no DAO Authentication within this as of now.
+Jonathan
+ */
 @Route (value = "registration", layout = MainLayout.class)
 public class RegistrationView extends BaseView {
 
