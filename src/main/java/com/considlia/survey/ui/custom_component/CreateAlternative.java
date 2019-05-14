@@ -81,7 +81,6 @@ public class CreateAlternative extends VerticalLayout {
         containsDuplicate = true;
       }
     }
-    System.out.println("containsDuplicate: " + containsDuplicate);
 
     // using Set to check if alternativeList contains duplicates
     Set<String> set = new LinkedHashSet<>();
