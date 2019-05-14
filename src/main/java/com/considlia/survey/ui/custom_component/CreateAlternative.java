@@ -64,6 +64,7 @@ public class CreateAlternative extends VerticalLayout {
     if (event.getSource().getValue().isEmpty() && textFieldList.size() > 1) {
       remove(event.getSource());
       textFieldList.remove(event.getSource());
+      textFieldList.get(textFieldList.size() - 1).focus();
     }
     if (event.getSource().getValue().length() > 255) {
       event.getSource().setValue(event.getSource().getValue().substring(0, 255));
@@ -73,6 +74,15 @@ public class CreateAlternative extends VerticalLayout {
     createAlternative(questionType, alternativeList);
     event.getSource().focus();
 
+    boolean containsDuplicate = false;
+
+    for (TextField t : textFieldList) {
+      if (t.getValue().equals(event.getSource().getValue()) && t != event.getSource()) {
+        containsDuplicate = true;
+      }
+    }
+    System.out.println("containsDuplicate: " + containsDuplicate);
+
     // using Set to check if alternativeList contains duplicates
     Set<String> set = new LinkedHashSet<>();
     set.addAll(getAlternativeList());
@@ -81,7 +91,7 @@ public class CreateAlternative extends VerticalLayout {
         && set.size() == alternativeList.size()) {
       csv.getAddQuestionButton().setEnabled(true);
     } else {
-      if (set.size() != alternativeList.size()) {
+      if (containsDuplicate) {
         Notification.show("Your alternatives contain duplicates");
       }
       csv.getAddQuestionButton().setEnabled(false);

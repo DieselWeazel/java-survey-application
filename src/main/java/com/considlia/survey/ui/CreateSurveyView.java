@@ -2,7 +2,9 @@ package com.considlia.survey.ui;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import com.considlia.survey.model.MultiQuestion;
 import com.considlia.survey.model.MultiQuestionAlternative;
 import com.considlia.survey.model.Question;
@@ -180,7 +182,6 @@ public class CreateSurveyView extends BaseView
         userCreationQuestion(QuestionType.CHECKBOX);
       } else if (event.getValue().equalsIgnoreCase("Ratio Question")) {
         userCreationQuestion(QuestionType.RATIO);
-
       }
 
       if (questionTitleTextField.isEmpty()) {
@@ -230,6 +231,8 @@ public class CreateSurveyView extends BaseView
         // questions.add(new RatioQuestionWithButtons(questionTitleTextField.getValue(), this,
         // mandatory.getValue()));
         extraComponents.remove(createRatioComponents);
+        break;
+      case TEXTAREA:
         break;
     }
 
@@ -283,8 +286,11 @@ public class CreateSurveyView extends BaseView
         break;
       case RADIO:
       case CHECKBOX:
+        Set<String> set = new LinkedHashSet<>();
+        set.addAll(createAlternative.getAlternativeList());
         addQuestionButton.setEnabled(
-            !createAlternative.getAlternativeList().isEmpty() && !questionTitleTextField.isEmpty());
+            !createAlternative.getAlternativeList().isEmpty() && !questionTitleTextField.isEmpty()
+                && createAlternative.getAlternativeList().size() == set.size());
         break;
       default:
         addQuestionButton.setEnabled(false);
