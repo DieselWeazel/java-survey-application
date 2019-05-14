@@ -23,6 +23,19 @@ public class QuestionFactory {
       question.setQuestionType(castComponent.getQuestionType());
       question.getAlternatives().addAll(castComponent.getAlternatives());
       return question;
+    } else if (true) {
+      return null;
+      // Work to do, dont have RatioQuestionWithButtons yet
+
+      // RatioQuestionWithButtons castComponent = (RatioQuestionWithButtons) component;
+      // RatioQuestion question = new RatioQuestion();
+      // question.setTitle(castComponent.getQuestion());
+      // question.setPosition(position);
+      // question.setMandatory(castComponent.isMandatory());
+      // question.setEnd(end);
+      // question.setStart(start);
+      // question.setChoices(choices);
+
     } else {
       return null;
     }
