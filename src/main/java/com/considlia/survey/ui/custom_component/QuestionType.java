@@ -1,7 +1,8 @@
 package com.considlia.survey.ui.custom_component;
 
 public enum QuestionType {
-  TEXT("Text question"), RADIO("Radio question"), CHECKBOX("Checkbox question");
+  TEXTFIELD("Text question"), RADIO("Radio question"), CHECKBOX("Checkbox question"), TEXTAREA(
+      "Text area");
 
   private String text;
 
