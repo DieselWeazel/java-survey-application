@@ -112,7 +112,7 @@ public class CreateSurveyView extends BaseView
       checkFilledFields();
     });
     descriptionTextArea.addValueChangeListener(descChange -> {
-      checkFilledFields();
+      hasChanges = true;
     });
 
     surveyTitleTextField.setLabel("Survey title");
@@ -127,6 +127,7 @@ public class CreateSurveyView extends BaseView
     creatorNameTextField.setRequired(true);
     descriptionTextArea.setLabel("Description");
     descriptionTextArea.setWidth("600px");
+    descriptionTextArea.setValueChangeMode(ValueChangeMode.EAGER);
   }
 
   public void initAddQuestionContainer() {
@@ -365,10 +366,11 @@ public class CreateSurveyView extends BaseView
     if (parameter != null) {
       thisSurvey = surveyRepository.getSurveyById(parameter);
 
+      surveyTitleTextField.setValue(thisSurvey.getTitle());
+      creatorNameTextField.setValue(thisSurvey.getCreator());
+      descriptionTextArea.setValue(thisSurvey.getDescription());
+
       for (Question q : thisSurvey.getQuestions()) {
-        surveyTitleTextField.setValue(thisSurvey.getTitle());
-        creatorNameTextField.setValue(thisSurvey.getCreator());
-        descriptionTextArea.setValue(thisSurvey.getDescription());
         if (q instanceof TextQuestion) {
           questions.add(new TextQuestionWithButtons(q.getTitle(), this, q.isMandatory()));
         } else {
