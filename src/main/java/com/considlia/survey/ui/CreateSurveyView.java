@@ -144,7 +144,6 @@ public class CreateSurveyView extends BaseView
     questionTitleTextField.setWidth("300px");
     questionTitleTextField.setPlaceholder("Question");
     questionTitleTextField.setLabel("Question");
-
     questionTitleTextField.addValueChangeListener(event -> {
 
       // checks if the the string contains more than 255 characters. If true cuts string after index
@@ -185,7 +184,6 @@ public class CreateSurveyView extends BaseView
       } else if (event.getValue().equalsIgnoreCase("Ratio Question")) {
         userCreationQuestion(QuestionType.RATIO);
       }
-
       if (questionTitleTextField.isEmpty()) {
         addQuestionButton.setEnabled(false);
       }
@@ -271,7 +269,6 @@ public class CreateSurveyView extends BaseView
         createRatioComponents = new CreateRatioComponents(this);
       }
       extraComponents.add(createRatioComponents);
-
     } else if (questionType != QuestionType.TEXTFIELD) {
       if (createAlternative == null) {
         createAlternative = new CreateAlternative(questionType, this);
@@ -281,7 +278,6 @@ public class CreateSurveyView extends BaseView
     }
 
     this.questionType = questionType;
-
     changeBtn();
   }
 
@@ -351,16 +347,11 @@ public class CreateSurveyView extends BaseView
     getUI().ifPresent(ui -> ui.navigate(""));
   }
 
-  // Control if questions list is not 0
-  public boolean validateQuestionListLength() {
-    return questions.getComponentCount() != 0;
-  }
-
   // Check if title and creator textfields are filled out
   public boolean checkFilledFields() {
     hasChanges = true;
     if (!(surveyTitleTextField.isEmpty() || creatorNameTextField.isEmpty())
-        && validateQuestionListLength()) {
+        && questions.getComponentCount() != 0) {
       submitSurveyButton.setEnabled(true);
       return true;
     } else {
