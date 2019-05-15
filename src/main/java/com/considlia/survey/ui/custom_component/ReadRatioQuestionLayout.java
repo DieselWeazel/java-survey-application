@@ -29,4 +29,7 @@ public class ReadRatioQuestionLayout extends ReadQuestionLayout {
     add(radioOptions);
   }
 
+  public RadioButtonGroup<String> getRadioButtons() {
+    return radioOptions;
+  }
 }

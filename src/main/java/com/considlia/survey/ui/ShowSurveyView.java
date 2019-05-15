@@ -150,6 +150,11 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
           sr.addAnswer(new Answers(castTextComponent.getQuestionField().getValue(),
               castTextComponent.getQuestion()));
           break;
+        case TEXTAREA:
+          ReadTextQuestionLayout castTextAreaComponent = (ReadTextQuestionLayout) component;
+          sr.addAnswer(new Answers(castTextAreaComponent.getQuestionField().getValue(),
+              castTextAreaComponent.getQuestion()));
+          break;
         case RADIO:
           ReadMultiQuestionLayout castRadioComponent = (ReadMultiQuestionLayout) component;
           sr.addAnswer(new Answers(castRadioComponent.getRadioButtons().getValue().getTitle(),
@@ -162,7 +167,10 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
             sr.addAnswer(new Answers(i.next().getTitle(), castCheckboxComponent.getQuestion()));
           }
           break;
-        case TEXTAREA:
+        case RATIO:
+          ReadRatioQuestionLayout castRatioComponent = (ReadRatioQuestionLayout) component;
+          sr.addAnswer(new Answers(castRatioComponent.getRadioButtons().getValue().substring(0, 1),
+              castRatioComponent.getQuestion()));
           break;
         default:
           break;
