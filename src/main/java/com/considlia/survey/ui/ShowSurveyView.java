@@ -6,12 +6,15 @@ import com.considlia.survey.model.Answers;
 import com.considlia.survey.model.MultiQuestion;
 import com.considlia.survey.model.MultiQuestionAlternative;
 import com.considlia.survey.model.Question;
+import com.considlia.survey.model.RatioQuestion;
 import com.considlia.survey.model.Survey;
 import com.considlia.survey.model.SurveyResponses;
+import com.considlia.survey.model.TextQuestion;
 import com.considlia.survey.repositories.ResponseRepository;
 import com.considlia.survey.repositories.SurveyRepository;
 import com.considlia.survey.ui.custom_component.ReadMultiQuestionLayout;
 import com.considlia.survey.ui.custom_component.ReadQuestionLayout;
+import com.considlia.survey.ui.custom_component.ReadRatioQuestionLayout;
 import com.considlia.survey.ui.custom_component.ReadTextQuestionLayout;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.StyleSheet;
@@ -114,10 +117,15 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
 
         ReadMultiQuestionLayout readMultiQuestionLayout = new ReadMultiQuestionLayout(mq);
         surveyVerticalLayout.add(readMultiQuestionLayout);
-      } else {
+      } else if (q instanceof TextQuestion) {
         ReadTextQuestionLayout readTextQuestionLayout = new ReadTextQuestionLayout(q);
         surveyVerticalLayout.add(readTextQuestionLayout);
+      } else if (q instanceof RatioQuestion) {
+        RatioQuestion rq = (RatioQuestion) q;
+        ReadRatioQuestionLayout ratioQuestionLayout = new ReadRatioQuestionLayout(rq);
+        surveyVerticalLayout.add(ratioQuestionLayout);
       }
+
       if (q.isMandatory()) {
         containsMandatory = true;
       }

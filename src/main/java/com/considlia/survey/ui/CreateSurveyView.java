@@ -9,6 +9,7 @@ import com.considlia.survey.model.MultiQuestion;
 import com.considlia.survey.model.MultiQuestionAlternative;
 import com.considlia.survey.model.Question;
 import com.considlia.survey.model.QuestionFactory;
+import com.considlia.survey.model.RatioQuestion;
 import com.considlia.survey.model.Survey;
 import com.considlia.survey.model.TextQuestion;
 import com.considlia.survey.repositories.SurveyRepository;
@@ -19,6 +20,7 @@ import com.considlia.survey.ui.custom_component.EditDialog;
 import com.considlia.survey.ui.custom_component.QuestionType;
 import com.considlia.survey.ui.custom_component.question_with_button.MultiQuestionWithButtons;
 import com.considlia.survey.ui.custom_component.question_with_button.QuestionWithButtons;
+import com.considlia.survey.ui.custom_component.question_with_button.RatioQuestionWithButtons;
 import com.considlia.survey.ui.custom_component.question_with_button.TextQuestionWithButtons;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
@@ -225,18 +227,27 @@ public class CreateSurveyView extends BaseView
         extraComponents.remove(createAlternative);
         break;
       case RATIO:
-        // questions.add(QuestionFactory.createQuestion(questionTitleTextField.getValue(),
-        // questionType, mandatory.getValue(), this));
+        questions.add(QuestionFactory.createQuestion(questionTitleTextField.getValue(),
+            questionType, mandatory.getValue(), createRatioComponents.getLowerLimit(),
+            createRatioComponents.getUperLimit(), createRatioComponents.getStepperValue(), this));
         extraComponents.remove(createRatioComponents);
         break;
       case TEXTAREA:
         break;
+
     }
 
     updateMoveButtonStatus();
+
     if (createAlternative != null) {
       createAlternative.getAlternativeList().clear();
       createAlternative = null;
+      questionType = null;
+    }
+
+    if (createRatioComponents != null) {
+      createRatioComponents.resetParts();
+      createRatioComponents = null;
       questionType = null;
     }
 
@@ -378,7 +389,7 @@ public class CreateSurveyView extends BaseView
       for (Question q : thisSurvey.getQuestions()) {
         if (q instanceof TextQuestion) {
           questions.add(new TextQuestionWithButtons((TextQuestion) q, this));
-        } else {
+        } else if (q instanceof MultiQuestion) {
           MultiQuestion mq = (MultiQuestion) q;
 
           List<String> stringAlternatives = new ArrayList<>();
@@ -386,6 +397,10 @@ public class CreateSurveyView extends BaseView
             stringAlternatives.add(mqa.getTitle());
           }
           questions.add(new MultiQuestionWithButtons(mq, this, stringAlternatives));
+
+        } else if (q instanceof RatioQuestion) {
+          RatioQuestion rq = (RatioQuestion) q;
+          questions.add(new RatioQuestionWithButtons(rq, this));
         }
       }
       submitSurveyButton.setText("Save Survey");
