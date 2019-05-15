@@ -362,14 +362,16 @@ public class CreateSurveyView extends BaseView
     thisSurvey.setDate(LocalDate.now());
 
     /*
-    TODO find a method to replace this process when merging?
-    TODO also delete the way you get the user (userDetails, securyticontext etc)
+    TODO org.springframework.dao.InvalidDataAccessApiUsageException: detached entity passed to persist:
+    TODO find solution to this, relationship isnt working as of now
     We now save Survey to the User instead.
      */
     User user = userRepository.findByUsername(creatorNameTextField.getValue());
     user.getSurveys().add(thisSurvey);
+
+    thisSurvey.setUser(user);
+    surveyRepository.save(thisSurvey);
     userRepository.save(user);
-    //    surveyRepository.save(thisSurvey);
 
     hasChanges = false;
     getUI().ifPresent(ui -> ui.navigate(""));

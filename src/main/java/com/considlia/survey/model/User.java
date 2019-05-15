@@ -46,9 +46,10 @@ public class User {
 
   @NotBlank private String role;
 
-  // Currently removes surveys owned by User, might want something else here.
-  @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-  @JoinColumn(name = "user_id")
+  // Removing User does not remove Surveys, this because deleting surveys would cause a delete on User
+  // Might be another solution but for now leaving this as is.
+  @OneToMany(fetch = FetchType.EAGER)
+//  @JoinColumn(name = "user_id")
   private Set<Survey> surveys = new HashSet<>();
   /*
   Could add a private boolean if user is banned/blocked.
