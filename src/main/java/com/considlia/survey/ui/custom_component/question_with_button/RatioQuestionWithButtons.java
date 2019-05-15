@@ -1,5 +1,6 @@
 package com.considlia.survey.ui.custom_component.question_with_button;
 
+import com.considlia.survey.model.Question;
 import com.considlia.survey.ui.CreateSurveyView;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
@@ -12,8 +13,8 @@ public class RatioQuestionWithButtons extends QuestionWithButtons {
   private TextField lowerLimit, upperLimit;
   private RadioButtonGroup<String> radioOptions;
 
-  public RatioQuestionWithButtons(String question, CreateSurveyView survey, boolean mandatory) {
-    super(question, survey, mandatory);
+  public RatioQuestionWithButtons(Question question, CreateSurveyView survey) {
+    super(question, survey);
 
     // // limits
     // HorizontalLayout limitOptios = new HorizontalLayout();

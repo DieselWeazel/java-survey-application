@@ -8,7 +8,7 @@ import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 
 public class CreateTextComponents extends VerticalLayout {
 
-  public RadioButtonGroup<String> radioButtons;
+  private RadioButtonGroup<String> radioButtons;
 
   public CreateTextComponents(CreateSurveyView csv) {
 

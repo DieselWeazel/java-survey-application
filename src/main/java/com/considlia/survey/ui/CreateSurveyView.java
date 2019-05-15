@@ -2,7 +2,9 @@ package com.considlia.survey.ui;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import com.considlia.survey.model.MultiQuestion;
 import com.considlia.survey.model.MultiQuestionAlternative;
 import com.considlia.survey.model.Question;
@@ -142,7 +144,6 @@ public class CreateSurveyView extends BaseView
     questionTitleTextField.setWidth("300px");
     questionTitleTextField.setPlaceholder("Question");
     questionTitleTextField.setLabel("Question");
-
     questionTitleTextField.addValueChangeListener(event -> {
 
       // checks if the the string contains more than 255 characters. If true cuts string after index
@@ -183,16 +184,13 @@ public class CreateSurveyView extends BaseView
         userCreationQuestion(QuestionType.CHECKBOX);
       } else if (event.getValue().equalsIgnoreCase("Ratio Question")) {
         userCreationQuestion(QuestionType.RATIO);
-
       }
-
       if (questionTitleTextField.isEmpty()) {
         addQuestionButton.setEnabled(false);
       }
     });
 
     mandatory = new Checkbox("Mandatory Question");
-
   }
 
   public void initLayout() {
@@ -217,28 +215,31 @@ public class CreateSurveyView extends BaseView
     switch (questionType) {
       case TEXTFIELD:
         if (createTextComponents.getRadioButtons().getValue() == "Textfield") {
-          questions.add(new TextQuestionWithButtons(questionTitleTextField.getValue(), this,
-              QuestionType.TEXTFIELD, mandatory.getValue()));
+          questions.add(QuestionFactory.createQuestion(questionTitleTextField.getValue(),
+              QuestionType.TEXTFIELD, mandatory.getValue(), this));
         } else if (createTextComponents.getRadioButtons().getValue() == "Textarea") {
-          questions.add(new TextQuestionWithButtons(questionTitleTextField.getValue(), this,
-              QuestionType.TEXTAREA, mandatory.getValue()));
+          questions.add(QuestionFactory.createQuestion(questionTitleTextField.getValue(),
+              QuestionType.TEXTAREA, mandatory.getValue(), this));
         }
+        createTextComponents.getRadioButtons().clear();
         extraComponents.remove(createTextComponents);
         break;
       case RADIO:
-        questions.add(new MultiQuestionWithButtons(questionTitleTextField.getValue(), this,
-            createAlternative.getAlternativeList(), QuestionType.RADIO, mandatory.getValue()));
+        questions.add(QuestionFactory.createQuestion(questionTitleTextField.getValue(),
+            questionType, mandatory.getValue(), createAlternative.getAlternativeList(), this));
         extraComponents.remove(createAlternative);
         break;
       case CHECKBOX:
-        questions.add(new MultiQuestionWithButtons(questionTitleTextField.getValue(), this,
-            createAlternative.getAlternativeList(), QuestionType.CHECKBOX, mandatory.getValue()));
+        questions.add(QuestionFactory.createQuestion(questionTitleTextField.getValue(),
+            questionType, mandatory.getValue(), createAlternative.getAlternativeList(), this));
         extraComponents.remove(createAlternative);
         break;
       case RATIO:
-        // questions.add(new RatioQuestionWithButtons(questionTitleTextField.getValue(), this,
-        // mandatory.getValue()));
+        // questions.add(QuestionFactory.createQuestion(questionTitleTextField.getValue(),
+        // questionType, mandatory.getValue(), this));
         extraComponents.remove(createRatioComponents);
+        break;
+      default:
         break;
     }
 
@@ -267,7 +268,6 @@ public class CreateSurveyView extends BaseView
         createRatioComponents = new CreateRatioComponents(this);
       }
       extraComponents.add(createRatioComponents);
-
     } else if (questionType != QuestionType.TEXTFIELD) {
       if (createAlternative == null) {
         createAlternative = new CreateAlternative(questionType, this);
@@ -282,7 +282,6 @@ public class CreateSurveyView extends BaseView
     }
 
     this.questionType = questionType;
-
     changeBtn();
   }
 
@@ -295,11 +294,20 @@ public class CreateSurveyView extends BaseView
       case RATIO:
         addQuestionButton
             .setEnabled(!createRatioComponents.isLimitEmpty() && !questionTitleTextField.isEmpty());
+
         break;
       case RADIO:
       case CHECKBOX:
-        addQuestionButton.setEnabled(
-            !createAlternative.getAlternativeList().isEmpty() && !questionTitleTextField.isEmpty());
+        if (questionType == QuestionType.RADIO
+            && createAlternative.getAlternativeList().size() <= 1) {
+          addQuestionButton.setEnabled(false);
+        } else {
+          Set<String> set = new LinkedHashSet<>();
+          set.addAll(createAlternative.getAlternativeList());
+          addQuestionButton.setEnabled(
+              !createAlternative.getAlternativeList().isEmpty() && !questionTitleTextField.isEmpty()
+                  && createAlternative.getAlternativeList().size() == set.size());
+        }
         break;
       default:
         addQuestionButton.setEnabled(false);
@@ -308,7 +316,6 @@ public class CreateSurveyView extends BaseView
 
   // Move question in questions container
   public void moveQuestion(Button button, int moveDirection) {
-
     questions.replace(button.getParent().get().getParent().get(), questions.getComponentAt(
         questions.indexOf(button.getParent().get().getParent().get()) + moveDirection));
     hasChanges = true;
@@ -329,12 +336,10 @@ public class CreateSurveyView extends BaseView
 
   // Save survey with questions to database
   public void saveSurvey() {
-    thisSurvey.getQuestions().clear();
-    QuestionFactory qf = new QuestionFactory();
-
     for (int position = 0; position < questions.getComponentCount(); position++) {
-      Question question = qf.createQuestion(questions.getComponentAt(position), position);
-      thisSurvey.getQuestions().add(question);
+      QuestionWithButtons question = (QuestionWithButtons) questions.getComponentAt(position);
+      question.getQuestion().setPosition(position);
+      thisSurvey.addQuestion(question.getQuestion());
     }
 
     thisSurvey.setCreator(creatorNameTextField.getValue());
@@ -348,16 +353,11 @@ public class CreateSurveyView extends BaseView
     getUI().ifPresent(ui -> ui.navigate(""));
   }
 
-  // Control if questions list is not 0
-  public boolean validateQuestionListLength() {
-    return questions.getComponentCount() != 0;
-  }
-
   // Check if title and creator textfields are filled out
   public boolean checkFilledFields() {
     hasChanges = true;
     if (!(surveyTitleTextField.isEmpty() || creatorNameTextField.isEmpty())
-        && validateQuestionListLength()) {
+        && questions.getComponentCount() != 0) {
       submitSurveyButton.setEnabled(true);
       return true;
     } else {
@@ -394,8 +394,7 @@ public class CreateSurveyView extends BaseView
 
       for (Question q : thisSurvey.getQuestions()) {
         if (q instanceof TextQuestion) {
-          questions
-              .add(new TextQuestionWithButtons(q.getTitle(), this, questionType, q.isMandatory()));
+          questions.add(new TextQuestionWithButtons((TextQuestion) q, this));
         } else {
           MultiQuestion mq = (MultiQuestion) q;
 
@@ -403,15 +402,13 @@ public class CreateSurveyView extends BaseView
           for (MultiQuestionAlternative mqa : mq.getAlternatives()) {
             stringAlternatives.add(mqa.getTitle());
           }
-          questions.add(new MultiQuestionWithButtons(mq.getTitle(), this, stringAlternatives,
-              mq.getQuestionType(), mq.isMandatory()));
+          questions.add(new MultiQuestionWithButtons(mq, this, stringAlternatives));
         }
       }
       submitSurveyButton.setText("Save Survey");
       updateMoveButtonStatus();
       thisSurvey.getQuestions().clear();
       checkFilledFields();
-      hasChanges = false;
     }
   }
 
@@ -430,16 +427,5 @@ public class CreateSurveyView extends BaseView
       ConfirmDialog dialog = new ConfirmDialog(action, this);
       dialog.open();
     }
-  }
-
-  public boolean verticalLayoutContainsComponent(VerticalLayout vLayout, Component component) {
-    for (int i = 0; i < vLayout.getComponentCount(); i++) {
-      Component c = addQuestionContainer.getComponentAt(i);
-      if (c == component) {
-        return true;
-      }
-    }
-
-    return false;
   }
 }

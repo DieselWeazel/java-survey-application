@@ -1,49 +1,47 @@
+
 package com.considlia.survey.model;
 
+import java.util.List;
+import com.considlia.survey.ui.CreateSurveyView;
+import com.considlia.survey.ui.custom_component.QuestionType;
 import com.considlia.survey.ui.custom_component.question_with_button.MultiQuestionWithButtons;
+import com.considlia.survey.ui.custom_component.question_with_button.QuestionWithButtons;
+import com.considlia.survey.ui.custom_component.question_with_button.RatioQuestionWithButtons;
 import com.considlia.survey.ui.custom_component.question_with_button.TextQuestionWithButtons;
-import com.vaadin.flow.component.Component;
 
 public class QuestionFactory {
 
-  public Question createQuestion(Component component, int position) {
+  public static QuestionWithButtons createQuestion(String question, QuestionType type,
+      boolean mandatory, CreateSurveyView csv) {
+    TextQuestion textQuestion = new TextQuestion();
+    setCommonVariables(textQuestion, question, type, mandatory);
 
-    if (component instanceof TextQuestionWithButtons) {
-      TextQuestionWithButtons castComponent = (TextQuestionWithButtons) component;
-      TextQuestion question = new TextQuestion();
-      question.setTitle(castComponent.getQuestion());
-      question.setPosition(position);
-      question.setMandatory(castComponent.isMandatory());
-      question.setQuestionType(castComponent.getQuestionType());
-      return question;
-    } else if (component instanceof MultiQuestionWithButtons) {
-      MultiQuestionWithButtons castComponent = (MultiQuestionWithButtons) component;
-      MultiQuestion question = new MultiQuestion();
-      question.setTitle(castComponent.getQuestion());
-      question.setPosition(position);
-      question.setMandatory(castComponent.isMandatory());
-      question.setQuestionType(castComponent.getQuestionType());
-      question.getAlternatives().addAll(castComponent.getAlternatives());
-      return question;
-    } else if (true) {
-      return null;
-      // Work to do, dont have RatioQuestionWithButtons yet
-
-      // RatioQuestionWithButtons castComponent = (RatioQuestionWithButtons) component;
-      // RatioQuestion question = new RatioQuestion();
-      // question.setTitle(castComponent.getQuestion());
-      // question.setPosition(position);
-      // question.setMandatory(castComponent.isMandatory());
-      // question.setEnd(end);
-      // question.setStart(start);
-      // question.setChoices(choices);
-
-    } else {
-      return null;
-    }
+    return new TextQuestionWithButtons(textQuestion, csv);
   }
 
-  private void setXX() {
+  public static QuestionWithButtons createQuestion(String question, QuestionType type,
+      boolean mandatory, List<String> stringAlternatives, CreateSurveyView csv) {
+    MultiQuestion multiQuestion = new MultiQuestion();
+    setCommonVariables(multiQuestion, question, type, mandatory);
 
+    return new MultiQuestionWithButtons(multiQuestion, csv, stringAlternatives);
+  }
+
+  public static QuestionWithButtons createQuestion(String question, QuestionType type,
+      boolean mandatory, String start, String end, int nrOfChoices, CreateSurveyView csv) {
+    RatioQuestion ratioQuestion = new RatioQuestion();
+    setCommonVariables(ratioQuestion, question, type, mandatory);
+    ratioQuestion.setChoices(nrOfChoices);
+    ratioQuestion.setEnd(end);
+    ratioQuestion.setStart(start);
+
+    return new RatioQuestionWithButtons(ratioQuestion, csv);
+  }
+
+  private static void setCommonVariables(Question question, String title, QuestionType type,
+      boolean mandatory) {
+    question.setTitle(title);
+    question.setQuestionType(type);
+    question.setMandatory(mandatory);
   }
 }

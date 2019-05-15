@@ -1,5 +1,6 @@
 package com.considlia.survey.ui.custom_component.question_with_button;
 
+import com.considlia.survey.model.Question;
 import com.considlia.survey.ui.CreateSurveyView;
 import com.considlia.survey.ui.custom_component.ConfirmDialog;
 import com.vaadin.flow.component.button.Button;
@@ -14,8 +15,7 @@ public abstract class QuestionWithButtons extends VerticalLayout {
   private static final int MOVE_UP = -1;
   private static final int MOVE_DOWN = 1;
 
-  private String question;
-  private boolean mandatory;
+  private Question question;
   private H5 title;
 
   private Button upButton;
@@ -24,7 +24,7 @@ public abstract class QuestionWithButtons extends VerticalLayout {
   private HorizontalLayout content;
   private CreateSurveyView survey;
 
-  public QuestionWithButtons(String question, CreateSurveyView survey, boolean mandatory) {
+  public QuestionWithButtons(Question question, CreateSurveyView survey) {
     setId("custom");
     setWidth("100%");
 
@@ -32,13 +32,12 @@ public abstract class QuestionWithButtons extends VerticalLayout {
     this.survey = survey;
     this.upButton = new Button(new Icon(VaadinIcon.ARROW_UP));
     this.downButton = new Button(new Icon(VaadinIcon.ARROW_DOWN));
-    setMandatory(mandatory);
 
     content = new HorizontalLayout();
     content.setWidthFull();
     content.setClassName("content");
 
-    title = new H5(question + (mandatory ? "*" : ""));
+    title = new H5(question.getTitle() + (question.isMandatory() ? "*" : ""));
     title.setWidth("90%");
 
     initButtonEvent(upButton, MOVE_UP);
@@ -64,14 +63,13 @@ public abstract class QuestionWithButtons extends VerticalLayout {
     new ConfirmDialog(survey, this);
   }
 
-  public String getQuestion() {
+  public Question getQuestion() {
     return question;
   }
 
-  public void setQuestion(String question) {
-    this.question = question;
+  public void setTitleInUI() {
 
-    H5 updatedTitle = new H5(question + (mandatory ? "*" : ""));
+    H5 updatedTitle = new H5(question.getTitle() + (question.isMandatory() ? "*" : ""));
     updatedTitle.setWidth("90%");
 
     content.replace(title, updatedTitle);
@@ -84,14 +82,6 @@ public abstract class QuestionWithButtons extends VerticalLayout {
 
   public void setTitle(H5 title) {
     this.title = title;
-  }
-
-  public boolean isMandatory() {
-    return mandatory;
-  }
-
-  public void setMandatory(boolean mandatory) {
-    this.mandatory = mandatory;
   }
 
   public Button getUpButton() {
@@ -117,5 +107,4 @@ public abstract class QuestionWithButtons extends VerticalLayout {
   public void setContent(HorizontalLayout content) {
     this.content = content;
   }
-
 }
