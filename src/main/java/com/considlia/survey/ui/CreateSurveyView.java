@@ -438,7 +438,6 @@ public class CreateSurveyView extends BaseView
         return true;
       }
     }
-
     return false;
   }
 }
