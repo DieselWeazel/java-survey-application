@@ -7,12 +7,14 @@ import com.vaadin.flow.component.Component;
 public class QuestionFactory {
 
   public Question createQuestion(Component component, int position) {
+
     if (component instanceof TextQuestionWithButtons) {
       TextQuestionWithButtons castComponent = (TextQuestionWithButtons) component;
       TextQuestion question = new TextQuestion();
       question.setTitle(castComponent.getQuestion());
       question.setPosition(position);
       question.setMandatory(castComponent.isMandatory());
+      question.setQuestionType(castComponent.getQuestionType());
       return question;
     } else if (component instanceof MultiQuestionWithButtons) {
       MultiQuestionWithButtons castComponent = (MultiQuestionWithButtons) component;
@@ -39,5 +41,9 @@ public class QuestionFactory {
     } else {
       return null;
     }
+  }
+
+  private void setXX() {
+
   }
 }

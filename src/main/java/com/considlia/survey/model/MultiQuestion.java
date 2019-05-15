@@ -19,13 +19,6 @@ public class MultiQuestion extends Question {
   @OrderBy("position ASC")
   private Set<MultiQuestionAlternative> alternatives = new HashSet<>();
 
-  // public MultiQuestion() {}
-
-  // public MultiQuestion(String questionTitle, int position, QuestionType questionType,
-  // boolean mandatory) {
-  // super(questionTitle, position, questionType, mandatory);
-  // }
-
   public Set<MultiQuestionAlternative> getAlternatives() {
     return alternatives;
   }
