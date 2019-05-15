@@ -23,13 +23,12 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 /*
 There is no DAO Authentication within this as of now.
 Jonathan
  */
-@Route (value = "registration", layout = MainLayout.class)
+@Route(value = "registration", layout = MainLayout.class)
 public class RegistrationView extends BaseView {
 
   private EmailField email;
@@ -43,21 +42,17 @@ public class RegistrationView extends BaseView {
 
   private Binder<User> userBinder;
 
-  @Autowired
-  private PasswordEncoder passwordEncoder;
+  @Autowired private PasswordEncoder passwordEncoder;
   private String passwordString = null;
 
   private User user;
-  @Autowired
-  private AuthenticationManager authenticationManagerBean;
+  @Autowired private AuthenticationManager authenticationManagerBean;
 
-  @Autowired
-  private UserRepository userRepository;
+  @Autowired private UserRepository userRepository;
 
-  @Autowired
-  private UserDetailsServiceImpl userDetailsService;
+  @Autowired private UserDetailsServiceImpl userDetailsService;
 
-  public RegistrationView(){
+  public RegistrationView() {
     super("Registration");
     initUI("580px");
   }
@@ -69,15 +64,15 @@ public class RegistrationView extends BaseView {
     user.setRole("USER");
     userRepository.save(user);
     signIn();
-
   }
-/*
-Sign in function doesn't work properly now.
- */
+  /*
+  Sign in function doesn't work properly now.
+   */
   private void signIn() {
     System.out.println(user.getUsername() + " " + user.getPassword());
-    Authentication request=new UsernamePasswordAuthenticationToken(user.getUsername(), passwordString);
-    Authentication result= authenticationManagerBean.authenticate(request);
+    Authentication request =
+        new UsernamePasswordAuthenticationToken(user.getUsername(), passwordString);
+    Authentication result = authenticationManagerBean.authenticate(request);
     SecurityContextHolder.getContext().setAuthentication(result);
     UI.getCurrent().navigate(HomeView.class);
   }
@@ -93,18 +88,19 @@ Sign in function doesn't work properly now.
     this.userBinder = new Binder<>(User.class);
     this.user = new User();
 
-    submitButton.addClickListener(e -> {
-      try {
-        registerUser();
-      } catch (ValidationException e1) {
-        e1.printStackTrace();
-      }
-    });
+    submitButton.addClickListener(
+        e -> {
+          try {
+            registerUser();
+          } catch (ValidationException e1) {
+            e1.printStackTrace();
+          }
+        });
 
     registrationLayout.add(email, firstName, lastName, username, passwordField, submitButton);
-    for (int i = 0; i < registrationLayout.getComponentCount(); i++){
+    for (int i = 0; i < registrationLayout.getComponentCount(); i++) {
       Component c = registrationLayout.getComponentAt(i);
-      if (c instanceof HasSize){
+      if (c instanceof HasSize) {
         HasSize componentSize = (HasSize) c;
         componentSize.setWidth(width);
       }
@@ -118,7 +114,9 @@ Sign in function doesn't work properly now.
 
   private void bindFields() {
     userBinder.setBean(user);
-    userBinder.forField(email).withValidator(new EmailValidator("Must be an Email address"))
+    userBinder
+        .forField(email)
+        .withValidator(new EmailValidator("Must be an Email address"))
         .bind(User::getEmail, User::setEmail);
     userBinder.bindInstanceFields(this);
   }

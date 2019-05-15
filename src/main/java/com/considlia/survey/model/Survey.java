@@ -11,8 +11,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
@@ -32,6 +32,10 @@ public class Survey {
   @JoinColumn(name = "survey_id")
   @OrderBy("position ASC")
   private Set<Question> questions = new HashSet<>();
+
+  @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+  @JoinColumn(name = "user_id")
+  private User user;
 
   public Survey() {}
 
@@ -84,6 +88,14 @@ public class Survey {
     this.description = description;
   }
 
+  public User getUser() {
+    return user;
+  }
+
+  public void setUser(User user) {
+    this.user = user;
+  }
+
   public void addQuestion(Question question) {
     getQuestions().add(question);
   }
@@ -94,7 +106,16 @@ public class Survey {
 
   @Override
   public String toString() {
-    return "Survey [surveyId=" + id + ", surveyTitle=" + title + ", creator=" + creator + ", date="
-        + date + ", questionList=" + questions + "]";
+    return "Survey [surveyId="
+        + id
+        + ", surveyTitle="
+        + title
+        + ", creator="
+        + creator
+        + ", date="
+        + date
+        + ", questionList="
+        + questions
+        + "]";
   }
 }

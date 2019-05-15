@@ -16,6 +16,7 @@ public abstract class Question {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "question_id")
   private Long id;
+
   private String title;
   private int position;
   private boolean mandatory;

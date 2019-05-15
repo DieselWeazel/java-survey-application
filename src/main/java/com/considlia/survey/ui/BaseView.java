@@ -22,5 +22,4 @@ public abstract class BaseView extends VerticalLayout {
     getStyle().set("width", "80%");
     getStyle().set("margin", "auto");
   }
-
 }

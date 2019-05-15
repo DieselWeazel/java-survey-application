@@ -79,8 +79,7 @@ public class CreateSurveyView extends BaseView
   private SurveyRepository surveyRepository;
   private CreateAlternative createAlternative;
 
-  @Autowired
-  private UserRepository userRepository;
+  @Autowired private UserRepository userRepository;
 
   public CreateSurveyView(SurveyRepository surveyRepository) {
     super("Create Survey");
@@ -119,12 +118,14 @@ public class CreateSurveyView extends BaseView
     creatorNameTextField = new TextField();
     descriptionTextArea = new TextArea();
 
-    surveyTitleTextField.addValueChangeListener(titleChange -> {
-      checkFilledFields();
-    });
-    creatorNameTextField.addValueChangeListener(titleChange -> {
-      checkFilledFields();
-    });
+    surveyTitleTextField.addValueChangeListener(
+        titleChange -> {
+          checkFilledFields();
+        });
+    creatorNameTextField.addValueChangeListener(
+        titleChange -> {
+          checkFilledFields();
+        });
 
     surveyTitleTextField.setLabel("Survey title");
     surveyTitleTextField.setPlaceholder("Survey title");
@@ -139,21 +140,19 @@ public class CreateSurveyView extends BaseView
     descriptionTextArea.setLabel("Description");
     descriptionTextArea.setWidth("600px");
 
-
     // Show User, just for show
     // TODO move me (separate method?)
     Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
     if (principal instanceof UserDetails) {
-      String username = ((UserDetails)principal).getUsername();
+      String username = ((UserDetails) principal).getUsername();
       creatorNameTextField.setValue(username);
       creatorNameTextField.setEnabled(false);
-//      creatorNameTextField.setPlaceholder(username);
+      //      creatorNameTextField.setPlaceholder(username);
 
     } else {
       String username = principal.toString();
       creatorNameTextField.setPlaceholder(username);
-
     }
   }
 
@@ -164,52 +163,54 @@ public class CreateSurveyView extends BaseView
     questionTitleTextField.setPlaceholder("Question");
     questionTitleTextField.setLabel("Question");
 
-    questionTitleTextField.addValueChangeListener(event -> {
+    questionTitleTextField.addValueChangeListener(
+        event -> {
 
-      // checks if the the string contains more than 255 characters. If true cuts string after index
-      // 255
-      if (event.getSource().getValue().length() > 255) {
-        event.getSource().setValue(event.getSource().getValue().substring(0, 255));
-        Notification.show("Question can max contain 255 characters");
-      }
+          // checks if the the string contains more than 255 characters. If true cuts string after
+          // index
+          // 255
+          if (event.getSource().getValue().length() > 255) {
+            event.getSource().setValue(event.getSource().getValue().substring(0, 255));
+            Notification.show("Question can max contain 255 characters");
+          }
 
-      if (questionTitleTextField.isEmpty() || selectOptions.getValue() == null) {
-        addQuestionButton.setEnabled(false);
-      } else if (selectOptions.getValue().equalsIgnoreCase("Text question")
-          && !questionTitleTextField.getValue().isEmpty()) {
-        userCreationQuestion(QuestionType.TEXT);
-      } else if ((selectOptions.getValue().equalsIgnoreCase("Radio Question")
-          && !questionTitleTextField.getValue().isEmpty())) {
-        userCreationQuestion(QuestionType.RADIO);
-      } else if ((selectOptions.getValue().equalsIgnoreCase("Checkbox Question")
-          && !questionTitleTextField.getValue().isEmpty())) {
-        userCreationQuestion(QuestionType.CHECKBOX);
-      }
-    });
+          if (questionTitleTextField.isEmpty() || selectOptions.getValue() == null) {
+            addQuestionButton.setEnabled(false);
+          } else if (selectOptions.getValue().equalsIgnoreCase("Text question")
+              && !questionTitleTextField.getValue().isEmpty()) {
+            userCreationQuestion(QuestionType.TEXT);
+          } else if ((selectOptions.getValue().equalsIgnoreCase("Radio Question")
+              && !questionTitleTextField.getValue().isEmpty())) {
+            userCreationQuestion(QuestionType.RADIO);
+          } else if ((selectOptions.getValue().equalsIgnoreCase("Checkbox Question")
+              && !questionTitleTextField.getValue().isEmpty())) {
+            userCreationQuestion(QuestionType.CHECKBOX);
+          }
+        });
 
     selectOptions = new Select<>();
     selectOptions.setPlaceholder("Type of question");
     selectOptions.setItems("Text question", "Radio Question", "Checkbox Question");
-    selectOptions.addValueChangeListener(event -> {
-      if (event.getValue().equalsIgnoreCase("Text question")) {
-        userCreationQuestion(QuestionType.TEXT);
-      } else if (event.getValue().equalsIgnoreCase("Radio Question")) {
-        userCreationQuestion(QuestionType.RADIO);
-      } else if (event.getValue().equalsIgnoreCase("Checkbox Question")) {
-        userCreationQuestion(QuestionType.CHECKBOX);
-      }
-      if (questionTitleTextField.isEmpty()) {
-        addQuestionButton.setEnabled(false);
-      }
-    });
+    selectOptions.addValueChangeListener(
+        event -> {
+          if (event.getValue().equalsIgnoreCase("Text question")) {
+            userCreationQuestion(QuestionType.TEXT);
+          } else if (event.getValue().equalsIgnoreCase("Radio Question")) {
+            userCreationQuestion(QuestionType.RADIO);
+          } else if (event.getValue().equalsIgnoreCase("Checkbox Question")) {
+            userCreationQuestion(QuestionType.CHECKBOX);
+          }
+          if (questionTitleTextField.isEmpty()) {
+            addQuestionButton.setEnabled(false);
+          }
+        });
 
     mandatory = new Checkbox("Mandatory Question");
-
   }
 
   public void initLayout() {
-    titleContainer.add(surveyTitleTextField, creatorNameTextField, submitSurveyButton,
-        cancelButton);
+    titleContainer.add(
+        surveyTitleTextField, creatorNameTextField, submitSurveyButton, cancelButton);
     header.add(titleContainer);
     header.add(descriptionTextArea);
 
@@ -228,17 +229,28 @@ public class CreateSurveyView extends BaseView
 
     switch (questionType) {
       case TEXT:
-        questions.add(new TextQuestionWithButtons(questionTitleTextField.getValue(), this,
-            mandatory.getValue()));
+        questions.add(
+            new TextQuestionWithButtons(
+                questionTitleTextField.getValue(), this, mandatory.getValue()));
         break;
       case RADIO:
-        questions.add(new MultiQuestionWithButtons(questionTitleTextField.getValue(), this,
-            createAlternative.getAlternativeList(), QuestionType.RADIO, mandatory.getValue()));
+        questions.add(
+            new MultiQuestionWithButtons(
+                questionTitleTextField.getValue(),
+                this,
+                createAlternative.getAlternativeList(),
+                QuestionType.RADIO,
+                mandatory.getValue()));
         addQuestionContainer.remove(createAlternative);
         break;
       case CHECKBOX:
-        questions.add(new MultiQuestionWithButtons(questionTitleTextField.getValue(), this,
-            createAlternative.getAlternativeList(), QuestionType.CHECKBOX, mandatory.getValue()));
+        questions.add(
+            new MultiQuestionWithButtons(
+                questionTitleTextField.getValue(),
+                this,
+                createAlternative.getAlternativeList(),
+                QuestionType.CHECKBOX,
+                mandatory.getValue()));
         addQuestionContainer.remove(createAlternative);
         break;
     }
@@ -295,7 +307,6 @@ public class CreateSurveyView extends BaseView
       }
 
       addQuestionButton.setEnabled(true);
-
     }
 
     // regarding of what happens this.questionType will be updated
@@ -305,7 +316,8 @@ public class CreateSurveyView extends BaseView
       if (!createAlternative.getAlternativeList().isEmpty() && !questionTitleTextField.isEmpty()) {
         addQuestionButton.setEnabled(true);
       } else if ((createAlternative.getAlternativeList().isEmpty()
-          || questionTitleTextField.isEmpty()) && questionType != QuestionType.TEXT) {
+              || questionTitleTextField.isEmpty())
+          && questionType != QuestionType.TEXT) {
         addQuestionButton.setEnabled(false);
       }
     }
@@ -314,8 +326,10 @@ public class CreateSurveyView extends BaseView
   // Move question in questions container
   public void moveQuestion(Button button, int moveDirection) {
 
-    questions.replace(button.getParent().get().getParent().get(), questions.getComponentAt(
-        questions.indexOf(button.getParent().get().getParent().get()) + moveDirection));
+    questions.replace(
+        button.getParent().get().getParent().get(),
+        questions.getComponentAt(
+            questions.indexOf(button.getParent().get().getParent().get()) + moveDirection));
     hasChanges = true;
   }
 
@@ -349,13 +363,13 @@ public class CreateSurveyView extends BaseView
 
     /*
     TODO find a method to replace this process when merging?
-
+    TODO also delete the way you get the user (userDetails, securyticontext etc)
     We now save Survey to the User instead.
      */
     User user = userRepository.findByUsername(creatorNameTextField.getValue());
     user.getSurveys().add(thisSurvey);
     userRepository.save(user);
-//    surveyRepository.save(thisSurvey);
+    //    surveyRepository.save(thisSurvey);
 
     hasChanges = false;
     getUI().ifPresent(ui -> ui.navigate(""));
@@ -414,8 +428,9 @@ public class CreateSurveyView extends BaseView
           for (MultiQuestionAlternative mqa : mq.getAlternatives()) {
             stringAlternatives.add(mqa.getTitle());
           }
-          questions.add(new MultiQuestionWithButtons(mq.getTitle(), this, stringAlternatives,
-              mq.getQuestionType(), mq.isMandatory()));
+          questions.add(
+              new MultiQuestionWithButtons(
+                  mq.getTitle(), this, stringAlternatives, mq.getQuestionType(), mq.isMandatory()));
         }
       }
       submitSurveyButton.setText("Save Survey");

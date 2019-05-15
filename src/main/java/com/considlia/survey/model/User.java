@@ -29,22 +29,24 @@ public class User {
   @Email
   @Column(unique = true)
   private String email;
-//  @Column(name = "password")
+  //  @Column(name = "password")
   private String password;
+
   @NotBlank
-//  @Column(name = "username")
+  //  @Column(name = "username")
   private String username;
+
   @NotBlank
-//  @Column(name = "first_name")
+  //  @Column(name = "first_name")
   private String firstName;
+
   @NotBlank
-//  @Column(name = "last_name")
+  //  @Column(name = "last_name")
   private String lastName;
 
-  @NotBlank
-  private String role;
+  @NotBlank private String role;
 
-  //Currently removes surveys owned by User, might want something else here.
+  // Currently removes surveys owned by User, might want something else here.
   @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   @JoinColumn(name = "user_id")
   private Set<Survey> surveys = new HashSet<>();
@@ -52,8 +54,7 @@ public class User {
   Could add a private boolean if user is banned/blocked.
    */
 
-  public User() {
-  }
+  public User() {}
 
   public Long getId() {
     return id;
@@ -121,8 +122,6 @@ public class User {
 
   @Override
   public String toString() {
-    return "User{" +
-        "username='" + username + '\'' +
-        '}';
+    return "User{" + "username='" + username + '\'' + '}';
   }
 }

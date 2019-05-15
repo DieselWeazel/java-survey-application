@@ -13,5 +13,4 @@ public abstract class ReadQuestionLayout extends VerticalLayout {
 
     add(title);
   }
-
 }

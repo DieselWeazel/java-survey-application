@@ -1,5 +1,6 @@
 package com.considlia.survey.model;
 
+import com.considlia.survey.ui.custom_component.QuestionType;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.CascadeType;
@@ -9,7 +10,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
-import com.considlia.survey.ui.custom_component.QuestionType;
 
 @Entity
 @Table(name = "multiquestion")
@@ -24,11 +24,10 @@ public class MultiQuestion extends Question {
 
   public MultiQuestion() {}
 
-  public MultiQuestion(String questionTitle, int position, QuestionType questionType,
-      boolean mandatory) {
+  public MultiQuestion(
+      String questionTitle, int position, QuestionType questionType, boolean mandatory) {
     super(questionTitle, position, mandatory);
     this.questionType = questionType;
-
   }
 
   public Set<MultiQuestionAlternative> getAlternatives() {
@@ -57,8 +56,10 @@ public class MultiQuestion extends Question {
 
   @Override
   public String toString() {
-    return "MultiQuestion [alternativeList=" + alternatives + ", questionType=" + questionType
+    return "MultiQuestion [alternativeList="
+        + alternatives
+        + ", questionType="
+        + questionType
         + "]";
   }
-
 }

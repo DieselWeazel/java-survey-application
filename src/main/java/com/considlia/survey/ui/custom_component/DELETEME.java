@@ -1,5 +1,7 @@
 package com.considlia.survey.ui.custom_component;
 
+
+
 import com.considlia.survey.model.Survey;
 import com.considlia.survey.model.User;
 import com.considlia.survey.repositories.SurveyRepository;
@@ -34,7 +36,9 @@ Jonathan
 
 !isHome at bottom should be isHome
  */
-public class SurveyGrid extends VerticalLayout {
+
+// TODO DELETE
+public class DELETEME extends VerticalLayout {
 
   private Grid<Survey> grid;
   private Grid.Column<Survey> idColumn;
@@ -43,7 +47,7 @@ public class SurveyGrid extends VerticalLayout {
   private Grid.Column<Survey> dateColumn;
   private HeaderRow filterRow;
 
-//  private List<Survey> userSurveyList;
+  //  private List<Survey> userSurveyList;
   private List<Survey> surveyList;
   private TextField idField, titleField, creatorField, dateField;
 
@@ -56,13 +60,30 @@ public class SurveyGrid extends VerticalLayout {
 //  @Autowired
 //  private List<Survey> surveysByUser;
 
-  public SurveyGrid(Class viewingLayout, SurveyRepository surveyRepository, List<Survey> surveyList) {
+  public DELETEME(Class viewingLayout, SurveyRepository surveyRepository, List<Survey> surveyList) {
     final boolean isHome = HomeView.class.equals(viewingLayout);
     grid = new Grid<>();
+
     this.surveyRepository = surveyRepository;
     this.userRepository = userRepository;
     this.surveyList = surveyList;
 
+    generateGridColumns(isHome);
+    grid.setDetailsVisibleOnClick(false);
+    grid.setSelectionMode(Grid.SelectionMode.NONE);
+
+    createFilterFields(isHome);
+    //TODO this is also a complete fucking failure now.
+    addGrid(surveyList);
+  }
+
+  public void addGrid(List<Survey> surveyList) {
+    grid.setItems(surveyList);
+    add(grid);
+    filterRow = grid.appendHeaderRow();
+  }
+
+  public void generateGridColumns(boolean isHome) {
     idColumn = grid.addColumn(Survey::getId).setHeader("Id").setWidth("3%");
     titleColumn = grid.addColumn(Survey::getTitle).setHeader("Title").setFlexGrow(4);
 
@@ -70,52 +91,44 @@ public class SurveyGrid extends VerticalLayout {
     grid.addComponentColumn(item -> showDescription(item)).setWidth("1%");
     grid.setItemDetailsRenderer(
         TemplateRenderer.<Survey>of(
-                "<div style='border: 1px solid gray; padding: 10px; width: 100%;box-sizing: border-box;'>"
-                    + "<div> <b>[[item.description]]</b></div>"
-                    + "</div>")
+            "<div style='border: 1px solid gray; padding: 10px; width: 100%;box-sizing: border-box;'>"
+                + "<div> <b>[[item.description]]</b></div>"
+                + "</div>")
             .withProperty("description", Survey::getDescription)
             .withEventHandler(
                 "handleClick",
                 survey -> {
                   grid.getDataProvider().refreshItem(survey);
                 }));
-    creatorColumn = grid.addColumn(Survey::getCreator).setHeader("Creator");
+    if (!isHome) creatorColumn = grid.addColumn(Survey::getCreator).setHeader("Creator");
+
     dateColumn = grid.addColumn(Survey::getDate).setHeader("Date");
 
-    // Init Buttons, adds correct
+    // Init Buttons last of all.
     grid.addComponentColumn(item -> showButtons(grid, item, isHome));
-    grid.setDetailsVisibleOnClick(false);
-    grid.setSelectionMode(Grid.SelectionMode.NONE);
 
-    grid.setItems(surveyList);
-
-    add(grid);
-    filterRow = grid.appendHeaderRow();
-
-    // InitGrid Method, sets Grid according to correct view
-    initGrid(isHome);
   }
 
-  private void initGrid(boolean isHome) {
-    if (isHome) {
-      initHomeGrid(isHome);
-    } else {
-      initProfileGrid(isHome);
-    }
-  }
+//  private void initGrid(boolean isHome) {
+//    if (isHome) {
+//      initHomeGrid(isHome);
+//    } else {
+//      initProfileGrid(isHome);
+//    }
+//  }
+//
+//  private void initProfileGrid(boolean isHome) {
+//    grid.removeAllColumns();
+//    idColumn = grid.addColumn(Survey::getId).setHeader("Id").setWidth("3%");
+//    titleColumn = grid.addColumn(Survey::getTitle).setHeader("Title").setFlexGrow(4);
+//    dateColumn = grid.addColumn(Survey::getDate).setHeader("Date");
+//    grid.addComponentColumn(item -> showButtons(grid, item, isHome));
+//
+//  }
 
-  private void initProfileGrid(boolean isHome) {
-    grid.removeAllColumns();
-    idColumn = grid.addColumn(Survey::getId).setHeader("Id").setWidth("3%");
-    titleColumn = grid.addColumn(Survey::getTitle).setHeader("Title").setFlexGrow(4);
-    dateColumn = grid.addColumn(Survey::getDate).setHeader("Date");
-    grid.addComponentColumn(item -> showButtons(grid, item, isHome));
-    createFilterFields(isHome);
-  }
-
-  private void initHomeGrid(boolean isHome) {
-    createFilterFields(isHome);
-  }
+//  private void initHomeGrid(boolean isHome) {
+//    createFilterFields(isHome);
+//  }
 
   private void createFilterFields(boolean isHome) {
     // ID filter
@@ -222,3 +235,4 @@ public class SurveyGrid extends VerticalLayout {
     }
   }
 }
+

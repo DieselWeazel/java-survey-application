@@ -1,38 +1,26 @@
 package com.considlia.survey.ui.UserViews;
 
-import static org.springframework.security.web.context.HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY;
-
+import com.considlia.survey.model.Survey;
 import com.considlia.survey.model.User;
+import com.considlia.survey.repositories.SurveyRepository;
 import com.considlia.survey.repositories.UserRepository;
-import com.considlia.survey.security.SecurityConfiguration;
-import com.considlia.survey.security.UserDetailsServiceImpl;
 import com.considlia.survey.ui.BaseView;
 import com.considlia.survey.ui.HomeView;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.dom.Element;
 import com.vaadin.flow.router.Route;
-import java.util.Collection;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.core.userdetails.UserDetails;
 /*
 Trying to figure out a way to redirect without "UI.getCurrent().navigate(HomeView.class);", looking for a Spring Security integration of sorts.
 Jonathan
@@ -46,14 +34,21 @@ public class LoginView extends BaseView {
   private Button submitButton;
 
   // -- Backend Components --
-  @Autowired
-  private AuthenticationManager authenticationManagerBean;
+  @Autowired private AuthenticationManager authenticationManagerBean;
 
   private VerticalLayout loginView;
 
-  public LoginView(AuthenticationManager authenticationManagerBean){
+  private SurveyRepository surveyRepository;
+  private UserRepository userRepository;
+
+  public LoginView(
+      AuthenticationManager authenticationManagerBean,
+      SurveyRepository surveyRepository,
+      UserRepository userRepository) {
     super("Login");
     this.authenticationManagerBean = authenticationManagerBean;
+    this.surveyRepository = surveyRepository;
+    this.userRepository = userRepository;
     username = new TextField();
     password = new PasswordField();
     submitButton = new Button("Login");
@@ -61,11 +56,12 @@ public class LoginView extends BaseView {
     username.setLabel("Username");
     password.setLabel("Password");
 
-    submitButton.addClickListener(event -> {
-      if (setCurrentUser(username.getValue(),password.getValue())){
-        UI.getCurrent().navigate(HomeView.class);
-      }
-    });
+    submitButton.addClickListener(
+        event -> {
+          if (setCurrentUser(username.getValue(), password.getValue())) {
+            UI.getCurrent().navigate(HomeView.class);
+          }
+        });
 
     username.setWidth("380px");
     password.setWidth("380px");
@@ -77,17 +73,15 @@ public class LoginView extends BaseView {
     setAlignItems(Alignment.CENTER);
   }
 
-  public boolean setCurrentUser(String login,String password){
+
+  public boolean setCurrentUser(String login, String password) {
     try {
-      Authentication request=new UsernamePasswordAuthenticationToken(login,password);
-      Authentication result= authenticationManagerBean.authenticate(request);
+      Authentication request = new UsernamePasswordAuthenticationToken(login, password);
+      Authentication result = authenticationManagerBean.authenticate(request);
       SecurityContextHolder.getContext().setAuthentication(result);
-    }
-    catch (  BadCredentialsException e) {
+    } catch (BadCredentialsException e) {
       return false;
     }
     return true;
   }
 }
-
-

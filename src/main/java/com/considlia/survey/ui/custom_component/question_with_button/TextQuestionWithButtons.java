@@ -17,7 +17,5 @@ public class TextQuestionWithButtons extends QuestionWithButtons {
     text.setEnabled(false);
 
     add(text);
-
   }
-
 }

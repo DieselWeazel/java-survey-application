@@ -5,6 +5,4 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "textquestion")
-public class TextQuestion extends Question {
-
-}
+public class TextQuestion extends Question {}

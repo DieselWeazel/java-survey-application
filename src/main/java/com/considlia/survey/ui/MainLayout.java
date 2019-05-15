@@ -2,9 +2,8 @@ package com.considlia.survey.ui;
 
 import com.considlia.survey.security.SecurityUtils;
 import com.considlia.survey.ui.UserViews.LoginView;
+import com.considlia.survey.ui.UserViews.MyProfileView;
 import com.considlia.survey.ui.UserViews.RegistrationView;
-import java.util.HashMap;
-import java.util.Map;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasElement;
 import com.vaadin.flow.component.button.Button;
@@ -15,6 +14,8 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.RouterLayout;
 import com.vaadin.flow.router.RouterLink;
+import java.util.HashMap;
+import java.util.Map;
 
 @StyleSheet("css/app.css")
 public class MainLayout extends VerticalLayout implements RouterLayout {
@@ -31,29 +32,28 @@ public class MainLayout extends VerticalLayout implements RouterLayout {
     navigation = new HorizontalLayout();
 
     navigation.add(createRouterLink(HomeView.class, "Home", VaadinIcon.HOME));
-    if (SecurityUtils.isUserLoggedIn()){
-      if (SecurityUtils.hasAccess(CreateSurveyView.class)){
-        navigation
-            .add(createRouterLink(CreateSurveyView.class, "Create New Survey", VaadinIcon.PLUS_CIRCLE));
+    if (SecurityUtils.isUserLoggedIn()) {
+      if (SecurityUtils.hasAccess(CreateSurveyView.class)) {
+        navigation.add(
+            createRouterLink(CreateSurveyView.class, "Create New Survey", VaadinIcon.PLUS_CIRCLE));
       }
+      navigation.add(createRouterLink(MyProfileView.class, "profileview", VaadinIcon.USER));
     } else {
       navigation.add(createRouterLink(LoginView.class, "Login", VaadinIcon.SIGN_IN));
       navigation.add(createRouterLink(RegistrationView.class, "registration", VaadinIcon.PENCIL));
     }
-
 
     navigation.setClassName("header");
     contentContainer = new VerticalLayout();
     contentContainer.setClassName("content");
 
     add(navigation, contentContainer);
-
   }
 
-  private Button createRouterLink(Class<? extends Component> targetViewClass, String text,
-      VaadinIcon icon) {
-    return new Button(text, new Icon(icon),
-        event -> getUI().ifPresent(ui -> ui.navigate(targetViewClass)));
+  private Button createRouterLink(
+      Class<? extends Component> targetViewClass, String text, VaadinIcon icon) {
+    return new Button(
+        text, new Icon(icon), event -> getUI().ifPresent(ui -> ui.navigate(targetViewClass)));
   }
 
   @Override
@@ -63,5 +63,4 @@ public class MainLayout extends VerticalLayout implements RouterLayout {
       this.contentContainer.add((Component) content);
     }
   }
-
 }

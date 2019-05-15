@@ -45,5 +45,4 @@ public class MultiQuestionAlternative {
   public String toString() {
     return title;
   }
-
 }

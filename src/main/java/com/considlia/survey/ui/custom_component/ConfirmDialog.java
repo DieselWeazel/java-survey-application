@@ -17,18 +17,25 @@ public class ConfirmDialog extends Dialog {
 
   private Button cancelBtn;
 
-  public ConfirmDialog(String headerText, String contentText, SurveyRepository surveyRepository,
-      Grid<Survey> grid, Survey item) {
+  public ConfirmDialog(
+      String headerText,
+      String contentText,
+      SurveyRepository surveyRepository,
+      Grid<Survey> grid,
+      Survey item) {
     setCloseOnEsc(false);
     setCloseOnOutsideClick(false);
 
     initCancelBtn();
 
-    Button confirmBtn = new Button("Confirm", onConfirm -> {
-      surveyRepository.delete(item);
-      grid.setItems(surveyRepository.findAll());
-      close();
-    });
+    Button confirmBtn =
+        new Button(
+            "Confirm",
+            onConfirm -> {
+              surveyRepository.delete(item);
+              grid.setItems(surveyRepository.findAll());
+              close();
+            });
 
     add(new H2(headerText), new H5(contentText));
     add(new HorizontalLayout(cancelBtn, confirmBtn));
@@ -39,21 +46,28 @@ public class ConfirmDialog extends Dialog {
 
     initCancelBtn();
 
-    Button confirmBtn = new Button("Discard", onDiscard -> {
-      action.proceed();
-      close();
-    });
-    Button saveBtn = new Button("Save", onSave -> {
-      survey.saveSurvey();
-      action.proceed();
-      close();
-    });
+    Button confirmBtn =
+        new Button(
+            "Discard",
+            onDiscard -> {
+              action.proceed();
+              close();
+            });
+    Button saveBtn =
+        new Button(
+            "Save",
+            onSave -> {
+              survey.saveSurvey();
+              action.proceed();
+              close();
+            });
 
     HorizontalLayout buttonContainer = new HorizontalLayout();
     if (!survey.checkFilledFields()) {
       saveBtn.setEnabled(false);
-      add(new Text(
-          "You have to fill out required fields and have at least one question. Fill them out or discard changes"));
+      add(
+          new Text(
+              "You have to fill out required fields and have at least one question. Fill them out or discard changes"));
     } else {
       add(new H5("Do you want to save or discard your changes before navigating away?"));
     }
@@ -66,19 +80,24 @@ public class ConfirmDialog extends Dialog {
 
     initCancelBtn();
 
-    Button confirmBtn = new Button("Confirm", onConfirm -> {
-      survey.removeQuestion(question);
-      close();
-    });
+    Button confirmBtn =
+        new Button(
+            "Confirm",
+            onConfirm -> {
+              survey.removeQuestion(question);
+              close();
+            });
     add(new H5("Are you sure you want to remove this question?"));
     add(new HorizontalLayout(cancelBtn, confirmBtn));
     open();
   }
 
   public void initCancelBtn() {
-    cancelBtn = new Button("Cancel", onCancel -> {
-      close();
-    });
+    cancelBtn =
+        new Button(
+            "Cancel",
+            onCancel -> {
+              close();
+            });
   }
-
 }

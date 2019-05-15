@@ -7,8 +7,7 @@ import com.vaadin.flow.router.Route;
 @Route(value = "loginprocess")
 public class ProcessingView extends VerticalLayout {
 
-  public ProcessingView(){
+  public ProcessingView() {
     add(new H1("You are being logged in.."));
   }
-
 }

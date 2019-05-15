@@ -50,14 +50,14 @@ public abstract class QuestionWithButtons extends VerticalLayout {
     content.add(new Button(new Icon(VaadinIcon.TRASH), event -> removeQuestion(survey)));
 
     add(content);
-
   }
 
   public void initButtonEvent(Button button, int move) {
-    button.addClickListener(onClick -> {
-      survey.moveQuestion(onClick.getSource(), move);
-      survey.updateMoveButtonStatus();
-    });
+    button.addClickListener(
+        onClick -> {
+          survey.moveQuestion(onClick.getSource(), move);
+          survey.updateMoveButtonStatus();
+        });
   }
 
   public void removeQuestion(CreateSurveyView survey) {
@@ -117,5 +117,4 @@ public abstract class QuestionWithButtons extends VerticalLayout {
   public void setContent(HorizontalLayout content) {
     this.content = content;
   }
-
 }
