@@ -33,8 +33,7 @@ public class Survey {
   @OrderBy("position ASC")
   private Set<Question> questions = new HashSet<>();
 
-  @ManyToOne(fetch = FetchType.EAGER)
-//  @ManyToOne(cascade={CascadeType.REFRESH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH}, fetch = FetchType.EAGER)
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user_id")
   private User user;
 

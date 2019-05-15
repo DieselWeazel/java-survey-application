@@ -34,8 +34,9 @@ public class ConfirmDialog extends Dialog {
         new Button(
             "Confirm",
             onConfirm -> {
-              System.out.println(item.toString());
+//              surveyRepository.deleteById(item.getId());
               surveyRepository.delete(item);
+              surveyList.remove(item);
               grid.setItems(surveyList);
               close();
             });

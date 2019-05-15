@@ -367,11 +367,11 @@ public class CreateSurveyView extends BaseView
     We now save Survey to the User instead.
      */
     User user = userRepository.findByUsername(creatorNameTextField.getValue());
-    user.getSurveys().add(thisSurvey);
+//    user.getSurveys().add(thisSurvey);
 
     thisSurvey.setUser(user);
     surveyRepository.save(thisSurvey);
-    userRepository.save(user);
+//    userRepository.save(user);
 
     hasChanges = false;
     getUI().ifPresent(ui -> ui.navigate(""));

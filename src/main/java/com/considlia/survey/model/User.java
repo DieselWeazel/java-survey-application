@@ -46,11 +46,13 @@ public class User {
 
   @NotBlank private String role;
 
-  // Removing User does not remove Surveys, this because deleting surveys would cause a delete on User
-  // Might be another solution but for now leaving this as is.
-  @OneToMany(fetch = FetchType.EAGER)
-//  @JoinColumn(name = "user_id")
+  // If User doesn't delete its child entity (Surveys) when User is deleted, we might need a Service class for this.
+  // Have not tried removing Users within Java/Hibernate, but removing them in SQL leaves the surveys. (Might be redundant of me writing this but
+  // I faced so many issues with this bit prior to this solution, deleting a Survey would delete the User, caused by fetchtype eager,
+  // SO I live this note here since this issue might come up in the future.
+  @OneToMany(cascade=CascadeType.ALL, orphanRemoval = true, mappedBy="user")
   private Set<Survey> surveys = new HashSet<>();
+
   /*
   Could add a private boolean if user is banned/blocked.
    */
