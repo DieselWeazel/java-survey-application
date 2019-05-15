@@ -210,35 +210,25 @@ public class CreateSurveyView extends BaseView
   // Add handling for multiquestions
   public void addQuestion() {
     questionTitleTextField.focus();
-    QuestionFactory qf = new QuestionFactory();
 
     switch (questionType) {
       case TEXTFIELD:
-        questions.add(new TextQuestionWithButtons((TextQuestion) qf
-            .createQuestion(questionTitleTextField.getValue(), questionType, mandatory.getValue()),
-            this));
+        questions.add(QuestionFactory.createQuestion(questionTitleTextField.getValue(),
+            questionType, mandatory.getValue(), this));
         break;
       case RADIO:
-        questions
-            .add(
-                new MultiQuestionWithButtons(
-                    (MultiQuestion) qf.createQuestion(questionTitleTextField.getValue(),
-                        questionType, mandatory.getValue()),
-                    this, createAlternative.getAlternativeList()));
+        questions.add(QuestionFactory.createQuestion(questionTitleTextField.getValue(),
+            questionType, mandatory.getValue(), createAlternative.getAlternativeList(), this));
         extraComponents.remove(createAlternative);
         break;
       case CHECKBOX:
-        questions
-            .add(
-                new MultiQuestionWithButtons(
-                    (MultiQuestion) qf.createQuestion(questionTitleTextField.getValue(),
-                        questionType, mandatory.getValue()),
-                    this, createAlternative.getAlternativeList()));
+        questions.add(QuestionFactory.createQuestion(questionTitleTextField.getValue(),
+            questionType, mandatory.getValue(), createAlternative.getAlternativeList(), this));
         extraComponents.remove(createAlternative);
         break;
       case RATIO:
-        // questions.add(new RatioQuestionWithButtons(questionTitleTextField.getValue(), this,
-        // mandatory.getValue()));
+        // questions.add(QuestionFactory.createQuestion(questionTitleTextField.getValue(),
+        // questionType, mandatory.getValue(), this));
         extraComponents.remove(createRatioComponents);
         break;
       case TEXTAREA:
