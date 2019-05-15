@@ -1,8 +1,10 @@
 package com.considlia.survey.ui;
 
 import java.time.LocalDate;
+import java.util.Iterator;
 import com.considlia.survey.model.Answers;
 import com.considlia.survey.model.MultiQuestion;
+import com.considlia.survey.model.MultiQuestionAlternative;
 import com.considlia.survey.model.Question;
 import com.considlia.survey.model.Survey;
 import com.considlia.survey.model.SurveyResponses;
@@ -146,9 +148,15 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
               castRadioComponent.getQuestion()));
           break;
         case CHECKBOX:
-
+          ReadMultiQuestionLayout castCheckboxComponent = (ReadMultiQuestionLayout) component;
+          for (Iterator<MultiQuestionAlternative> i =
+              castCheckboxComponent.getCheckBoxButtons().getValue().iterator(); i.hasNext();) {
+            sr.addAnswer(new Answers(i.next().getTitle(), castCheckboxComponent.getQuestion()));
+          }
           break;
         case TEXTAREA:
+          break;
+        default:
           break;
       }
     }
