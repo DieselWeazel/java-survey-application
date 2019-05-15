@@ -1,38 +1,66 @@
 package com.considlia.survey.ui.custom_component.question_with_button;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.considlia.survey.ui.CreateSurveyView;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
-import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.component.radiobutton.RadioGroupVariant;
 
 public class RatioQuestionWithButtons extends QuestionWithButtons {
 
   // string string int för pluppar
 
-  private TextField lowerLimit, upperLimit;
+  private String start, end;
+  private int choices;
   private RadioButtonGroup<String> radioOptions;
+  private List<String> options = new ArrayList<>();
 
-  public RatioQuestionWithButtons(String question, CreateSurveyView survey, boolean mandatory) {
+  public RatioQuestionWithButtons(String question, CreateSurveyView survey, boolean mandatory,
+      String start, String end, int choices) {
     super(question, survey, mandatory);
 
-    // // limits
-    // HorizontalLayout limitOptios = new HorizontalLayout();
-    // lowerLimit = new TextField();
-    // lowerLimit.setPlaceholder("Lower Limit");
-    //
-    // upperLimit = new TextField();
-    // upperLimit.setPlaceholder("Upper Limit");
-    // limitOptios.add(lowerLimit, upperLimit);
-    //
-    // // radio
-    // radioOptions = new RadioButtonGroup<>();
-    // radioOptions.setItems("1 " + lowerLimit, "2", "3", "4", "5 " + upperLimit);
-    //
-    // // radioOptions.getStyle().set("display", "inline");
-    // add(limitOptios);
+    setStart(start);
+    setEnd(end);
+    setChoices(choices);
 
-    Notification hej = new Notification("fuck");
-    hej.open();
+    for (int i = 1; i <= choices; i++) {
+      if (i == 1) {
+        options.add(Integer.toString(i) + " " + start);
+      } else if (i == choices) {
+        options.add(Integer.toString(i) + " " + end);
+      } else {
+        options.add(Integer.toString(i));
+      }
+    }
+
+    radioOptions = new RadioButtonGroup<>();
+    radioOptions.setItems(options);
+    radioOptions.addThemeVariants(RadioGroupVariant.LUMO_VERTICAL);
+    add(radioOptions);
+  }
+
+  public String getStart() {
+    return start;
+  }
+
+  public void setStart(String start) {
+    this.start = start;
+  }
+
+  public String getEnd() {
+    return end;
+  }
+
+  public void setEnd(String end) {
+    this.end = end;
+  }
+
+  public int getChoices() {
+    return choices;
+  }
+
+  public void setChoices(int choices) {
+    this.choices = choices;
   }
 
 }

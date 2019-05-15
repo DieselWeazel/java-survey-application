@@ -1,6 +1,7 @@
 package com.considlia.survey.model;
 
 import com.considlia.survey.ui.custom_component.question_with_button.MultiQuestionWithButtons;
+import com.considlia.survey.ui.custom_component.question_with_button.RatioQuestionWithButtons;
 import com.considlia.survey.ui.custom_component.question_with_button.TextQuestionWithButtons;
 import com.vaadin.flow.component.Component;
 
@@ -23,19 +24,16 @@ public class QuestionFactory {
       question.setQuestionType(castComponent.getQuestionType());
       question.getAlternatives().addAll(castComponent.getAlternatives());
       return question;
-    } else if (true) {
-      return null;
-      // Work to do, dont have RatioQuestionWithButtons yet
-
-      // RatioQuestionWithButtons castComponent = (RatioQuestionWithButtons) component;
-      // RatioQuestion question = new RatioQuestion();
-      // question.setTitle(castComponent.getQuestion());
-      // question.setPosition(position);
-      // question.setMandatory(castComponent.isMandatory());
-      // question.setEnd(end);
-      // question.setStart(start);
-      // question.setChoices(choices);
-
+    } else if (component instanceof RatioQuestionWithButtons) {
+      RatioQuestionWithButtons castComponent = (RatioQuestionWithButtons) component;
+      RatioQuestion question = new RatioQuestion();
+      question.setTitle(castComponent.getQuestion());
+      question.setPosition(position);
+      question.setMandatory(castComponent.isMandatory());
+      question.setEnd(castComponent.getEnd());
+      question.setStart(castComponent.getStart());
+      question.setChoices(castComponent.getChoices());
+      return question;
     } else {
       return null;
     }
