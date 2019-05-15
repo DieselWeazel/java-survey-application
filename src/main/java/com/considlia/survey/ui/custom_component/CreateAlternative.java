@@ -85,14 +85,23 @@ public class CreateAlternative extends VerticalLayout {
     Set<String> set = new LinkedHashSet<>();
     set.addAll(getAlternativeList());
 
+    // if the alternativeList is not empty and questionTitleField is not empty
+    // and no duplicates exists
     if (!getAlternativeList().isEmpty() && !csv.getQuestionTitleTextField().isEmpty()
         && set.size() == alternativeList.size()) {
-      csv.getAddQuestionButton().setEnabled(true);
+
+      // if the questionType is radio and there are less than two alternatives
+      if (getQuestionType() == QuestionType.RADIO && getAlternativeList().size() < 2) {
+        csv.getAddQuestionButton().setEnabled(false);
+      } else {
+        csv.getAddQuestionButton().setEnabled(true);
+      }
+
     } else {
+      csv.getAddQuestionButton().setEnabled(false);
       if (containsDuplicate && !getAlternativeList().isEmpty()) {
         Notification.show("Your alternatives contain duplicates");
       }
-      csv.getAddQuestionButton().setEnabled(false);
     }
   }
 

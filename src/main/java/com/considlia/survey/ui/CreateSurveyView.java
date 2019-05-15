@@ -286,11 +286,16 @@ public class CreateSurveyView extends BaseView
         break;
       case RADIO:
       case CHECKBOX:
-        Set<String> set = new LinkedHashSet<>();
-        set.addAll(createAlternative.getAlternativeList());
-        addQuestionButton.setEnabled(
-            !createAlternative.getAlternativeList().isEmpty() && !questionTitleTextField.isEmpty()
-                && createAlternative.getAlternativeList().size() == set.size());
+        if (questionType == QuestionType.RADIO
+            && createAlternative.getAlternativeList().size() <= 1) {
+          addQuestionButton.setEnabled(false);
+        } else {
+          Set<String> set = new LinkedHashSet<>();
+          set.addAll(createAlternative.getAlternativeList());
+          addQuestionButton.setEnabled(
+              !createAlternative.getAlternativeList().isEmpty() && !questionTitleTextField.isEmpty()
+                  && createAlternative.getAlternativeList().size() == set.size());
+        }
         break;
       default:
         addQuestionButton.setEnabled(false);
