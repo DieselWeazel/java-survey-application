@@ -65,8 +65,7 @@ public class CreateAlternative extends VerticalLayout {
       remove(event.getSource());
       textFieldList.remove(event.getSource());
       textFieldList.get(textFieldList.size() - 1).focus();
-    }
-    if (event.getSource().getValue().length() > 255) {
+    } else if (event.getSource().getValue().length() > 255) {
       event.getSource().setValue(event.getSource().getValue().substring(0, 255));
       Notification.show("Alternative can max contain 255 characters");
     }
@@ -90,7 +89,7 @@ public class CreateAlternative extends VerticalLayout {
         && set.size() == alternativeList.size()) {
       csv.getAddQuestionButton().setEnabled(true);
     } else {
-      if (containsDuplicate) {
+      if (containsDuplicate && !getAlternativeList().isEmpty()) {
         Notification.show("Your alternatives contain duplicates");
       }
       csv.getAddQuestionButton().setEnabled(false);
