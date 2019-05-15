@@ -1,28 +1,22 @@
 package com.considlia.survey.model;
 
-import com.considlia.survey.ui.custom_component.question_with_button.MultiQuestionWithButtons;
-import com.considlia.survey.ui.custom_component.question_with_button.TextQuestionWithButtons;
-import com.vaadin.flow.component.Component;
+import com.considlia.survey.ui.custom_component.QuestionType;
 
 public class QuestionFactory {
 
-  public Question createQuestion(Component component, int position) {
-    if (component instanceof TextQuestionWithButtons) {
-      TextQuestionWithButtons castComponent = (TextQuestionWithButtons) component;
+  public Question createQuestion(String questionTitle, QuestionType questionType,
+      boolean mandatory) {
+    if (questionType == QuestionType.TEXTFIELD) {
       TextQuestion question = new TextQuestion();
-      question.setTitle(castComponent.getQuestion());
-      question.setPosition(position);
-      question.setMandatory(castComponent.isMandatory());
-      question.setQuestionType(castComponent.getQuestionType());
+      question.setTitle(questionTitle);
+      question.setMandatory(mandatory);
+      question.setQuestionType(questionType);
       return question;
-    } else if (component instanceof MultiQuestionWithButtons) {
-      MultiQuestionWithButtons castComponent = (MultiQuestionWithButtons) component;
+    } else if (questionType == QuestionType.RADIO || questionType == QuestionType.CHECKBOX) {
       MultiQuestion question = new MultiQuestion();
-      question.setTitle(castComponent.getQuestion());
-      question.setPosition(position);
-      question.setMandatory(castComponent.isMandatory());
-      question.setQuestionType(castComponent.getQuestionType());
-      question.getAlternatives().addAll(castComponent.getAlternatives());
+      question.setTitle(questionTitle);
+      question.setMandatory(mandatory);
+      question.setQuestionType(questionType);
       return question;
     } else if (true) {
       return null;

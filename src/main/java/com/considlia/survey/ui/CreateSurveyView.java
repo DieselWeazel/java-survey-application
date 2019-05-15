@@ -190,7 +190,6 @@ public class CreateSurveyView extends BaseView
     });
 
     mandatory = new Checkbox("Mandatory Question");
-
   }
 
   public void initLayout() {
@@ -211,20 +210,30 @@ public class CreateSurveyView extends BaseView
   // Add handling for multiquestions
   public void addQuestion() {
     questionTitleTextField.focus();
+    QuestionFactory qf = new QuestionFactory();
 
     switch (questionType) {
       case TEXTFIELD:
-        questions.add(new TextQuestionWithButtons(questionTitleTextField.getValue(), this,
-            mandatory.getValue(), questionType));
+        questions.add(new TextQuestionWithButtons((TextQuestion) qf
+            .createQuestion(questionTitleTextField.getValue(), questionType, mandatory.getValue()),
+            this));
         break;
       case RADIO:
-        questions.add(new MultiQuestionWithButtons(questionTitleTextField.getValue(), this,
-            createAlternative.getAlternativeList(), QuestionType.RADIO, mandatory.getValue()));
+        questions
+            .add(
+                new MultiQuestionWithButtons(
+                    (MultiQuestion) qf.createQuestion(questionTitleTextField.getValue(),
+                        questionType, mandatory.getValue()),
+                    this, createAlternative.getAlternativeList()));
         extraComponents.remove(createAlternative);
         break;
       case CHECKBOX:
-        questions.add(new MultiQuestionWithButtons(questionTitleTextField.getValue(), this,
-            createAlternative.getAlternativeList(), QuestionType.CHECKBOX, mandatory.getValue()));
+        questions
+            .add(
+                new MultiQuestionWithButtons(
+                    (MultiQuestion) qf.createQuestion(questionTitleTextField.getValue(),
+                        questionType, mandatory.getValue()),
+                    this, createAlternative.getAlternativeList()));
         extraComponents.remove(createAlternative);
         break;
       case RATIO:
@@ -304,7 +313,6 @@ public class CreateSurveyView extends BaseView
 
   // Move question in questions container
   public void moveQuestion(Button button, int moveDirection) {
-
     questions.replace(button.getParent().get().getParent().get(), questions.getComponentAt(
         questions.indexOf(button.getParent().get().getParent().get()) + moveDirection));
     hasChanges = true;
@@ -325,12 +333,10 @@ public class CreateSurveyView extends BaseView
 
   // Save survey with questions to database
   public void saveSurvey() {
-    thisSurvey.getQuestions().clear();
-    QuestionFactory qf = new QuestionFactory();
-
     for (int position = 0; position < questions.getComponentCount(); position++) {
-      Question question = qf.createQuestion(questions.getComponentAt(position), position);
-      thisSurvey.getQuestions().add(question);
+      QuestionWithButtons question = (QuestionWithButtons) questions.getComponentAt(position);
+      question.getQuestion().setPosition(position);
+      thisSurvey.addQuestion(question.getQuestion());
     }
 
     thisSurvey.setCreator(creatorNameTextField.getValue());
@@ -390,8 +396,7 @@ public class CreateSurveyView extends BaseView
 
       for (Question q : thisSurvey.getQuestions()) {
         if (q instanceof TextQuestion) {
-          questions.add(new TextQuestionWithButtons(q.getTitle(), this, q.isMandatory(),
-              q.getQuestionType()));
+          questions.add(new TextQuestionWithButtons((TextQuestion) q, this));
         } else {
           MultiQuestion mq = (MultiQuestion) q;
 
@@ -399,15 +404,13 @@ public class CreateSurveyView extends BaseView
           for (MultiQuestionAlternative mqa : mq.getAlternatives()) {
             stringAlternatives.add(mqa.getTitle());
           }
-          questions.add(new MultiQuestionWithButtons(mq.getTitle(), this, stringAlternatives,
-              mq.getQuestionType(), mq.isMandatory()));
+          questions.add(new MultiQuestionWithButtons(mq, this, stringAlternatives));
         }
       }
       submitSurveyButton.setText("Save Survey");
       updateMoveButtonStatus();
       thisSurvey.getQuestions().clear();
       checkFilledFields();
-      hasChanges = false;
     }
   }
 
