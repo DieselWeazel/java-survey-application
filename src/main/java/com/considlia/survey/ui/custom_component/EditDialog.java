@@ -50,13 +50,14 @@ public class EditDialog extends Dialog {
   public void textQuestion() {
     TextQuestionWithButtons choosenQuestion =
         (TextQuestionWithButtons) inputButton.getParent().get().getParent().get();
-    question.setValue(choosenQuestion.getQuestion());
-    mandatory.setValue(choosenQuestion.isMandatory());
+    question.setValue(choosenQuestion.getQuestion().getTitle());
+    mandatory.setValue(choosenQuestion.getQuestion().isMandatory());
 
     confirm = new Button("Confirm");
     confirm.addClickListener(onConfirm -> {
-      choosenQuestion.setMandatory(mandatory.getValue());
-      choosenQuestion.setQuestion(question.getValue());
+      choosenQuestion.getQuestion().setMandatory(mandatory.getValue());
+      choosenQuestion.getQuestion().setTitle(question.getValue());
+      choosenQuestion.setTitleInUI();
 
       close();
     });
@@ -66,11 +67,11 @@ public class EditDialog extends Dialog {
   public void radioQuestion() {
     MultiQuestionWithButtons choosenQuestion =
         (MultiQuestionWithButtons) inputButton.getParent().get().getParent().get();
-    question.setValue(choosenQuestion.getQuestion());
-    mandatory.setValue(choosenQuestion.isMandatory());
+    question.setValue(choosenQuestion.getQuestion().getTitle());
+    mandatory.setValue(choosenQuestion.getQuestion().isMandatory());
 
     List<MultiQuestionAlternative> alternativeList = new ArrayList<>();
-    for (MultiQuestionAlternative alternative : choosenQuestion.getAlternatives()) {
+    for (MultiQuestionAlternative alternative : choosenQuestion.getQuestion().getAlternatives()) {
       alternativeList.add(alternative);
     }
 
@@ -85,8 +86,9 @@ public class EditDialog extends Dialog {
     footer.add(new Button(new Icon(VaadinIcon.PLUS_CIRCLE), event -> addNewTextField(null)));
     confirm = new Button("Confirm");
     confirm.addClickListener(onConfirm -> {
-      choosenQuestion.setMandatory(mandatory.getValue());
-      choosenQuestion.setQuestion(question.getValue());
+      choosenQuestion.getQuestion().setMandatory(mandatory.getValue());
+      choosenQuestion.getQuestion().setTitle(question.getValue());
+      choosenQuestion.setTitleInUI();
 
       List<String> strings = new ArrayList<>();
       for (TextField txt : textFieldList) {

@@ -2,6 +2,7 @@ package com.considlia.survey.ui.custom_component.question_with_button;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.considlia.survey.model.RatioQuestion;
 import com.considlia.survey.ui.CreateSurveyView;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.radiobutton.RadioGroupVariant;
@@ -15,13 +16,12 @@ public class RatioQuestionWithButtons extends QuestionWithButtons {
   private RadioButtonGroup<String> radioOptions;
   private List<String> options = new ArrayList<>();
 
-  public RatioQuestionWithButtons(String question, CreateSurveyView survey, boolean mandatory,
-      String start, String end, int choices) {
-    super(question, survey, mandatory);
+  public RatioQuestionWithButtons(RatioQuestion question, CreateSurveyView survey) {
+    super(question, survey);
 
-    setStart(start);
-    setEnd(end);
-    setChoices(choices);
+    setStart(question.getStart());
+    setEnd(question.getEnd());
+    setChoices(question.getChoices());
 
     for (int i = 1; i <= choices; i++) {
       if (i == 1) {

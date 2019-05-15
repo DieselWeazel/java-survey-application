@@ -28,7 +28,7 @@ public class SurveyResponses {
 
   @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   @JoinColumn(name = "response_id")
-  @OrderBy("position ASC")
+  @OrderBy("question_question_id ASC")
   private Set<Answers> answers = new HashSet<>();
 
   public SurveyResponses() {}

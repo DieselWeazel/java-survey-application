@@ -2,7 +2,9 @@ package com.considlia.survey.ui;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import com.considlia.survey.model.MultiQuestion;
 import com.considlia.survey.model.MultiQuestionAlternative;
 import com.considlia.survey.model.Question;
@@ -182,7 +184,6 @@ public class CreateSurveyView extends BaseView
         userCreationQuestion(QuestionType.CHECKBOX);
       } else if (event.getValue().equalsIgnoreCase("Ratio Question")) {
         userCreationQuestion(QuestionType.RATIO);
-
       }
 
       if (questionTitleTextField.isEmpty()) {
@@ -191,7 +192,6 @@ public class CreateSurveyView extends BaseView
     });
 
     mandatory = new Checkbox("Mandatory Question");
-
   }
 
   public void initLayout() {
@@ -215,23 +215,23 @@ public class CreateSurveyView extends BaseView
 
     switch (questionType) {
       case TEXTFIELD:
-        questions.add(new TextQuestionWithButtons(questionTitleTextField.getValue(), this,
-            mandatory.getValue()));
+        questions.add(QuestionFactory.createQuestion(questionTitleTextField.getValue(),
+            questionType, mandatory.getValue(), this));
         break;
       case RADIO:
-        questions.add(new MultiQuestionWithButtons(questionTitleTextField.getValue(), this,
-            createAlternative.getAlternativeList(), QuestionType.RADIO, mandatory.getValue()));
+        questions.add(QuestionFactory.createQuestion(questionTitleTextField.getValue(),
+            questionType, mandatory.getValue(), createAlternative.getAlternativeList(), this));
         extraComponents.remove(createAlternative);
         break;
       case CHECKBOX:
-        questions.add(new MultiQuestionWithButtons(questionTitleTextField.getValue(), this,
-            createAlternative.getAlternativeList(), QuestionType.CHECKBOX, mandatory.getValue()));
+        questions.add(QuestionFactory.createQuestion(questionTitleTextField.getValue(),
+            questionType, mandatory.getValue(), createAlternative.getAlternativeList(), this));
         extraComponents.remove(createAlternative);
         break;
       case RATIO:
-        questions.add(new RatioQuestionWithButtons(questionTitleTextField.getValue(), this,
-            mandatory.getValue(), createRatioComponents.getLowerLimit(),
-            createRatioComponents.getUperLimit(), createRatioComponents.getStepperValue()));
+        questions.add(QuestionFactory.createQuestion(questionTitleTextField.getValue(),
+            questionType, mandatory.getValue(), createRatioComponents.getLowerLimit(),
+            createRatioComponents.getUperLimit(), createRatioComponents.getStepperValue(), this));
         extraComponents.remove(createRatioComponents);
         break;
       case TEXTAREA:
@@ -296,8 +296,16 @@ public class CreateSurveyView extends BaseView
         break;
       case RADIO:
       case CHECKBOX:
-        addQuestionButton.setEnabled(
-            !createAlternative.getAlternativeList().isEmpty() && !questionTitleTextField.isEmpty());
+        if (questionType == QuestionType.RADIO
+            && createAlternative.getAlternativeList().size() <= 1) {
+          addQuestionButton.setEnabled(false);
+        } else {
+          Set<String> set = new LinkedHashSet<>();
+          set.addAll(createAlternative.getAlternativeList());
+          addQuestionButton.setEnabled(
+              !createAlternative.getAlternativeList().isEmpty() && !questionTitleTextField.isEmpty()
+                  && createAlternative.getAlternativeList().size() == set.size());
+        }
         break;
       default:
         addQuestionButton.setEnabled(false);
@@ -306,7 +314,6 @@ public class CreateSurveyView extends BaseView
 
   // Move question in questions container
   public void moveQuestion(Button button, int moveDirection) {
-
     questions.replace(button.getParent().get().getParent().get(), questions.getComponentAt(
         questions.indexOf(button.getParent().get().getParent().get()) + moveDirection));
     hasChanges = true;
@@ -327,12 +334,10 @@ public class CreateSurveyView extends BaseView
 
   // Save survey with questions to database
   public void saveSurvey() {
-    thisSurvey.getQuestions().clear();
-    QuestionFactory qf = new QuestionFactory();
-
     for (int position = 0; position < questions.getComponentCount(); position++) {
-      Question question = qf.createQuestion(questions.getComponentAt(position), position);
-      thisSurvey.getQuestions().add(question);
+      QuestionWithButtons question = (QuestionWithButtons) questions.getComponentAt(position);
+      question.getQuestion().setPosition(position);
+      thisSurvey.addQuestion(question.getQuestion());
     }
 
     thisSurvey.setCreator(creatorNameTextField.getValue());
@@ -392,7 +397,7 @@ public class CreateSurveyView extends BaseView
 
       for (Question q : thisSurvey.getQuestions()) {
         if (q instanceof TextQuestion) {
-          questions.add(new TextQuestionWithButtons(q.getTitle(), this, q.isMandatory()));
+          questions.add(new TextQuestionWithButtons((TextQuestion) q, this));
         } else if (q instanceof MultiQuestion) {
           MultiQuestion mq = (MultiQuestion) q;
 
@@ -400,19 +405,17 @@ public class CreateSurveyView extends BaseView
           for (MultiQuestionAlternative mqa : mq.getAlternatives()) {
             stringAlternatives.add(mqa.getTitle());
           }
-          questions.add(new MultiQuestionWithButtons(mq.getTitle(), this, stringAlternatives,
-              mq.getQuestionType(), mq.isMandatory()));
+          questions.add(new MultiQuestionWithButtons(mq, this, stringAlternatives));
+
         } else if (q instanceof RatioQuestion) {
-          questions.add(new RatioQuestionWithButtons(q.getTitle(), this, q.isMandatory(),
-              ((RatioQuestion) q).getStart(), ((RatioQuestion) q).getEnd(),
-              ((RatioQuestion) q).getChoices()));
+          RatioQuestion rq = (RatioQuestion) q;
+          questions.add(new RatioQuestionWithButtons(rq, this));
         }
       }
       submitSurveyButton.setText("Save Survey");
       updateMoveButtonStatus();
       thisSurvey.getQuestions().clear();
       checkFilledFields();
-      hasChanges = false;
     }
   }
 
@@ -432,5 +435,4 @@ public class CreateSurveyView extends BaseView
       dialog.open();
     }
   }
-
 }
