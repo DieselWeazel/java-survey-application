@@ -1,3 +1,4 @@
+
 package com.considlia.survey.model;
 
 import java.util.List;
@@ -43,5 +44,4 @@ public class QuestionFactory {
     question.setQuestionType(type);
     question.setMandatory(mandatory);
   }
-
 }

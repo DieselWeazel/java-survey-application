@@ -16,6 +16,7 @@ import com.considlia.survey.repositories.SurveyRepository;
 import com.considlia.survey.ui.custom_component.ConfirmDialog;
 import com.considlia.survey.ui.custom_component.CreateAlternative;
 import com.considlia.survey.ui.custom_component.CreateRatioComponents;
+import com.considlia.survey.ui.custom_component.CreateTextComponents;
 import com.considlia.survey.ui.custom_component.EditDialog;
 import com.considlia.survey.ui.custom_component.QuestionType;
 import com.considlia.survey.ui.custom_component.question_with_button.MultiQuestionWithButtons;
@@ -74,6 +75,7 @@ public class CreateSurveyView extends BaseView
   private SurveyRepository surveyRepository;
   private CreateAlternative createAlternative;
   private CreateRatioComponents createRatioComponents;
+  private CreateTextComponents createTextComponents;
 
   public CreateSurveyView(SurveyRepository surveyRepository) {
     super("Create Survey");
@@ -157,6 +159,7 @@ public class CreateSurveyView extends BaseView
         addQuestionButton.setEnabled(false);
       } else if (selectOptions.getValue().equalsIgnoreCase("Text question")
           && !questionTitleTextField.getValue().isEmpty()) {
+
         userCreationQuestion(QuestionType.TEXTFIELD);
       } else if ((selectOptions.getValue().equalsIgnoreCase("Radio Question")
           && !questionTitleTextField.getValue().isEmpty())) {
@@ -213,8 +216,15 @@ public class CreateSurveyView extends BaseView
 
     switch (questionType) {
       case TEXTFIELD:
-        questions.add(QuestionFactory.createQuestion(questionTitleTextField.getValue(),
-            questionType, mandatory.getValue(), this));
+        if (createTextComponents.getRadioButtons().getValue() == "Textfield") {
+          questions.add(QuestionFactory.createQuestion(questionTitleTextField.getValue(),
+              QuestionType.TEXTFIELD, mandatory.getValue(), this));
+        } else if (createTextComponents.getRadioButtons().getValue() == "Textarea") {
+          questions.add(QuestionFactory.createQuestion(questionTitleTextField.getValue(),
+              QuestionType.TEXTAREA, mandatory.getValue(), this));
+        }
+        createTextComponents.getRadioButtons().clear();
+        extraComponents.remove(createTextComponents);
         break;
       case RADIO:
         questions.add(QuestionFactory.createQuestion(questionTitleTextField.getValue(),
@@ -232,7 +242,7 @@ public class CreateSurveyView extends BaseView
             createRatioComponents.getUperLimit(), createRatioComponents.getStepperValue(), this));
         extraComponents.remove(createRatioComponents);
         break;
-      case TEXTAREA:
+      default:
         break;
 
     }
@@ -275,6 +285,11 @@ public class CreateSurveyView extends BaseView
       }
       createAlternative.setQuestionType(questionType);
       extraComponents.add(createAlternative);
+    } else if (questionType == QuestionType.TEXTFIELD) {
+      if (createTextComponents == null) {
+        createTextComponents = new CreateTextComponents(this);
+      }
+      extraComponents.add(createTextComponents);
     }
 
     this.questionType = questionType;
@@ -284,11 +299,13 @@ public class CreateSurveyView extends BaseView
   public void changeBtn() {
     switch (questionType) {
       case TEXTFIELD:
-        addQuestionButton.setEnabled(!questionTitleTextField.isEmpty());
+        addQuestionButton.setEnabled(!questionTitleTextField.isEmpty()
+            && createTextComponents.getRadioButtons().getValue() != null);
         break;
       case RATIO:
         addQuestionButton
             .setEnabled(!createRatioComponents.isLimitEmpty() && !questionTitleTextField.isEmpty());
+
         break;
       case RADIO:
       case CHECKBOX:
