@@ -267,6 +267,7 @@ public class CreateSurveyView extends BaseView
 
     addQuestionContainer.setVisible(true);
     addQuestionButton.setEnabled(false);
+    mandatory.setValue(false);
   }
 
   public void userCreationQuestion(QuestionType questionType) {
