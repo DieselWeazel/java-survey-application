@@ -159,7 +159,6 @@ public class CreateSurveyView extends BaseView
         addQuestionButton.setEnabled(false);
       } else if (selectOptions.getValue().equalsIgnoreCase("Text question")
           && !questionTitleTextField.getValue().isEmpty()) {
-
         userCreationQuestion(QuestionType.TEXTFIELD);
       } else if ((selectOptions.getValue().equalsIgnoreCase("Radio Question")
           && !questionTitleTextField.getValue().isEmpty())) {
@@ -271,7 +270,6 @@ public class CreateSurveyView extends BaseView
   }
 
   public void userCreationQuestion(QuestionType questionType) {
-
     // Clears the extraComponentLayout
     extraComponents.removeAll();
 
@@ -425,6 +423,7 @@ public class CreateSurveyView extends BaseView
       updateMoveButtonStatus();
       thisSurvey.getQuestions().clear();
       checkFilledFields();
+      hasChanges = false;
     }
   }
 
