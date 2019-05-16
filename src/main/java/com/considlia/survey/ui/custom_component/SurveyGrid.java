@@ -2,6 +2,7 @@ package com.considlia.survey.ui.custom_component;
 
 import com.considlia.survey.model.Survey;
 import com.considlia.survey.repositories.SurveyRepository;
+import com.considlia.survey.security.CustomUserService;
 import com.considlia.survey.ui.CreateSurveyView;
 import com.considlia.survey.ui.HomeView;
 import com.considlia.survey.ui.ShowSurveyView;
@@ -21,6 +22,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.BiFunction;
+import java.util.function.Consumer;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /*
 isHome shows if Home or not, always add according to if (isHome) or not.
@@ -40,17 +43,28 @@ public class SurveyGrid extends VerticalLayout {
 
   private SurveyRepository surveyRepository;
 
+  @Autowired
+  private CustomUserService customUserService;
+
+  private Consumer surveyGridConsumer;
+  private boolean isHome = false;
+
   public SurveyGrid(
       Class viewingLayout, SurveyRepository surveyRepository, List<Survey> surveyList) {
-    final boolean isHome = HomeView.class.equals(viewingLayout);
+    isHome = HomeView.class.equals(viewingLayout);
     grid = new Grid<>();
     this.surveyRepository = surveyRepository;
     this.surveyList = surveyList;
-    generateGridColumns(isHome);
+    //TODO Nullpointer or?
+    this.customUserService = customUserService;
+    generateGridColumns();
     grid.setItems(surveyList);
   }
 
-  private void generateGridColumns(boolean isHome) {
+  private static void setGridData(Object o) {
+  }
+
+  private void generateGridColumns() {
     idColumn = grid.addColumn(Survey::getId).setHeader("Id").setWidth("3%");
     titleColumn = grid.addColumn(Survey::getTitle).setHeader("Title").setFlexGrow(4);
 
@@ -58,9 +72,9 @@ public class SurveyGrid extends VerticalLayout {
     grid.addComponentColumn(item -> showDescription(item)).setWidth("1%");
     grid.setItemDetailsRenderer(
         TemplateRenderer.<Survey>of(
-                "<div style='border: 1px solid gray; padding: 10px; width: 100%;box-sizing: border-box;'>"
-                    + "<div> <b>[[item.description]]</b></div>"
-                    + "</div>")
+            "<div style='border: 1px solid gray; padding: 10px; width: 100%;box-sizing: border-box;'>"
+                + "<div> <b>[[item.description]]</b></div>"
+                + "</div>")
             .withProperty("description", Survey::getDescription)
             .withEventHandler(
                 "handleClick",
@@ -74,16 +88,16 @@ public class SurveyGrid extends VerticalLayout {
     dateColumn = grid.addColumn(Survey::getDate).setHeader("Date");
 
     // Init Buttons, adds correct
-    grid.addComponentColumn(item -> showButtons(grid, item, isHome));
+    grid.addComponentColumn(item -> showButtons(grid, item));
     grid.setDetailsVisibleOnClick(false);
     grid.setSelectionMode(Grid.SelectionMode.NONE);
 
     add(grid);
     filterRow = grid.appendHeaderRow();
-    createFilterFields(isHome);
+    createFilterFields();
   }
 
-  private void createFilterFields(boolean isHome) {
+  private void createFilterFields() {
     // ID filter
     idField = createFilterField(filterRow, idColumn);
     idField.addValueChangeListener(
@@ -156,7 +170,15 @@ public class SurveyGrid extends VerticalLayout {
     return new HorizontalLayout(info);
   }
 
-  private Component showButtons(Grid<Survey> grid, Survey item, boolean isHome) {
+  private void setGridData(){
+    if (!isHome){
+      surveyList = surveyRepository.findAllByUserId(customUserService.getId());
+    } else {
+      surveyList = surveyRepository.findAll();
+    }
+  }
+
+  private Component showButtons(Grid<Survey> grid, Survey item) {
     Button showSurvey =
         new Button(
             new Icon(VaadinIcon.EYE),

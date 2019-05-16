@@ -26,7 +26,6 @@ public class CustomUserService extends User {
       String username = ((UserDetails) principal).getUsername();
 
       user = userRepository.findByUsername(username);
-
       return user;
     }
     return user;

@@ -2,9 +2,9 @@ package com.considlia.survey.ui.UserViews;
 
 import com.considlia.survey.model.Role;
 import com.considlia.survey.model.Survey;
-import com.considlia.survey.model.User;
 import com.considlia.survey.repositories.SurveyRepository;
 import com.considlia.survey.repositories.UserRepository;
+import com.considlia.survey.security.CustomUserService;
 import com.considlia.survey.ui.BaseView;
 import com.considlia.survey.ui.MainLayout;
 import com.considlia.survey.ui.custom_component.SurveyGrid;
@@ -14,8 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 
 @Route(value = "profileview", layout = MainLayout.class)
 @Secured({Role.USER, Role.ADMIN})
@@ -24,25 +22,30 @@ public class MyProfileView extends BaseView {
   private SurveyGrid surveyGrid;
 
   private SurveyRepository surveyRepository;
-  @Autowired private UserRepository userRepository;
 
-  public MyProfileView(SurveyRepository surveyRepository, UserRepository userRepository) {
+  @Autowired
+  private UserRepository userRepository;
+
+  @Autowired
+  private CustomUserService customUserService;
+
+  public MyProfileView(
+      SurveyRepository surveyRepository,
+      UserRepository userRepository,
+      CustomUserService customUserService) {
     super("My Profile");
     this.userRepository = userRepository;
-    Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    this.customUserService = customUserService;
 
-    if (principal instanceof UserDetails) {
-      String username = ((UserDetails) principal).getUsername();
-      add(new H3(username));
+    /*
+    does not show username as of now?
+     */
+    add(new H3(customUserService.getUsername()));
+    List<Survey> userSurveyList = new ArrayList<>();
+    userSurveyList = surveyRepository.findAllByUserId(customUserService.getUser().getId());
 
-      User user = userRepository.findByUsername(username);
-
-      List<Survey> userSurveyList = new ArrayList<>();
-      userSurveyList = surveyRepository.findAllByUserId(user.getId());
-
-      this.surveyRepository = surveyRepository;
-      surveyGrid = new SurveyGrid(this.getClass(), surveyRepository, userSurveyList);
-      add(surveyGrid);
-    }
+    this.surveyRepository = surveyRepository;
+    surveyGrid = new SurveyGrid(this.getClass(), surveyRepository, userSurveyList);
+    add(surveyGrid);
   }
 }
