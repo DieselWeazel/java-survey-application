@@ -170,12 +170,12 @@ public class SurveyGrid extends VerticalLayout {
     return new HorizontalLayout(info);
   }
 
-  private void setGridData(){
-    if (!isHome){
-      surveyList = surveyRepository.findAllByUserId(customUserService.getId());
-    } else {
-      surveyList = surveyRepository.findAll();
-    }
+  private void updateGridData(Survey survey){
+    surveyRepository.delete(survey);
+    //TODO nullpointerexception:
+    surveyList.remove(survey);
+    surveyRepository.delete(survey);
+    grid.setItems(surveyList);
   }
 
   private Component showButtons(Grid<Survey> grid, Survey item) {
@@ -199,9 +199,7 @@ public class SurveyGrid extends VerticalLayout {
                   new ConfirmDialog(
                       "Confirm delete",
                       "Are you sure you want to delete the item?",
-                      surveyRepository,
-                      surveyList,
-                      grid,
+                      this::updateGridData,
                       item);
             });
     if (isHome) {
@@ -210,4 +208,6 @@ public class SurveyGrid extends VerticalLayout {
       return new HorizontalLayout(showSurvey, editSurvey, deleteSurvey);
     }
   }
+
+
 }

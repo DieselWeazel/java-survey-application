@@ -13,17 +13,25 @@ import com.vaadin.flow.component.html.H5;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.router.BeforeLeaveEvent.ContinueNavigationAction;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class ConfirmDialog extends Dialog {
 
   private Button cancelBtn;
+//  public ConfirmDialog(
+//  String confirm_delete,
+//  String s
+//  , Object o
+//  , SurveyRepository surveyRepository
+//  , List<Survey> surveyList,
+//  Grid<Survey> grid,
+//  Survey item) {
 
   public ConfirmDialog(
       String headerText,
       String contentText,
-      SurveyRepository surveyRepository,
-      List<Survey> surveyList,
-      Grid<Survey> grid,
+      Consumer <Survey> consumer,
       Survey item) {
     setCloseOnEsc(false);
     setCloseOnOutsideClick(false);
@@ -34,10 +42,7 @@ public class ConfirmDialog extends Dialog {
         new Button(
             "Confirm",
             onConfirm -> {
-              //              surveyRepository.deleteById(item.getId());
-              surveyRepository.delete(item);
-              surveyList.remove(item);
-              grid.setItems(surveyList);
+              consumer.accept(item);
               close();
             });
 
@@ -95,6 +100,7 @@ public class ConfirmDialog extends Dialog {
     add(new HorizontalLayout(cancelBtn, confirmBtn));
     open();
   }
+
 
   public void initCancelBtn() {
     cancelBtn =

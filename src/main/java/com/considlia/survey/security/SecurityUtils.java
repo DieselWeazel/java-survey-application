@@ -21,6 +21,7 @@ public class SecurityUtils {
   private SecurityUtils() {}
 
   public static boolean hasAccess(Class securedClass) {
+    // TODO might be redundant?
     final boolean allowedViews =
         LoginView.class.equals(securedClass)
             || HomeView.class.equals(securedClass)
@@ -30,6 +31,7 @@ public class SecurityUtils {
     if (allowedViews) {
       return true;
     }
+    // TODO ^
 
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 

@@ -88,6 +88,7 @@ public class RegistrationView extends BaseView {
     this.userBinder = new Binder<>(User.class);
     this.user = new User();
 
+    // TODO add (catch DataIntegrityViolationException e) doStuff
     submitButton.addClickListener(
         e -> {
           try {

@@ -6,6 +6,7 @@ import com.considlia.survey.ui.BaseView;
 import com.considlia.survey.ui.HomeView;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
@@ -29,21 +30,16 @@ public class LoginView extends BaseView {
   private Button submitButton;
 
   // -- Backend Components --
-  @Autowired private AuthenticationManager authenticationManagerBean;
+  @Autowired
+  private AuthenticationManager authenticationManagerBean;
 
   private VerticalLayout loginView;
 
-  private SurveyRepository surveyRepository;
-  private UserRepository userRepository;
 
   public LoginView(
-      AuthenticationManager authenticationManagerBean,
-      SurveyRepository surveyRepository,
-      UserRepository userRepository) {
+      AuthenticationManager authenticationManagerBean) {
     super("Login");
     this.authenticationManagerBean = authenticationManagerBean;
-    this.surveyRepository = surveyRepository;
-    this.userRepository = userRepository;
     username = new TextField();
     password = new PasswordField();
     submitButton = new Button("Login");
@@ -74,6 +70,7 @@ public class LoginView extends BaseView {
       Authentication result = authenticationManagerBean.authenticate(request);
       SecurityContextHolder.getContext().setAuthentication(result);
     } catch (BadCredentialsException e) {
+      Notification.show("Error, Bad Credentials!");
       return false;
     }
     return true;
