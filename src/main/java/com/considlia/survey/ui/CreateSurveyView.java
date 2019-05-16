@@ -222,7 +222,6 @@ public class CreateSurveyView extends BaseView
           questions.add(QuestionFactory.createQuestion(questionTitleTextField.getValue(),
               QuestionType.TEXTAREA, mandatory.getValue(), this));
         }
-        createTextComponents.getRadioButtons().clear();
         extraComponents.remove(createTextComponents);
         break;
       case RADIO:
@@ -258,6 +257,10 @@ public class CreateSurveyView extends BaseView
       createRatioComponents.resetParts();
       createRatioComponents = null;
       questionType = null;
+    }
+    if (createTextComponents != null) {
+      createTextComponents.clearRadioButtons();
+      createTextComponents = null;
     }
 
     questionTitleTextField.setValue("");

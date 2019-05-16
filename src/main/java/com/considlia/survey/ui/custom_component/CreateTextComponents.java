@@ -28,4 +28,10 @@ public class CreateTextComponents extends VerticalLayout {
     return radioButtons;
   }
 
+  public void clearRadioButtons() {
+    System.out.println("Inne i Clear buttons");
+    // radioButtons.setValue("");
+    radioButtons.clear();
+  }
+
 }
