@@ -24,8 +24,7 @@ public class MyProfileView extends BaseView {
   private SurveyGrid surveyGrid;
 
   private SurveyRepository surveyRepository;
-  @Autowired
-  private UserRepository userRepository;
+  @Autowired private UserRepository userRepository;
 
   public MyProfileView(SurveyRepository surveyRepository, UserRepository userRepository) {
     super("My Profile");
@@ -40,7 +39,6 @@ public class MyProfileView extends BaseView {
 
       List<Survey> userSurveyList = new ArrayList<>();
       userSurveyList = surveyRepository.findAllByUserId(user.getId());
-
 
       this.surveyRepository = surveyRepository;
       surveyGrid = new SurveyGrid(this.getClass(), surveyRepository, userSurveyList);

@@ -1,19 +1,15 @@
 package com.considlia.survey.ui;
 
-import com.considlia.survey.model.Role;
-import com.considlia.survey.model.User;
-import com.considlia.survey.repositories.UserRepository;
-import com.considlia.survey.security.SecurityUtils;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import com.considlia.survey.model.MultiQuestion;
 import com.considlia.survey.model.MultiQuestionAlternative;
 import com.considlia.survey.model.Question;
 import com.considlia.survey.model.QuestionFactory;
+import com.considlia.survey.model.Role;
 import com.considlia.survey.model.Survey;
 import com.considlia.survey.model.TextQuestion;
+import com.considlia.survey.model.User;
 import com.considlia.survey.repositories.SurveyRepository;
+import com.considlia.survey.repositories.UserRepository;
 import com.considlia.survey.ui.custom_component.ConfirmDialog;
 import com.considlia.survey.ui.custom_component.CreateAlternative;
 import com.considlia.survey.ui.custom_component.EditDialog;
@@ -39,10 +35,11 @@ import com.vaadin.flow.router.BeforeLeaveObserver;
 import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.OptionalParameter;
 import com.vaadin.flow.router.Route;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -367,11 +364,11 @@ public class CreateSurveyView extends BaseView
     We now save Survey to the User instead.
      */
     User user = userRepository.findByUsername(creatorNameTextField.getValue());
-//    user.getSurveys().add(thisSurvey);
+    //    user.getSurveys().add(thisSurvey);
 
     thisSurvey.setUser(user);
     surveyRepository.save(thisSurvey);
-//    userRepository.save(user);
+    //    userRepository.save(user);
 
     hasChanges = false;
     getUI().ifPresent(ui -> ui.navigate(""));

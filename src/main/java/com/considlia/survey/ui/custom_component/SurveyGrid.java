@@ -1,9 +1,7 @@
 package com.considlia.survey.ui.custom_component;
 
 import com.considlia.survey.model.Survey;
-import com.considlia.survey.model.User;
 import com.considlia.survey.repositories.SurveyRepository;
-import com.considlia.survey.repositories.UserRepository;
 import com.considlia.survey.ui.CreateSurveyView;
 import com.considlia.survey.ui.HomeView;
 import com.considlia.survey.ui.ShowSurveyView;
@@ -23,10 +21,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.BiFunction;
-import javax.annotation.PostConstruct;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 
 /*
 isHome shows if Home or not, always add according to if (isHome) or not.
@@ -46,7 +40,8 @@ public class SurveyGrid extends VerticalLayout {
 
   private SurveyRepository surveyRepository;
 
-  public SurveyGrid(Class viewingLayout, SurveyRepository surveyRepository, List<Survey> surveyList) {
+  public SurveyGrid(
+      Class viewingLayout, SurveyRepository surveyRepository, List<Survey> surveyList) {
     final boolean isHome = HomeView.class.equals(viewingLayout);
     grid = new Grid<>();
     this.surveyRepository = surveyRepository;
@@ -87,7 +82,6 @@ public class SurveyGrid extends VerticalLayout {
     filterRow = grid.appendHeaderRow();
     createFilterFields(isHome);
   }
-
 
   private void createFilterFields(boolean isHome) {
     // ID filter

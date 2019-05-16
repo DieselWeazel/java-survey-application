@@ -5,11 +5,9 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
@@ -46,11 +44,14 @@ public class User {
 
   @NotBlank private String role;
 
-  // If User doesn't delete its child entity (Surveys) when User is deleted, we might need a Service class for this.
-  // Have not tried removing Users within Java/Hibernate, but removing them in SQL leaves the surveys. (Might be redundant of me writing this but
-  // I faced so many issues with this bit prior to this solution, deleting a Survey would delete the User, caused by fetchtype eager,
+  // If User doesn't delete its child entity (Surveys) when User is deleted, we might need a Service
+  // class for this.
+  // Have not tried removing Users within Java/Hibernate, but removing them in SQL leaves the
+  // surveys. (Might be redundant of me writing this but
+  // I faced so many issues with this bit prior to this solution, deleting a Survey would delete the
+  // User, caused by fetchtype eager,
   // SO I live this note here since this issue might come up in the future.
-  @OneToMany(cascade=CascadeType.ALL, orphanRemoval = true, mappedBy="user")
+  @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user")
   private Set<Survey> surveys = new HashSet<>();
 
   /*
