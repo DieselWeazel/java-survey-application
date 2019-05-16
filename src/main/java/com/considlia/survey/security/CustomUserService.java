@@ -17,6 +17,10 @@ public class CustomUserService extends User {
     this.userRepository = userRepository;
   }
 
+  /**
+   * In order to retrieve User info, this service gathers more than just the username/password.
+   * @return currently logged in User for use as User Object
+   */
   public User getUser(){
     Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     User user = new User();

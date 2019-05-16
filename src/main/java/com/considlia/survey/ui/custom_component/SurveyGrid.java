@@ -1,7 +1,9 @@
 package com.considlia.survey.ui.custom_component;
 
 import com.considlia.survey.model.Survey;
+import com.considlia.survey.model.User;
 import com.considlia.survey.repositories.SurveyRepository;
+import com.considlia.survey.repositories.UserRepository;
 import com.considlia.survey.security.CustomUserService;
 import com.considlia.survey.ui.CreateSurveyView;
 import com.considlia.survey.ui.HomeView;
@@ -23,6 +25,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
+import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /*
@@ -46,22 +49,38 @@ public class SurveyGrid extends VerticalLayout {
   @Autowired
   private CustomUserService customUserService;
 
-  private Consumer surveyGridConsumer;
+  @Autowired
+  private UserRepository userRepository;
   private boolean isHome = false;
 
   public SurveyGrid(
-      Class viewingLayout, SurveyRepository surveyRepository, List<Survey> surveyList) {
+      Class viewingLayout, SurveyRepository surveyRepository) {
     isHome = HomeView.class.equals(viewingLayout);
-    grid = new Grid<>();
     this.surveyRepository = surveyRepository;
-    this.surveyList = surveyList;
-    //TODO Nullpointer or?
-    this.customUserService = customUserService;
-    generateGridColumns();
-    grid.setItems(surveyList);
+    this.surveyList = new ArrayList<>();
+    init();
   }
 
-  private static void setGridData(Object o) {
+  public SurveyGrid(
+      Class viewingLayout, SurveyRepository surveyRepository, CustomUserService customUserService) {
+    isHome = HomeView.class.equals(viewingLayout);
+    this.surveyRepository = surveyRepository;
+    this.customUserService = customUserService;
+    this.surveyList = new ArrayList<>();
+    init();
+  }
+
+  @PostConstruct
+  public void init(){
+    grid = new Grid<>();
+    surveyList = surveyRepository.findAll();
+    if (!isHome){
+      surveyList = surveyRepository.findAllByUserId(customUserService.getUser().getId());
+    }
+//    //TODO Nullpointer or?
+//    this.customUserService = customUserService;
+    generateGridColumns();
+    grid.setItems(surveyList);
   }
 
   private void generateGridColumns() {
@@ -88,7 +107,7 @@ public class SurveyGrid extends VerticalLayout {
     dateColumn = grid.addColumn(Survey::getDate).setHeader("Date");
 
     // Init Buttons, adds correct
-    grid.addComponentColumn(item -> showButtons(grid, item));
+    grid.addComponentColumn(item -> showButtons(item));
     grid.setDetailsVisibleOnClick(false);
     grid.setSelectionMode(Grid.SelectionMode.NONE);
 
@@ -172,13 +191,10 @@ public class SurveyGrid extends VerticalLayout {
 
   private void updateGridData(Survey survey){
     surveyRepository.delete(survey);
-    //TODO nullpointerexception:
-    surveyList.remove(survey);
-    surveyRepository.delete(survey);
-    grid.setItems(surveyList);
+    grid.setItems(surveyList = surveyRepository.findAllByUserId(customUserService.getId()));
   }
 
-  private Component showButtons(Grid<Survey> grid, Survey item) {
+  private Component showButtons(Survey item) {
     Button showSurvey =
         new Button(
             new Icon(VaadinIcon.EYE),

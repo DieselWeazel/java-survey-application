@@ -21,18 +21,19 @@ public class MyProfileView extends BaseView {
 
   private SurveyGrid surveyGrid;
 
+  @Autowired
   private SurveyRepository surveyRepository;
 
   @Autowired
   private UserRepository userRepository;
 
-  @Autowired
+//  @Autowired
   private CustomUserService customUserService;
 
+  @Autowired
   public MyProfileView(
       SurveyRepository surveyRepository,
-      UserRepository userRepository,
-      CustomUserService customUserService) {
+      UserRepository userRepository, CustomUserService customUserService) {
     super("My Profile");
     this.userRepository = userRepository;
     this.customUserService = customUserService;
@@ -41,11 +42,9 @@ public class MyProfileView extends BaseView {
     does not show username as of now?
      */
     add(new H3(customUserService.getUsername()));
-    List<Survey> userSurveyList = new ArrayList<>();
-    userSurveyList = surveyRepository.findAllByUserId(customUserService.getUser().getId());
 
     this.surveyRepository = surveyRepository;
-    surveyGrid = new SurveyGrid(this.getClass(), surveyRepository, userSurveyList);
+    surveyGrid = new SurveyGrid(this.getClass(), surveyRepository, customUserService);
     add(surveyGrid);
   }
 }

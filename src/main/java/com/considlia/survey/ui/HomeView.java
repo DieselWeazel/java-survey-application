@@ -10,15 +10,14 @@ import java.util.List;
 public class HomeView extends BaseView {
 
   private SurveyGrid surveyGrid;
-  private List<Survey> surveyList;
 
   private SurveyRepository surveyRepository;
 
   public HomeView(SurveyRepository surveyRepository) {
     super("Home");
     this.surveyRepository = surveyRepository;
-    surveyList = surveyRepository.findAll();
-    surveyGrid = new SurveyGrid(this.getClass(), surveyRepository, surveyList);
+
+    surveyGrid = new SurveyGrid(this.getClass(), surveyRepository);
     add(surveyGrid);
   }
 }

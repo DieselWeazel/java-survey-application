@@ -19,14 +19,6 @@ import java.util.function.Function;
 public class ConfirmDialog extends Dialog {
 
   private Button cancelBtn;
-//  public ConfirmDialog(
-//  String confirm_delete,
-//  String s
-//  , Object o
-//  , SurveyRepository surveyRepository
-//  , List<Survey> surveyList,
-//  Grid<Survey> grid,
-//  Survey item) {
 
   public ConfirmDialog(
       String headerText,
