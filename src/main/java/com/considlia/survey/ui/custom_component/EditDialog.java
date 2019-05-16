@@ -1,5 +1,7 @@
 package com.considlia.survey.ui.custom_component;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.considlia.survey.model.MultiQuestionAlternative;
 import com.considlia.survey.ui.custom_component.question_with_button.MultiQuestionWithButtons;
 import com.considlia.survey.ui.custom_component.question_with_button.TextQuestionWithButtons;
@@ -12,8 +14,6 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
-import java.util.ArrayList;
-import java.util.List;
 
 public class EditDialog extends Dialog {
 
@@ -40,6 +40,7 @@ public class EditDialog extends Dialog {
       textQuestion();
     } else {
       radioQuestion();
+
     }
 
     footer.add(new HorizontalLayout(new Button("Cancel", onCancel -> close()), confirm));
@@ -49,34 +50,34 @@ public class EditDialog extends Dialog {
   public void textQuestion() {
     TextQuestionWithButtons choosenQuestion =
         (TextQuestionWithButtons) inputButton.getParent().get().getParent().get();
-    question.setValue(choosenQuestion.getQuestion());
-    mandatory.setValue(choosenQuestion.isMandatory());
+    question.setValue(choosenQuestion.getQuestion().getTitle());
+    mandatory.setValue(choosenQuestion.getQuestion().isMandatory());
 
     confirm = new Button("Confirm");
-    confirm.addClickListener(
-        onConfirm -> {
-          choosenQuestion.setMandatory(mandatory.getValue());
-          choosenQuestion.setQuestion(question.getValue());
+    confirm.addClickListener(onConfirm -> {
+      choosenQuestion.getQuestion().setMandatory(mandatory.getValue());
+      choosenQuestion.getQuestion().setTitle(question.getValue());
+      choosenQuestion.setTitleInUI();
 
-          close();
-        });
+      close();
+    });
+
   }
 
   public void radioQuestion() {
     MultiQuestionWithButtons choosenQuestion =
         (MultiQuestionWithButtons) inputButton.getParent().get().getParent().get();
-    question.setValue(choosenQuestion.getQuestion());
-    mandatory.setValue(choosenQuestion.isMandatory());
+    question.setValue(choosenQuestion.getQuestion().getTitle());
+    mandatory.setValue(choosenQuestion.getQuestion().isMandatory());
 
     List<MultiQuestionAlternative> alternativeList = new ArrayList<>();
-    for (MultiQuestionAlternative alternative : choosenQuestion.getAlternatives()) {
+    for (MultiQuestionAlternative alternative : choosenQuestion.getQuestion().getAlternatives()) {
       alternativeList.add(alternative);
     }
 
     // Sorting the list after the position index
-    alternativeList.sort(
-        (MultiQuestionAlternative m1, MultiQuestionAlternative m2) ->
-            m1.getPosition() - m2.getPosition());
+    alternativeList.sort((MultiQuestionAlternative m1,
+        MultiQuestionAlternative m2) -> m1.getPosition() - m2.getPosition());
 
     for (MultiQuestionAlternative alternative : alternativeList) {
       addNewTextField(alternative.getTitle());
@@ -84,26 +85,28 @@ public class EditDialog extends Dialog {
 
     footer.add(new Button(new Icon(VaadinIcon.PLUS_CIRCLE), event -> addNewTextField(null)));
     confirm = new Button("Confirm");
-    confirm.addClickListener(
-        onConfirm -> {
-          choosenQuestion.setMandatory(mandatory.getValue());
-          choosenQuestion.setQuestion(question.getValue());
+    confirm.addClickListener(onConfirm -> {
+      choosenQuestion.getQuestion().setMandatory(mandatory.getValue());
+      choosenQuestion.getQuestion().setTitle(question.getValue());
+      choosenQuestion.setTitleInUI();
 
-          List<String> strings = new ArrayList<>();
-          for (TextField txt : textFieldList) {
-            if (!txt.getValue().trim().equals("")) {
-              strings.add(txt.getValue());
-            }
-          }
-          if (!strings.isEmpty()) {
-            choosenQuestion.setStringAlternatives(strings);
-            close();
-          } else {
-            Dialog info = new Dialog();
-            info.open();
-            info.add("Need to have at least 1 alternative");
-          }
-        });
+      List<String> strings = new ArrayList<>();
+      for (TextField txt : textFieldList) {
+        if (!txt.getValue().trim().equals("")) {
+          strings.add(txt.getValue());
+
+        }
+      }
+      if (!strings.isEmpty()) {
+        choosenQuestion.setStringAlternatives(strings);
+        close();
+      } else {
+        Dialog info = new Dialog();
+        info.open();
+        info.add("Need to have at least 1 alternative");
+      }
+
+    });
   }
 
   public void addNewTextField(String title) {
@@ -113,10 +116,9 @@ public class EditDialog extends Dialog {
       txtAlternative.setValue(title);
     }
     Button remove = new Button(new Icon(VaadinIcon.MINUS));
-    remove.addClickListener(
-        onRemove -> {
-          remove(remove);
-        });
+    remove.addClickListener(onRemove -> {
+      remove(remove);
+    });
     horizontalBox.add(txtAlternative, remove);
     horizontalBox.setAlignItems(Alignment.BASELINE);
     contentBox.add(horizontalBox);
@@ -131,5 +133,7 @@ public class EditDialog extends Dialog {
     for (int i = 0; i < textFieldList.size(); i++) {
       textFieldList.get(i).setLabel("Alternative " + (i + 1));
     }
+
   }
+
 }

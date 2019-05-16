@@ -1,21 +1,34 @@
 package com.considlia.survey.ui.custom_component.question_with_button;
 
+import com.considlia.survey.model.TextQuestion;
 import com.considlia.survey.ui.CreateSurveyView;
+import com.considlia.survey.ui.custom_component.QuestionType;
 import com.vaadin.flow.component.dependency.StyleSheet;
+import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 
 @StyleSheet("css/app.css")
 public class TextQuestionWithButtons extends QuestionWithButtons {
 
-  private TextField text;
+  private TextField textfield;
+  private TextArea textarea;
 
-  public TextQuestionWithButtons(String question, CreateSurveyView survey, boolean mandatory) {
-    super(question, survey, mandatory);
+  public TextQuestionWithButtons(TextQuestion question, CreateSurveyView survey) {
 
-    text = new TextField();
-    text.setWidth("25%");
-    text.setEnabled(false);
+    super(question, survey);
 
-    add(text);
+    if (question.getQuestionType() == QuestionType.TEXTFIELD) {
+      textfield = new TextField();
+      textfield.setWidth("40%");
+      textfield.setEnabled(false);
+      add(textfield);
+    } else if (question.getQuestionType() == QuestionType.TEXTAREA) {
+      textarea = new TextArea();
+      textarea.setWidth("40%");
+      textarea.setHeight("35%");
+      textarea.setEnabled(false);
+      add(textarea);
+    }
   }
+
 }

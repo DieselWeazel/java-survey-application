@@ -27,4 +27,13 @@ public class ReadMultiQuestionLayout extends ReadQuestionLayout {
       checkBoxButtons.addThemeVariants(CheckboxGroupVariant.LUMO_VERTICAL);
     }
   }
+
+  public RadioButtonGroup<MultiQuestionAlternative> getRadioButtons() {
+    return radioButtons;
+  }
+
+  public CheckboxGroup<MultiQuestionAlternative> getCheckBoxButtons() {
+    return checkBoxButtons;
+  }
+
 }

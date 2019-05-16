@@ -7,6 +7,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import com.considlia.survey.ui.custom_component.QuestionType;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -19,14 +20,17 @@ public abstract class Question {
 
   private String title;
   private int position;
+  private QuestionType questionType;
   private boolean mandatory;
 
   public Question() {}
 
-  public Question(String questionTitle, int position, boolean mandatory) {
+  public Question(String questionTitle, int position, QuestionType questionType,
+      boolean mandatory) {
     this.title = questionTitle;
     this.position = position;
     this.mandatory = mandatory;
+    this.questionType = questionType;
   }
 
   public String getTitle() {
@@ -43,6 +47,14 @@ public abstract class Question {
 
   public void setPosition(int position) {
     this.position = position;
+  }
+
+  public QuestionType getQuestionType() {
+    return questionType;
+  }
+
+  public void setQuestionType(QuestionType questionType) {
+    this.questionType = questionType;
   }
 
   public boolean isMandatory() {

@@ -1,6 +1,5 @@
 package com.considlia.survey.model;
 
-import com.considlia.survey.ui.custom_component.QuestionType;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.CascadeType;
@@ -15,20 +14,10 @@ import javax.persistence.Table;
 @Table(name = "multiquestion")
 public class MultiQuestion extends Question {
 
-  private QuestionType questionType;
-
   @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   @JoinColumn(name = "question_id")
   @OrderBy("position ASC")
   private Set<MultiQuestionAlternative> alternatives = new HashSet<>();
-
-  public MultiQuestion() {}
-
-  public MultiQuestion(
-      String questionTitle, int position, QuestionType questionType, boolean mandatory) {
-    super(questionTitle, position, mandatory);
-    this.questionType = questionType;
-  }
 
   public Set<MultiQuestionAlternative> getAlternatives() {
     return alternatives;
@@ -36,14 +25,6 @@ public class MultiQuestion extends Question {
 
   public void setAlternatives(Set<MultiQuestionAlternative> alternatives) {
     this.alternatives = alternatives;
-  }
-
-  public QuestionType getQuestionType() {
-    return questionType;
-  }
-
-  public void setQuestionType(QuestionType questionType) {
-    this.questionType = questionType;
   }
 
   public void addAlternative(MultiQuestionAlternative mqa) {
@@ -56,10 +37,7 @@ public class MultiQuestion extends Question {
 
   @Override
   public String toString() {
-    return "MultiQuestion [alternativeList="
-        + alternatives
-        + ", questionType="
-        + questionType
-        + "]";
+    return "MultiQuestion [alternativeList=" + alternatives + ", questionType=" + "]";
   }
+
 }
