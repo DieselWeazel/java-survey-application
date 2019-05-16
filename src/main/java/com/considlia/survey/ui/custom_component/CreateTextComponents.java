@@ -29,8 +29,6 @@ public class CreateTextComponents extends VerticalLayout {
   }
 
   public void clearRadioButtons() {
-    System.out.println("Inne i Clear buttons");
-    // radioButtons.setValue("");
     radioButtons.clear();
   }
 
