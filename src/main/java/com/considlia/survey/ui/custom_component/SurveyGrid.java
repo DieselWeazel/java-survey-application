@@ -107,7 +107,11 @@ public class SurveyGrid extends VerticalLayout {
     dateColumn = grid.addColumn(Survey::getDate).setHeader("Date");
 
     // Init Buttons, adds correct
-    grid.addComponentColumn(item -> showButtons(item));
+//    grid.addComponentColumn(item -> showButtons(item));
+    grid.addComponentColumn(item -> {
+      GridTools gridTools = new GridTools(item, this::updateGridData, isHome);
+      return gridTools;
+    });
     grid.setDetailsVisibleOnClick(false);
     grid.setSelectionMode(Grid.SelectionMode.NONE);
 
@@ -191,39 +195,6 @@ public class SurveyGrid extends VerticalLayout {
 
   private void updateGridData(Survey survey){
     surveyRepository.delete(survey);
-    grid.setItems(surveyList = surveyRepository.findAllByUserId(customUserService.getId()));
+    grid.setItems(surveyList = surveyRepository.findAllByUserId(customUserService.getUser().getId()));
   }
-
-  private Component showButtons(Survey item) {
-    Button showSurvey =
-        new Button(
-            new Icon(VaadinIcon.EYE),
-            onShow -> {
-              getUI().ifPresent(ui -> ui.navigate(ShowSurveyView.class, item.getId()));
-            });
-    Button editSurvey =
-        new Button(
-            new Icon(VaadinIcon.PENCIL),
-            onEdit -> {
-              getUI().ifPresent(ui -> ui.navigate(CreateSurveyView.class, item.getId()));
-            });
-    Button deleteSurvey =
-        new Button(
-            new Icon(VaadinIcon.TRASH),
-            onDelete -> {
-              ConfirmDialog confirmDialog =
-                  new ConfirmDialog(
-                      "Confirm delete",
-                      "Are you sure you want to delete the item?",
-                      this::updateGridData,
-                      item);
-            });
-    if (isHome) {
-      return new HorizontalLayout(showSurvey);
-    } else {
-      return new HorizontalLayout(showSurvey, editSurvey, deleteSurvey);
-    }
-  }
-
-
 }
