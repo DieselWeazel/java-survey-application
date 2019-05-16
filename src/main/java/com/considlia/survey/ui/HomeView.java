@@ -6,6 +6,7 @@ import java.util.List;
 import com.considlia.survey.model.Survey;
 import com.considlia.survey.repositories.SurveyRepository;
 import com.considlia.survey.ui.custom_component.ConfirmDialog;
+import com.considlia.survey.ui.custom_component.Tooltip;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.HeaderRow;
@@ -161,6 +162,7 @@ public class HomeView extends BaseView {
 
   public HorizontalLayout showDescription(Survey item) {
     Icon info = new Icon(VaadinIcon.INFO_CIRCLE_O);
+    Tooltip.setTooltip(info, "Show the surveys description if it has one");
     info.addClickListener(e -> {
       grid.setDetailsVisible(item, !grid.isDetailsVisible(item));
     });
@@ -178,6 +180,11 @@ public class HomeView extends BaseView {
       ConfirmDialog confirmDialog = new ConfirmDialog("Confirm delete",
           "Are you sure you want to delete the item?", surveyRepository, grid, item);
     });
+
+    Tooltip.setTooltip(showSurvey, "Show and answer this survey");
+    Tooltip.setTooltip(editSurvey, "Edit this survey");
+    Tooltip.setTooltip(deleteSurvey, "Delete this survey");
+
     return new HorizontalLayout(showSurvey, editSurvey, deleteSurvey);
   }
 }
