@@ -77,12 +77,13 @@ public class SurveyGrid extends VerticalLayout {
     if (!isHome){
       surveyList = surveyRepository.findAllByUserId(customUserService.getUser().getId());
     }
-//    //TODO Nullpointer or?
-//    this.customUserService = customUserService;
     generateGridColumns();
     grid.setItems(surveyList);
   }
 
+  /**
+   * Generates Grid Columns, in case of Profile View we don't add Creator Column, instead add more tools to our Grid.
+   */
   private void generateGridColumns() {
     idColumn = grid.addColumn(Survey::getId).setHeader("Id").setWidth("3%");
     titleColumn = grid.addColumn(Survey::getTitle).setHeader("Title").setFlexGrow(4);
@@ -106,12 +107,19 @@ public class SurveyGrid extends VerticalLayout {
     }
     dateColumn = grid.addColumn(Survey::getDate).setHeader("Date");
 
-    // Init Buttons, adds correct
-//    grid.addComponentColumn(item -> showButtons(item));
-    grid.addComponentColumn(item -> {
-      GridTools gridTools = new GridTools(item, this::updateGridData, isHome);
-      return gridTools;
-    });
+
+    // Includes deleteSurvey method to Consumer if we are on ProfileView.
+    if(!isHome) {
+      grid.addComponentColumn(item -> {
+        GridTools gridTools = new GridTools(item, this::updateGridData);
+        return gridTools;
+      });
+    } else {
+      grid.addComponentColumn(item -> {
+        GridTools gridTools = new GridTools(item);
+        return gridTools;
+      });
+    }
     grid.setDetailsVisibleOnClick(false);
     grid.setSelectionMode(Grid.SelectionMode.NONE);
 
