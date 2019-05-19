@@ -26,7 +26,6 @@ import com.considlia.survey.ui.custom_component.question_with_button.TextQuestio
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
-import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -42,7 +41,6 @@ import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.OptionalParameter;
 import com.vaadin.flow.router.Route;
 
-@StyleSheet("css/app.css")
 @Route(value = "createsurvey", layout = MainLayout.class)
 public class CreateSurveyView extends BaseView
     implements HasUrlParameter<Long>, BeforeLeaveObserver {
@@ -79,7 +77,7 @@ public class CreateSurveyView extends BaseView
 
   public CreateSurveyView(SurveyRepository surveyRepository) {
     super("Create Survey");
-    setId("createsurvey");
+    // setId("createsurvey");
 
     this.surveyRepository = surveyRepository;
     thisSurvey = new Survey();
@@ -111,8 +109,8 @@ public class CreateSurveyView extends BaseView
     submitSurveyButton.setEnabled(false);
     cancelButton = new Button("Cancel", event -> getUI().ifPresent(ui -> ui.navigate("")));
 
-    surveyTitleTextField = new TextField();
-    creatorNameTextField = new TextField();
+    surveyTitleTextField = createTextField("400px", "Survey Title", true);
+    creatorNameTextField = createTextField("250px", "Created By", true);
     descriptionTextArea = new TextArea();
 
     surveyTitleTextField.addValueChangeListener(titleChange -> {
@@ -125,27 +123,29 @@ public class CreateSurveyView extends BaseView
       hasChanges = true;
     });
 
-    surveyTitleTextField.setLabel("Survey title");
-    surveyTitleTextField.setPlaceholder("Survey title");
-    surveyTitleTextField.setWidth("400px");
-    surveyTitleTextField.setValueChangeMode(ValueChangeMode.EAGER);
-    surveyTitleTextField.setRequired(true);
-    creatorNameTextField.setLabel("Created by");
-    creatorNameTextField.setPlaceholder("Created by");
-    creatorNameTextField.setWidth("250px");
-    creatorNameTextField.setValueChangeMode(ValueChangeMode.EAGER);
-    creatorNameTextField.setRequired(true);
+    // surveyTitleTextField.setLabel("Survey title");
+    // surveyTitleTextField.setPlaceholder("Survey title");
+    // surveyTitleTextField.setWidth("400px");
+    // surveyTitleTextField.setValueChangeMode(ValueChangeMode.EAGER);
+    // surveyTitleTextField.setRequired(false);
+    //
+    // creatorNameTextField.setLabel("Created by");
+    // creatorNameTextField.setPlaceholder("Created by");
+    // creatorNameTextField.setWidth("250px");
+    // creatorNameTextField.setValueChangeMode(ValueChangeMode.EAGER);
+    // creatorNameTextField.setRequired(true);
+
     descriptionTextArea.setLabel("Description");
     descriptionTextArea.setWidth("600px");
     descriptionTextArea.setValueChangeMode(ValueChangeMode.EAGER);
   }
 
   public void initAddQuestionContainer() {
-    questionTitleTextField = new TextField();
-    questionTitleTextField.setValueChangeMode(ValueChangeMode.EAGER);
-    questionTitleTextField.setWidth("300px");
-    questionTitleTextField.setPlaceholder("Question");
-    questionTitleTextField.setLabel("Question");
+    questionTitleTextField = createTextField("300px", "Question", false);
+    // questionTitleTextField.setValueChangeMode(ValueChangeMode.EAGER);
+    // questionTitleTextField.setWidth("300px");
+    // questionTitleTextField.setPlaceholder("Question");
+    // questionTitleTextField.setLabel("Question");
     questionTitleTextField.addValueChangeListener(event -> {
 
       // checks if the the string contains more than 255 characters. If true cuts string after index
@@ -206,6 +206,18 @@ public class CreateSurveyView extends BaseView
     add(header);
     add(addQuestionContainer);
     add(questions);
+  }
+
+  public TextField createTextField(String width, String placeholderAndLabel, boolean isRequired) {
+    TextField textField = new TextField();
+    textField.setWidth(width);
+    textField.setRequired(isRequired);
+    textField.setLabel(placeholderAndLabel);
+    textField.setPlaceholder(placeholderAndLabel);
+    textField.setValueChangeMode(ValueChangeMode.EAGER);
+
+    return textField;
+
   }
 
   // Create addQuestion-package with listeners, if already created: save the question
