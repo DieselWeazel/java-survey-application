@@ -8,7 +8,7 @@ import java.util.Set;
 import com.considlia.survey.model.MultiQuestion;
 import com.considlia.survey.model.MultiQuestionAlternative;
 import com.considlia.survey.model.Question;
-import com.considlia.survey.model.QuestionFactory;
+import com.considlia.survey.model.QuestionType;
 import com.considlia.survey.model.RatioQuestion;
 import com.considlia.survey.model.Survey;
 import com.considlia.survey.model.TextQuestion;
@@ -18,7 +18,7 @@ import com.considlia.survey.ui.custom_component.CreateAlternative;
 import com.considlia.survey.ui.custom_component.CreateRatioComponents;
 import com.considlia.survey.ui.custom_component.CreateTextComponents;
 import com.considlia.survey.ui.custom_component.EditDialog;
-import com.considlia.survey.ui.custom_component.QuestionType;
+import com.considlia.survey.ui.custom_component.QuestionFactory;
 import com.considlia.survey.ui.custom_component.question_with_button.MultiQuestionWithButtons;
 import com.considlia.survey.ui.custom_component.question_with_button.QuestionWithButtons;
 import com.considlia.survey.ui.custom_component.question_with_button.RatioQuestionWithButtons;
@@ -26,7 +26,6 @@ import com.considlia.survey.ui.custom_component.question_with_button.TextQuestio
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
-import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -42,7 +41,6 @@ import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.OptionalParameter;
 import com.vaadin.flow.router.Route;
 
-@StyleSheet("css/app.css")
 @Route(value = "createsurvey", layout = MainLayout.class)
 public class CreateSurveyView extends BaseView
     implements HasUrlParameter<Long>, BeforeLeaveObserver {
@@ -51,7 +49,7 @@ public class CreateSurveyView extends BaseView
   private Button addQuestionButton;
   private Button submitSurveyButton;
   private Button cancelButton;
-  private Select<String> selectOptions;
+  private Select<QuestionType> selectOptions;
   private Checkbox mandatory;
 
   // Textfields
@@ -79,7 +77,7 @@ public class CreateSurveyView extends BaseView
 
   public CreateSurveyView(SurveyRepository surveyRepository) {
     super("Create Survey");
-    setId("createsurvey");
+    // setId("createsurvey");
 
     this.surveyRepository = surveyRepository;
     thisSurvey = new Survey();
@@ -111,8 +109,8 @@ public class CreateSurveyView extends BaseView
     submitSurveyButton.setEnabled(false);
     cancelButton = new Button("Cancel", event -> getUI().ifPresent(ui -> ui.navigate("")));
 
-    surveyTitleTextField = new TextField();
-    creatorNameTextField = new TextField();
+    surveyTitleTextField = createTextField("400px", "Survey Title", true);
+    creatorNameTextField = createTextField("250px", "Created By", true);
     descriptionTextArea = new TextArea();
 
     surveyTitleTextField.addValueChangeListener(titleChange -> {
@@ -125,27 +123,13 @@ public class CreateSurveyView extends BaseView
       hasChanges = true;
     });
 
-    surveyTitleTextField.setLabel("Survey title");
-    surveyTitleTextField.setPlaceholder("Survey title");
-    surveyTitleTextField.setWidth("400px");
-    surveyTitleTextField.setValueChangeMode(ValueChangeMode.EAGER);
-    surveyTitleTextField.setRequired(true);
-    creatorNameTextField.setLabel("Created by");
-    creatorNameTextField.setPlaceholder("Created by");
-    creatorNameTextField.setWidth("250px");
-    creatorNameTextField.setValueChangeMode(ValueChangeMode.EAGER);
-    creatorNameTextField.setRequired(true);
     descriptionTextArea.setLabel("Description");
     descriptionTextArea.setWidth("600px");
     descriptionTextArea.setValueChangeMode(ValueChangeMode.EAGER);
   }
 
   public void initAddQuestionContainer() {
-    questionTitleTextField = new TextField();
-    questionTitleTextField.setValueChangeMode(ValueChangeMode.EAGER);
-    questionTitleTextField.setWidth("300px");
-    questionTitleTextField.setPlaceholder("Question");
-    questionTitleTextField.setLabel("Question");
+    questionTitleTextField = createTextField("300px", "Question", false);
     questionTitleTextField.addValueChangeListener(event -> {
 
       // checks if the the string contains more than 255 characters. If true cuts string after index
@@ -157,16 +141,16 @@ public class CreateSurveyView extends BaseView
 
       if (questionTitleTextField.isEmpty() || selectOptions.getValue() == null) {
         addQuestionButton.setEnabled(false);
-      } else if (selectOptions.getValue().equalsIgnoreCase("Text question")
+      } else if (selectOptions.getValue() == QuestionType.TEXTFIELD
           && !questionTitleTextField.getValue().isEmpty()) {
         userCreationQuestion(QuestionType.TEXTFIELD);
-      } else if ((selectOptions.getValue().equalsIgnoreCase("Radio Question")
+      } else if ((selectOptions.getValue() == QuestionType.RADIO
           && !questionTitleTextField.getValue().isEmpty())) {
         userCreationQuestion(QuestionType.RADIO);
-      } else if ((selectOptions.getValue().equalsIgnoreCase("Checkbox Question")
+      } else if ((selectOptions.getValue() == QuestionType.CHECKBOX
           && !questionTitleTextField.getValue().isEmpty())) {
         userCreationQuestion(QuestionType.CHECKBOX);
-      } else if ((selectOptions.getValue().equalsIgnoreCase("Ratio Question")
+      } else if ((selectOptions.getValue() == QuestionType.RATIO
           && !questionTitleTextField.getValue().isEmpty())) {
         userCreationQuestion(QuestionType.RATIO);
       }
@@ -174,16 +158,16 @@ public class CreateSurveyView extends BaseView
 
     selectOptions = new Select<>();
     selectOptions.setPlaceholder("Type of question");
-    selectOptions.setItems("Text question", "Radio Question", "Checkbox Question",
-        "Ratio Question");
+    selectOptions.setItems(QuestionType.TEXTFIELD, QuestionType.RADIO, QuestionType.CHECKBOX,
+        QuestionType.RATIO);
     selectOptions.addValueChangeListener(event -> {
-      if (event.getValue().equalsIgnoreCase("Text question")) {
+      if (event.getValue() == QuestionType.TEXTFIELD) {
         userCreationQuestion(QuestionType.TEXTFIELD);
-      } else if (event.getValue().equalsIgnoreCase("Radio Question")) {
+      } else if (event.getValue() == QuestionType.RADIO) {
         userCreationQuestion(QuestionType.RADIO);
-      } else if (event.getValue().equalsIgnoreCase("Checkbox Question")) {
+      } else if (event.getValue() == QuestionType.CHECKBOX) {
         userCreationQuestion(QuestionType.CHECKBOX);
-      } else if (event.getValue().equalsIgnoreCase("Ratio Question")) {
+      } else if (event.getValue() == QuestionType.RATIO) {
         userCreationQuestion(QuestionType.RATIO);
       }
       if (questionTitleTextField.isEmpty()) {
@@ -206,6 +190,18 @@ public class CreateSurveyView extends BaseView
     add(header);
     add(addQuestionContainer);
     add(questions);
+  }
+
+  public TextField createTextField(String width, String placeholderAndLabel, boolean isRequired) {
+    TextField textField = new TextField();
+    textField.setWidth(width);
+    textField.setRequired(isRequired);
+    textField.setLabel(placeholderAndLabel);
+    textField.setPlaceholder(placeholderAndLabel);
+    textField.setValueChangeMode(ValueChangeMode.EAGER);
+
+    return textField;
+
   }
 
   // Create addQuestion-package with listeners, if already created: save the question
@@ -264,7 +260,7 @@ public class CreateSurveyView extends BaseView
     }
 
     questionTitleTextField.setValue("");
-    selectOptions.setValue("");
+    selectOptions.clear();
     checkFilledFields();
 
     addQuestionContainer.setVisible(true);

@@ -2,7 +2,6 @@ package com.considlia.survey.model;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import com.considlia.survey.ui.custom_component.QuestionType;
 
 @Entity
 @Table(name = "ratingquestion")

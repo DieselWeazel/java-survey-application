@@ -7,7 +7,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import com.considlia.survey.ui.custom_component.QuestionType;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)

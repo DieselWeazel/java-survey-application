@@ -21,10 +21,16 @@
   padding-top: 80px;
 }
 
-#createsurvey {
-	
 
+#baseview{
+	width: 80%;
+	margin: auto;
 }
+#baseview .title{
+	margin-top: 20px;
+	margin-bottom: -10px;
+}
+
 
 #createheader {
 	width: 100%;
