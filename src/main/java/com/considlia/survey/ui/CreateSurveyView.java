@@ -49,7 +49,7 @@ public class CreateSurveyView extends BaseView
   private Button addQuestionButton;
   private Button submitSurveyButton;
   private Button cancelButton;
-  private Select<String> selectOptions;
+  private Select<QuestionType> selectOptions;
   private Checkbox mandatory;
 
   // Textfields
@@ -123,18 +123,6 @@ public class CreateSurveyView extends BaseView
       hasChanges = true;
     });
 
-    // surveyTitleTextField.setLabel("Survey title");
-    // surveyTitleTextField.setPlaceholder("Survey title");
-    // surveyTitleTextField.setWidth("400px");
-    // surveyTitleTextField.setValueChangeMode(ValueChangeMode.EAGER);
-    // surveyTitleTextField.setRequired(false);
-    //
-    // creatorNameTextField.setLabel("Created by");
-    // creatorNameTextField.setPlaceholder("Created by");
-    // creatorNameTextField.setWidth("250px");
-    // creatorNameTextField.setValueChangeMode(ValueChangeMode.EAGER);
-    // creatorNameTextField.setRequired(true);
-
     descriptionTextArea.setLabel("Description");
     descriptionTextArea.setWidth("600px");
     descriptionTextArea.setValueChangeMode(ValueChangeMode.EAGER);
@@ -142,10 +130,6 @@ public class CreateSurveyView extends BaseView
 
   public void initAddQuestionContainer() {
     questionTitleTextField = createTextField("300px", "Question", false);
-    // questionTitleTextField.setValueChangeMode(ValueChangeMode.EAGER);
-    // questionTitleTextField.setWidth("300px");
-    // questionTitleTextField.setPlaceholder("Question");
-    // questionTitleTextField.setLabel("Question");
     questionTitleTextField.addValueChangeListener(event -> {
 
       // checks if the the string contains more than 255 characters. If true cuts string after index
@@ -157,16 +141,16 @@ public class CreateSurveyView extends BaseView
 
       if (questionTitleTextField.isEmpty() || selectOptions.getValue() == null) {
         addQuestionButton.setEnabled(false);
-      } else if (selectOptions.getValue().equalsIgnoreCase("Text question")
+      } else if (selectOptions.getValue() == QuestionType.TEXTFIELD
           && !questionTitleTextField.getValue().isEmpty()) {
         userCreationQuestion(QuestionType.TEXTFIELD);
-      } else if ((selectOptions.getValue().equalsIgnoreCase("Radio Question")
+      } else if ((selectOptions.getValue() == QuestionType.RADIO
           && !questionTitleTextField.getValue().isEmpty())) {
         userCreationQuestion(QuestionType.RADIO);
-      } else if ((selectOptions.getValue().equalsIgnoreCase("Checkbox Question")
+      } else if ((selectOptions.getValue() == QuestionType.CHECKBOX
           && !questionTitleTextField.getValue().isEmpty())) {
         userCreationQuestion(QuestionType.CHECKBOX);
-      } else if ((selectOptions.getValue().equalsIgnoreCase("Ratio Question")
+      } else if ((selectOptions.getValue() == QuestionType.RATIO
           && !questionTitleTextField.getValue().isEmpty())) {
         userCreationQuestion(QuestionType.RATIO);
       }
@@ -174,16 +158,16 @@ public class CreateSurveyView extends BaseView
 
     selectOptions = new Select<>();
     selectOptions.setPlaceholder("Type of question");
-    selectOptions.setItems("Text question", "Radio Question", "Checkbox Question",
-        "Ratio Question");
+    selectOptions.setItems(QuestionType.TEXTFIELD, QuestionType.RADIO, QuestionType.CHECKBOX,
+        QuestionType.RATIO);
     selectOptions.addValueChangeListener(event -> {
-      if (event.getValue().equalsIgnoreCase("Text question")) {
+      if (event.getValue() == QuestionType.TEXTFIELD) {
         userCreationQuestion(QuestionType.TEXTFIELD);
-      } else if (event.getValue().equalsIgnoreCase("Radio Question")) {
+      } else if (event.getValue() == QuestionType.RADIO) {
         userCreationQuestion(QuestionType.RADIO);
-      } else if (event.getValue().equalsIgnoreCase("Checkbox Question")) {
+      } else if (event.getValue() == QuestionType.CHECKBOX) {
         userCreationQuestion(QuestionType.CHECKBOX);
-      } else if (event.getValue().equalsIgnoreCase("Ratio Question")) {
+      } else if (event.getValue() == QuestionType.RATIO) {
         userCreationQuestion(QuestionType.RATIO);
       }
       if (questionTitleTextField.isEmpty()) {
@@ -276,7 +260,7 @@ public class CreateSurveyView extends BaseView
     }
 
     questionTitleTextField.setValue("");
-    selectOptions.setValue("");
+    selectOptions.clear();
     checkFilledFields();
 
     addQuestionContainer.setVisible(true);
