@@ -1,6 +1,7 @@
 package com.considlia.survey.ui.custom_component;
 
 import com.considlia.survey.model.Question;
+import com.considlia.survey.model.QuestionType;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 
