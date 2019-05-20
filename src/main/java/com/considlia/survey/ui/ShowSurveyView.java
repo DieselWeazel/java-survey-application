@@ -140,15 +140,17 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
     for (int position = 0; position < surveyVerticalLayout.getComponentCount(); position++) {
       ReadQuestionLayout component =
           (ReadQuestionLayout) surveyVerticalLayout.getComponentAt(position);
+
       switch (component.getQuestion().getQuestionType()) {
         case TEXTFIELD:
           ReadTextQuestionLayout castTextComponent = (ReadTextQuestionLayout) component;
-          sr.addAnswer(new Answers(castTextComponent.getQuestionField().getValue(),
-              castTextComponent.getQuestion()));
+          sr.addAnswer(
+              new Answers(castTextComponent.getQuestionField(), castTextComponent.getQuestion()));
           break;
         case TEXTAREA:
-          ReadTextQuestionLayout castTextAreaComponent = (ReadTextQuestionLayout) component;
-          sr.addAnswer(new Answers(castTextAreaComponent.getQuestionField().getValue(),
+          ReadTextQuestionLayout castTextAreaComponent =
+              (ReadTextQuestionLayout) surveyVerticalLayout.getComponentAt(position);
+          sr.addAnswer(new Answers(castTextAreaComponent.getQuestionField(),
               castTextAreaComponent.getQuestion()));
           break;
         case RADIO:
