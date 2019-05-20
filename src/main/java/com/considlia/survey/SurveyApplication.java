@@ -142,17 +142,6 @@ public class SurveyApplication {
       //
       //            userRepository.save(noob);
       //
-      //            User august = new User();
-      //            august.setFirstName("noob");
-      //            august.setLastName("scrub");
-      //            august.setEmail("augustmail@augusthemsida.se");
-      //            august.setRole("USER");
-      //            august.setUsername("august");
-      //            august.setPassword(passwordEncoder.encode("user"));
-      //
-      //            userRepository.save(august);
-
-
     };
   }
 }

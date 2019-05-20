@@ -3,6 +3,7 @@ package com.considlia.survey.security;
 import com.considlia.survey.ui.HomeView;
 import com.considlia.survey.ui.ShowSurveyView;
 import com.considlia.survey.ui.UserViews.LoginView;
+import com.considlia.survey.ui.UserViews.RegistrationView;
 import com.vaadin.flow.server.ServletHelper.RequestType;
 import com.vaadin.flow.shared.ApplicationConstants;
 import java.util.Arrays;
@@ -25,7 +26,8 @@ public class SecurityUtils {
     final boolean allowedViews =
         LoginView.class.equals(securedClass)
             || HomeView.class.equals(securedClass)
-            || ShowSurveyView.class.equals(securedClass);
+            || ShowSurveyView.class.equals(securedClass)
+        || RegistrationView.class.equals(securedClass);
 
     // Allowing views that does not require login
     if (allowedViews) {

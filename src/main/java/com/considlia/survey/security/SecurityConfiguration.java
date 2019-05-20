@@ -14,6 +14,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @EnableWebSecurity
@@ -40,6 +41,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     return super.authenticationManagerBean();
   }
 
+//  @Bean
+//  public AuthenticationSuccessHandler customUrlAuthenticationSuccessHandler(){
+//    return new CustomUrlAuthenticationSuccessHandler();
+//  }
+
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     http.csrf()
@@ -60,10 +66,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         .and()
         .formLogin()
         .loginPage("/login")
-        .permitAll()
-        .loginProcessingUrl("/loginprocess")
+//        .permitAll()
+
         .failureUrl("/failedlogin")
-        //        .defaultSuccessUrl("/", true)
+//                .defaultSuccessUrl("/", true)
+//        .successHandler(customUrlAuthenticationSuccessHandler())
 
         // Register the success handler that redirects users to the page they last tried
         // to access

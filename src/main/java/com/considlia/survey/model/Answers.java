@@ -17,6 +17,8 @@ public class Answers {
   @Column(name = "answer_id")
   private Long id;
 
+  //TODO Delete?
+
   @OneToOne
   private Question question;
   // private int answerType;

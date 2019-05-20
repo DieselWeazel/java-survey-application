@@ -2,6 +2,7 @@ package com.considlia.survey.ui.UserViews;
 
 import com.considlia.survey.model.User;
 import com.considlia.survey.repositories.UserRepository;
+import com.considlia.survey.security.SecurityUtils;
 import com.considlia.survey.security.UserDetailsServiceImpl;
 import com.considlia.survey.ui.BaseView;
 import com.considlia.survey.ui.HomeView;
@@ -17,6 +18,8 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.data.validator.EmailValidator;
+import com.vaadin.flow.router.BeforeEnterEvent;
+import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -29,7 +32,7 @@ There is no DAO Authentication within this as of now.
 Jonathan
  */
 @Route(value = "registration", layout = MainLayout.class)
-public class RegistrationView extends BaseView {
+public class RegistrationView extends BaseView implements BeforeEnterObserver {
 
   private EmailField email;
   private PasswordField passwordField;
@@ -120,5 +123,12 @@ public class RegistrationView extends BaseView {
         .withValidator(new EmailValidator("Must be an Email address"))
         .bind(User::getEmail, User::setEmail);
     userBinder.bindInstanceFields(this);
+  }
+
+  @Override
+  public void beforeEnter(BeforeEnterEvent event) {
+    if (SecurityUtils.isUserLoggedIn()){
+      event.rerouteTo("");
+    }
   }
 }

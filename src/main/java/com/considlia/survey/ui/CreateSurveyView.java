@@ -1,5 +1,6 @@
 package com.considlia.survey.ui;
 
+import com.considlia.survey.security.CustomUserService;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -58,6 +59,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class CreateSurveyView extends BaseView
     implements HasUrlParameter<Long>, BeforeLeaveObserver {
 
+  public final String routeURL = "createsurvey";
+
   // Buttons
   private Button addQuestionButton;
   private Button submitSurveyButton;
@@ -88,13 +91,17 @@ public class CreateSurveyView extends BaseView
   private CreateRatioComponents createRatioComponents;
   private CreateTextComponents createTextComponents;
 
-  @Autowired private UserRepository userRepository;
+  @Autowired
+  private UserRepository userRepository;
+  @Autowired
+  private CustomUserService customUserService;
 
-  public CreateSurveyView(SurveyRepository surveyRepository) {
+  public CreateSurveyView(SurveyRepository surveyRepository, CustomUserService customUserService) {
     super("Create Survey");
     setId("createsurvey");
 
     this.surveyRepository = surveyRepository;
+    this.customUserService = customUserService;
     thisSurvey = new Survey();
     hasChanges = false;
 
@@ -151,20 +158,11 @@ public class CreateSurveyView extends BaseView
     descriptionTextArea.setLabel("Description");
     descriptionTextArea.setWidth("600px");
 
-    // Show User, just for show
-    // TODO move me (separate method?)
-    Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-    if (principal instanceof UserDetails) {
-      String username = ((UserDetails) principal).getUsername();
-      creatorNameTextField.setValue(username);
-      creatorNameTextField.setEnabled(false);
-      //      creatorNameTextField.setPlaceholder(username);
-
-    } else {
-      String username = principal.toString();
-      creatorNameTextField.setPlaceholder(username);
-    }
+    /*
+    Currently doesn't allow for editing of Users name within CreatorName for Survey.
+     */
+    creatorNameTextField.setValue(customUserService.getUser().getLastName() + ", " + customUserService.getUser().getFirstName());
+    creatorNameTextField.setEnabled(false);
     descriptionTextArea.setValueChangeMode(ValueChangeMode.EAGER);
   }
 
@@ -388,15 +386,7 @@ public class CreateSurveyView extends BaseView
     thisSurvey.setDescription(descriptionTextArea.getValue());
     thisSurvey.setDate(LocalDate.now());
 
-    /*
-    TODO org.springframework.dao.InvalidDataAccessApiUsageException: detached entity passed to persist:
-    TODO find solution to this, relationship isnt working as of now
-    We now save Survey to the User instead.
-     */
-    User user = userRepository.findByUsername(creatorNameTextField.getValue());
-    //    user.getSurveys().add(thisSurvey);
-
-    thisSurvey.setUser(user);
+    thisSurvey.setUser(customUserService.getUser());
     surveyRepository.save(thisSurvey);
 
     hasChanges = false;

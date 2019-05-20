@@ -32,10 +32,18 @@ public class Survey {
   @JoinColumn(name = "survey_id")
   @OrderBy("position ASC")
   private Set<Question> questions = new HashSet<>();
-
+  
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user_id")
   private User user;
+
+//  @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+//  @JoinColumn(name = "survey_id")
+//  @OrderBy("position ASC")
+//  private Set<SurveyResponses> surveyResponses = new HashSet<>();
+
+  // Related to Status Class, Status.ENUM_VALUE
+  //private String currentStatus;
 
   public Survey() {}
 

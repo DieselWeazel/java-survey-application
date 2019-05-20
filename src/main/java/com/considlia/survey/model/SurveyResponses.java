@@ -23,13 +23,26 @@ public class SurveyResponses {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "response_id")
   private Long id;
-  private Long surveyId;
-  private LocalDate date = LocalDate.now();
 
+  // delete
+  private Long surveyId;
+
+  private LocalDate date = LocalDate.now();
+  // Can be whatever decided upon, timeSpent = date.plus();
+// private LocalDate timeSpent;
+
+   // Delete
   @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   @JoinColumn(name = "response_id")
   @OrderBy("question_question_id ASC")
   private Set<Answers> answers = new HashSet<>();
+
+//  private Set<Answers> answers = new HashSet<>();
+
+
+  // Boolean
+  // private boolen surveyStatus;
+
 
   public SurveyResponses() {}
 

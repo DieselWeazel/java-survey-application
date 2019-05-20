@@ -1,35 +1,31 @@
-package com.considLia.survey;
-
-import com.considlia.survey.model.User;
-import com.considlia.survey.repositories.UserRepository;
-import java.sql.SQLIntegrityConstraintViolationException;
-import javax.validation.ConstraintViolationException;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.test.context.junit4.SpringRunner;
-
-@RunWith(SpringRunner.class)
-@SpringBootTest
-public class SurveyApplicationTests {
-
-//  @Autowired
-//  private UserRepository userRepository;
+//package com.considLia.survey;
 //
+//import com.considlia.survey.model.User;
+//import com.considlia.survey.repositories.UserRepository;
+//import java.sql.SQLIntegrityConstraintViolationException;
+//import org.hibernate.exception.ConstraintViolationException;
+//import org.junit.Rule;
+//import org.junit.Test;
+//import org.junit.rules.ExpectedException;
+//import org.junit.runner.RunWith;
+//import org.mockito.Mock;
+//import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.dao.DataIntegrityViolationException;
+//
+//public class UserTests {
+//
+//
+// TODO: Fix Tests, right now not finished.
+
+//  @Mock
+//  private UserRepository userRepository;
+//////
 //  @Rule
 //  public ExpectedException thrown = ExpectedException.none();
-
-  @Test
-  public void contextLoads() {}
-
+//
 //  @Test
 //  public void duplicateUserInfoTest(){
-//    this.userRepository = userRepository;
-////    UserRepository userRepository;
+////    this.userRepository = userRepository;
 //    User user1 = new User();
 //    user1.setUsername("user");
 //    user1.setEmail("email@email.com");
@@ -51,5 +47,4 @@ public class SurveyApplicationTests {
 //    thrown.expect(SQLIntegrityConstraintViolationException.class);
 //    thrown.expect(DataIntegrityViolationException.class);
 //  }
-
-}
+//}

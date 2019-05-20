@@ -31,6 +31,7 @@ public class User {
   private String password;
 
   @NotBlank
+  @Column(unique = true)
   //  @Column(name = "username")
   private String username;
 

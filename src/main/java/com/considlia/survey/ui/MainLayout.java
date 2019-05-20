@@ -1,6 +1,7 @@
 package com.considlia.survey.ui;
 
 import com.considlia.survey.security.SecurityUtils;
+import com.considlia.survey.ui.UserViews.AccessDeniedView;
 import com.considlia.survey.ui.UserViews.LoginView;
 import com.considlia.survey.ui.UserViews.MyProfileView;
 import com.considlia.survey.ui.UserViews.RegistrationView;
@@ -32,16 +33,10 @@ public class MainLayout extends VerticalLayout implements RouterLayout {
     navigation = new HorizontalLayout();
 
     navigation.add(createRouterLink(HomeView.class, "Home", VaadinIcon.HOME));
-    if (SecurityUtils.isUserLoggedIn()) {
-      if (SecurityUtils.hasAccess(CreateSurveyView.class)) {
-        navigation.add(
-            createRouterLink(CreateSurveyView.class, "Create New Survey", VaadinIcon.PLUS_CIRCLE));
-      }
-      navigation.add(createRouterLink(MyProfileView.class, "profileview", VaadinIcon.USER));
-    } else {
-      navigation.add(createRouterLink(LoginView.class, "Login", VaadinIcon.SIGN_IN));
-      navigation.add(createRouterLink(RegistrationView.class, "registration", VaadinIcon.PENCIL));
-    }
+    navigation.add(createRouterLink(CreateSurveyView.class, "Create New Survey", VaadinIcon.PLUS_CIRCLE));
+    navigation.add(createRouterLink(MyProfileView.class, "profileview", VaadinIcon.USER));
+//    navigation.add(createRouterLink(LoginView.class, "Login", VaadinIcon.SIGN_IN));
+//    navigation.add(createRouterLink(RegistrationView.class, "registration", VaadinIcon.PENCIL));
 
     navigation.setClassName("header");
     contentContainer = new VerticalLayout();
@@ -50,10 +45,23 @@ public class MainLayout extends VerticalLayout implements RouterLayout {
     add(navigation, contentContainer);
   }
 
+  public static void refreshLayoutContent(){
+
+  }
+
+//  private Button createRouterLinks(String destination, String text, VaadinIcon icon){
+//    return new Button(text, new Icon(icon), e -> getUI().ifPresent(ui -> ui.na))
+//  }
+
   private Button createRouterLink(
       Class<? extends Component> targetViewClass, String text, VaadinIcon icon) {
-    return new Button(
-        text, new Icon(icon), event -> getUI().ifPresent(ui -> ui.navigate(targetViewClass)));
+    return new Button(text, new Icon(icon), e -> {
+        if (SecurityUtils.hasAccess(targetViewClass)) {
+          getUI().ifPresent(ui -> ui.navigate(targetViewClass));
+        } else {
+          getUI().ifPresent(ui -> ui.navigate(AccessDeniedView.class));
+        }
+    });
   }
 
   @Override
