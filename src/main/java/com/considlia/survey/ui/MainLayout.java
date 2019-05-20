@@ -7,6 +7,7 @@ import com.considlia.survey.ui.UserViews.MyProfileView;
 import com.considlia.survey.ui.UserViews.RegistrationView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasElement;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.icon.Icon;
@@ -17,6 +18,9 @@ import com.vaadin.flow.router.RouterLayout;
 import com.vaadin.flow.router.RouterLink;
 import java.util.HashMap;
 import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 @StyleSheet("css/app.css")
 public class MainLayout extends VerticalLayout implements RouterLayout {
@@ -26,7 +30,8 @@ public class MainLayout extends VerticalLayout implements RouterLayout {
 
   private HorizontalLayout navigation;
   private VerticalLayout contentContainer;
-
+  @Autowired
+  private HttpServletRequest httpServletRequest;
   public MainLayout() {
     setId("mainlayout");
 
@@ -38,6 +43,9 @@ public class MainLayout extends VerticalLayout implements RouterLayout {
 //    navigation.add(createRouterLink(LoginView.class, "Login", VaadinIcon.SIGN_IN));
 //    navigation.add(createRouterLink(RegistrationView.class, "registration", VaadinIcon.PENCIL));
 
+    if (SecurityUtils.isUserLoggedIn()){
+      navigation.add(new Button("Logout", new Icon(VaadinIcon.EXIT), e-> logoutUser()));
+    }
     navigation.setClassName("header");
     contentContainer = new VerticalLayout();
     contentContainer.setClassName("content");
@@ -45,8 +53,11 @@ public class MainLayout extends VerticalLayout implements RouterLayout {
     add(navigation, contentContainer);
   }
 
-  public static void refreshLayoutContent(){
-
+  private void logoutUser(){
+    SecurityContextHolder.clearContext();
+    httpServletRequest.getSession(false).invalidate();
+    UI.getCurrent().getSession().close();
+    UI.getCurrent().getPage().reload();
   }
 
 //  private Button createRouterLinks(String destination, String text, VaadinIcon icon){

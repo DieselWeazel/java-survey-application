@@ -67,7 +67,9 @@ public class LoginView extends BaseView implements BeforeEnterObserver {
     submitButton.addClickListener(
         event -> {
           if (setCurrentUser(username.getValue(), password.getValue())) {
-            this.getUI().ifPresent(ui -> ui.navigate(""));
+//            this.getUI().ifPresent(ui -> ui.navigate(""));
+            UI.getCurrent().getSession().close();
+            UI.getCurrent().getPage().reload();
           }
         });
 
