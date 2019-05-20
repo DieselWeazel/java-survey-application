@@ -7,19 +7,17 @@ import com.vaadin.flow.component.textfield.TextField;
 
 public class ReadTextQuestionLayout extends ReadQuestionLayout {
 
-  private TextField questionField;
-  private TextArea questionArea;
+  private TextField questionField = new TextField();
+  private TextArea questionArea = new TextArea();
 
   public ReadTextQuestionLayout(Question question) {
     super(question);
 
     if (question.getQuestionType() == QuestionType.TEXTFIELD) {
-      questionField = new TextField();
       questionField.setWidth("40%");
       questionField.setEnabled(true);
       add(questionField);
     } else if (question.getQuestionType() == QuestionType.TEXTAREA) {
-      questionArea = new TextArea();
       questionArea.setWidth("40%");
       questionArea.setHeight("80px");
       questionArea.setMaxHeight("100px");
@@ -28,12 +26,12 @@ public class ReadTextQuestionLayout extends ReadQuestionLayout {
     }
   }
 
-  public TextField getQuestionField() {
-    return questionField;
+  public String getQuestionField() {
+    return questionField.getValue();
   }
 
-  public TextArea getQuestionArea() {
-    return questionArea;
+  public String getQuestionArea() {
+    return questionArea.getValue();
   }
 
 }
