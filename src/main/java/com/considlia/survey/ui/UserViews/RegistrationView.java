@@ -77,7 +77,8 @@ public class RegistrationView extends BaseView implements BeforeEnterObserver {
         new UsernamePasswordAuthenticationToken(user.getUsername(), passwordString);
     Authentication result = authenticationManagerBean.authenticate(request);
     SecurityContextHolder.getContext().setAuthentication(result);
-    UI.getCurrent().navigate(HomeView.class);
+    UI.getCurrent().getSession().close();
+    UI.getCurrent().getPage().reload();
   }
 
   private void initUI(String width) {

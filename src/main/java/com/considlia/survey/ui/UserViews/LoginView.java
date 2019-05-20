@@ -10,7 +10,9 @@ import com.considlia.survey.ui.HomeView;
 import com.considlia.survey.ui.MainLayout;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.html.H4;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
@@ -45,7 +47,9 @@ public class LoginView extends BaseView implements BeforeEnterObserver {
   private TextField username;
   private PasswordField password;
   private Button submitButton;
+  private Button registerButton;
 
+  private HorizontalLayout horizontalLayout;
   // -- Backend Components --
   @Autowired
   private AuthenticationManager authenticationManagerBean;
@@ -60,6 +64,8 @@ public class LoginView extends BaseView implements BeforeEnterObserver {
     username = new TextField();
     password = new PasswordField();
     submitButton = new Button("Login");
+    this.registerButton = new Button("Register");
+    H4 h4 = new H4("Don't have an account?");
 
     username.setLabel("Username");
     password.setLabel("Password");
@@ -78,6 +84,10 @@ public class LoginView extends BaseView implements BeforeEnterObserver {
     loginView = new VerticalLayout(username, password, submitButton);
     add(loginView);
 
+    // If User isn't registered, added a small little navigation choice to the register menu
+    registerButton.addClickListener(e-> UI.getCurrent().navigate("registration"));
+    this.horizontalLayout = new HorizontalLayout(h4, registerButton);
+    add(horizontalLayout);
     loginView.setWidth("400px");
     loginView.setAlignItems(Alignment.CENTER);
     setAlignItems(Alignment.CENTER);

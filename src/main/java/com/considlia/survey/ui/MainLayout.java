@@ -60,10 +60,6 @@ public class MainLayout extends VerticalLayout implements RouterLayout {
     UI.getCurrent().getPage().reload();
   }
 
-//  private Button createRouterLinks(String destination, String text, VaadinIcon icon){
-//    return new Button(text, new Icon(icon), e -> getUI().ifPresent(ui -> ui.na))
-//  }
-
   private Button createRouterLink(
       Class<? extends Component> targetViewClass, String text, VaadinIcon icon) {
     return new Button(text, new Icon(icon), e -> {

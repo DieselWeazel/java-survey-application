@@ -123,25 +123,25 @@ public class SurveyApplication {
       //
       //       surveyRepository.save(survey2);
 
-                  User user = new User();
-                  user.setFirstName("admin");
-                  user.setLastName("admin");
-                  user.setEmail("jonathan@gmail.com");
-                  user.setRole("ADMIN");
-                  user.setUsername("admin");
-                  user.setPassword(passwordEncoder.encode("admin"));
-
-                  userRepository.save(user);
-
-                  User noob = new User();
-                  noob.setFirstName("noob");
-                  noob.setLastName("scrub");
-                  noob.setEmail("newbie@gmail.com");
-                  noob.setRole("USER");
-                  noob.setUsername("user");
-                  noob.setPassword(passwordEncoder.encode("user"));
-
-                  userRepository.save(noob);
+//                  User user = new User();
+//                  user.setFirstName("admin");
+//                  user.setLastName("admin");
+//                  user.setEmail("jonathan@gmail.com");
+//                  user.setRole("ADMIN");
+//                  user.setUsername("admin");
+//                  user.setPassword(passwordEncoder.encode("admin"));
+//
+//                  userRepository.save(user);
+//
+//                  User noob = new User();
+//                  noob.setFirstName("noob");
+//                  noob.setLastName("scrub");
+//                  noob.setEmail("newbie@gmail.com");
+//                  noob.setRole("USER");
+//                  noob.setUsername("user");
+//                  noob.setPassword(passwordEncoder.encode("user"));
+//
+//                  userRepository.save(noob);
       //
     };
   }
