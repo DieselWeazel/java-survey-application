@@ -2,6 +2,8 @@ package com.considlia.survey.model.question;
 
 import com.considlia.survey.model.question.Question;
 import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.Table;
 import com.considlia.survey.ui.custom_component.QuestionType;
 
