@@ -40,11 +40,13 @@ public class MainLayout extends VerticalLayout implements RouterLayout {
     navigation.add(createRouterLink(HomeView.class, "Home", VaadinIcon.HOME));
     navigation.add(createRouterLink(CreateSurveyView.class, "Create New Survey", VaadinIcon.PLUS_CIRCLE));
     navigation.add(createRouterLink(MyProfileView.class, "profileview", VaadinIcon.USER));
-//    navigation.add(createRouterLink(LoginView.class, "Login", VaadinIcon.SIGN_IN));
-//    navigation.add(createRouterLink(RegistrationView.class, "registration", VaadinIcon.PENCIL));
+
 
     if (SecurityUtils.isUserLoggedIn()){
       navigation.add(new Button("Logout", new Icon(VaadinIcon.EXIT), e-> logoutUser()));
+    } else {
+      navigation.add(createRouterLink(LoginView.class, "Login", VaadinIcon.SIGN_IN));
+      navigation.add(createRouterLink(RegistrationView.class, "registration", VaadinIcon.PENCIL));
     }
     navigation.setClassName("header");
     contentContainer = new VerticalLayout();

@@ -194,10 +194,7 @@ public class SurveyGrid extends VerticalLayout {
 
   private HorizontalLayout showDescription(Survey item) {
     Icon info = new Icon(VaadinIcon.INFO_CIRCLE_O);
-    info.addClickListener(
-        e -> {
-          grid.setDetailsVisible(item, !grid.isDetailsVisible(item));
-        });
+    info.addClickListener(e -> grid.setDetailsVisible(item, !grid.isDetailsVisible(item)));
     return new HorizontalLayout(info);
   }
 
