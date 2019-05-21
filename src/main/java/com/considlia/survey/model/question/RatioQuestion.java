@@ -8,7 +8,7 @@ import javax.persistence.Table;
 import com.considlia.survey.ui.custom_component.QuestionType;
 
 @Entity
-@Table(name = "ratingquestion")
+@Table(name = "ratioquestion")
 public class RatioQuestion extends Question {
 
   private String start;
