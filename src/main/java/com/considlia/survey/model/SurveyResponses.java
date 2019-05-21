@@ -31,10 +31,9 @@ public class SurveyResponses {
 //   Can be whatever decided upon, timeSpent = date.plus();
 // private LocalDate timeSpent;
 
-   // Delete
   @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "response_id")
-  @OrderBy("position ASC")
+  @OrderBy("questionPosition ASC")
   private Set<Answers> answers = new HashSet<>();
 
   @OneToOne(fetch = FetchType.LAZY)

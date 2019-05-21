@@ -2,15 +2,14 @@ package com.considlia.survey.model.answer;
 
 import com.considlia.survey.model.answer.Answers;
 import javax.persistence.Entity;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "textanswer")
 public class TextAnswer extends Answers {
 
-
   private String textAnswer;
-
 
   public String getTextAnswer() {
     return textAnswer;

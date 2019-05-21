@@ -41,16 +41,16 @@ public class SurveyApplication {
       //
       //       MultiQuestionAlternative multiAlt = new MultiQuestionAlternative();
       //       multiAlt.setTitle("Första");
-      //       multiAlt.setPosition(1);
+      //       multiAlt.setAlternativePosition(1);
       //       MultiQuestionAlternative multiAlt2 = new MultiQuestionAlternative();
       //       multiAlt2.setTitle("Andra");
-      //       multiAlt2.setPosition(2);
+      //       multiAlt2.setAlternativePosition(2);
       //       MultiQuestionAlternative multiAlt3 = new MultiQuestionAlternative();
       //       multiAlt3.setTitle("Tredje");
-      //       multiAlt3.setPosition(3);
+      //       multiAlt3.setAlternativePosition(3);
       //       MultiQuestionAlternative multiAlt4 = new MultiQuestionAlternative();
       //       multiAlt4.setTitle("Fjärde");
-      //       multiAlt4.setPosition(4);
+      //       multiAlt4.setAlternativePosition(4);
       //
       //       TextQuestion text = new TextQuestion();
       //       text.setTitle("bTest textfråga");
@@ -70,16 +70,16 @@ public class SurveyApplication {
       //
       //       MultiQuestionAlternative singleAlt = new MultiQuestionAlternative();
       //       singleAlt.setTitle("AAAAAAA");
-      //       singleAlt.setPosition(1);
+      //       singleAlt.setAlternativePosition(1);
       //       MultiQuestionAlternative singleAlt2 = new MultiQuestionAlternative();
       //       singleAlt2.setTitle("BBBBB");
-      //       singleAlt2.setPosition(2);
+      //       singleAlt2.setAlternativePosition(2);
       //       MultiQuestionAlternative singleAlt3 = new MultiQuestionAlternative();
       //       singleAlt3.setTitle("CCCCCCC");
-      //       singleAlt3.setPosition(3);
+      //       singleAlt3.setAlternativePosition(3);
       //       MultiQuestionAlternative singleAlt4 = new MultiQuestionAlternative();
       //       singleAlt4.setTitle("DDDDDDD");
-      //       singleAlt4.setPosition(4);
+      //       singleAlt4.setAlternativePosition(4);
       //
       //       Set<MultiQuestionAlternative> alternativeList2 = new HashSet<>();
       //       alternativeList2.add(singleAlt);
@@ -89,9 +89,9 @@ public class SurveyApplication {
       //
       //       multi2.setAlternatives(alternativeList2);
       //
-      //       text.setPosition(1);
-      //       multi.setPosition(2);
-      //       multi2.setPosition(3);
+      //       text.setAlternativePosition(1);
+      //       multi.setAlternativePosition(2);
+      //       multi2.setAlternativePosition(3);
       //
       //       Set<Question> questionList = new HashSet<>();
       //       questionList.add(multi);
@@ -109,11 +109,11 @@ public class SurveyApplication {
       //
       //       Question jonteQuestion1 = new TextQuestion();
       //       jonteQuestion1.setTitle("FRÅGA 1");
-      //       jonteQuestion1.setPosition(1);
+      //       jonteQuestion1.setAlternativePosition(1);
       //
       //       Question jonteQuestion2 = new TextQuestion();
       //       jonteQuestion2.setTitle("FRÅGA 2");
-      //       jonteQuestion2.setPosition(2);
+      //       jonteQuestion2.setAlternativePosition(2);
       //
       //       Set<Question> questionListJonte = new HashSet<>();
       //       questionListJonte.add(jonteQuestion1);

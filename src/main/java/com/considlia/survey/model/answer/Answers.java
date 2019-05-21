@@ -11,7 +11,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED)
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public abstract class Answers {
 
   @Id
@@ -19,7 +19,7 @@ public abstract class Answers {
   @Column(name = "answer_id")
   private Long id;
 
-  private int position;
+  private int questionPosition;
   public Answers() {}
 
   public Long getId() {
@@ -27,11 +27,11 @@ public abstract class Answers {
   }
 
   public int getPosition() {
-    return position;
+    return questionPosition;
   }
 
-  public void setPosition(int position) {
-    this.position = position;
+  public void setPosition(int questionPosition) {
+    this.questionPosition = questionPosition;
   }
 
 }
