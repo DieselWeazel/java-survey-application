@@ -1,5 +1,6 @@
 package com.considlia.survey.model;
 
+import com.considlia.survey.model.question.Question;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
@@ -37,10 +38,10 @@ public class Survey {
   @JoinColumn(name = "user_id")
   private User user;
 
-//  @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-//  @JoinColumn(name = "survey_id")
-//  @OrderBy("position ASC")
-//  private Set<SurveyResponses> surveyResponses = new HashSet<>();
+  @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+  @JoinColumn(name = "survey_id")
+  @OrderBy("position ASC")
+  private Set<SurveyResponses> surveyResponses = new HashSet<>();
 
   // Related to Status Class, Status.ENUM_VALUE
   //private String currentStatus;
@@ -106,6 +107,14 @@ public class Survey {
 
   public void addQuestion(Question question) {
     getQuestions().add(question);
+  }
+
+  public Set<SurveyResponses> getSurveyResponses() {
+    return surveyResponses;
+  }
+
+  public void setSurveyResponses(Set<SurveyResponses> surveyResponses) {
+    this.surveyResponses = surveyResponses;
   }
 
   public void moveQuestion(Question question, int moveDirection) {

@@ -1,8 +1,8 @@
 package com.considlia.survey.ui.custom_component.question_with_button;
 
 import java.util.List;
-import com.considlia.survey.model.MultiQuestion;
-import com.considlia.survey.model.MultiQuestionAlternative;
+import com.considlia.survey.model.question.MultiQuestion;
+import com.considlia.survey.model.question.MultiQuestionAlternative;
 import com.considlia.survey.ui.CreateSurveyView;
 import com.considlia.survey.ui.custom_component.QuestionType;
 import com.vaadin.flow.component.checkbox.CheckboxGroup;

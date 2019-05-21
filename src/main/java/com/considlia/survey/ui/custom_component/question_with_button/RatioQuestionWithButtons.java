@@ -2,7 +2,7 @@ package com.considlia.survey.ui.custom_component.question_with_button;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.considlia.survey.model.RatioQuestion;
+import com.considlia.survey.model.question.RatioQuestion;
 import com.considlia.survey.ui.CreateSurveyView;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.radiobutton.RadioGroupVariant;

@@ -1,6 +1,6 @@
 package com.considlia.survey.ui.custom_component.question_with_button;
 
-import com.considlia.survey.model.Question;
+import com.considlia.survey.model.question.Question;
 import com.considlia.survey.ui.CreateSurveyView;
 import com.considlia.survey.ui.custom_component.ConfirmDialog;
 import com.vaadin.flow.component.button.Button;

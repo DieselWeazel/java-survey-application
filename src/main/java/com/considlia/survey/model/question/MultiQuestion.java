@@ -1,4 +1,4 @@
-package com.considlia.survey.model;
+package com.considlia.survey.model.question;
 
 import java.util.HashSet;
 import java.util.Set;

@@ -1,4 +1,4 @@
-package com.considlia.survey.model;
+package com.considlia.survey.model.question;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

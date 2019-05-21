@@ -1,6 +1,10 @@
 
 package com.considlia.survey.model;
 
+import com.considlia.survey.model.question.MultiQuestion;
+import com.considlia.survey.model.question.Question;
+import com.considlia.survey.model.question.RatioQuestion;
+import com.considlia.survey.model.question.TextQuestion;
 import java.util.List;
 import com.considlia.survey.ui.CreateSurveyView;
 import com.considlia.survey.ui.custom_component.QuestionType;

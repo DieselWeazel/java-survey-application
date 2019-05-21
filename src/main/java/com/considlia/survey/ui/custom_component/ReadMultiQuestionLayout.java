@@ -1,7 +1,7 @@
 package com.considlia.survey.ui.custom_component;
 
-import com.considlia.survey.model.MultiQuestion;
-import com.considlia.survey.model.MultiQuestionAlternative;
+import com.considlia.survey.model.question.MultiQuestion;
+import com.considlia.survey.model.question.MultiQuestionAlternative;
 import com.vaadin.flow.component.checkbox.CheckboxGroup;
 import com.vaadin.flow.component.checkbox.CheckboxGroupVariant;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;

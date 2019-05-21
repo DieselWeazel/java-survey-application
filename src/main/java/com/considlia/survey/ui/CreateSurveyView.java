@@ -6,15 +6,14 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-import com.considlia.survey.model.MultiQuestion;
-import com.considlia.survey.model.MultiQuestionAlternative;
-import com.considlia.survey.model.Question;
+import com.considlia.survey.model.question.MultiQuestion;
+import com.considlia.survey.model.question.MultiQuestionAlternative;
+import com.considlia.survey.model.question.Question;
 import com.considlia.survey.model.QuestionFactory;
-import com.considlia.survey.model.RatioQuestion;
+import com.considlia.survey.model.question.RatioQuestion;
 import com.considlia.survey.model.Role;
 import com.considlia.survey.model.Survey;
-import com.considlia.survey.model.TextQuestion;
-import com.considlia.survey.model.User;
+import com.considlia.survey.model.question.TextQuestion;
 import com.considlia.survey.repositories.SurveyRepository;
 import com.considlia.survey.repositories.UserRepository;
 import com.considlia.survey.ui.custom_component.ConfirmDialog;
@@ -45,13 +44,8 @@ import com.vaadin.flow.router.BeforeLeaveObserver;
 import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.OptionalParameter;
 import com.vaadin.flow.router.Route;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 
 @StyleSheet("css/app.css")
 @Route(value = "createsurvey", layout = MainLayout.class)
