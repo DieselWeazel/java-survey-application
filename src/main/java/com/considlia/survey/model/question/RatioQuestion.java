@@ -1,9 +1,8 @@
 package com.considlia.survey.model.question;
 
-import com.considlia.survey.model.question.Question;
+import com.considlia.survey.model.QuestionType;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import com.considlia.survey.ui.custom_component.QuestionType;
 
 @Entity
 @Table(name = "ratingquestion")
@@ -15,13 +14,12 @@ public class RatioQuestion extends Question {
 
   public RatioQuestion() {}
 
-  public RatioQuestion(String questionTitle, int position, QuestionType questionType,
-      boolean mandatory, String start, String end, int choices) {
-    super(questionTitle, position, questionType, mandatory);
-
-    this.start = start;
-    this.end = end;
-    this.choices = choices;
+  public RatioQuestion(String questionTitle, boolean mandatory, String start, String end,
+      int choice) {
+    super(questionTitle, QuestionType.RATIO, mandatory);
+    setStart(start);
+    setEnd(end);
+    setChoices(choice);
   }
 
   public String getStart() {

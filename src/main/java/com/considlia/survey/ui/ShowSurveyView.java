@@ -17,7 +17,6 @@ import com.considlia.survey.ui.custom_component.ReadQuestionLayout;
 import com.considlia.survey.ui.custom_component.ReadRatioQuestionLayout;
 import com.considlia.survey.ui.custom_component.ReadTextQuestionLayout;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H5;
 import com.vaadin.flow.component.html.Label;
@@ -30,7 +29,6 @@ import com.vaadin.flow.router.Route;
 /*
  * http://localhost:8080/showsurvey/1
  */
-@StyleSheet("css/app.css")
 @Route(value = "showsurvey", layout = MainLayout.class)
 public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
 
@@ -48,8 +46,6 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
   private boolean containsMandatory = false;
 
   public ShowSurveyView(SurveyRepository surveyRepository, ResponseRepository responseRepository) {
-    // Using same ID as CreateSurveyView as of now.
-    setId("createsurvey");
     this.surveyRepository = surveyRepository;
     this.responseRepository = responseRepository;
     this.h1 = new H1("PlaceHolder // Survey Not Actually Found, Text not Updated");

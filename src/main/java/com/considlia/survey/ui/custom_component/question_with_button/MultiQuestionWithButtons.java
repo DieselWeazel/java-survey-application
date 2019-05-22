@@ -1,10 +1,9 @@
 package com.considlia.survey.ui.custom_component.question_with_button;
 
+import com.considlia.survey.model.QuestionType;
 import java.util.List;
 import com.considlia.survey.model.question.MultiQuestion;
-import com.considlia.survey.model.question.MultiQuestionAlternative;
 import com.considlia.survey.ui.CreateSurveyView;
-import com.considlia.survey.ui.custom_component.QuestionType;
 import com.vaadin.flow.component.checkbox.CheckboxGroup;
 import com.vaadin.flow.component.checkbox.CheckboxGroupVariant;
 import com.vaadin.flow.component.dependency.StyleSheet;
@@ -20,14 +19,13 @@ public class MultiQuestionWithButtons extends QuestionWithButtons {
   private RadioButtonGroup<String> radioButtons;
   private CheckboxGroup<String> checkBoxButtons;
 
-  public MultiQuestionWithButtons(MultiQuestion question, CreateSurveyView survey,
-      List<String> stringAlternatives) {
+  public MultiQuestionWithButtons(MultiQuestion question, CreateSurveyView survey) {
     super(question, survey);
 
-    this.stringAlternatives = stringAlternatives;
+    this.stringAlternatives = question.getStringAlternatives();
     this.question = question;
 
-    updateAlternatives();
+    // updateAlternatives();
 
     if (question.getQuestionType() == QuestionType.RADIO) {
       radioButtons = new RadioButtonGroup<>();
@@ -43,16 +41,16 @@ public class MultiQuestionWithButtons extends QuestionWithButtons {
     }
 
   }
-
-  public void updateAlternatives() {
-    getQuestion().getAlternatives().clear();
-    for (int position = 0; position < stringAlternatives.size(); position++) {
-      MultiQuestionAlternative alt = new MultiQuestionAlternative();
-      alt.setPosition(position);
-      alt.setTitle(stringAlternatives.get(position));
-      getQuestion().getAlternatives().add(alt);
-    }
-  }
+  //
+  // public void updateAlternatives() {
+  // getQuestion().getAlternatives().clear();
+  // for (int position = 0; position < stringAlternatives.size(); position++) {
+  // MultiQuestionAlternative alt = new MultiQuestionAlternative();
+  // alt.setPosition(position);
+  // alt.setTitle(stringAlternatives.get(position));
+  // getQuestion().getAlternatives().add(alt);
+  // }
+  // }
 
   @Override
   public MultiQuestion getQuestion() {
@@ -63,17 +61,17 @@ public class MultiQuestionWithButtons extends QuestionWithButtons {
     return stringAlternatives;
   }
 
-  public void setStringAlternatives(List<String> stringAlternatives) {
-    this.stringAlternatives = stringAlternatives;
-
-    updateAlternatives();
-
-    if (getQuestion().getQuestionType() == QuestionType.RADIO) {
-      radioButtons.setItems(stringAlternatives);
-    } else {
-      checkBoxButtons.setItems(stringAlternatives);
-    }
-
-  }
+  // public void setStringAlternatives(List<String> stringAlternatives) {
+  // this.stringAlternatives = stringAlternatives;
+  //
+  // updateAlternatives();
+  //
+  // if (getQuestion().getQuestionType() == QuestionType.RADIO) {
+  // radioButtons.setItems(stringAlternatives);
+  // } else {
+  // checkBoxButtons.setItems(stringAlternatives);
+  // }
+  //
+  // }
 
 }

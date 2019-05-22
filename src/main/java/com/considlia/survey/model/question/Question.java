@@ -1,5 +1,6 @@
 package com.considlia.survey.model.question;
 
+import com.considlia.survey.model.QuestionType;
 import com.considlia.survey.model.answer.Answers;
 import java.util.HashSet;
 import java.util.Set;
@@ -11,7 +12,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import com.considlia.survey.ui.custom_component.QuestionType;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -35,6 +35,12 @@ public abstract class Question {
   private Set<Answers> answerSet = new HashSet<>();
 
   public Question() {}
+
+  public Question(String questionTitle, QuestionType questionType, boolean mandatory) {
+    this.title = questionTitle;
+    this.mandatory = mandatory;
+    this.questionType = questionType;
+  }
 
   public Question(String questionTitle, int position, QuestionType questionType,
       boolean mandatory) {

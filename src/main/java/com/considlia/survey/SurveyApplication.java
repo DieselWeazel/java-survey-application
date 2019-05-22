@@ -49,7 +49,6 @@ public class SurveyApplication {
                   user.setPassword(passwordEncoder.encode("user"));
 
                   userRepository.save(user);
-      //
     };
   }
 }

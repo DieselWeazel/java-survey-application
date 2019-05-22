@@ -2,8 +2,8 @@ package com.considlia.survey.model;
 
 import com.considlia.survey.model.question.Question;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -31,17 +31,17 @@ public class Survey {
 
   @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   @JoinColumn(name = "survey_id")
-  @OrderBy("position ASC")
-  private Set<Question> questions = new HashSet<>();
-  
+  private List<Question> questions = new ArrayList<>();
+
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user_id")
   private User user;
 
+
   @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "survey_id")
   @OrderBy("position ASC")
-  private Set<SurveyResponses> surveyResponses = new HashSet<>();
+  private List<SurveyResponses> surveyResponses = new ArrayList<>();
 
   // Related to Status Class, Status.ENUM_VALUE
   //private String currentStatus;
@@ -81,11 +81,11 @@ public class Survey {
     this.date = date;
   }
 
-  public Set<Question> getQuestions() {
+  public List<Question> getQuestions() {
     return questions;
   }
 
-  public void setQuestions(Set<Question> questions) {
+  public void setQuestions(List<Question> questions) {
     this.questions = questions;
   }
 
@@ -109,11 +109,11 @@ public class Survey {
     getQuestions().add(question);
   }
 
-  public Set<SurveyResponses> getSurveyResponses() {
+  public List<SurveyResponses> getSurveyResponses() {
     return surveyResponses;
   }
 
-  public void setSurveyResponses(Set<SurveyResponses> surveyResponses) {
+  public void setSurveyResponses(List<SurveyResponses> surveyResponses) {
     this.surveyResponses = surveyResponses;
   }
 
