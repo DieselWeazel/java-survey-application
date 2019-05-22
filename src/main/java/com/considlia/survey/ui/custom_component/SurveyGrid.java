@@ -1,15 +1,10 @@
 package com.considlia.survey.ui.custom_component;
 
 import com.considlia.survey.model.Survey;
-import com.considlia.survey.model.User;
 import com.considlia.survey.repositories.SurveyRepository;
 import com.considlia.survey.repositories.UserRepository;
 import com.considlia.survey.security.CustomUserService;
-import com.considlia.survey.ui.CreateSurveyView;
 import com.considlia.survey.ui.HomeView;
-import com.considlia.survey.ui.ShowSurveyView;
-import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.HeaderRow;
 import com.vaadin.flow.component.icon.Icon;
@@ -24,7 +19,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.BiFunction;
-import java.util.function.Consumer;
 import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -71,10 +65,10 @@ public class SurveyGrid extends VerticalLayout {
   }
 
   @PostConstruct
-  public void init(){
+  public void init() {
     grid = new Grid<>();
     surveyList = surveyRepository.findAll();
-    if (!isHome){
+    if (!isHome) {
       surveyList = surveyRepository.findAllByUserId(customUserService.getUser().getId());
     }
     generateGridColumns();
@@ -82,7 +76,8 @@ public class SurveyGrid extends VerticalLayout {
   }
 
   /**
-   * Generates Grid Columns, in case of Profile View we don't add Creator Column, instead add more tools to our Grid.
+   * Generates Grid Columns, in case of Profile View we don't add Creator Column, instead add more
+   * tools to our Grid.
    */
   private void generateGridColumns() {
     idColumn = grid.addColumn(Survey::getId).setHeader("Id").setWidth("3%");
@@ -107,9 +102,8 @@ public class SurveyGrid extends VerticalLayout {
     }
     dateColumn = grid.addColumn(Survey::getDate).setHeader("Date");
 
-
     // Includes deleteSurvey method to Consumer if we are on ProfileView.
-    if(!isHome) {
+    if (!isHome) {
       grid.addComponentColumn(item -> {
         GridTools gridTools = new GridTools(item, this::updateGridData);
         return gridTools;
@@ -198,8 +192,9 @@ public class SurveyGrid extends VerticalLayout {
     return new HorizontalLayout(info);
   }
 
-  private void updateGridData(Survey survey){
+  private void updateGridData(Survey survey) {
     surveyRepository.delete(survey);
-    grid.setItems(surveyList = surveyRepository.findAllByUserId(customUserService.getUser().getId()));
+    grid.setItems(
+        surveyList = surveyRepository.findAllByUserId(customUserService.getUser().getId()));
   }
 }

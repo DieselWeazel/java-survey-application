@@ -1,4 +1,3 @@
-
 package com.considlia.survey.model;
 
 public enum QuestionType {

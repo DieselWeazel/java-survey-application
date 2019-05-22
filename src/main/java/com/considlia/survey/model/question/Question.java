@@ -14,7 +14,6 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -34,7 +33,8 @@ public abstract class Question {
   @JoinColumn(name = "question_id")
   private Set<Answers> answerSet = new HashSet<>();
 
-  public Question() {}
+  public Question() {
+  }
 
   public Question(String questionTitle, QuestionType questionType, boolean mandatory) {
     this.title = questionTitle;

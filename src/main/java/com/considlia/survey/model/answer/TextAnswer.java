@@ -1,8 +1,6 @@
 package com.considlia.survey.model.answer;
 
-import com.considlia.survey.model.answer.Answers;
 import javax.persistence.Entity;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity

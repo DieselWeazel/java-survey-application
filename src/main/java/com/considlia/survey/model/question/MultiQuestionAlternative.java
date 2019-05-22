@@ -19,7 +19,8 @@ public class MultiQuestionAlternative {
   private String title;
   private int position;
 
-  public MultiQuestionAlternative() {}
+  public MultiQuestionAlternative() {
+  }
 
   public MultiQuestionAlternative(String questionTitle) {
     this.title = questionTitle;

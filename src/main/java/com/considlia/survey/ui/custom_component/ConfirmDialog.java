@@ -1,21 +1,16 @@
 package com.considlia.survey.ui.custom_component;
 
 import com.considlia.survey.model.Survey;
-import com.considlia.survey.repositories.SurveyRepository;
 import com.considlia.survey.ui.CreateSurveyView;
 import com.considlia.survey.ui.custom_component.question_with_button.QuestionWithButtons;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
-import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.H5;
-import com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.router.BeforeLeaveEvent.ContinueNavigationAction;
-import java.util.List;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 public class ConfirmDialog extends Dialog {
 
@@ -24,7 +19,7 @@ public class ConfirmDialog extends Dialog {
   public ConfirmDialog(
       String headerText,
       String contentText,
-      Consumer <Survey> consumer,
+      Consumer<Survey> consumer,
       Survey item) {
     setCloseOnEsc(false);
     setCloseOnOutsideClick(false);
@@ -94,9 +89,9 @@ public class ConfirmDialog extends Dialog {
     open();
   }
 
-  public ConfirmDialog(){
+  public ConfirmDialog() {
     add(new H5("Error, UserName and/or Email is already taken."));
-    add(new Button("Ok", e-> close()));
+    add(new Button("Ok", e -> close()));
   }
 
 

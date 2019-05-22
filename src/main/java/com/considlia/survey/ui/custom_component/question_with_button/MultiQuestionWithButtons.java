@@ -1,7 +1,6 @@
 package com.considlia.survey.ui.custom_component.question_with_button;
 
 import com.considlia.survey.model.QuestionType;
-import java.util.List;
 import com.considlia.survey.model.question.MultiQuestion;
 import com.considlia.survey.ui.CreateSurveyView;
 import com.vaadin.flow.component.checkbox.CheckboxGroup;
@@ -9,6 +8,7 @@ import com.vaadin.flow.component.checkbox.CheckboxGroupVariant;
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.radiobutton.RadioGroupVariant;
+import java.util.List;
 
 @StyleSheet("css/app.css")
 public class MultiQuestionWithButtons extends QuestionWithButtons {

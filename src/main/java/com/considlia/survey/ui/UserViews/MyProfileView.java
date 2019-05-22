@@ -1,7 +1,6 @@
 package com.considlia.survey.ui.UserViews;
 
 import com.considlia.survey.model.Role;
-import com.considlia.survey.model.Survey;
 import com.considlia.survey.repositories.SurveyRepository;
 import com.considlia.survey.repositories.UserRepository;
 import com.considlia.survey.security.CustomUserService;
@@ -10,8 +9,6 @@ import com.considlia.survey.ui.MainLayout;
 import com.considlia.survey.ui.custom_component.SurveyGrid;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.router.Route;
-import java.util.ArrayList;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 
@@ -27,7 +24,7 @@ public class MyProfileView extends BaseView {
   @Autowired
   private UserRepository userRepository;
 
-//  @Autowired
+  //  @Autowired
   private CustomUserService customUserService;
 
   @Autowired

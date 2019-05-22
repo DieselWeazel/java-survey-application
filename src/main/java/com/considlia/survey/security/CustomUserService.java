@@ -19,9 +19,10 @@ public class CustomUserService extends User {
 
   /**
    * In order to retrieve User info, this service gathers more than just the username/password.
+   *
    * @return currently logged in User for use as User Object
    */
-  public User getUser(){
+  public User getUser() {
     Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     User user = new User();
     // If Principal is of type User, get the User.

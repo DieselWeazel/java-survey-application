@@ -1,7 +1,5 @@
 package com.considlia.survey.ui.custom_component;
 
-import java.util.ArrayList;
-import java.util.List;
 import com.considlia.survey.model.question.MultiQuestionAlternative;
 import com.considlia.survey.ui.custom_component.question_with_button.MultiQuestionWithButtons;
 import com.considlia.survey.ui.custom_component.question_with_button.TextQuestionWithButtons;
@@ -14,6 +12,8 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import java.util.ArrayList;
+import java.util.List;
 
 public class EditDialog extends Dialog {
 

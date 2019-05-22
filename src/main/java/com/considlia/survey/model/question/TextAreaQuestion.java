@@ -8,7 +8,8 @@ import javax.persistence.Table;
 @Table(name = "textareaquestion")
 public class TextAreaQuestion extends TextQuestion {
 
-  public TextAreaQuestion() {}
+  public TextAreaQuestion() {
+  }
 
   public TextAreaQuestion(String questionTitle, boolean mandatory) {
     super(questionTitle, QuestionType.TEXTAREA, mandatory);

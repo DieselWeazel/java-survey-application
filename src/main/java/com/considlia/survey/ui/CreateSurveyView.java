@@ -1,19 +1,12 @@
 package com.considlia.survey.ui;
 
-import com.considlia.survey.security.CustomUserService;
-import java.time.LocalDate;
-import java.util.LinkedHashSet;
-import java.util.Set;
 import com.considlia.survey.model.QuestionType;
-import com.considlia.survey.model.question.MultiQuestion;
-import com.considlia.survey.model.question.MultiQuestionAlternative;
-import com.considlia.survey.model.question.Question;
-import com.considlia.survey.model.question.RatioQuestion;
 import com.considlia.survey.model.Role;
 import com.considlia.survey.model.Survey;
-import com.considlia.survey.model.question.TextQuestion;
+import com.considlia.survey.model.question.Question;
 import com.considlia.survey.repositories.SurveyRepository;
 import com.considlia.survey.repositories.UserRepository;
+import com.considlia.survey.security.CustomUserService;
 import com.considlia.survey.ui.custom_component.ConfirmDialog;
 import com.considlia.survey.ui.custom_component.CreateAlternative;
 import com.considlia.survey.ui.custom_component.CreateRatioComponents;
@@ -39,6 +32,9 @@ import com.vaadin.flow.router.BeforeLeaveObserver;
 import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.OptionalParameter;
 import com.vaadin.flow.router.Route;
+import java.time.LocalDate;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 
@@ -137,7 +133,9 @@ public class CreateSurveyView extends BaseView
     /*
     Currently doesn't allow for editing of Users name within CreatorName for Survey.
      */
-    creatorNameTextField.setValue(customUserService.getUser().getLastName() + ", " + customUserService.getUser().getFirstName());
+    creatorNameTextField.setValue(
+        customUserService.getUser().getLastName() + ", " + customUserService.getUser()
+            .getFirstName());
     creatorNameTextField.setEnabled(false);
     descriptionTextArea.setValueChangeMode(ValueChangeMode.EAGER);
   }

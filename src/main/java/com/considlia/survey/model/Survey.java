@@ -46,7 +46,8 @@ public class Survey {
   // Related to Status Class, Status.ENUM_VALUE
   //private String currentStatus;
 
-  public Survey() {}
+  public Survey() {
+  }
 
   public Survey(String surveyTitle, String creator) {
     setTitle(surveyTitle);

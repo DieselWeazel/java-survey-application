@@ -19,7 +19,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 public class SecurityUtils {
 
-  private SecurityUtils() {}
+  private SecurityUtils() {
+  }
 
   public static boolean hasAccess(Class securedClass) {
     // TODO might be redundant?
@@ -27,7 +28,7 @@ public class SecurityUtils {
         LoginView.class.equals(securedClass)
             || HomeView.class.equals(securedClass)
             || ShowSurveyView.class.equals(securedClass)
-        || RegistrationView.class.equals(securedClass);
+            || RegistrationView.class.equals(securedClass);
 
     // Allowing views that does not require login
     if (allowedViews) {
@@ -62,7 +63,9 @@ public class SecurityUtils {
     return !(authentication instanceof AnonymousAuthenticationToken);
   }
 
-  /** Checks if internal request, for framework purposes. */
+  /**
+   * Checks if internal request, for framework purposes.
+   */
   static boolean isFrameworkInternalRequest(HttpServletRequest request) {
     final String parameterValue = request.getParameter(ApplicationConstants.REQUEST_TYPE_PARAMETER);
     return parameterValue != null

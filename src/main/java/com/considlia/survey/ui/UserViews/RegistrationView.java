@@ -5,14 +5,12 @@ import com.considlia.survey.repositories.UserRepository;
 import com.considlia.survey.security.SecurityUtils;
 import com.considlia.survey.security.UserDetailsServiceImpl;
 import com.considlia.survey.ui.BaseView;
-import com.considlia.survey.ui.HomeView;
 import com.considlia.survey.ui.MainLayout;
 import com.considlia.survey.ui.custom_component.ConfirmDialog;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasSize;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.PasswordField;
@@ -24,17 +22,14 @@ import com.vaadin.flow.data.validator.StringLengthValidator;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.Route;
-import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
-import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
 /*
 There is no DAO Authentication within this as of now.
 Jonathan
@@ -71,7 +66,8 @@ public class RegistrationView extends BaseView implements BeforeEnterObserver {
     super("Registration");
     initUI("580px");
   }
-//SQLIntegrityConstraintViolationException
+
+  //SQLIntegrityConstraintViolationException
   //DataIntegrityViolationException
   //ConstraintViolationException
   private void registerUser() {
@@ -89,7 +85,7 @@ public class RegistrationView extends BaseView implements BeforeEnterObserver {
       signIn();
       // The real duplicate is nested within this exception, if we want to show the duplicate correctly
       // we will need to dig into the exception. Leaving this here for the future.
-    } catch (DataIntegrityViolationException e){
+    } catch (DataIntegrityViolationException e) {
       ConfirmDialog confirmDialog = new ConfirmDialog();
       confirmDialog.open();
 //      e.printStackTrace();
@@ -99,6 +95,7 @@ public class RegistrationView extends BaseView implements BeforeEnterObserver {
 
     }
   }
+
   /*
   Sign in function doesn't work properly now.
    */
@@ -172,7 +169,7 @@ public class RegistrationView extends BaseView implements BeforeEnterObserver {
 
   @Override
   public void beforeEnter(BeforeEnterEvent event) {
-    if (SecurityUtils.isUserLoggedIn()){
+    if (SecurityUtils.isUserLoggedIn()) {
       event.rerouteTo("");
     }
   }

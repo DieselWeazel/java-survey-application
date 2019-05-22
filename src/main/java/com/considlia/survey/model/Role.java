@@ -1,6 +1,7 @@
 package com.considlia.survey.model;
 
 public class Role {
+
   public static final String USER = "USER";
   public static final String ADMIN = "ADMIN";
 
@@ -9,6 +10,6 @@ public class Role {
   }
 
   public static String[] getAllRoles() {
-    return new String[] {USER, ADMIN};
+    return new String[]{USER, ADMIN};
   }
 }

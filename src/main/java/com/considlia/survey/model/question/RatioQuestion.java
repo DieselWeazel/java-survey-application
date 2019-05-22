@@ -12,7 +12,8 @@ public class RatioQuestion extends Question {
   private String end;
   private int choices;
 
-  public RatioQuestion() {}
+  public RatioQuestion() {
+  }
 
   public RatioQuestion(String questionTitle, boolean mandatory, String start, String end,
       int choice) {

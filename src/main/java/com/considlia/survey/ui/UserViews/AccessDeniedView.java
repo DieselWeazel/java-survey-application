@@ -18,7 +18,7 @@ public class AccessDeniedView extends BaseView {
 
   private HorizontalLayout horizontalLayout;
 
-  public AccessDeniedView(){
+  public AccessDeniedView() {
     super("Oops!");
     add(new H3("Looks like you tried to access a forbidden route."));
     add(new H4("Have you tried logging in before accessing this destination?"));
@@ -27,10 +27,9 @@ public class AccessDeniedView extends BaseView {
     this.registerButton = new Button("Register");
     this.backToHomeButton = new Button("Go Home");
 
-    loginButton.addClickListener(e-> UI.getCurrent().navigate("login"));
-    registerButton.addClickListener(e-> UI.getCurrent().navigate("registration"));
-    backToHomeButton.addClickListener(e-> UI.getCurrent().navigate(""));
-
+    loginButton.addClickListener(e -> UI.getCurrent().navigate("login"));
+    registerButton.addClickListener(e -> UI.getCurrent().navigate("registration"));
+    backToHomeButton.addClickListener(e -> UI.getCurrent().navigate(""));
 
     this.horizontalLayout = new HorizontalLayout(loginButton, registerButton, backToHomeButton);
     add(horizontalLayout);

@@ -32,18 +32,19 @@ public class MainLayout extends VerticalLayout implements RouterLayout {
   private VerticalLayout contentContainer;
   @Autowired
   private HttpServletRequest httpServletRequest;
+
   public MainLayout() {
     setId("mainlayout");
 
     navigation = new HorizontalLayout();
 
     navigation.add(createRouterLink(HomeView.class, "Home", VaadinIcon.HOME));
-    navigation.add(createRouterLink(CreateSurveyView.class, "Create New Survey", VaadinIcon.PLUS_CIRCLE));
+    navigation
+        .add(createRouterLink(CreateSurveyView.class, "Create New Survey", VaadinIcon.PLUS_CIRCLE));
     navigation.add(createRouterLink(MyProfileView.class, "profileview", VaadinIcon.USER));
 
-
-    if (SecurityUtils.isUserLoggedIn()){
-      navigation.add(new Button("Logout", new Icon(VaadinIcon.EXIT), e-> logoutUser()));
+    if (SecurityUtils.isUserLoggedIn()) {
+      navigation.add(new Button("Logout", new Icon(VaadinIcon.EXIT), e -> logoutUser()));
     } else {
       navigation.add(createRouterLink(LoginView.class, "Login", VaadinIcon.SIGN_IN));
       navigation.add(createRouterLink(RegistrationView.class, "registration", VaadinIcon.PENCIL));
@@ -55,7 +56,7 @@ public class MainLayout extends VerticalLayout implements RouterLayout {
     add(navigation, contentContainer);
   }
 
-  private void logoutUser(){
+  private void logoutUser() {
     SecurityContextHolder.clearContext();
     httpServletRequest.getSession(false).invalidate();
     UI.getCurrent().getSession().close();
@@ -65,11 +66,11 @@ public class MainLayout extends VerticalLayout implements RouterLayout {
   private Button createRouterLink(
       Class<? extends Component> targetViewClass, String text, VaadinIcon icon) {
     return new Button(text, new Icon(icon), e -> {
-        if (SecurityUtils.hasAccess(targetViewClass)) {
-          getUI().ifPresent(ui -> ui.navigate(targetViewClass));
-        } else {
-          getUI().ifPresent(ui -> ui.navigate(AccessDeniedView.class));
-        }
+      if (SecurityUtils.hasAccess(targetViewClass)) {
+        getUI().ifPresent(ui -> ui.navigate(targetViewClass));
+      } else {
+        getUI().ifPresent(ui -> ui.navigate(AccessDeniedView.class));
+      }
     });
   }
 

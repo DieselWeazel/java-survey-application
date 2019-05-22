@@ -1,16 +1,8 @@
 package com.considLia.survey;
 
-import com.considlia.survey.model.User;
-import com.considlia.survey.repositories.UserRepository;
-import java.sql.SQLIntegrityConstraintViolationException;
-import javax.validation.ConstraintViolationException;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
@@ -24,7 +16,8 @@ public class SurveyApplicationTests {
 //  public ExpectedException thrown = ExpectedException.none();
 
   @Test
-  public void contextLoads() {}
+  public void contextLoads() {
+  }
 
 //  @Test
 //  public void duplicateUserInfoTest(){

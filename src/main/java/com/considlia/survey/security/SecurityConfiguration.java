@@ -14,7 +14,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @EnableWebSecurity
@@ -22,7 +21,8 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 @Configuration
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-  @Autowired private final UserDetailsServiceImpl userDetailsService;
+  @Autowired
+  private final UserDetailsServiceImpl userDetailsService;
 
   public SecurityConfiguration(UserDetailsServiceImpl userDetailsService) {
     this.userDetailsService = userDetailsService;

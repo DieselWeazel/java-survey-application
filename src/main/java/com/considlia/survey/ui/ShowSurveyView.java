@@ -1,19 +1,13 @@
 package com.considlia.survey.ui;
 
-import java.time.LocalDate;
-import java.util.Iterator;
-import com.considlia.survey.model.answer.Answers;
+import com.considlia.survey.model.Survey;
 import com.considlia.survey.model.question.MultiQuestion;
-import com.considlia.survey.model.question.MultiQuestionAlternative;
 import com.considlia.survey.model.question.Question;
 import com.considlia.survey.model.question.RatioQuestion;
-import com.considlia.survey.model.Survey;
-import com.considlia.survey.model.SurveyResponses;
 import com.considlia.survey.model.question.TextQuestion;
 import com.considlia.survey.repositories.ResponseRepository;
 import com.considlia.survey.repositories.SurveyRepository;
 import com.considlia.survey.ui.custom_component.ReadMultiQuestionLayout;
-import com.considlia.survey.ui.custom_component.ReadQuestionLayout;
 import com.considlia.survey.ui.custom_component.ReadRatioQuestionLayout;
 import com.considlia.survey.ui.custom_component.ReadTextQuestionLayout;
 import com.vaadin.flow.component.button.Button;

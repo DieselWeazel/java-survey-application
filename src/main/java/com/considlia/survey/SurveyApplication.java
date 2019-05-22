@@ -20,7 +20,8 @@ Add a user and try the functionality
 @ComponentScan(basePackages = "com.considlia.survey")
 public class SurveyApplication {
 
-  @Autowired private PasswordEncoder passwordEncoder;
+  @Autowired
+  private PasswordEncoder passwordEncoder;
 
   public static void main(String[] args) {
     SpringApplication.run(SurveyApplication.class, args);
@@ -30,25 +31,25 @@ public class SurveyApplication {
   public CommandLineRunner initDb(
       SurveyRepository surveyRepository, UserRepository userRepository) {
     return args -> {
-                  User adminUser = new User();
-                  adminUser.setFirstName("admin");
-                  adminUser.setLastName("admin");
-                  adminUser.setEmail("admin@gmail.com");
-                  adminUser.setRole("ADMIN");
-                  adminUser.setUsername("admin");
-                  adminUser.setPassword(passwordEncoder.encode("admin"));
+      User adminUser = new User();
+      adminUser.setFirstName("admin");
+      adminUser.setLastName("admin");
+      adminUser.setEmail("admin@gmail.com");
+      adminUser.setRole("ADMIN");
+      adminUser.setUsername("admin");
+      adminUser.setPassword(passwordEncoder.encode("admin"));
 
-                  userRepository.save(adminUser);
+      userRepository.save(adminUser);
 
-                  User user = new User();
-                  user.setFirstName("noob");
-                  user.setLastName("scrub");
-                  user.setEmail("newbie@gmail.com");
-                  user.setRole("USER");
-                  user.setUsername("user");
-                  user.setPassword(passwordEncoder.encode("user"));
+      User user = new User();
+      user.setFirstName("noob");
+      user.setLastName("scrub");
+      user.setEmail("newbie@gmail.com");
+      user.setRole("USER");
+      user.setUsername("user");
+      user.setPassword(passwordEncoder.encode("user"));
 
-                  userRepository.save(user);
+      userRepository.save(user);
     };
   }
 }

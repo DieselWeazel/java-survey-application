@@ -15,7 +15,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 @Entity
@@ -47,7 +46,8 @@ public class SurveyResponses {
   // Boolean
   // private boolen surveyStatus;
 
-  public SurveyResponses() {}
+  public SurveyResponses() {
+  }
 
   public SurveyResponses(LocalDate date, Set<Answers> answers) {
     this.date = date;
