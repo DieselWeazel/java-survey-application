@@ -1,9 +1,5 @@
 package com.considlia.survey.ui.custom_component;
 
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
 import com.considlia.survey.model.QuestionType;
 import com.considlia.survey.ui.CreateSurveyView;
 import com.vaadin.flow.component.AbstractField.ComponentValueChangeEvent;
@@ -11,6 +7,10 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 public class CreateAlternative extends VerticalLayout {
 

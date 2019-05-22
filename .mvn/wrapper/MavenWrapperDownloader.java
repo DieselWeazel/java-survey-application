@@ -44,8 +44,7 @@ public class MavenWrapperDownloader {
   /**
    * Path where the maven-wrapper.jar will be saved to.
    */
-  private static final String MAVEN_WRAPPER_JAR_PATH =
-      ".mvn/wrapper/maven-wrapper.jar";
+  private static final String MAVEN_WRAPPER_JAR_PATH = ".mvn/wrapper/maven-wrapper.jar";
 
   /**
    * Name of the property which should be used to override the default download url for the
@@ -87,7 +86,8 @@ public class MavenWrapperDownloader {
     if (!outputFile.getParentFile().exists()) {
       if (!outputFile.getParentFile().mkdirs()) {
         System.out.println(
-            "- ERROR creating output direcrory '" + outputFile.getParentFile().getAbsolutePath()
+            "- ERROR creating output direcrory '"
+                + outputFile.getParentFile().getAbsolutePath()
                 + "'");
       }
     }
@@ -112,5 +112,4 @@ public class MavenWrapperDownloader {
     fos.close();
     rbc.close();
   }
-
 }

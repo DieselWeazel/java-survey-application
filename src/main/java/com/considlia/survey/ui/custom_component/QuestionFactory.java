@@ -1,14 +1,13 @@
-
 package com.considlia.survey.ui.custom_component;
 
-import java.util.List;
-import com.considlia.survey.model.CheckBoxQuestion;
-import com.considlia.survey.model.Question;
 import com.considlia.survey.model.QuestionType;
-import com.considlia.survey.model.RadioQuestion;
-import com.considlia.survey.model.RatioQuestion;
-import com.considlia.survey.model.TextAreaQuestion;
-import com.considlia.survey.model.TextFieldQuestion;
+import com.considlia.survey.model.question.CheckBoxQuestion;
+import com.considlia.survey.model.question.Question;
+import com.considlia.survey.model.question.RadioQuestion;
+import com.considlia.survey.model.question.RatioQuestion;
+import com.considlia.survey.model.question.TextAreaQuestion;
+import com.considlia.survey.model.question.TextFieldQuestion;
+import java.util.List;
 
 public class QuestionFactory {
 

@@ -1,6 +1,6 @@
 package com.considlia.survey.ui.custom_component.question_with_button;
 
-import com.considlia.survey.model.Question;
+import com.considlia.survey.model.question.Question;
 import com.considlia.survey.ui.CreateSurveyView;
 import com.considlia.survey.ui.custom_component.ConfirmDialog;
 import com.vaadin.flow.component.button.Button;
@@ -49,14 +49,14 @@ public abstract class QuestionWithButtons extends VerticalLayout {
     content.add(new Button(new Icon(VaadinIcon.TRASH), event -> removeQuestion(survey)));
 
     add(content);
-
   }
 
   public void initButtonEvent(Button button, int move) {
-    button.addClickListener(onClick -> {
-      survey.moveQuestion(onClick.getSource(), move);
-      survey.updateMoveButtonStatus();
-    });
+    button.addClickListener(
+        onClick -> {
+          survey.moveQuestion(onClick.getSource(), move);
+          survey.updateMoveButtonStatus();
+        });
   }
 
   public void removeQuestion(CreateSurveyView survey) {

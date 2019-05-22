@@ -1,5 +1,6 @@
-package com.considlia.survey.model;
+package com.considlia.survey.model.question;
 
+import com.considlia.survey.model.QuestionType;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
@@ -11,7 +12,8 @@ public class RatioQuestion extends Question {
   private String end;
   private int choices;
 
-  public RatioQuestion() {}
+  public RatioQuestion() {
+  }
 
   public RatioQuestion(String questionTitle, boolean mandatory, String start, String end,
       int choice) {

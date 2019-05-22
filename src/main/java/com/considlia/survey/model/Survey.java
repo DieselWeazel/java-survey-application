@@ -1,5 +1,6 @@
 package com.considlia.survey.model;
 
+import com.considlia.survey.model.question.Question;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
@@ -29,10 +31,23 @@ public class Survey {
 
   @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   @JoinColumn(name = "survey_id")
-  @OrderBy("position ASC")
   private List<Question> questions = new ArrayList<>();
 
-  public Survey() {}
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "user_id")
+  private User user;
+
+
+  @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+  @JoinColumn(name = "survey_id")
+  @OrderBy("position ASC")
+  private List<SurveyResponses> surveyResponses = new ArrayList<>();
+
+  // Related to Status Class, Status.ENUM_VALUE
+  //private String currentStatus;
+
+  public Survey() {
+  }
 
   public Survey(String surveyTitle, String creator) {
     setTitle(surveyTitle);
@@ -83,8 +98,24 @@ public class Survey {
     this.description = description;
   }
 
+  public User getUser() {
+    return user;
+  }
+
+  public void setUser(User user) {
+    this.user = user;
+  }
+
   public void addQuestion(Question question) {
     getQuestions().add(question);
+  }
+
+  public List<SurveyResponses> getSurveyResponses() {
+    return surveyResponses;
+  }
+
+  public void setSurveyResponses(List<SurveyResponses> surveyResponses) {
+    this.surveyResponses = surveyResponses;
   }
 
   public void moveQuestion(Question question, int moveDirection) {
@@ -93,7 +124,16 @@ public class Survey {
 
   @Override
   public String toString() {
-    return "Survey [surveyId=" + id + ", surveyTitle=" + title + ", creator=" + creator + ", date="
-        + date + ", questionList=" + questions + "]";
+    return "Survey [surveyId="
+        + id
+        + ", surveyTitle="
+        + title
+        + ", creator="
+        + creator
+        + ", date="
+        + date
+        + ", questionList="
+        + questions
+        + "]";
   }
 }

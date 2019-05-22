@@ -1,5 +1,6 @@
-package com.considlia.survey.model;
+package com.considlia.survey.model.question;
 
+import com.considlia.survey.model.QuestionType;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.Table;

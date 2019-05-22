@@ -1,5 +1,6 @@
 package com.considlia.survey.model;
 
+import com.considlia.survey.model.answer.Answers;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
@@ -11,8 +12,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -23,32 +25,37 @@ public class SurveyResponses {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "response_id")
   private Long id;
-  private Long surveyId;
+
   private LocalDate date = LocalDate.now();
 
-  @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+  // Time spent on Survey
+  private Long time;
+
+  @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "response_id")
-  @OrderBy("question_question_id ASC")
   private Set<Answers> answers = new HashSet<>();
 
-  public SurveyResponses() {}
+  @OneToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "user_id")
+  private User user;
 
-  public SurveyResponses(Long surveyId, LocalDate date, Set<Answers> answers) {
-    this.surveyId = surveyId;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "survey_id")
+  private Survey survey;
+
+  // Boolean
+  // private boolen surveyStatus;
+
+  public SurveyResponses() {
+  }
+
+  public SurveyResponses(LocalDate date, Set<Answers> answers) {
     this.date = date;
     this.answers = answers;
   }
 
   public void addAnswer(Answers answer) {
     getAnswers().add(answer);
-  }
-
-  public Long getSurveyId() {
-    return surveyId;
-  }
-
-  public void setSurveyId(Long surveyId) {
-    this.surveyId = surveyId;
   }
 
   public LocalDate getDate() {
@@ -69,5 +76,13 @@ public class SurveyResponses {
 
   public Long getId() {
     return id;
+  }
+
+  public User getUser() {
+    return user;
+  }
+
+  public void setUser(User user) {
+    this.user = user;
   }
 }

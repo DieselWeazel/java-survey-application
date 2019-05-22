@@ -1,12 +1,12 @@
 package com.considlia.survey.ui;
 
-import java.time.LocalDate;
-import java.util.LinkedHashSet;
-import java.util.Set;
-import com.considlia.survey.model.Question;
 import com.considlia.survey.model.QuestionType;
+import com.considlia.survey.model.Role;
 import com.considlia.survey.model.Survey;
+import com.considlia.survey.model.question.Question;
 import com.considlia.survey.repositories.SurveyRepository;
+import com.considlia.survey.repositories.UserRepository;
+import com.considlia.survey.security.CustomUserService;
 import com.considlia.survey.ui.custom_component.ConfirmDialog;
 import com.considlia.survey.ui.custom_component.CreateAlternative;
 import com.considlia.survey.ui.custom_component.CreateRatioComponents;
@@ -32,8 +32,14 @@ import com.vaadin.flow.router.BeforeLeaveObserver;
 import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.OptionalParameter;
 import com.vaadin.flow.router.Route;
+import java.time.LocalDate;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 
 @Route(value = "createsurvey", layout = MainLayout.class)
+@Secured({Role.USER, Role.ADMIN})
 public class CreateSurveyView extends BaseView
     implements HasUrlParameter<Long>, BeforeLeaveObserver {
 
@@ -67,11 +73,17 @@ public class CreateSurveyView extends BaseView
   private CreateRatioComponents createRatioComponents;
   private CreateTextComponents createTextComponents;
 
-  public CreateSurveyView(SurveyRepository surveyRepository) {
+  @Autowired
+  private UserRepository userRepository;
+  @Autowired
+  private CustomUserService customUserService;
+
+  public CreateSurveyView(SurveyRepository surveyRepository, CustomUserService customUserService) {
     super("Create Survey");
     // setId("createsurvey");
 
     this.surveyRepository = surveyRepository;
+    this.customUserService = customUserService;
     thisSurvey = new Survey();
     hasChanges = false;
 
@@ -117,6 +129,14 @@ public class CreateSurveyView extends BaseView
 
     descriptionTextArea.setLabel("Description");
     descriptionTextArea.setWidth("600px");
+
+    /*
+    Currently doesn't allow for editing of Users name within CreatorName for Survey.
+     */
+    creatorNameTextField.setValue(
+        customUserService.getUser().getLastName() + ", " + customUserService.getUser()
+            .getFirstName());
+    creatorNameTextField.setEnabled(false);
     descriptionTextArea.setValueChangeMode(ValueChangeMode.EAGER);
   }
 
@@ -249,7 +269,7 @@ public class CreateSurveyView extends BaseView
   public void userCreationQuestion(QuestionType questionType) {
     // Clears the extraComponentLayout
     extraComponents.removeAll();
-    initShit();
+    initExtraComponents();
 
     if (questionType == QuestionType.RATIO) {
       extraComponents.add(createRatioComponents);
@@ -263,7 +283,7 @@ public class CreateSurveyView extends BaseView
     changeBtn();
   }
 
-  public void initShit() {
+  public void initExtraComponents() {
     if (createRatioComponents == null) {
       createRatioComponents = new CreateRatioComponents(this);
     }
@@ -338,6 +358,7 @@ public class CreateSurveyView extends BaseView
     thisSurvey.setDescription(descriptionTextArea.getValue());
     thisSurvey.setDate(LocalDate.now());
 
+    thisSurvey.setUser(customUserService.getUser());
     surveyRepository.save(thisSurvey);
     hasChanges = false;
     getUI().ifPresent(ui -> ui.navigate(""));

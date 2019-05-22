@@ -1,10 +1,10 @@
 package com.considlia.survey.ui.custom_component;
 
-import java.util.ArrayList;
-import java.util.List;
-import com.considlia.survey.model.RatioQuestion;
+import com.considlia.survey.model.question.RatioQuestion;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.radiobutton.RadioGroupVariant;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ReadRatioQuestionLayout extends ReadQuestionLayout {
 

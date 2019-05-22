@@ -1,4 +1,4 @@
-package com.considlia.survey.model;
+package com.considlia.survey.model.question;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,7 +19,8 @@ public class MultiQuestionAlternative {
   private String title;
   private int position;
 
-  public MultiQuestionAlternative() {}
+  public MultiQuestionAlternative() {
+  }
 
   public MultiQuestionAlternative(String questionTitle) {
     this.title = questionTitle;
@@ -45,5 +46,4 @@ public class MultiQuestionAlternative {
   public String toString() {
     return title;
   }
-
 }

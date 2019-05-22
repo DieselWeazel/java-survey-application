@@ -1,11 +1,11 @@
 package com.considlia.survey.ui.custom_component;
 
-import com.considlia.survey.model.CheckBoxQuestion;
-import com.considlia.survey.model.Question;
 import com.considlia.survey.model.QuestionType;
-import com.considlia.survey.model.RadioQuestion;
-import com.considlia.survey.model.RatioQuestion;
-import com.considlia.survey.model.TextQuestion;
+import com.considlia.survey.model.question.CheckBoxQuestion;
+import com.considlia.survey.model.question.Question;
+import com.considlia.survey.model.question.RadioQuestion;
+import com.considlia.survey.model.question.RatioQuestion;
+import com.considlia.survey.model.question.TextQuestion;
 import com.considlia.survey.ui.CreateSurveyView;
 import com.considlia.survey.ui.custom_component.question_with_button.MultiQuestionWithButtons;
 import com.considlia.survey.ui.custom_component.question_with_button.QuestionWithButtons;

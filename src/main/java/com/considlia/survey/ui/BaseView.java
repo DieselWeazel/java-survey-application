@@ -24,5 +24,4 @@ public abstract class BaseView extends VerticalLayout {
     setSizeUndefined();
     setId("baseview");
   }
-
 }

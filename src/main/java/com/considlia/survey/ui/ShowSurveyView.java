@@ -1,19 +1,13 @@
 package com.considlia.survey.ui;
 
-import java.time.LocalDate;
-import java.util.Iterator;
-import com.considlia.survey.model.Answers;
-import com.considlia.survey.model.MultiQuestion;
-import com.considlia.survey.model.MultiQuestionAlternative;
-import com.considlia.survey.model.Question;
-import com.considlia.survey.model.RatioQuestion;
 import com.considlia.survey.model.Survey;
-import com.considlia.survey.model.SurveyResponses;
-import com.considlia.survey.model.TextQuestion;
+import com.considlia.survey.model.question.MultiQuestion;
+import com.considlia.survey.model.question.Question;
+import com.considlia.survey.model.question.RatioQuestion;
+import com.considlia.survey.model.question.TextQuestion;
 import com.considlia.survey.repositories.ResponseRepository;
 import com.considlia.survey.repositories.SurveyRepository;
 import com.considlia.survey.ui.custom_component.ReadMultiQuestionLayout;
-import com.considlia.survey.ui.custom_component.ReadQuestionLayout;
 import com.considlia.survey.ui.custom_component.ReadRatioQuestionLayout;
 import com.considlia.survey.ui.custom_component.ReadTextQuestionLayout;
 import com.vaadin.flow.component.button.Button;
@@ -52,7 +46,7 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
     this.h5 = new H5();
     this.saveButton = new Button();
     saveButton.setText("Send");
-    saveButton.addClickListener(e -> saveResponse());
+//    saveButton.addClickListener(e -> saveResponse());
   }
 
   // -- UI method, adding, etc.
@@ -131,59 +125,57 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
 
   // -- Public Button Methods --
   // Demo för hur ett svar kan kunnas skicka in.
-  public void saveResponse() {
-
-    SurveyResponses sr = new SurveyResponses();
-    sr.setSurveyId(survey.getId());
-    sr.setDate(LocalDate.now());
-
-    for (int position = 0; position < surveyVerticalLayout.getComponentCount(); position++) {
-      ReadQuestionLayout component =
-          (ReadQuestionLayout) surveyVerticalLayout.getComponentAt(position);
-
-      switch (component.getQuestion().getQuestionType()) {
-        case TEXTFIELD:
-          ReadTextQuestionLayout castTextComponent = (ReadTextQuestionLayout) component;
-          sr.addAnswer(
-              new Answers(castTextComponent.getQuestionField(), castTextComponent.getQuestion()));
-          break;
-        case TEXTAREA:
-          ReadTextQuestionLayout castTextAreaComponent =
-              (ReadTextQuestionLayout) surveyVerticalLayout.getComponentAt(position);
-          sr.addAnswer(new Answers(castTextAreaComponent.getQuestionField(),
-              castTextAreaComponent.getQuestion()));
-          break;
-        case RADIO:
-          ReadMultiQuestionLayout castRadioComponent = (ReadMultiQuestionLayout) component;
-          sr.addAnswer(new Answers(castRadioComponent.getRadioButtons().getValue().getTitle(),
-              castRadioComponent.getQuestion()));
-          break;
-        case CHECKBOX:
-          ReadMultiQuestionLayout castCheckboxComponent = (ReadMultiQuestionLayout) component;
-          for (Iterator<MultiQuestionAlternative> i =
-              castCheckboxComponent.getCheckBoxButtons().getValue().iterator(); i.hasNext();) {
-            sr.addAnswer(new Answers(i.next().getTitle(), castCheckboxComponent.getQuestion()));
-          }
-          break;
-        case RATIO:
-          ReadRatioQuestionLayout castRatioComponent = (ReadRatioQuestionLayout) component;
-          sr.addAnswer(new Answers(castRatioComponent.getRadioButtons().getValue().substring(0, 1),
-              castRatioComponent.getQuestion()));
-          break;
-        default:
-          break;
-      }
-    }
-    responseRepository.save(sr);
-
-    for (SurveyResponses srPrint : responseRepository.findAllBySurveyId(survey.getId())) {
-      for (Answers aPrint : srPrint.getAnswers()) {
-        System.out.println(aPrint.getQuestion().getTitle() + ": " + aPrint.getAnswer());
-      }
-      System.out.println();
-    }
-    getUI().ifPresent(ui -> ui.navigate(""));
-  }
+//  public void saveResponse() {
+//
+//    SurveyResponses sr = new SurveyResponses();
+//    sr.setSurveyId(survey.getId());
+//    sr.setDate(LocalDate.now());
+//
+//    for (int position = 0; position < surveyVerticalLayout.getComponentCount(); position++) {
+//      ReadQuestionLayout component =
+//          (ReadQuestionLayout) surveyVerticalLayout.getComponentAt(position);
+//      switch (component.getQuestion().getQuestionType()) {
+//        case TEXTFIELD:
+//          ReadTextQuestionLayout castTextComponent = (ReadTextQuestionLayout) component;
+//          sr.addAnswer(new Answers(castTextComponent.getQuestionField().getValue(),
+//              castTextComponent.getQuestion()));
+//          break;
+//        case TEXTAREA:
+//          ReadTextQuestionLayout castTextAreaComponent = (ReadTextQuestionLayout) component;
+//          sr.addAnswer(new Answers(castTextAreaComponent.getQuestionField().getValue(),
+//              castTextAreaComponent.getQuestion()));
+//          break;
+//        case RADIO:
+//          ReadMultiQuestionLayout castRadioComponent = (ReadMultiQuestionLayout) component;
+//          sr.addAnswer(new Answers(castRadioComponent.getRadioButtons().getValue().getTitle(),
+//              castRadioComponent.getQuestion()));
+//          break;
+//        case CHECKBOX:
+//          ReadMultiQuestionLayout castCheckboxComponent = (ReadMultiQuestionLayout) component;
+//          for (Iterator<MultiQuestionAlternative> i =
+//              castCheckboxComponent.getCheckBoxButtons().getValue().iterator(); i.hasNext();) {
+//            sr.addAnswer(new Answers(i.next().getTitle(), castCheckboxComponent.getQuestion()));
+//          }
+//          break;
+//        case RATIO:
+//          ReadRatioQuestionLayout castRatioComponent = (ReadRatioQuestionLayout) component;
+//          sr.addAnswer(new Answers(castRatioComponent.getRadioButtons().getValue().substring(0, 1),
+//              castRatioComponent.getQuestion()));
+//          break;
+//        default:
+//          break;
+//      }
+//    }
+//    responseRepository.save(sr);
+//
+//    for (SurveyResponses srPrint : responseRepository.findAllBySurveyId(survey.getId())) {
+//      for (Answers aPrint : srPrint.getAnswers()) {
+//        System.out.println(aPrint.getQuestion().getTitle() + ": " + aPrint.getAnswer());
+//      }
+//      System.out.println();
+//    }
+//    getUI().ifPresent(ui -> ui.navigate(""));
+//  }
 
   public void goHome() {
     saveButton.setText("Go To Mainview");
