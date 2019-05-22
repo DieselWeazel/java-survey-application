@@ -1,5 +1,6 @@
 package com.considlia.survey.model.answer;
 
+import com.considlia.survey.model.question.Question;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -7,6 +8,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -19,19 +22,15 @@ public abstract class Answers {
   @Column(name = "answer_id")
   private Long id;
 
-  private int questionPosition;
+  @ManyToOne
+  @JoinColumn(name = "question_id")
+  private Question question;
+
   public Answers() {}
 
   public Long getId() {
     return id;
   }
 
-  public int getPosition() {
-    return questionPosition;
-  }
-
-  public void setPosition(int questionPosition) {
-    this.questionPosition = questionPosition;
-  }
 
 }

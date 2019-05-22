@@ -31,7 +31,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
   @Override
   protected void configure(AuthenticationManagerBuilder auth) throws Exception {
     super.configure(auth);
-    //    auth.authenticationProvider(authProvider());
     auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
   }
 
@@ -40,11 +39,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
   public AuthenticationManager authenticationManagerBean() throws Exception {
     return super.authenticationManagerBean();
   }
-
-//  @Bean
-//  public AuthenticationSuccessHandler customUrlAuthenticationSuccessHandler(){
-//    return new CustomUrlAuthenticationSuccessHandler();
-//  }
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
@@ -66,27 +60,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         .and()
         .formLogin()
         .loginPage("/login")
-//        .permitAll()
-
         .failureUrl("/failedlogin")
-//                .defaultSuccessUrl("/", true)
-//        .successHandler(customUrlAuthenticationSuccessHandler())
-
-        // Register the success handler that redirects users to the page they last tried
-        // to access
-        //        .successHandler(new SavedRequestAwareAuthenticationSuccessHandler())
         .and()
         .logout()
         .logoutSuccessUrl("/*");
   }
-
-  //  @Bean
-  //  public DaoAuthenticationProvider authProvider() {
-  //    DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-  //    authProvider.setUserDetailsService(userDetailsService);
-  //    authProvider.setPasswordEncoder(passwordEncoder());
-  //    return authProvider;
-  //    }
 
   @Bean
   public PasswordEncoder passwordEncoder() {

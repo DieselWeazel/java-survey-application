@@ -28,12 +28,12 @@ public class SurveyResponses {
   private Long id;
 
   private LocalDate date = LocalDate.now();
-//   Can be whatever decided upon, timeSpent = date.plus();
-// private LocalDate timeSpent;
+
+  // Time spent on Survey
+  private Long time;
 
   @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "response_id")
-  @OrderBy("questionPosition ASC")
   private Set<Answers> answers = new HashSet<>();
 
   @OneToOne(fetch = FetchType.LAZY)
@@ -46,7 +46,6 @@ public class SurveyResponses {
 
   // Boolean
   // private boolen surveyStatus;
-
 
   public SurveyResponses() {}
 

@@ -1,5 +1,9 @@
 package com.considlia.survey.model.question;
 
+import com.considlia.survey.model.answer.Answers;
+import java.util.HashSet;
+import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -8,6 +12,9 @@ import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import com.considlia.survey.ui.custom_component.QuestionType;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -22,6 +29,10 @@ public abstract class Question {
   private int position;
   private QuestionType questionType;
   private boolean mandatory;
+
+  @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+  @JoinColumn(name = "question_id")
+  private Set<Answers> answerSet = new HashSet<>();
 
   public Question() {}
 

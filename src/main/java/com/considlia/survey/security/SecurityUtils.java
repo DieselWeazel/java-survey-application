@@ -33,7 +33,6 @@ public class SecurityUtils {
     if (allowedViews) {
       return true;
     }
-    // TODO ^
 
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
