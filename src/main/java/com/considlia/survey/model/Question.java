@@ -23,6 +23,12 @@ public abstract class Question {
 
   public Question() {}
 
+  public Question(String questionTitle, QuestionType questionType, boolean mandatory) {
+    this.title = questionTitle;
+    this.mandatory = mandatory;
+    this.questionType = questionType;
+  }
+
   public Question(String questionTitle, int position, QuestionType questionType,
       boolean mandatory) {
     this.title = questionTitle;
