@@ -1,8 +1,8 @@
 package com.considlia.survey.model;
 
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -30,7 +30,7 @@ public class Survey {
   @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   @JoinColumn(name = "survey_id")
   @OrderBy("position ASC")
-  private Set<Question> questions = new HashSet<>();
+  private List<Question> questions = new ArrayList<>();
 
   public Survey() {}
 
@@ -67,11 +67,11 @@ public class Survey {
     this.date = date;
   }
 
-  public Set<Question> getQuestions() {
+  public List<Question> getQuestions() {
     return questions;
   }
 
-  public void setQuestions(Set<Question> questions) {
+  public void setQuestions(List<Question> questions) {
     this.questions = questions;
   }
 

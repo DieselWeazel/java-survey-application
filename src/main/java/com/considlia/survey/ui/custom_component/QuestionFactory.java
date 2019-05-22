@@ -2,50 +2,36 @@
 package com.considlia.survey.ui.custom_component;
 
 import java.util.List;
-import com.considlia.survey.model.MultiQuestion;
+import com.considlia.survey.model.CheckBoxQuestion;
 import com.considlia.survey.model.Question;
 import com.considlia.survey.model.QuestionType;
+import com.considlia.survey.model.RadioQuestion;
 import com.considlia.survey.model.RatioQuestion;
-import com.considlia.survey.model.TextQuestion;
-import com.considlia.survey.ui.CreateSurveyView;
-import com.considlia.survey.ui.custom_component.question_with_button.MultiQuestionWithButtons;
-import com.considlia.survey.ui.custom_component.question_with_button.QuestionWithButtons;
-import com.considlia.survey.ui.custom_component.question_with_button.RatioQuestionWithButtons;
-import com.considlia.survey.ui.custom_component.question_with_button.TextQuestionWithButtons;
+import com.considlia.survey.model.TextAreaQuestion;
+import com.considlia.survey.model.TextFieldQuestion;
 
 public class QuestionFactory {
 
-  public static QuestionWithButtons createQuestion(String question, QuestionType type,
-      boolean mandatory, CreateSurveyView csv) {
-    TextQuestion textQuestion = new TextQuestion();
-    setCommonVariables(textQuestion, question, type, mandatory);
+  public static Question createQuestion(QuestionType type, String question, boolean mandatory,
+      List<String> stringAlternatives, CreateRatioComponents cr) {
 
-    return new TextQuestionWithButtons(textQuestion, csv);
-  }
+    if (type == QuestionType.TEXTFIELD) {
+      return new TextFieldQuestion(question, mandatory);
+    } else if (type == QuestionType.TEXTAREA) {
 
-  public static QuestionWithButtons createQuestion(String question, QuestionType type,
-      boolean mandatory, List<String> stringAlternatives, CreateSurveyView csv) {
-    MultiQuestion multiQuestion = new MultiQuestion();
-    setCommonVariables(multiQuestion, question, type, mandatory);
+      return new TextAreaQuestion(question, mandatory);
+    } else if (type == QuestionType.RADIO) {
 
-    return new MultiQuestionWithButtons(multiQuestion, csv, stringAlternatives);
-  }
+      return new RadioQuestion(question, mandatory, stringAlternatives);
+    } else if (type == QuestionType.CHECKBOX) {
 
-  public static QuestionWithButtons createQuestion(String question, QuestionType type,
-      boolean mandatory, String start, String end, int nrOfChoices, CreateSurveyView csv) {
-    RatioQuestion ratioQuestion = new RatioQuestion();
-    setCommonVariables(ratioQuestion, question, type, mandatory);
-    ratioQuestion.setChoices(nrOfChoices);
-    ratioQuestion.setEnd(end);
-    ratioQuestion.setStart(start);
+      return new CheckBoxQuestion(question, mandatory, stringAlternatives);
+    } else if (type == QuestionType.RATIO) {
+      return new RatioQuestion(question, mandatory, cr.getLowerLimit(), cr.getUperLimit(),
+          cr.getStepperValue());
+    } else {
 
-    return new RatioQuestionWithButtons(ratioQuestion, csv);
-  }
-
-  private static void setCommonVariables(Question question, String title, QuestionType type,
-      boolean mandatory) {
-    question.setTitle(title);
-    question.setQuestionType(type);
-    question.setMandatory(mandatory);
+      return null;
+    }
   }
 }
