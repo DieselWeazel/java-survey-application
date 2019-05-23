@@ -1,5 +1,9 @@
 package com.considlia.survey.ui.custom_component;
 
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 import com.considlia.survey.model.QuestionType;
 import com.considlia.survey.ui.CreateSurveyView;
 import com.vaadin.flow.component.AbstractField.ComponentValueChangeEvent;
@@ -7,10 +11,6 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
 
 public class CreateAlternative extends VerticalLayout {
 
@@ -21,19 +21,34 @@ public class CreateAlternative extends VerticalLayout {
   private QuestionType questionType;
   private CreateSurveyView csv;
 
-  public CreateAlternative(QuestionType questionType, CreateSurveyView csv) {
+  /**
+   * Constructor adds new empty TextField to variable dynamicTextField. Adds new empty ArrayLists to
+   * private Lists alternativeList and textFieldList. Invokes createAlternative with given
+   * questionType and empty arrayList.
+   * 
+   * @param csv Instance of current CreateSurveyView to get access to addQuestionButton.
+   */
+  public CreateAlternative(CreateSurveyView csv) {
     this.csv = csv;
     dynamicTextField = new TextField();
 
     textFieldList = new ArrayList<>();
     alternativeList = new ArrayList<>();
 
-    createAlternative(questionType, alternativeList);
+    createAlternative(alternativeList);
 
   }
 
-  public void createAlternative(QuestionType questionType, List<String> alternativeList) {
-    this.questionType = questionType;
+  /**
+   * Invoked first time when user chooses questionType RADIO or CHECKBOX, then invoked with every
+   * TextField event. Method manages the length of textFieldList and creates new TextFields. Adds a
+   * new {@link TextField} if textFieldList is empty or the last TextField in TextFieldList contains
+   * value. Adds event on all new TextFields using {@link addValueChangeListener} with
+   * {@link ValueChangeMode.EAGER}
+   * 
+   * @param alternativeList
+   */
+  public void createAlternative(List<String> alternativeList) {
 
     if (textFieldList.isEmpty()) {
 
@@ -61,6 +76,14 @@ public class CreateAlternative extends VerticalLayout {
     }
   }
 
+  /**
+   * Invoked every time user changes value in textField. If value of {@link TextField} is empty and
+   * there's more than one TextField in textFieldList the TextField is removed. Checks if the
+   * {@link String} is more than 255 characters. Puts out notification if alternativeList contains
+   * duplicates. Also manages enable/disable for addQuestionButton.
+   * 
+   * @param event, used to get value and source
+   */
   public void textFieldEvent(ComponentValueChangeEvent<TextField, String> event) {
     if (event.getSource().getValue().isEmpty() && textFieldList.size() > 1) {
       remove(event.getSource());
@@ -71,7 +94,7 @@ public class CreateAlternative extends VerticalLayout {
       Notification.show("Alternative can max contain 255 characters");
     }
 
-    createAlternative(questionType, alternativeList);
+    createAlternative(alternativeList);
     event.getSource().focus();
 
     boolean containsDuplicate = false;
@@ -82,7 +105,8 @@ public class CreateAlternative extends VerticalLayout {
       }
     }
 
-    // using Set to check if alternativeList contains duplicates
+    // using both Set and the above boolean to check if alternativeList
+    // contains duplicates to manage Notifications
     Set<String> set = new LinkedHashSet<>();
     set.addAll(getAlternativeList());
 
@@ -106,6 +130,10 @@ public class CreateAlternative extends VerticalLayout {
     }
   }
 
+  /**
+   * 
+   * @returns {@link List} containing Strings with values from TextFields in textFieldList.
+   */
   public List<String> getAlternativeList() {
     alternativeList.clear();
     for (TextField t : textFieldList) {
@@ -117,10 +145,19 @@ public class CreateAlternative extends VerticalLayout {
     return alternativeList;
   }
 
+  /**
+   * 
+   * @returns QuestionType RADIO or CHECKBOX
+   */
   public QuestionType getQuestionType() {
     return questionType;
   }
 
+  /**
+   * Sets QuestionType
+   * 
+   * @param questionType
+   */
   public void setQuestionType(QuestionType questionType) {
     this.questionType = questionType;
   }

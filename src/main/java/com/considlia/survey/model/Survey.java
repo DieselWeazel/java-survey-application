@@ -1,6 +1,5 @@
 package com.considlia.survey.model;
 
-import com.considlia.survey.model.question.Question;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,9 +15,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
+import com.considlia.survey.model.question.Question;
 
 @Entity
 @Table(name = "survey")
+// @Table(name = "survey", uniqueConstraints = @UniqueConstraint(columnNames = {"title",
+// "user_id"}))
 public class Survey {
 
   @Id
@@ -44,10 +46,9 @@ public class Survey {
   private List<SurveyResponses> surveyResponses = new ArrayList<>();
 
   // Related to Status Class, Status.ENUM_VALUE
-  //private String currentStatus;
+  // private String currentStatus;
 
-  public Survey() {
-  }
+  public Survey() {}
 
   public Survey(String surveyTitle, String creator) {
     setTitle(surveyTitle);
@@ -124,16 +125,7 @@ public class Survey {
 
   @Override
   public String toString() {
-    return "Survey [surveyId="
-        + id
-        + ", surveyTitle="
-        + title
-        + ", creator="
-        + creator
-        + ", date="
-        + date
-        + ", questionList="
-        + questions
-        + "]";
+    return "Survey [surveyId=" + id + ", surveyTitle=" + title + ", creator=" + creator + ", date="
+        + date + ", questionList=" + questions + "]";
   }
 }
