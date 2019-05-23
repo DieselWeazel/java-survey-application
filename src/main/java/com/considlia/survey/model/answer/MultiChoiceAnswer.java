@@ -15,7 +15,7 @@ import javax.persistence.OneToMany;
 public class MultiChoiceAnswer extends Answers {
 
   @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-  @JoinColumn(name = "question_id")
+  @JoinColumn(name = "answer_id")
   private Set<ChosenAnswer> chosenAnswerSet = new HashSet<>();
 
   public MultiChoiceAnswer(){}

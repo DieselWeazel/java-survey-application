@@ -1,14 +1,14 @@
-package com.considlia.survey.ui.custom_component;
+package com.considlia.survey.ui.custom_component.ReadQuestionLayouts;
 
 import com.considlia.survey.model.answer.Answers;
-import com.considlia.survey.model.question.Question;
 import com.considlia.survey.model.question.RatioQuestion;
+import com.considlia.survey.ui.custom_component.ReadQuestionComponent;
+import com.considlia.survey.ui.custom_component.ReadQuestionLayouts.ReadQuestionLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.radiobutton.RadioGroupVariant;
 import com.vaadin.flow.data.binder.ValidationException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
 public class ReadRatioQuestionLayout extends ReadQuestionLayout implements ReadQuestionComponent {
 

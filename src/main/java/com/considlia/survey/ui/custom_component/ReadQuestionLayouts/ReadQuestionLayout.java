@@ -1,11 +1,8 @@
-package com.considlia.survey.ui.custom_component;
+package com.considlia.survey.ui.custom_component.ReadQuestionLayouts;
 
-import com.considlia.survey.model.answer.Answers;
 import com.considlia.survey.model.question.Question;
 import com.vaadin.flow.component.html.H5;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.data.binder.Binder;
-import java.util.function.Consumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

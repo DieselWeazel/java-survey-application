@@ -2,20 +2,13 @@ package com.considlia.survey.ui;
 
 import com.considlia.survey.model.Survey;
 import com.considlia.survey.model.SurveyResponses;
-import com.considlia.survey.model.question.MultiQuestion;
 import com.considlia.survey.model.question.Question;
-import com.considlia.survey.model.question.RatioQuestion;
-import com.considlia.survey.model.question.TextQuestion;
 import com.considlia.survey.repositories.ResponseRepository;
 import com.considlia.survey.repositories.SurveyRepository;
-import com.considlia.survey.ui.custom_component.ReadMultiQuestionLayout;
 import com.considlia.survey.ui.custom_component.ReadQuestionComponent;
 import com.considlia.survey.ui.custom_component.ReadQuestionFactory;
-import com.considlia.survey.ui.custom_component.ReadQuestionLayout;
-import com.considlia.survey.ui.custom_component.ReadRatioQuestionLayout;
-import com.considlia.survey.ui.custom_component.ReadTextQuestionLayout;
+import com.considlia.survey.ui.custom_component.ReadQuestionLayouts.ReadTextQuestionLayout;
 import com.considlia.survey.ui.custom_component.SurveyLoader;
-import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H5;
@@ -138,7 +131,7 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
 //      if (q instanceof MultiQuestion) {
 //        MultiQuestion mq = (MultiQuestion) q;
 //
-//        ReadMultiQuestionLayout readMultiQuestionLayout = new ReadMultiQuestionLayout(mq);
+//        ReadMultiChoiceQuestionLayout readMultiQuestionLayout = new ReadMultiChoiceQuestionLayout(mq);
 //        surveyVerticalLayout.add(readMultiQuestionLayout);
 //      } else if (q instanceof TextQuestion) {
 //        ReadTextQuestionLayout readTextQuestionLayout = new ReadTextQuestionLayout(q);
@@ -191,12 +184,12 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
 //              castTextAreaComponent.getQuestion()));
 //          break;
 //        case RADIO:
-//          ReadMultiQuestionLayout castRadioComponent = (ReadMultiQuestionLayout) component;
+//          ReadMultiChoiceQuestionLayout castRadioComponent = (ReadMultiChoiceQuestionLayout) component;
 //          sr.addAnswer(new Answers(castRadioComponent.getRadioButtons().getValue().getTitle(),
 //              castRadioComponent.getQuestion()));
 //          break;
 //        case CHECKBOX:
-//          ReadMultiQuestionLayout castCheckboxComponent = (ReadMultiQuestionLayout) component;
+//          ReadMultiChoiceQuestionLayout castCheckboxComponent = (ReadMultiChoiceQuestionLayout) component;
 //          for (Iterator<MultiQuestionAlternative> i =
 //              castCheckboxComponent.getCheckBoxButtons().getValue().iterator(); i.hasNext();) {
 //            sr.addAnswer(new Answers(i.next().getTitle(), castCheckboxComponent.getQuestion()));
