@@ -16,12 +16,23 @@ public class ReadQuestionLayout extends VerticalLayout {
   private Question question;
   private static final Logger LOGGER = LoggerFactory.getLogger(ReadQuestionLayout.class);
   //TODO
+//  private Binder <Answers> binder;
+//  private Answers answers;
 
   public ReadQuestionLayout(Question question) {
     this.title = new H5(question.getTitle() + (question.isMandatory() ? "*" : ""));
     this.question = question;
+//    this.binder = new Binder();
     add(title);
   }
+
+//  public Binder getBinder() {
+//    return binder;
+//  }
+//
+//  public Answers getAnswers() {
+//    return answers;
+//  }
 
   public Question getQuestion() {
     return question;
