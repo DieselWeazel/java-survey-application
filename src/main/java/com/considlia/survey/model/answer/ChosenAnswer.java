@@ -35,8 +35,6 @@ public class ChosenAnswer {
 
   @Override
   public String toString() {
-    return "ChosenAnswer{" +
-        "checkedAnswer='" + checkedAnswer + '\'' +
-        '}';
+    return checkedAnswer;
   }
 }

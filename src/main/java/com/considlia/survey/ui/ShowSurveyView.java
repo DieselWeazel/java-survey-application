@@ -7,6 +7,7 @@ import com.considlia.survey.repositories.ResponseRepository;
 import com.considlia.survey.repositories.SurveyRepository;
 import com.considlia.survey.ui.custom_component.ReadQuestionComponent;
 import com.considlia.survey.ui.custom_component.ReadQuestionFactory;
+import com.considlia.survey.ui.custom_component.ReadQuestionLayouts.ReadQuestionLayout;
 import com.considlia.survey.ui.custom_component.ReadQuestionLayouts.ReadTextQuestionLayout;
 import com.considlia.survey.ui.custom_component.SurveyLoader;
 import com.vaadin.flow.component.button.Button;
@@ -112,9 +113,9 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
   public void loadSurvey(Survey survey) {
 
     for (Question question : survey.getQuestions()){
-      ReadTextQuestionLayout readTextQuestionLayout = (ReadTextQuestionLayout) readQuestionFactory.loadQuestion(question);
-      surveyVerticalLayout.add(readTextQuestionLayout);
-      readQuestionList.add(readTextQuestionLayout);
+      ReadQuestionLayout readQuestionLayout = (ReadQuestionLayout) readQuestionFactory.loadQuestion(question);
+      surveyVerticalLayout.add(readQuestionLayout);
+      readQuestionList.add((ReadQuestionComponent) readQuestionLayout);
 //      surveyVerticalLayout.add((Component) readQuestionFactory.loadQuestion(question));
 
 //      surveyLoader.loadQuestion(question);

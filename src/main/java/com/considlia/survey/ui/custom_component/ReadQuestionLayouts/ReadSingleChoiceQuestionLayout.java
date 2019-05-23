@@ -48,7 +48,7 @@ public class ReadSingleChoiceQuestionLayout extends ReadQuestionLayout implement
     singleChoiceAnswer.setQuestion(getQuestion());
     getLOGGER().info("Logging question: '{}'", getQuestion());
     binder.writeBean(singleChoiceAnswer);
-    answerAlternativeList.forEach(e-> getLOGGER().info("Logging chosenanswer: '{}'", e.toString()));
+//    answerAlternativeList.forEach(e-> getLOGGER().info("Logging chosenanswer: '{}'", e.toString()));
     getLOGGER().info("Logging answer: '{}'", singleChoiceAnswer);
 
     return singleChoiceAnswer;
