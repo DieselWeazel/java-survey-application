@@ -8,6 +8,7 @@ import com.considlia.survey.model.question.RatioQuestion;
 import com.considlia.survey.model.question.TextQuestion;
 import com.considlia.survey.ui.custom_component.ReadQuestionLayouts.ReadMultiChoiceQuestionLayout;
 import com.considlia.survey.ui.custom_component.ReadQuestionLayouts.ReadRatioQuestionLayout;
+import com.considlia.survey.ui.custom_component.ReadQuestionLayouts.ReadSingleChoiceQuestionLayout;
 import com.considlia.survey.ui.custom_component.ReadQuestionLayouts.ReadTextQuestionLayout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +29,9 @@ public class SurveyLoader implements ReadQuestionFactory<ReadQuestionComponent> 
       LOGGER.info("SurveyLoader: Loading a MultiQuestion");
       return readMultiChoiceQuestionLayout;
     } else if (question instanceof RadioQuestion){
-
+      MultiQuestion mq = (MultiQuestion) question;
+      ReadSingleChoiceQuestionLayout readSingleChoiceQuestionLayout = new ReadSingleChoiceQuestionLayout(mq);
+      return readSingleChoiceQuestionLayout;
     }else if (question instanceof TextQuestion) {
       ReadTextQuestionLayout readTextQuestionLayout = new ReadTextQuestionLayout(question);
       LOGGER.info("SurveyLoader: Loading a TextQuestion");
