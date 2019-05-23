@@ -3,10 +3,12 @@ package com.considlia.survey;
 import com.considlia.survey.model.User;
 import com.considlia.survey.repositories.SurveyRepository;
 import com.considlia.survey.repositories.UserRepository;
+import com.considlia.survey.security.AutoLoginProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,6 +19,7 @@ no users yet, login view showing however!
 Add a user and try the functionality
  */
 @SpringBootApplication
+@EnableConfigurationProperties(AutoLoginProperties.class)
 @ComponentScan(basePackages = "com.considlia.survey")
 public class SurveyApplication {
 

@@ -40,7 +40,6 @@ public class Survey {
 
   @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "survey_id")
-  @OrderBy("position ASC")
   private List<SurveyResponses> surveyResponses = new ArrayList<>();
 
   // Related to Status Class, Status.ENUM_VALUE
