@@ -24,10 +24,10 @@ public class HomeView extends BaseView {
   private Button registerButton;
   private HorizontalLayout horizontalLayout;
 
-  @Autowired
-  private AuthenticationManager authenticationManagerBean;
+//  @Autowired
+//  private AuthenticationManager authenticationManagerBean;
 
-  public HomeView(SurveyRepository surveyRepository) {
+  public HomeView(SurveyRepository surveyRepository, AuthenticationManager authenticationManagerBean) {
     super("Home");
     this.surveyRepository = surveyRepository;
     this.loginButton = new Button("Login");

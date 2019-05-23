@@ -36,8 +36,7 @@ public class SurveyApplication {
 
   @Bean
   public CommandLineRunner initDb(
-      SurveyRepository surveyRepository, UserRepository userRepository,
-      AuthenticationManager authenticationManagerBean) {
+      SurveyRepository surveyRepository, UserRepository userRepository) {
     return args -> {
 //      User adminUser = new User();
 //      adminUser.setFirstName("admin");
