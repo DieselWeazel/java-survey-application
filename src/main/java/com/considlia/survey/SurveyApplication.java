@@ -38,25 +38,25 @@ public class SurveyApplication {
   public CommandLineRunner initDb(
       SurveyRepository surveyRepository, UserRepository userRepository) {
     return args -> {
-      User adminUser = new User();
-      adminUser.setFirstName("admin");
-      adminUser.setLastName("admin");
-      adminUser.setEmail("admin@gmail.com");
-      adminUser.setRole("ADMIN");
-      adminUser.setUsername("admin");
-      adminUser.setPassword(passwordEncoder.encode("admin"));
-
-      userRepository.save(adminUser);
-
-      User user = new User();
-      user.setFirstName("noob");
-      user.setLastName("scrub");
-      user.setEmail("newbie@gmail.com");
-      user.setRole("USER");
-      user.setUsername("user");
-      user.setPassword(passwordEncoder.encode("user"));
-
-      userRepository.save(user);
+//      User adminUser = new User();
+//      adminUser.setFirstName("admin");
+//      adminUser.setLastName("admin");
+//      adminUser.setEmail("admin@gmail.com");
+//      adminUser.setRole("ADMIN");
+//      adminUser.setUsername("admin");
+//      adminUser.setPassword(passwordEncoder.encode("admin"));
+//
+//      userRepository.save(adminUser);
+//
+//      User user = new User();
+//      user.setFirstName("noob");
+//      user.setLastName("scrub");
+//      user.setEmail("newbie@gmail.com");
+//      user.setRole("USER");
+//      user.setUsername("user");
+//      user.setPassword(passwordEncoder.encode("user"));
+//
+//      userRepository.save(user);
     };
   }
 }
