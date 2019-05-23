@@ -1,5 +1,10 @@
 package com.considlia.survey.ui;
 
+import java.time.LocalDate;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import com.considlia.survey.model.QuestionType;
 import com.considlia.survey.model.Role;
 import com.considlia.survey.model.Survey;
@@ -32,11 +37,6 @@ import com.vaadin.flow.router.BeforeLeaveObserver;
 import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.OptionalParameter;
 import com.vaadin.flow.router.Route;
-import java.time.LocalDate;
-import java.util.LinkedHashSet;
-import java.util.Set;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
 
 @Route(value = "createsurvey", layout = MainLayout.class)
 @Secured({Role.USER, Role.ADMIN})
@@ -131,11 +131,10 @@ public class CreateSurveyView extends BaseView
     descriptionTextArea.setWidth("600px");
 
     /*
-    Currently doesn't allow for editing of Users name within CreatorName for Survey.
+     * Currently doesn't allow for editing of Users name within CreatorName for Survey.
      */
-    creatorNameTextField.setValue(
-        customUserService.getUser().getLastName() + ", " + customUserService.getUser()
-            .getFirstName());
+    creatorNameTextField.setValue(customUserService.getUser().getLastName() + ", "
+        + customUserService.getUser().getFirstName());
     creatorNameTextField.setEnabled(false);
     descriptionTextArea.setValueChangeMode(ValueChangeMode.EAGER);
   }
@@ -288,7 +287,7 @@ public class CreateSurveyView extends BaseView
       createRatioComponents = new CreateRatioComponents(this);
     }
     if (createAlternative == null) {
-      createAlternative = new CreateAlternative(questionType, this);
+      createAlternative = new CreateAlternative(this);
     }
     if (createTextComponents == null) {
       createTextComponents = new CreateTextComponents(this);
