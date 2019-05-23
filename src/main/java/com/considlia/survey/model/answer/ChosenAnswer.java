@@ -32,4 +32,11 @@ public class ChosenAnswer {
   public void setCheckedAnswer(String checkedAnswer) {
     this.checkedAnswer = checkedAnswer;
   }
+
+  @Override
+  public String toString() {
+    return "ChosenAnswer{" +
+        "checkedAnswer='" + checkedAnswer + '\'' +
+        '}';
+  }
 }

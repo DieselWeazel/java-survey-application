@@ -29,13 +29,14 @@ public class ReadMultiChoiceQuestionLayout extends ReadQuestionLayout implements
       multiChoiceAnswer = new MultiChoiceAnswer();
       binder.setBean(multiChoiceAnswer);
 
+    // TODO Duplicate CODE
       question.getStringAlternatives().forEach(e ->
           answerAlternativeList.add(new ChosenAnswer(e)));
 
-      answerAlternativeList.addAll(answerAlternativeList);
-
-
+      // might be able to delete setItems?
+      checkBoxButtons.setItems(answerAlternativeList);
       binder.forField(checkBoxButtons).bind(MultiChoiceAnswer::getChosenAnswerSet, MultiChoiceAnswer::setChosenAnswerSet);
+
       add(checkBoxButtons);
       checkBoxButtons.addThemeVariants(CheckboxGroupVariant.LUMO_VERTICAL);
     }
@@ -45,18 +46,9 @@ public class ReadMultiChoiceQuestionLayout extends ReadQuestionLayout implements
     multiChoiceAnswer.setQuestion(getQuestion());
     getLOGGER().info("Logging question: '{}'", getQuestion());
     binder.writeBean(multiChoiceAnswer);
+    answerAlternativeList.forEach(e-> getLOGGER().info("Logging chosenanswer: '{}'", e.toString()));
     getLOGGER().info("Logging answer: '{}'", multiChoiceAnswer);
 
     return multiChoiceAnswer;
   }
 }
-//  List<Integer> data = Arrays.asList(0, 1, 2, 3, 4, 5);
-//        sample = new CheckBoxGroup<>("Select options", data);
-//    sample.setItemCaptionGenerator(item -> "Option " + item);
-//    sample.select(data.get(2), data.get(3));
-//    sample.setItemEnabledProvider(item -> item % 2 != 0);
-//
-//    ...
-//
-//    sample.addValueChangeListener(event -> Notification.show("Value changed:", String.valueOf(event.getValue()),
-//    Type.TRAY_NOTIFICATION));

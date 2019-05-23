@@ -18,7 +18,24 @@ public class SingleChoiceAnswer extends Answers {
   @JoinColumn(name = "chosenanswer_id")
   private ChosenAnswer chosenAnswer;
 
+  public SingleChoiceAnswer (){}
+
   public SingleChoiceAnswer(ChosenAnswer chosenAnswer){
     this.chosenAnswer = chosenAnswer;
+  }
+
+  public ChosenAnswer getChosenAnswer() {
+    return chosenAnswer;
+  }
+
+  public void setChosenAnswer(ChosenAnswer chosenAnswer) {
+    this.chosenAnswer = chosenAnswer;
+  }
+
+  @Override
+  public String toString() {
+    return "SingleChoiceAnswer{" +
+        "chosenAnswer=" + chosenAnswer +
+        '}';
   }
 }

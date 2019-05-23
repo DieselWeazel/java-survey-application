@@ -33,4 +33,11 @@ public class MultiChoiceAnswer extends Answers {
       Set<ChosenAnswer> chosenAnswerSet) {
     this.chosenAnswerSet = chosenAnswerSet;
   }
+
+  @Override
+  public String toString() {
+    return "MultiChoiceAnswer{" +
+        "chosenAnswerSet=" + chosenAnswerSet +
+        '}';
+  }
 }
