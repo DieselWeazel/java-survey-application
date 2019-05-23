@@ -1,6 +1,9 @@
-package com.considlia.survey.security;
+package com.considlia.survey.config;
 
 import com.considlia.survey.repositories.UserRepository;
+import com.considlia.survey.security.UserDetailsServiceImpl;
+import com.considlia.survey.security.SecurityUtils;
+import com.considlia.survey.security.CustomRequestCache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
