@@ -1,6 +1,7 @@
 package com.considlia.survey.ui;
 
 import com.considlia.survey.model.Survey;
+import com.considlia.survey.model.SurveyResponses;
 import com.considlia.survey.model.question.MultiQuestion;
 import com.considlia.survey.model.question.Question;
 import com.considlia.survey.model.question.RatioQuestion;
@@ -8,17 +9,25 @@ import com.considlia.survey.model.question.TextQuestion;
 import com.considlia.survey.repositories.ResponseRepository;
 import com.considlia.survey.repositories.SurveyRepository;
 import com.considlia.survey.ui.custom_component.ReadMultiQuestionLayout;
+import com.considlia.survey.ui.custom_component.ReadQuestionComponent;
+import com.considlia.survey.ui.custom_component.ReadQuestionFactory;
+import com.considlia.survey.ui.custom_component.ReadQuestionLayout;
 import com.considlia.survey.ui.custom_component.ReadRatioQuestionLayout;
 import com.considlia.survey.ui.custom_component.ReadTextQuestionLayout;
+import com.considlia.survey.ui.custom_component.SurveyLoader;
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H5;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.Route;
+import java.util.ArrayList;
+import java.util.List;
 
 /*
  * http://localhost:8080/showsurvey/1
@@ -39,9 +48,18 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
   private Survey survey;
   private boolean containsMandatory = false;
 
-  public ShowSurveyView(SurveyRepository surveyRepository, ResponseRepository responseRepository) {
+
+  //Factory stuff (Fix me)
+  private ReadQuestionFactory readQuestionFactory;
+
+  private List<ReadQuestionComponent> readQuestionList = new ArrayList<>();
+
+  public ShowSurveyView(SurveyRepository surveyRepository,
+      ResponseRepository responseRepository,
+      SurveyLoader surveyLoader) {
     this.surveyRepository = surveyRepository;
     this.responseRepository = responseRepository;
+    this.readQuestionFactory = surveyLoader;
     this.h1 = new H1("PlaceHolder // Survey Not Actually Found, Text not Updated");
     this.h5 = new H5();
     this.saveButton = new Button();
@@ -100,27 +118,54 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
   // -- Loading Survey to Layout
   public void loadSurvey(Survey survey) {
 
-    for (Question q : survey.getQuestions()) {
+    for (Question question : survey.getQuestions()){
+      ReadTextQuestionLayout readTextQuestionLayout = (ReadTextQuestionLayout) readQuestionFactory.loadQuestion(question);
+      surveyVerticalLayout.add(readTextQuestionLayout);
+      readQuestionList.add(readTextQuestionLayout);
+//      surveyVerticalLayout.add((Component) readQuestionFactory.loadQuestion(question));
 
-      if (q instanceof MultiQuestion) {
-        MultiQuestion mq = (MultiQuestion) q;
-
-        ReadMultiQuestionLayout readMultiQuestionLayout = new ReadMultiQuestionLayout(mq);
-        surveyVerticalLayout.add(readMultiQuestionLayout);
-      } else if (q instanceof TextQuestion) {
-        ReadTextQuestionLayout readTextQuestionLayout = new ReadTextQuestionLayout(q);
-        surveyVerticalLayout.add(readTextQuestionLayout);
-      } else if (q instanceof RatioQuestion) {
-        RatioQuestion rq = (RatioQuestion) q;
-        ReadRatioQuestionLayout ratioQuestionLayout = new ReadRatioQuestionLayout(rq);
-        surveyVerticalLayout.add(ratioQuestionLayout);
-      }
-
-      if (q.isMandatory()) {
-        containsMandatory = true;
-      }
+//      surveyLoader.loadQuestion(question);
     }
+    saveButton.addClickListener(e -> {
+      try {
+        saveResponse();
+      } catch (ValidationException e1) {
+        e1.printStackTrace();
+      }
+    });
+//    for (Question q : survey.getQuestions()) {
+//
+//      if (q instanceof MultiQuestion) {
+//        MultiQuestion mq = (MultiQuestion) q;
+//
+//        ReadMultiQuestionLayout readMultiQuestionLayout = new ReadMultiQuestionLayout(mq);
+//        surveyVerticalLayout.add(readMultiQuestionLayout);
+//      } else if (q instanceof TextQuestion) {
+//        ReadTextQuestionLayout readTextQuestionLayout = new ReadTextQuestionLayout(q);
+//        surveyVerticalLayout.add(readTextQuestionLayout);
+//      } else if (q instanceof RatioQuestion) {
+//        RatioQuestion rq = (RatioQuestion) q;
+//        ReadRatioQuestionLayout ratioQuestionLayout = new ReadRatioQuestionLayout(rq);
+//        surveyVerticalLayout.add(ratioQuestionLayout);
+//      }
+//
+//      if (q.isMandatory()) {
+//        containsMandatory = true;
+//      }
+//    }
+
+
     initUI();
+  }
+
+  public void saveResponse() throws ValidationException {
+    SurveyResponses surveyResponse = new SurveyResponses();
+
+    for (ReadQuestionComponent r : readQuestionList){
+      surveyResponse.addAnswer(r.gatherResponse());
+    }
+
+    responseRepository.save(surveyResponse);
   }
 
   // -- Public Button Methods --

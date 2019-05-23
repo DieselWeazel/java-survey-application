@@ -16,4 +16,9 @@ public class TextAnswer extends Answers {
   public void setTextAnswer(String textAnswer) {
     this.textAnswer = textAnswer;
   }
+
+  @Override
+  public String toString() {
+    return "TextAnswer: " + textAnswer;
+  }
 }

@@ -31,5 +31,11 @@ public abstract class Answers {
     return id;
   }
 
+  public Question getQuestion() {
+    return question;
+  }
 
+  public void setQuestion(Question question) {
+    this.question = question;
+  }
 }

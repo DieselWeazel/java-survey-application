@@ -1,12 +1,16 @@
 package com.considlia.survey.ui.custom_component;
 
+import com.considlia.survey.model.answer.Answers;
+import com.considlia.survey.model.question.Question;
 import com.considlia.survey.model.question.RatioQuestion;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.radiobutton.RadioGroupVariant;
+import com.vaadin.flow.data.binder.ValidationException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
-public class ReadRatioQuestionLayout extends ReadQuestionLayout {
+public class ReadRatioQuestionLayout extends ReadQuestionLayout implements ReadQuestionComponent {
 
   private RadioButtonGroup<String> radioOptions;
   private List<String> options = new ArrayList<>();
@@ -31,5 +35,10 @@ public class ReadRatioQuestionLayout extends ReadQuestionLayout {
 
   public RadioButtonGroup<String> getRadioButtons() {
     return radioOptions;
+  }
+
+  @Override
+  public Answers gatherResponse() throws ValidationException {
+    return null;
   }
 }
