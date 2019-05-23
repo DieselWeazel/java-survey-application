@@ -42,10 +42,8 @@ public class LoginView extends BaseView implements BeforeEnterObserver {
   private VerticalLayout loginView;
 
 
-  public LoginView(
-      AuthenticationManager authenticationManagerBean) {
+  public LoginView() {
     super("Login");
-    this.authenticationManagerBean = authenticationManagerBean;
     username = new TextField();
     password = new PasswordField();
     submitButton = new Button("Login");

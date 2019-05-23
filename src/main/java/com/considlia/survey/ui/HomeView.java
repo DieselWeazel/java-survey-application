@@ -27,13 +27,12 @@ public class HomeView extends BaseView {
   @Autowired
   private AuthenticationManager authenticationManagerBean;
 
-  public HomeView(SurveyRepository surveyRepository,
-      AuthenticationManager authenticationManagerBean) {
+  public HomeView(SurveyRepository surveyRepository) {
     super("Home");
     this.surveyRepository = surveyRepository;
     this.loginButton = new Button("Login");
     this.registerButton = new Button("Register");
-    this.authenticationManagerBean = authenticationManagerBean;
+//    this.authenticationManagerBean = authenticationManagerBean;
     Authentication request = new UsernamePasswordAuthenticationToken("admin", "admin");
     Authentication result = authenticationManagerBean.authenticate(request);
     SecurityContextHolder.getContext().setAuthentication(result);
