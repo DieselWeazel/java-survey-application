@@ -1,4 +1,4 @@
-package com.considlia.survey.ui.custom_component.ReadQuestionLayouts;
+package com.considlia.survey.ui.custom_component.ShowSurveyComponents.ReadQuestionLayouts;
 
 import com.considlia.survey.model.question.Question;
 import com.vaadin.flow.component.html.H5;

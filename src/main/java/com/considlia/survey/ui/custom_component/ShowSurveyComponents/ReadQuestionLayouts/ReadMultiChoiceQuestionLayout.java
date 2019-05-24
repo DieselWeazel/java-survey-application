@@ -1,11 +1,10 @@
-package com.considlia.survey.ui.custom_component.ReadQuestionLayouts;
+package com.considlia.survey.ui.custom_component.ShowSurveyComponents.ReadQuestionLayouts;
 
 import com.considlia.survey.model.answer.Answers;
 import com.considlia.survey.model.answer.ChosenAnswer;
 import com.considlia.survey.model.answer.MultiChoiceAnswer;
 import com.considlia.survey.model.question.MultiQuestion;
-import com.considlia.survey.model.question.MultiQuestionAlternative;
-import com.considlia.survey.ui.custom_component.ReadQuestionComponent;
+import com.considlia.survey.ui.custom_component.ShowSurveyComponents.ReadQuestionComponent;
 import com.vaadin.flow.component.checkbox.CheckboxGroup;
 import com.vaadin.flow.component.checkbox.CheckboxGroupVariant;
 import com.vaadin.flow.data.binder.Binder;
@@ -31,7 +30,7 @@ public class ReadMultiChoiceQuestionLayout extends ReadQuestionLayout implements
       binder = new Binder<>(MultiChoiceAnswer.class);
       multiChoiceAnswer = new MultiChoiceAnswer();
       binder.setBean(multiChoiceAnswer);
-      
+
       question.getStringAlternatives().forEach(e ->
           answerAlternativeList.add(new ChosenAnswer(e)));
 
