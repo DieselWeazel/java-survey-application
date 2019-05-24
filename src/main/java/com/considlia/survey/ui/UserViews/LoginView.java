@@ -35,6 +35,7 @@ public class LoginView extends BaseView implements BeforeEnterObserver {
   private Button registerButton;
 
   private HorizontalLayout horizontalLayout;
+
   // -- Backend Components --
   @Autowired
   private AuthenticationManager authenticationManagerBean;
@@ -56,7 +57,6 @@ public class LoginView extends BaseView implements BeforeEnterObserver {
     submitButton.addClickListener(
         event -> {
           if (setCurrentUser(username.getValue(), password.getValue())) {
-//            this.getUI().ifPresent(ui -> ui.navigate(""));
             UI.getCurrent().getSession().close();
             UI.getCurrent().getPage().reload();
           }
