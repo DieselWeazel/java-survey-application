@@ -19,14 +19,19 @@ public class ReadQuestionLayout extends VerticalLayout {
   public ReadQuestionLayout(Question question) {
     this.title = new H5(question.getTitle() + (question.isMandatory() ? "*" : ""));
     this.question = question;
-//    this.binder = new Binder();
     add(title);
   }
 
+  /**
+   * @return any type of Question that implements Question.
+   */
   public Question getQuestion() {
     return question;
   }
 
+  /**
+   * @return Logger for debugging purposes.
+   */
   public static Logger getLOGGER() {
     return LOGGER;
   }

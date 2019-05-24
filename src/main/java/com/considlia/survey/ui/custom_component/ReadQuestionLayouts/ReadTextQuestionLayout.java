@@ -12,13 +12,18 @@ import com.vaadin.flow.data.binder.ValidationException;
 
 public class ReadTextQuestionLayout extends ReadQuestionLayout implements ReadQuestionComponent {
 
-  private TextField questionField = new TextField();
-  private TextArea questionArea = new TextArea();
   private TextAnswer textAnswer;
   private Binder<TextAnswer> binder;
 
+  /**
+   * Constructs a Layout for Viewing and Storing TextAnswer(s)
+   * Works with both types of TextQuestion
+   * @param question TextAreaQuestion or TextFieldQuestion
+   */
   public ReadTextQuestionLayout(Question question) {
     super(question);
+    TextField questionField = new TextField();
+    TextArea questionArea = new TextArea();
     textAnswer = new TextAnswer();
     binder = new Binder<>(TextAnswer.class);
     binder.setBean(textAnswer);
@@ -39,14 +44,11 @@ public class ReadTextQuestionLayout extends ReadQuestionLayout implements ReadQu
     }
   }
 
-  public String getQuestionField() {
-    return questionField.getValue();
-  }
-
-  public String getQuestionArea() {
-    return questionArea.getValue();
-  }
-
+  /**
+   * Gathers Response of filled form.
+   * @return TextAnswer
+   * @throws ValidationException
+   */
   @Override
   public Answers gatherResponse() throws ValidationException {
     textAnswer.setQuestion(getQuestion());

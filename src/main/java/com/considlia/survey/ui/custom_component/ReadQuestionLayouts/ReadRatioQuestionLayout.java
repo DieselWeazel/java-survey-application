@@ -18,6 +18,10 @@ public class ReadRatioQuestionLayout extends ReadQuestionLayout implements ReadQ
   private RatioAnswer ratioAnswer = new RatioAnswer();
   private Binder<RatioAnswer> binder = new Binder<>(RatioAnswer.class);
 
+  /**
+   * Constructs a Layout for Viewing and Storing RatioAnswer
+   * @param question RatioQuestion
+   */
   public ReadRatioQuestionLayout(RatioQuestion question) {
     super(question);
     RadioButtonGroup<String> ratioRadioButtons = new RadioButtonGroup<>();
@@ -40,6 +44,11 @@ public class ReadRatioQuestionLayout extends ReadQuestionLayout implements ReadQ
     add(ratioRadioButtons);
   }
 
+  /**
+   * Gathers Response of filled form.
+   * @return RatioAnswer
+   * @throws ValidationException
+   */
   @Override
   public Answers gatherResponse() throws ValidationException {
     ratioAnswer.setQuestion(getQuestion());

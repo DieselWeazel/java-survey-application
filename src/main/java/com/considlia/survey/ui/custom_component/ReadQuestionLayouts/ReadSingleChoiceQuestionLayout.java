@@ -4,6 +4,7 @@ import com.considlia.survey.model.answer.Answers;
 import com.considlia.survey.model.answer.ChosenAnswer;
 import com.considlia.survey.model.answer.RadioAnswer;
 import com.considlia.survey.model.question.MultiQuestion;
+import com.considlia.survey.model.question.RadioQuestion;
 import com.considlia.survey.ui.custom_component.ReadQuestionComponent;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.radiobutton.RadioGroupVariant;
@@ -19,7 +20,11 @@ public class ReadSingleChoiceQuestionLayout extends ReadQuestionLayout implement
   private RadioAnswer singleChoiceAnswer;
   private Binder<RadioAnswer> binder;
 
-  public ReadSingleChoiceQuestionLayout(MultiQuestion question) {
+  /**
+   * Constructs a Layout for Viewing and Storing RadioAnswer
+   * @param question RadioQuestion
+   */
+  public ReadSingleChoiceQuestionLayout(RadioQuestion question) {
     super(question);
     radioButtons = new RadioButtonGroup<>();
     binder = new Binder<>(RadioAnswer.class);
@@ -33,7 +38,11 @@ public class ReadSingleChoiceQuestionLayout extends ReadQuestionLayout implement
     radioButtons.addThemeVariants(RadioGroupVariant.LUMO_VERTICAL);
   }
 
-
+  /**
+   * Gathers Response of filled form.
+   * @return RadioAnswer
+   * @throws ValidationException
+   */
   @Override
   public Answers gatherResponse() throws ValidationException {
     singleChoiceAnswer.setQuestion(getQuestion());

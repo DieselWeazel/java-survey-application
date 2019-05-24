@@ -16,24 +16,25 @@ import java.util.List;
 public class ReadMultiChoiceQuestionLayout extends ReadQuestionLayout implements
     ReadQuestionComponent {
 
-  private CheckboxGroup<ChosenAnswer> checkBoxButtons;
   private MultiChoiceAnswer multiChoiceAnswer;
   private Binder<MultiChoiceAnswer> binder;
 
   private List<ChosenAnswer> answerAlternativeList = new ArrayList<ChosenAnswer>();
 
+  /**
+   * Constructs a Layout for Viewing and Storing MultiChoiceAnswer(s)
+   * @param question MultiQuestion only
+   */
   public ReadMultiChoiceQuestionLayout(MultiQuestion question) {
     super(question);
-      checkBoxButtons = new CheckboxGroup<>();
+      CheckboxGroup<ChosenAnswer> checkBoxButtons = new CheckboxGroup<>();
       binder = new Binder<>(MultiChoiceAnswer.class);
       multiChoiceAnswer = new MultiChoiceAnswer();
       binder.setBean(multiChoiceAnswer);
-
-    // TODO Duplicate CODE
+      
       question.getStringAlternatives().forEach(e ->
           answerAlternativeList.add(new ChosenAnswer(e)));
 
-      // might be able to delete setItems?
       checkBoxButtons.setItems(answerAlternativeList);
       binder.forField(checkBoxButtons).bind(MultiChoiceAnswer::getChosenAnswerSet, MultiChoiceAnswer::setChosenAnswerSet);
 
@@ -41,6 +42,11 @@ public class ReadMultiChoiceQuestionLayout extends ReadQuestionLayout implements
       checkBoxButtons.addThemeVariants(CheckboxGroupVariant.LUMO_VERTICAL);
     }
 
+  /**
+   * Gathers Response of filled form.
+   * @return MultiChoiceAnswer
+   * @throws ValidationException
+   */
   @Override
   public Answers gatherResponse() throws ValidationException {
     multiChoiceAnswer.setQuestion(getQuestion());
