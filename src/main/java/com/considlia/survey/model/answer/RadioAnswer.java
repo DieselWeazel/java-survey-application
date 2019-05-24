@@ -14,23 +14,21 @@ import javax.persistence.OneToOne;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-public class SingleChoiceAnswer extends Answers {
+public class RadioAnswer extends Answers {
 
-  @OneToOne(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-  @JoinColumn(name = "answer_id")
-  private ChosenAnswer chosenAnswer;
+  private String chosenAnswer;
 
-  public SingleChoiceAnswer (){}
+  public RadioAnswer(){}
 
-  public SingleChoiceAnswer(ChosenAnswer chosenAnswer){
+  public RadioAnswer(String chosenAnswer){
     this.chosenAnswer = chosenAnswer;
   }
 
-  public ChosenAnswer getChosenAnswer() {
+  public String getChosenAnswer() {
     return chosenAnswer;
   }
 
-  public void setChosenAnswer(ChosenAnswer chosenAnswer) {
+  public void setChosenAnswer(String chosenAnswer) {
     this.chosenAnswer = chosenAnswer;
   }
 
