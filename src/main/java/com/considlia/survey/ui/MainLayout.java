@@ -1,5 +1,10 @@
 package com.considlia.survey.ui;
 
+import java.util.HashMap;
+import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import com.considlia.survey.security.SecurityUtils;
 import com.considlia.survey.ui.UserViews.AccessDeniedView;
 import com.considlia.survey.ui.UserViews.LoginView;
@@ -16,11 +21,6 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.RouterLayout;
 import com.vaadin.flow.router.RouterLink;
-import java.util.HashMap;
-import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 @StyleSheet("css/app.css")
 public class MainLayout extends VerticalLayout implements RouterLayout {
@@ -63,8 +63,8 @@ public class MainLayout extends VerticalLayout implements RouterLayout {
     UI.getCurrent().getPage().reload();
   }
 
-  private Button createRouterLink(
-      Class<? extends Component> targetViewClass, String text, VaadinIcon icon) {
+  private Button createRouterLink(Class<? extends Component> targetViewClass, String text,
+      VaadinIcon icon) {
     return new Button(text, new Icon(icon), e -> {
       if (SecurityUtils.hasAccess(targetViewClass)) {
         getUI().ifPresent(ui -> ui.navigate(targetViewClass));

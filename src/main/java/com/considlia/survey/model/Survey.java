@@ -17,6 +17,9 @@ import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import com.considlia.survey.model.question.Question;
 
+/**
+ * Class to create a Survey
+ */
 @Entity
 @Table(name = "survey")
 // @Table(name = "survey", uniqueConstraints = @UniqueConstraint(columnNames = {"title",
