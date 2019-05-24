@@ -1,8 +1,14 @@
 package com.considlia.survey.ui;
 
+import java.time.LocalDate;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import com.considlia.survey.model.QuestionType;
 import com.considlia.survey.model.Role;
 import com.considlia.survey.model.Survey;
+import com.considlia.survey.model.SurveyStatus;
 import com.considlia.survey.model.question.Question;
 import com.considlia.survey.repositories.SurveyRepository;
 import com.considlia.survey.repositories.UserRepository;
@@ -15,7 +21,6 @@ import com.considlia.survey.ui.custom_component.EditDialog;
 import com.considlia.survey.ui.custom_component.QuestionFactory;
 import com.considlia.survey.ui.custom_component.QuestionWithButtonsFactory;
 import com.considlia.survey.ui.custom_component.question_with_button.QuestionWithButtons;
-import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.notification.Notification;
@@ -32,11 +37,6 @@ import com.vaadin.flow.router.BeforeLeaveObserver;
 import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.OptionalParameter;
 import com.vaadin.flow.router.Route;
-import java.time.LocalDate;
-import java.util.LinkedHashSet;
-import java.util.Set;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
 
 @Route(value = "createsurvey", layout = MainLayout.class)
 @Secured({Role.USER, Role.ADMIN})
@@ -73,12 +73,19 @@ public class CreateSurveyView extends BaseView
   private CreateRatioComponents createRatioComponents;
   private CreateTextComponents createTextComponents;
 
-  @Autowired private UserRepository userRepository;
-  @Autowired private CustomUserService customUserService;
+  @Autowired
+  private UserRepository userRepository;
+  @Autowired
+  private CustomUserService customUserService;
 
+  /**
+   * Constructor for CreateSurveyView
+   *
+   * @param surveyRepository
+   * @param customUserService
+   */
   public CreateSurveyView(SurveyRepository surveyRepository, CustomUserService customUserService) {
     super("Create Survey");
-    // setId("createsurvey");
 
     this.surveyRepository = surveyRepository;
     this.customUserService = customUserService;
@@ -90,6 +97,10 @@ public class CreateSurveyView extends BaseView
     initLayout();
   }
 
+  /**
+   * Initiates the view for CreateSurvey and creates events for surveyTitleTextField,
+   * creatorNameTextField, descriptionTextArea.
+   */
   public void initSurvey() {
     header = new VerticalLayout();
     header.setId("createheader");
@@ -115,90 +126,34 @@ public class CreateSurveyView extends BaseView
     creatorNameTextField = createTextField("250px", "Created By", true);
     descriptionTextArea = new TextArea();
 
-    surveyTitleTextField.addValueChangeListener(
-        titleChange -> {
-          checkFilledFields();
-        });
-    creatorNameTextField.addValueChangeListener(
-        creatorChange -> {
-          checkFilledFields();
-        });
-    descriptionTextArea.addValueChangeListener(
-        descChange -> {
-          hasChanges = true;
-        });
+    surveyTitleTextField.addValueChangeListener(titleChange -> {
+      checkFilledFields();
+    });
+    creatorNameTextField.addValueChangeListener(creatorChange -> {
+      checkFilledFields();
+    });
+    descriptionTextArea.addValueChangeListener(descChange -> {
+      hasChanges = true;
+    });
 
     descriptionTextArea.setLabel("Description");
     descriptionTextArea.setWidth("600px");
 
     /*
-    Currently doesn't allow for editing of Users name within CreatorName for Survey.
+     * Currently doesn't allow for editing of Users name within CreatorName for Survey.
      */
-    creatorNameTextField.setValue(
-        customUserService.getUser().getLastName()
-            + ", "
-            + customUserService.getUser().getFirstName());
+    creatorNameTextField.setValue(customUserService.getUser().getLastName() + ", "
+        + customUserService.getUser().getFirstName());
     creatorNameTextField.setEnabled(false);
     descriptionTextArea.setValueChangeMode(ValueChangeMode.EAGER);
   }
 
-  public void initAddQuestionContainer() {
-    questionTitleTextField = createTextField("300px", "Question", false);
-    questionTitleTextField.addValueChangeListener(
-        event -> {
-
-          // checks if the the string contains more than 255 characters. If true cuts string after
-          // index
-          // 255
-          if (event.getSource().getValue().length() > 255) {
-            event.getSource().setValue(event.getSource().getValue().substring(0, 255));
-            Notification.show("Question can max contain 255 characters");
-          }
-
-          if (questionTitleTextField.isEmpty() || selectOptions.getValue() == null) {
-            addQuestionButton.setEnabled(false);
-          } else if (selectOptions.getValue() == QuestionType.TEXTFIELD
-              && !questionTitleTextField.getValue().isEmpty()) {
-            userCreationQuestion(QuestionType.TEXTFIELD);
-          } else if ((selectOptions.getValue() == QuestionType.RADIO
-              && !questionTitleTextField.getValue().isEmpty())) {
-            userCreationQuestion(QuestionType.RADIO);
-          } else if ((selectOptions.getValue() == QuestionType.CHECKBOX
-              && !questionTitleTextField.getValue().isEmpty())) {
-            userCreationQuestion(QuestionType.CHECKBOX);
-          } else if ((selectOptions.getValue() == QuestionType.RATIO
-              && !questionTitleTextField.getValue().isEmpty())) {
-            userCreationQuestion(QuestionType.RATIO);
-          }
-        });
-
-    selectOptions = new Select<>();
-    selectOptions.setPlaceholder("Type of question");
-    selectOptions.setItems(
-        QuestionType.TEXTFIELD, QuestionType.RADIO, QuestionType.CHECKBOX, QuestionType.RATIO);
-    selectOptions.addValueChangeListener(
-        event -> {
-          questionType = selectOptions.getValue();
-          if (event.getValue() == QuestionType.TEXTFIELD) {
-            userCreationQuestion(QuestionType.TEXTFIELD);
-          } else if (event.getValue() == QuestionType.RADIO) {
-            userCreationQuestion(QuestionType.RADIO);
-          } else if (event.getValue() == QuestionType.CHECKBOX) {
-            userCreationQuestion(QuestionType.CHECKBOX);
-          } else if (event.getValue() == QuestionType.RATIO) {
-            userCreationQuestion(QuestionType.RATIO);
-          }
-          if (questionTitleTextField.isEmpty()) {
-            addQuestionButton.setEnabled(false);
-          }
-        });
-
-    mandatory = new Checkbox("Mandatory Question");
-  }
-
+  /**
+   * adds layouts to containers, invoked by constructor.
+   */
   public void initLayout() {
-    titleContainer.add(
-        surveyTitleTextField, creatorNameTextField, submitSurveyButton, cancelButton);
+    titleContainer.add(surveyTitleTextField, creatorNameTextField, submitSurveyButton,
+        cancelButton);
     header.add(titleContainer);
     header.add(descriptionTextArea);
 
@@ -208,6 +163,62 @@ public class CreateSurveyView extends BaseView
     add(header);
     add(addQuestionContainer);
     add(questions);
+  }
+
+  /**
+   * Creates and sets events for questionTitleTextField {@link TextField} and selectOptions
+   * {@link Select}. Events invokes userCreationQuestion with value QuestionType. Also creates
+   * mandatory {@link CheckBox}.
+   */
+  public void initAddQuestionContainer() {
+    questionTitleTextField = createTextField("300px", "Question", false);
+    questionTitleTextField.addValueChangeListener(event -> {
+
+      // checks if the the string contains more than 255 characters. If true cuts string after index
+      // 255
+      if (event.getSource().getValue().length() > 255) {
+        event.getSource().setValue(event.getSource().getValue().substring(0, 255));
+        Notification.show("Question can max contain 255 characters");
+      }
+
+      if (questionTitleTextField.isEmpty() || selectOptions.getValue() == null) {
+        addQuestionButton.setEnabled(false);
+      } else if (selectOptions.getValue() == QuestionType.TEXTFIELD
+          && !questionTitleTextField.getValue().isEmpty()) {
+        userCreationQuestion(QuestionType.TEXTFIELD);
+      } else if ((selectOptions.getValue() == QuestionType.RADIO
+          && !questionTitleTextField.getValue().isEmpty())) {
+        userCreationQuestion(QuestionType.RADIO);
+      } else if ((selectOptions.getValue() == QuestionType.CHECKBOX
+          && !questionTitleTextField.getValue().isEmpty())) {
+        userCreationQuestion(QuestionType.CHECKBOX);
+      } else if ((selectOptions.getValue() == QuestionType.RATIO
+          && !questionTitleTextField.getValue().isEmpty())) {
+        userCreationQuestion(QuestionType.RATIO);
+      }
+    });
+
+    selectOptions = new Select<>();
+    selectOptions.setPlaceholder("Type of question");
+    selectOptions.setItems(QuestionType.TEXTFIELD, QuestionType.RADIO, QuestionType.CHECKBOX,
+        QuestionType.RATIO);
+    selectOptions.addValueChangeListener(event -> {
+      questionType = selectOptions.getValue();
+      if (event.getValue() == QuestionType.TEXTFIELD) {
+        userCreationQuestion(QuestionType.TEXTFIELD);
+      } else if (event.getValue() == QuestionType.RADIO) {
+        userCreationQuestion(QuestionType.RADIO);
+      } else if (event.getValue() == QuestionType.CHECKBOX) {
+        userCreationQuestion(QuestionType.CHECKBOX);
+      } else if (event.getValue() == QuestionType.RATIO) {
+        userCreationQuestion(QuestionType.RATIO);
+      }
+      if (questionTitleTextField.isEmpty()) {
+        addQuestionButton.setEnabled(false);
+      }
+    });
+
+    mandatory = new Checkbox("Mandatory Question");
   }
 
   public TextField createTextField(String width, String placeholderAndLabel, boolean isRequired) {
@@ -221,6 +232,10 @@ public class CreateSurveyView extends BaseView
     return textField;
   }
 
+  /**
+   * Removes all questions, then adds all Questions with new index values. Invokes
+   * {@link updateMoveButtonStatus()}
+   */
   public void refreshItems() {
     setIndex();
     questions.removeAll();
@@ -238,8 +253,10 @@ public class CreateSurveyView extends BaseView
     }
   }
 
-  // Create addQuestion-package with listeners, if already created: save the question
-  // Add handling for multiquestions
+  /**
+   * Adds question to {@link Survey} object. Then clears components and variables used in
+   * addQuestionContainer
+   */
   public void addQuestion() {
     questionTitleTextField.focus();
     questionType = selectOptions.getValue();
@@ -251,13 +268,9 @@ public class CreateSurveyView extends BaseView
       }
     }
 
-    thisSurvey.addQuestion(
-        QuestionFactory.createQuestion(
-            questionType,
-            questionTitleTextField.getValue(),
-            mandatory.getValue(),
-            createAlternative.getAlternativeList(),
-            createRatioComponents));
+    thisSurvey
+        .addQuestion(QuestionFactory.createQuestion(questionType, questionTitleTextField.getValue(),
+            mandatory.getValue(), createAlternative.getAlternativeList(), createRatioComponents));
 
     refreshItems();
 
@@ -275,6 +288,11 @@ public class CreateSurveyView extends BaseView
     mandatory.setValue(false);
   }
 
+  /**
+   * Updated components in extraComponents Layout for given QuestionType.
+   *
+   * @param questionType
+   */
   public void userCreationQuestion(QuestionType questionType) {
     // Clears the extraComponentLayout
     extraComponents.removeAll();
@@ -292,29 +310,35 @@ public class CreateSurveyView extends BaseView
     changeBtn();
   }
 
+  /**
+   * Creates instance of componentsCreate START HERESTART HERESTART HERESTART HERESTART HEREType.
+   * This is done here because components are set to null after a Question is saved.
+   */
   public void initExtraComponents() {
     if (createRatioComponents == null) {
       createRatioComponents = new CreateRatioComponents(this);
     }
     if (createAlternative == null) {
-      createAlternative = new CreateAlternative(questionType, this);
+      createAlternative = new CreateAlternative(this);
     }
     if (createTextComponents == null) {
       createTextComponents = new CreateTextComponents(this);
     }
   }
 
+  /**
+   * Manages setEnable for addQuestionButton {@link Button}
+   */
   public void changeBtn() {
     questionType = selectOptions.getValue();
     switch (questionType) {
       case TEXTFIELD:
-        addQuestionButton.setEnabled(
-            !questionTitleTextField.isEmpty()
-                && createTextComponents.getRadioButtons().getValue() != null);
+        addQuestionButton.setEnabled(!questionTitleTextField.isEmpty()
+            && createTextComponents.getRadioButtons().getValue() != null);
         break;
       case RATIO:
-        addQuestionButton.setEnabled(
-            !createRatioComponents.isLimitEmpty() && !questionTitleTextField.isEmpty());
+        addQuestionButton
+            .setEnabled(!createRatioComponents.isLimitEmpty() && !questionTitleTextField.isEmpty());
 
         break;
       case RADIO:
@@ -326,8 +350,7 @@ public class CreateSurveyView extends BaseView
           Set<String> set = new LinkedHashSet<>();
           set.addAll(createAlternative.getAlternativeList());
           addQuestionButton.setEnabled(
-              !createAlternative.getAlternativeList().isEmpty()
-                  && !questionTitleTextField.isEmpty()
+              !createAlternative.getAlternativeList().isEmpty() && !questionTitleTextField.isEmpty()
                   && createAlternative.getAlternativeList().size() == set.size());
         }
         break;
@@ -336,7 +359,12 @@ public class CreateSurveyView extends BaseView
     }
   }
 
-  // Move question in questions container
+  /**
+   * Manages changing position of questions.
+   *
+   * @param button the {@link Button} attached to the {@link QuestionWithButtons}
+   * @param moveDirection 1 = down, -1 = up
+   */
   public void moveQuestion(Button button, int moveDirection) {
     QuestionWithButtons qb = (QuestionWithButtons) button.getParent().get().getParent().get();
     int currentIndex = thisSurvey.getQuestions().indexOf(qb.getQuestion());
@@ -347,27 +375,37 @@ public class CreateSurveyView extends BaseView
     hasChanges = true;
   }
 
-  // Remove questions from questions container
-  public void removeQuestion(Component c) {
-    QuestionWithButtons qb = (QuestionWithButtons) c;
-    thisSurvey.getQuestions().remove(qb.getQuestion());
+  /**
+   * Removes question from questions {@link List} in {@link Survey}. Invoked from
+   * {@link ConfirmDialog}
+   *
+   * @param questionWithButtons type: {@link QuestionWithButtons}
+   */
+  public void removeQuestion(QuestionWithButtons questionWithButtons) {
+    thisSurvey.getQuestions().remove(questionWithButtons.getQuestion());
 
     refreshItems();
     checkFilledFields();
   }
 
-  // Edit question via pencil buttons in custom components
+  /**
+   *
+   * @param button
+   */
   public void editQuestion(Button button) {
     new EditDialog(button);
     hasChanges = true;
   }
 
-  // Save survey with questions to database
+  /**
+   * Saves survey with questions to database
+   */
   public void saveSurvey() {
     thisSurvey.setCreator(creatorNameTextField.getValue());
     thisSurvey.setTitle(surveyTitleTextField.getValue());
     thisSurvey.setDescription(descriptionTextArea.getValue());
     thisSurvey.setDate(LocalDate.now());
+    thisSurvey.setStatus(SurveyStatus.EDITABLE);
 
     thisSurvey.setUser(customUserService.getUser());
     surveyRepository.save(thisSurvey);
@@ -375,7 +413,12 @@ public class CreateSurveyView extends BaseView
     getUI().ifPresent(ui -> ui.navigate(""));
   }
 
-  // Check if title and creator textfields are filled out
+  /**
+   * Manages setEnable for submitSurveyButton {@link Button}
+   *
+   * @returns true, if: surveyTitleTextField has content, creatorNameTextField has content and
+   *          {@link Survey} contains {@link Question}s. else returns false
+   */
   public boolean checkFilledFields() {
     hasChanges = true;
     if (!(surveyTitleTextField.isEmpty() || creatorNameTextField.isEmpty())
@@ -403,8 +446,9 @@ public class CreateSurveyView extends BaseView
     }
   }
 
-  // HasUrlParameter function, if parameter is null, do nothing but load the view as normal.
-  // If parameter has an surveyId, load questions, title and creator. Add Multiquestion
+  /**
+   * Sets the title, the creator and the description of the Survey
+   */
   @Override
   public void setParameter(BeforeEvent event, @OptionalParameter Long parameter) {
     if (parameter != null) {
@@ -422,14 +466,25 @@ public class CreateSurveyView extends BaseView
     }
   }
 
+  /**
+   *
+   * @returns addQuestionButton
+   */
   public Button getAddQuestionButton() {
     return addQuestionButton;
   }
 
+  /**
+   *
+   * @returns questionTitleTextField type: {@link TextField}
+   */
   public TextField getQuestionTitleTextField() {
     return questionTitleTextField;
   }
 
+  /**
+   * Creates dialog to confirm exit if there are unsaved changes to confirm exit.
+   */
   @Override
   public void beforeLeave(BeforeLeaveEvent event) {
     if (hasChanges) {
