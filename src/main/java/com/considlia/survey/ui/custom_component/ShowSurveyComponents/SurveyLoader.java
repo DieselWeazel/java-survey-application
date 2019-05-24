@@ -25,7 +25,7 @@ public class SurveyLoader implements ReadQuestionFactory<ReadQuestionComponent> 
    * @return layout corresponding with Question.
    */
   @Override
-  public ReadQuestionComponent loadQuestion(Question question) {
+  public ReadQuestionComponent loadQuestionLayout(Question question) {
 
     LOGGER.info("SurveyLoader: Loading a question");
     if (question instanceof CheckBoxQuestion) {

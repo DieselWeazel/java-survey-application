@@ -130,7 +130,7 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
    */
   public void loadSurvey(Survey survey) {
     for (Question question : survey.getQuestions()){
-      ReadQuestionLayout readQuestionLayout = (ReadQuestionLayout) readQuestionFactory.loadQuestion(question);
+      ReadQuestionLayout readQuestionLayout = (ReadQuestionLayout) readQuestionFactory.loadQuestionLayout(question);
       surveyVerticalLayout.add(readQuestionLayout);
       readQuestionList.add((ReadQuestionComponent) readQuestionLayout);
     }

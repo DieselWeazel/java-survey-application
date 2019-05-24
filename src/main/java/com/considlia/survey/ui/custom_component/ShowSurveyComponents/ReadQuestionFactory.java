@@ -9,6 +9,6 @@ import com.considlia.survey.model.question.Question;
  */
 public interface ReadQuestionFactory<T> {
 
-  T loadQuestion(Question question);
+  T loadQuestionLayout(Question question);
 
 }
