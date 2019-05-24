@@ -24,7 +24,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /*
- * http://localhost:8080/showsurvey/1
+ *
+ *  Link:
+ *  http://localhost:8080/showsurvey/1
+ *  written by: Jonathan Harr
  */
 @Route(value = "showsurvey", layout = MainLayout.class)
 public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
@@ -48,6 +51,12 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
 
   private List<ReadQuestionComponent> readQuestionList = new ArrayList<>();
 
+  /**
+   * Constructs view.
+   * @param surveyRepository for loading Surveys.
+   * @param responseRepository for storing SurveyResponse.
+   * @param surveyLoader factory loading Questions and Answerform.
+   */
   public ShowSurveyView(SurveyRepository surveyRepository,
       ResponseRepository responseRepository,
       SurveyLoader surveyLoader) {
@@ -61,7 +70,9 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
 //    saveButton.addClickListener(e -> saveResponse());
   }
 
-  // -- UI method, adding, etc.
+  /**
+   * initiates page GUI.
+   */
   private void initUI() {
 
     headerHorizontalLayout.setId("createheader");
@@ -81,27 +92,29 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
     add(saveButton);
   }
 
-  // -- Data methods --
-  // -- Parameter Method, finding Survey --
+  //TODO change to !parameter ==null, reduce boilerplate code.
+  /**
+   * Checks if page is meant to load a Survey,
+   * if parameter is null, sets text and button
+   * into having not found a Survey.
+   * @param event initiates before load.
+   * @param parameter ID of Survey, value determining event.
+   */
   @Override
   public void setParameter(BeforeEvent event, Long parameter) {
     try {
       if (parameter == null) {
         // Null Pointer Exception? (Survey Null Pointer Exception)
         h1.setText("ERROR, no survey ID parameter given.");
-
         goHome();
       }
       if (surveyRepository.findById(parameter).isPresent()) {
         survey = surveyRepository.getSurveyById(parameter);
         h1.setText(survey.getTitle());
         h5.setText(survey.getDescription());
-
         loadSurvey(survey);
       } else {
-        // Or Create SurveyNotFoundException
         h1.setText("ERROR, no Survey by the ID of: " + parameter + " exists.");
-
         goHome();
       }
     } catch (NullPointerException e) {
@@ -109,16 +122,18 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
     }
   }
 
-  // -- Loading Survey to Layout
+  /**
+   * Loads Questions,
+   * @param survey, reads all questions inside Survey,
+   * for each question, adds a ReadQuestionLayout via
+   * ReadQuestionFactory into surveyVerticalLayout and
+   * each to readQuestionList.
+   */
   public void loadSurvey(Survey survey) {
-
     for (Question question : survey.getQuestions()){
       ReadQuestionLayout readQuestionLayout = (ReadQuestionLayout) readQuestionFactory.loadQuestion(question);
       surveyVerticalLayout.add(readQuestionLayout);
       readQuestionList.add((ReadQuestionComponent) readQuestionLayout);
-//      surveyVerticalLayout.add((Component) readQuestionFactory.loadQuestion(question));
-
-//      surveyLoader.loadQuestion(question);
     }
     saveButton.addClickListener(e -> {
       try {
@@ -127,31 +142,18 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
         e1.printStackTrace();
       }
     });
-//    for (Question q : survey.getQuestions()) {
-//
-//      if (q instanceof MultiQuestion) {
-//        MultiQuestion mq = (MultiQuestion) q;
-//
-//        ReadMultiChoiceQuestionLayout readMultiQuestionLayout = new ReadMultiChoiceQuestionLayout(mq);
-//        surveyVerticalLayout.add(readMultiQuestionLayout);
-//      } else if (q instanceof TextQuestion) {
-//        ReadTextQuestionLayout readTextQuestionLayout = new ReadTextQuestionLayout(q);
-//        surveyVerticalLayout.add(readTextQuestionLayout);
-//      } else if (q instanceof RatioQuestion) {
-//        RatioQuestion rq = (RatioQuestion) q;
-//        ReadRatioQuestionLayout ratioQuestionLayout = new ReadRatioQuestionLayout(rq);
-//        surveyVerticalLayout.add(ratioQuestionLayout);
-//      }
-//
-//      if (q.isMandatory()) {
-//        containsMandatory = true;
-//      }
-//    }
-
-
     initUI();
   }
 
+  /**
+   * Creates a SurveyResponse and stores all Answer(s).
+   * For each readQuestionComponent inside readQuestionList,
+   * gatherResponse() method is called
+   * storing each Answer into respective Bean, connecting them to
+   * each Question of origin.
+   * Saves SurveyResponse to ResponseRepository.
+   * @throws ValidationException
+   */
   public void saveResponse() throws ValidationException {
     SurveyResponses surveyResponse = new SurveyResponses();
 
@@ -162,60 +164,10 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
     responseRepository.save(surveyResponse);
   }
 
-  // -- Public Button Methods --
-  // Demo för hur ett svar kan kunnas skicka in.
-//  public void saveResponse() {
-//
-//    SurveyResponses sr = new SurveyResponses();
-//    sr.setSurveyId(survey.getId());
-//    sr.setDate(LocalDate.now());
-//
-//    for (int position = 0; position < surveyVerticalLayout.getComponentCount(); position++) {
-//      ReadQuestionLayout component =
-//          (ReadQuestionLayout) surveyVerticalLayout.getComponentAt(position);
-//      switch (component.getQuestion().getQuestionType()) {
-//        case TEXTFIELD:
-//          ReadTextQuestionLayout castTextComponent = (ReadTextQuestionLayout) component;
-//          sr.addAnswer(new Answers(castTextComponent.getQuestionField().getValue(),
-//              castTextComponent.getQuestion()));
-//          break;
-//        case TEXTAREA:
-//          ReadTextQuestionLayout castTextAreaComponent = (ReadTextQuestionLayout) component;
-//          sr.addAnswer(new Answers(castTextAreaComponent.getQuestionField().getValue(),
-//              castTextAreaComponent.getQuestion()));
-//          break;
-//        case RADIO:
-//          ReadMultiChoiceQuestionLayout castRadioComponent = (ReadMultiChoiceQuestionLayout) component;
-//          sr.addAnswer(new Answers(castRadioComponent.getRadioButtons().getValue().getTitle(),
-//              castRadioComponent.getQuestion()));
-//          break;
-//        case CHECKBOX:
-//          ReadMultiChoiceQuestionLayout castCheckboxComponent = (ReadMultiChoiceQuestionLayout) component;
-//          for (Iterator<MultiQuestionAlternative> i =
-//              castCheckboxComponent.getCheckBoxButtons().getValue().iterator(); i.hasNext();) {
-//            sr.addAnswer(new Answers(i.next().getTitle(), castCheckboxComponent.getQuestion()));
-//          }
-//          break;
-//        case RATIO:
-//          ReadRatioQuestionLayout castRatioComponent = (ReadRatioQuestionLayout) component;
-//          sr.addAnswer(new Answers(castRatioComponent.getRadioButtons().getValue().substring(0, 1),
-//              castRatioComponent.getQuestion()));
-//          break;
-//        default:
-//          break;
-//      }
-//    }
-//    responseRepository.save(sr);
-//
-//    for (SurveyResponses srPrint : responseRepository.findAllBySurveyId(survey.getId())) {
-//      for (Answers aPrint : srPrint.getAnswers()) {
-//        System.out.println(aPrint.getQuestion().getTitle() + ": " + aPrint.getAnswer());
-//      }
-//      System.out.println();
-//    }
-//    getUI().ifPresent(ui -> ui.navigate(""));
-//  }
-
+  /**
+   * If no survey is loaded, saveButton changes function,
+   * offers a way back to homeview for User.
+   */
   public void goHome() {
     saveButton.setText("Go To Mainview");
     saveButton.addClickListener(e -> getUI().ifPresent(ui -> ui.navigate("")));

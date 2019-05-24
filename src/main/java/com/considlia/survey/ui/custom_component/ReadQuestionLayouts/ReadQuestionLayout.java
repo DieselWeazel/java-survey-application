@@ -6,30 +6,22 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-//TODO what method do I want them all to share that is useful?
 public class ReadQuestionLayout extends VerticalLayout {
 
   private H5 title;
   private Question question;
   private static final Logger LOGGER = LoggerFactory.getLogger(ReadQuestionLayout.class);
-  //TODO
-//  private Binder <Answers> binder;
-//  private Answers answers;
 
+  /**
+   * Constructs a generic TextQuestionLayout
+   * @param question works with any abstract Question.
+   */
   public ReadQuestionLayout(Question question) {
     this.title = new H5(question.getTitle() + (question.isMandatory() ? "*" : ""));
     this.question = question;
 //    this.binder = new Binder();
     add(title);
   }
-
-//  public Binder getBinder() {
-//    return binder;
-//  }
-//
-//  public Answers getAnswers() {
-//    return answers;
-//  }
 
   public Question getQuestion() {
     return question;
