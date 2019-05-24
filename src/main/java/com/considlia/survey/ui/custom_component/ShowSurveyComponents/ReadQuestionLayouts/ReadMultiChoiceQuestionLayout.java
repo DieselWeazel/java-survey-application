@@ -1,8 +1,8 @@
 package com.considlia.survey.ui.custom_component.ShowSurveyComponents.ReadQuestionLayouts;
 
-import com.considlia.survey.model.answer.Answers;
-import com.considlia.survey.model.answer.ChosenAnswer;
-import com.considlia.survey.model.answer.MultiChoiceAnswer;
+import com.considlia.survey.model.answer.Answer;
+import com.considlia.survey.model.answer.MultiAnswerChoice;
+import com.considlia.survey.model.answer.MultiAnswer;
 import com.considlia.survey.model.question.MultiQuestion;
 import com.considlia.survey.ui.custom_component.ShowSurveyComponents.ReadQuestionComponent;
 import com.vaadin.flow.component.checkbox.CheckboxGroup;
@@ -15,27 +15,27 @@ import java.util.List;
 public class ReadMultiChoiceQuestionLayout extends ReadQuestionLayout implements
     ReadQuestionComponent {
 
-  private MultiChoiceAnswer multiChoiceAnswer;
-  private Binder<MultiChoiceAnswer> binder;
+  private MultiAnswer multiChoiceAnswer;
+  private Binder<MultiAnswer> binder;
 
-  private List<ChosenAnswer> answerAlternativeList = new ArrayList<ChosenAnswer>();
+  private List<MultiAnswerChoice> answerAlternativeList = new ArrayList<MultiAnswerChoice>();
 
   /**
-   * Constructs a Layout for Viewing and Storing MultiChoiceAnswer(s)
+   * Constructs a Layout for Viewing and Storing MultiAnswer(s)
    * @param question MultiQuestion only
    */
   public ReadMultiChoiceQuestionLayout(MultiQuestion question) {
     super(question);
-      CheckboxGroup<ChosenAnswer> checkBoxButtons = new CheckboxGroup<>();
-      binder = new Binder<>(MultiChoiceAnswer.class);
-      multiChoiceAnswer = new MultiChoiceAnswer();
+      CheckboxGroup<MultiAnswerChoice> checkBoxButtons = new CheckboxGroup<>();
+      binder = new Binder<>(MultiAnswer.class);
+      multiChoiceAnswer = new MultiAnswer();
       binder.setBean(multiChoiceAnswer);
 
       question.getStringAlternatives().forEach(e ->
-          answerAlternativeList.add(new ChosenAnswer(e)));
+          answerAlternativeList.add(new MultiAnswerChoice(e)));
 
       checkBoxButtons.setItems(answerAlternativeList);
-      binder.forField(checkBoxButtons).bind(MultiChoiceAnswer::getChosenAnswerSet, MultiChoiceAnswer::setChosenAnswerSet);
+      binder.forField(checkBoxButtons).bind(MultiAnswer::getMultiAnswerChoiceSet, MultiAnswer::setMultiAnswerChoiceSet);
 
       add(checkBoxButtons);
       checkBoxButtons.addThemeVariants(CheckboxGroupVariant.LUMO_VERTICAL);
@@ -43,11 +43,11 @@ public class ReadMultiChoiceQuestionLayout extends ReadQuestionLayout implements
 
   /**
    * Gathers Response of filled form.
-   * @return MultiChoiceAnswer
+   * @return MultiAnswer
    * @throws ValidationException
    */
   @Override
-  public Answers gatherResponse() throws ValidationException {
+  public Answer gatherResponse() throws ValidationException {
     multiChoiceAnswer.setQuestion(getQuestion());
     getLOGGER().info("Logging question: '{}'", getQuestion());
     binder.writeBean(multiChoiceAnswer);

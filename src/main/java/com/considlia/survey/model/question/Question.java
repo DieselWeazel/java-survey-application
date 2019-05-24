@@ -1,7 +1,7 @@
 package com.considlia.survey.model.question;
 
 import com.considlia.survey.model.QuestionType;
-import com.considlia.survey.model.answer.Answers;
+import com.considlia.survey.model.answer.Answer;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.CascadeType;
@@ -31,7 +31,7 @@ public abstract class Question {
 
   @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "question_id")
-  private Set<Answers> answerSet = new HashSet<>();
+  private Set<Answer> answerSet = new HashSet<>();
 
   public Question() {
   }

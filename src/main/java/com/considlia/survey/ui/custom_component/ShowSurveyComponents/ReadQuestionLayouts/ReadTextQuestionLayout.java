@@ -1,7 +1,7 @@
 package com.considlia.survey.ui.custom_component.ShowSurveyComponents.ReadQuestionLayouts;
 
 import com.considlia.survey.model.QuestionType;
-import com.considlia.survey.model.answer.Answers;
+import com.considlia.survey.model.answer.Answer;
 import com.considlia.survey.model.answer.TextAnswer;
 import com.considlia.survey.model.question.Question;
 import com.considlia.survey.ui.custom_component.ShowSurveyComponents.ReadQuestionComponent;
@@ -50,7 +50,7 @@ public class ReadTextQuestionLayout extends ReadQuestionLayout implements ReadQu
    * @throws ValidationException
    */
   @Override
-  public Answers gatherResponse() throws ValidationException {
+  public Answer gatherResponse() throws ValidationException {
     textAnswer.setQuestion(getQuestion());
     getLOGGER().info("Logging question: '{}'", getQuestion());
     binder.writeBean(textAnswer);

@@ -22,7 +22,7 @@ public class SurveyLoader implements ReadQuestionFactory<ReadQuestionComponent> 
   /**
    * Implementation of Factory, Reads
    * @param question any implementation.
-   * @return layout corresponding with Question.
+   * @return layout corresponding with Question. {@link com.considlia.survey.ui.custom_component.ShowSurveyComponents.ReadQuestionLayouts.ReadQuestionLayout}
    */
   @Override
   public ReadQuestionComponent loadQuestionLayout(Question question) {

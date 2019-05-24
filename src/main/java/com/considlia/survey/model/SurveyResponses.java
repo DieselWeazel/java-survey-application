@@ -1,6 +1,6 @@
 package com.considlia.survey.model;
 
-import com.considlia.survey.model.answer.Answers;
+import com.considlia.survey.model.answer.Answer;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
@@ -17,6 +17,10 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+/**
+ * SurveyResponse of parent entity {@link Survey}
+ * Used for storing each response with answers of {@link com.considlia.survey.model.question.Question}
+ */
 @Entity
 @Table(name = "surveyresponses")
 public class SurveyResponses {
@@ -33,7 +37,7 @@ public class SurveyResponses {
 
   @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "response_id")
-  private Set<Answers> answers = new HashSet<>();
+  private Set<Answer> answers = new HashSet<>();
 
   @OneToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user_id")
@@ -46,15 +50,23 @@ public class SurveyResponses {
   // Boolean
   // private boolen surveyStatus;
 
+  /**
+   * Empty Constructor
+   */
   public SurveyResponses() {
   }
 
-  public SurveyResponses(LocalDate date, Set<Answers> answers) {
+  /**
+   *
+   * @param date
+   * @param answers
+   */
+  public SurveyResponses(LocalDate date, Set<Answer> answers) {
     this.date = date;
     this.answers = answers;
   }
 
-  public void addAnswer(Answers answer) {
+  public void addAnswer(Answer answer) {
     getAnswers().add(answer);
   }
 
@@ -66,11 +78,11 @@ public class SurveyResponses {
     this.date = date;
   }
 
-  public Set<Answers> getAnswers() {
+  public Set<Answer> getAnswers() {
     return answers;
   }
 
-  public void setAnswers(Set<Answers> answers) {
+  public void setAnswers(Set<Answer> answers) {
     this.answers = answers;
   }
 

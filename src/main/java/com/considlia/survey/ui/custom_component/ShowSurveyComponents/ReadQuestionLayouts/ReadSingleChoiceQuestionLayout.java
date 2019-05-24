@@ -1,6 +1,6 @@
 package com.considlia.survey.ui.custom_component.ShowSurveyComponents.ReadQuestionLayouts;
 
-import com.considlia.survey.model.answer.Answers;
+import com.considlia.survey.model.answer.Answer;
 import com.considlia.survey.model.answer.RadioAnswer;
 import com.considlia.survey.model.question.RadioQuestion;
 import com.considlia.survey.ui.custom_component.ShowSurveyComponents.ReadQuestionComponent;
@@ -40,7 +40,7 @@ public class ReadSingleChoiceQuestionLayout extends ReadQuestionLayout implement
    * @throws ValidationException
    */
   @Override
-  public Answers gatherResponse() throws ValidationException {
+  public Answer gatherResponse() throws ValidationException {
     singleChoiceAnswer.setQuestion(getQuestion());
     getLOGGER().info("Logging question: '{}'", getQuestion());
     binder.writeBean(singleChoiceAnswer);
