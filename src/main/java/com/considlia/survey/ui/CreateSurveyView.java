@@ -8,6 +8,7 @@ import org.springframework.security.access.annotation.Secured;
 import com.considlia.survey.model.QuestionType;
 import com.considlia.survey.model.Role;
 import com.considlia.survey.model.Survey;
+import com.considlia.survey.model.SurveyStatus;
 import com.considlia.survey.model.question.Question;
 import com.considlia.survey.repositories.SurveyRepository;
 import com.considlia.survey.repositories.UserRepository;
@@ -77,9 +78,14 @@ public class CreateSurveyView extends BaseView
   @Autowired
   private CustomUserService customUserService;
 
+  /**
+   * Constructor for CreateSurveyView
+   * 
+   * @param surveyRepository
+   * @param customUserService
+   */
   public CreateSurveyView(SurveyRepository surveyRepository, CustomUserService customUserService) {
     super("Create Survey");
-    // setId("createsurvey");
 
     this.surveyRepository = surveyRepository;
     this.customUserService = customUserService;
@@ -399,6 +405,7 @@ public class CreateSurveyView extends BaseView
     thisSurvey.setTitle(surveyTitleTextField.getValue());
     thisSurvey.setDescription(descriptionTextArea.getValue());
     thisSurvey.setDate(LocalDate.now());
+    thisSurvey.setStatus(SurveyStatus.EDITABLE);
 
     thisSurvey.setUser(customUserService.getUser());
     surveyRepository.save(thisSurvey);

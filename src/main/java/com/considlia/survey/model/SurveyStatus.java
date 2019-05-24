@@ -5,7 +5,7 @@ package com.considlia.survey.model;
  * When a Survey is published its no longer Editable, but have to be either Public or Private
  */
 
-public enum Status {
+public enum SurveyStatus {
 
   EDITABLE, PUBLIC, PRIVATE, CLOSED;
 
