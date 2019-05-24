@@ -21,27 +21,27 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Configuration
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-  @Autowired
-  private final UserDetailsServiceImpl userDetailsService;
+  @Autowired private final UserDetailsServiceImpl userDetailsService;
 
   /**
    * Constructor for SecurityConfiguration
-   * @param userDetailsService stores {@link
-   * UserDetailsServiceImpl} implementation of
-   * {@link org.springframework.security.core.userdetails.UserDetailsService}
-   * to retrieve User with correct UserName, and password.
+   *
+   * @param userDetailsService stores {@link UserDetailsServiceImpl} implementation of {@link
+   *     org.springframework.security.core.userdetails.UserDetailsService} to retrieve User with
+   *     correct UserName, and password.
    */
   public SecurityConfiguration(UserDetailsServiceImpl userDetailsService) {
     this.userDetailsService = userDetailsService;
   }
 
   /**
-   * Configures with correct UserDetailsService and which PasswordEncoder to use.
-   * Without, Spring Security won't be able to authenticate our users.
+   * Configures with correct UserDetailsService and which PasswordEncoder to use. Without, Spring
+   * Security won't be able to authenticate our users.
+   *
    * @param auth Building our AuthenticationManager
-   * @throws Exception if our implementation of
-   * {@link org.springframework.security.core.userdetails.UserDetailsService}
-   * or our chosen PasswordEncoder isn't valid.
+   * @throws Exception if our implementation of {@link
+   *     org.springframework.security.core.userdetails.UserDetailsService} or our chosen
+   *     PasswordEncoder isn't valid.
    */
   @Override
   protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -51,6 +51,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
   /**
    * Bean of AuthenticationManager in order to authenticate Users within Login.
+   *
    * @return implementation of {@link AuthenticationManager}
    * @throws Exception if authentication not possible.
    */
@@ -62,6 +63,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
   /**
    * Configures the paths of access, for various roles.
+   *
    * @param http representing the address of application.
    * @throws Exception should only be thrown if Configuration isn't correct.
    */
@@ -92,9 +94,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
   }
 
   /**
-   * Spring Security won't work without a Password Encoder that is valid.
-   * Any PasswordEncoder can be chosen as long as it encodes the String correctly.
-   * Does not work if Database storage of String is shorter than 60 chars.
+   * Spring Security won't work without a Password Encoder that is valid. Any PasswordEncoder can be
+   * chosen as long as it encodes the String correctly. Does not work if Database storage of String
+   * is shorter than 60 chars.
+   *
    * @return BCryptPasswordEncoder.
    */
   @Bean
@@ -104,6 +107,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
   /**
    * Configures readability/access for Vaadin framework.
+   *
    * @param web declaring what Spring Security should ignore.
    * @throws Exception if configuration isn't correct.
    */

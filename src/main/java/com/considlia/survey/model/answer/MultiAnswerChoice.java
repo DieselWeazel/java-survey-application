@@ -6,13 +6,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-/**
- * MultiAnswerChoice, child entity of {@link MultiAnswer}.
- */
+/** MultiAnswerChoice, child entity of {@link MultiAnswer}. */
 @Entity
 @Table(name = "chosen_answer")
 public class MultiAnswerChoice {
@@ -26,8 +22,8 @@ public class MultiAnswerChoice {
 
   /**
    * Constructs a MultiAnswerChoice for {@link MultiAnswer}
-   * @param checkedAnswer is the chosen answer of
-   * {@link MultiQuestionAlternative}.
+   *
+   * @param checkedAnswer is the chosen answer of {@link MultiQuestionAlternative}.
    */
   public MultiAnswerChoice(String checkedAnswer) {
     this.checkedAnswer = checkedAnswer;
@@ -35,8 +31,8 @@ public class MultiAnswerChoice {
 
   /**
    * Gets the MultiAnswerChoice of {@link MultiAnswer}.
-   * @return the chosen answer of
-   * {@link MultiQuestionAlternative}
+   *
+   * @return the chosen answer of {@link MultiQuestionAlternative}
    */
   public String getCheckedAnswer() {
     return checkedAnswer;
@@ -44,16 +40,14 @@ public class MultiAnswerChoice {
 
   /**
    * Sets MultiAnswerChoice for {@link MultiAnswer}
-   * @param checkedAnswer is the resulted chosen answer to
-   * {@link MultiQuestionAlternative}.
+   *
+   * @param checkedAnswer is the resulted chosen answer to {@link MultiQuestionAlternative}.
    */
   public void setCheckedAnswer(String checkedAnswer) {
     this.checkedAnswer = checkedAnswer;
   }
 
-  /**
-   * @return String value of checked answer.
-   */
+  /** @return String value of checked answer. */
   @Override
   public String toString() {
     return checkedAnswer;

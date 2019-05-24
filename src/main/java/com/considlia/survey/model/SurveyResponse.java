@@ -19,8 +19,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 /**
- * SurveyResponse of parent entity {@link Survey}
- * Used for storing each response with answers of {@link com.considlia.survey.model.question.Question}
+ * SurveyResponse of parent entity {@link Survey} Used for storing each response with answers of
+ * {@link com.considlia.survey.model.question.Question}
  */
 @Entity
 @Table(name = "surveyresponses")
@@ -51,17 +51,14 @@ public class SurveyResponse {
   // Boolean
   // private boolen surveyStatus;
 
-  /**
-   * Empty Constructor
-   */
-  public SurveyResponse() {
-  }
+  /** Empty Constructor */
+  public SurveyResponse() {}
 
   /**
    * Constructs a SurveyResponse with date and list of answers.
+   *
    * @param date is the date of Survey being answered.
-   * @param answers is the answers to the questions of
-   * {@link Survey}
+   * @param answers is the answers to the questions of {@link Survey}
    */
   public SurveyResponse(LocalDate date, Set<Answer> answers) {
     this.date = date;
@@ -70,8 +67,8 @@ public class SurveyResponse {
 
   /**
    * Adds an Answer to SurveyResponse list.
-   * @param answer is the Answer of
-   * {@link com.considlia.survey.model.question.Question}
+   *
+   * @param answer is the Answer of {@link com.considlia.survey.model.question.Question}
    */
   public void addAnswer(Answer answer) {
     getAnswers().add(answer);
@@ -79,6 +76,7 @@ public class SurveyResponse {
 
   /**
    * Gets Date of SurveyResponse creation
+   *
    * @return date of SurveyResponse creation.
    */
   public LocalDate getDate() {
@@ -87,6 +85,7 @@ public class SurveyResponse {
 
   /**
    * Sets Date of SurveyResponse creation.
+   *
    * @param date of SurveyResponse creation.
    */
   public void setDate(LocalDate date) {
@@ -95,9 +94,9 @@ public class SurveyResponse {
 
   /**
    * Gets list of Answers.
-   * @return list of Answers to
-   * {@link com.considlia.survey.model.question.Question}
-   * belonging to {@link Survey}
+   *
+   * @return list of Answers to {@link com.considlia.survey.model.question.Question} belonging to
+   *     {@link Survey}
    */
   public Set<Answer> getAnswers() {
     return answers;
@@ -105,9 +104,9 @@ public class SurveyResponse {
 
   /**
    * Sets Answers within SurveyResponse.
-   * @param answers list of Answers to
-   * {@link com.considlia.survey.model.question.Question}
-   * belonging to {@link Survey}
+   *
+   * @param answers list of Answers to {@link com.considlia.survey.model.question.Question}
+   *     belonging to {@link Survey}
    */
   public void setAnswers(Set<Answer> answers) {
     this.answers = answers;
@@ -115,6 +114,7 @@ public class SurveyResponse {
 
   /**
    * Gets the ID of SurveyResponse.
+   *
    * @return the ID of SurveyResponse.
    */
   public Long getId() {
@@ -123,8 +123,8 @@ public class SurveyResponse {
 
   /**
    * Gets the User that responded to Survey.
-   * @return User that responded to Survey.
-   * If no user is present, SurveyResponse is anonymous.
+   *
+   * @return User that responded to Survey. If no user is present, SurveyResponse is anonymous.
    */
   public User getUser() {
     return user;
@@ -132,13 +132,15 @@ public class SurveyResponse {
 
   /**
    * Sets the User that responded to Survey
+   *
    * @param user that responded to Survey.
    */
   public void setUser(User user) {
     if (SecurityUtils.isUserLoggedIn()) {
       this.user = user;
     } else {
-      throw new RuntimeException("User is not signed in, setting a User for SurveyResponse Entity not possible.");
+      throw new RuntimeException(
+          "User is not signed in, setting a User for SurveyResponse Entity not possible.");
     }
   }
 }

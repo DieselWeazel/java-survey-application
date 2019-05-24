@@ -62,5 +62,4 @@ public class RatioQuestionWithButtons extends QuestionWithButtons {
   public void setChoices(int choices) {
     this.choices = choices;
   }
-
 }

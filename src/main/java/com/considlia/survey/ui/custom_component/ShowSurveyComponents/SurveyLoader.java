@@ -21,8 +21,10 @@ public class SurveyLoader implements ReadQuestionFactory<ReadQuestionComponent> 
 
   /**
    * Implementation of Factory, Reads
+   *
    * @param question any implementation.
-   * @return layout corresponding with Question. {@link com.considlia.survey.ui.custom_component.ShowSurveyComponents.ReadQuestionLayouts.ReadQuestionLayout}
+   * @return layout corresponding with Question. {@link
+   *     com.considlia.survey.ui.custom_component.ShowSurveyComponents.ReadQuestionLayouts.ReadQuestionLayout}
    */
   @Override
   public ReadQuestionComponent loadQuestionLayout(Question question) {
@@ -30,15 +32,17 @@ public class SurveyLoader implements ReadQuestionFactory<ReadQuestionComponent> 
     LOGGER.info("SurveyLoader: Loading a question");
     if (question instanceof CheckBoxQuestion) {
       MultiQuestion mq = (MultiQuestion) question;
-      ReadMultiChoiceQuestionLayout readMultiChoiceQuestionLayout = new ReadMultiChoiceQuestionLayout(mq);
+      ReadMultiChoiceQuestionLayout readMultiChoiceQuestionLayout =
+          new ReadMultiChoiceQuestionLayout(mq);
       LOGGER.info("SurveyLoader: Loading '{}'", mq.getTitle());
       return readMultiChoiceQuestionLayout;
-    } else if (question instanceof RadioQuestion){
+    } else if (question instanceof RadioQuestion) {
       RadioQuestion radioQuestion = (RadioQuestion) question;
-      ReadSingleChoiceQuestionLayout readSingleChoiceQuestionLayout = new ReadSingleChoiceQuestionLayout(radioQuestion);
+      ReadSingleChoiceQuestionLayout readSingleChoiceQuestionLayout =
+          new ReadSingleChoiceQuestionLayout(radioQuestion);
       LOGGER.info("SurveyLoader: Loading '{}'", radioQuestion.getTitle());
       return readSingleChoiceQuestionLayout;
-    }else if (question instanceof TextQuestion) {
+    } else if (question instanceof TextQuestion) {
       ReadTextQuestionLayout readTextQuestionLayout = new ReadTextQuestionLayout(question);
       LOGGER.info("SurveyLoader: Loading '{}'", question.getTitle());
       return readTextQuestionLayout;

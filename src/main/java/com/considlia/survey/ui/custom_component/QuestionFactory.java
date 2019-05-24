@@ -11,8 +11,12 @@ import java.util.List;
 
 public class QuestionFactory {
 
-  public static Question createQuestion(QuestionType type, String question, boolean mandatory,
-      List<String> stringAlternatives, CreateRatioComponents cr) {
+  public static Question createQuestion(
+      QuestionType type,
+      String question,
+      boolean mandatory,
+      List<String> stringAlternatives,
+      CreateRatioComponents cr) {
 
     if (type == QuestionType.TEXTFIELD) {
       return new TextFieldQuestion(question, mandatory);
@@ -26,8 +30,8 @@ public class QuestionFactory {
 
       return new CheckBoxQuestion(question, mandatory, stringAlternatives);
     } else if (type == QuestionType.RATIO) {
-      return new RatioQuestion(question, mandatory, cr.getLowerLimit(), cr.getUperLimit(),
-          cr.getStepperValue());
+      return new RatioQuestion(
+          question, mandatory, cr.getLowerLimit(), cr.getUperLimit(), cr.getStepperValue());
     } else {
 
       return null;

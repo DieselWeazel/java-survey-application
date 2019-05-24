@@ -36,16 +36,14 @@ public class Survey {
   @JoinColumn(name = "user_id")
   private User user;
 
-
   @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "survey_id")
   private List<SurveyResponse> surveyResponseList = new ArrayList<>();
 
   // Related to Status Class, Status.ENUM_VALUE
-  //private String currentStatus;
+  // private String currentStatus;
 
-  public Survey() {
-  }
+  public Survey() {}
 
   public Survey(String surveyTitle, String creator) {
     setTitle(surveyTitle);

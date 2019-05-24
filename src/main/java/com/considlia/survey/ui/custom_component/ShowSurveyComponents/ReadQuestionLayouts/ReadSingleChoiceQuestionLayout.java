@@ -9,8 +9,8 @@ import com.vaadin.flow.component.radiobutton.RadioGroupVariant;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
 
-public class ReadSingleChoiceQuestionLayout extends ReadQuestionLayout implements
-    ReadQuestionComponent {
+public class ReadSingleChoiceQuestionLayout extends ReadQuestionLayout
+    implements ReadQuestionComponent {
 
   private RadioButtonGroup<String> radioButtons;
   private RadioAnswer singleChoiceAnswer;
@@ -18,6 +18,7 @@ public class ReadSingleChoiceQuestionLayout extends ReadQuestionLayout implement
 
   /**
    * Constructs a Layout for Viewing and Storing RadioAnswer
+   *
    * @param question RadioQuestion
    */
   public ReadSingleChoiceQuestionLayout(RadioQuestion question) {
@@ -36,6 +37,7 @@ public class ReadSingleChoiceQuestionLayout extends ReadQuestionLayout implement
 
   /**
    * Gathers Response of filled form.
+   *
    * @return RadioAnswer
    * @throws ValidationException
    */

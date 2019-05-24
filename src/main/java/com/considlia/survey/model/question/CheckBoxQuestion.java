@@ -9,13 +9,10 @@ import javax.persistence.Table;
 @Table(name = "checkboxquestion")
 public class CheckBoxQuestion extends MultiQuestion {
 
-  public CheckBoxQuestion() {
+  public CheckBoxQuestion() {}
 
-  }
-
-  public CheckBoxQuestion(String questionTitle, boolean mandatory,
-      List<String> stringAlternatives) {
+  public CheckBoxQuestion(
+      String questionTitle, boolean mandatory, List<String> stringAlternatives) {
     super(questionTitle, QuestionType.CHECKBOX, mandatory, stringAlternatives);
   }
-
 }

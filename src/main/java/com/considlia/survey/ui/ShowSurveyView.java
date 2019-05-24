@@ -44,19 +44,20 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
   private Survey survey;
   private boolean containsMandatory = false;
 
-
-  //Factory stuff (Fix me)
+  // Factory stuff (Fix me)
   private ReadQuestionFactory readQuestionFactory;
 
   private List<ReadQuestionComponent> readQuestionList = new ArrayList<>();
 
   /**
    * Constructs view.
+   *
    * @param surveyRepository for loading Surveys.
    * @param responseRepository for storing SurveyResponse.
    * @param surveyLoader factory loading Questions and Answerform.
    */
-  public ShowSurveyView(SurveyRepository surveyRepository,
+  public ShowSurveyView(
+      SurveyRepository surveyRepository,
       ResponseRepository responseRepository,
       SurveyLoader surveyLoader) {
     this.surveyRepository = surveyRepository;
@@ -66,12 +67,10 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
     this.h5 = new H5();
     this.saveButton = new Button();
     saveButton.setText("Send");
-//    saveButton.addClickListener(e -> saveResponse());
+    //    saveButton.addClickListener(e -> saveResponse());
   }
 
-  /**
-   * initiates page GUI.
-   */
+  /** initiates page GUI. */
   private void initUI() {
 
     headerHorizontalLayout.setId("createheader");
@@ -91,11 +90,11 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
     add(saveButton);
   }
 
-  //TODO change to !parameter ==null, reduce boilerplate code.
+  // TODO change to !parameter ==null, reduce boilerplate code.
   /**
-   * Checks if page is meant to load a Survey,
-   * if parameter is null, sets text and button
-   * into having not found a Survey.
+   * Checks if page is meant to load a Survey, if parameter is null, sets text and button into
+   * having not found a Survey.
+   *
    * @param event initiates before load.
    * @param parameter ID of Survey, value determining event.
    */
@@ -123,40 +122,39 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
 
   /**
    * Loads Questions,
-   * @param survey, reads all questions inside Survey,
-   * for each question, adds a ReadQuestionLayout via
-   * ReadQuestionFactory into surveyVerticalLayout and
-   * each to readQuestionList.
+   *
+   * @param survey, reads all questions inside Survey, for each question, adds a ReadQuestionLayout
+   *     via ReadQuestionFactory into surveyVerticalLayout and each to readQuestionList.
    */
   public void loadSurvey(Survey survey) {
-    for (Question question : survey.getQuestions()){
-      ReadQuestionLayout readQuestionLayout = (ReadQuestionLayout) readQuestionFactory.loadQuestionLayout(question);
+    for (Question question : survey.getQuestions()) {
+      ReadQuestionLayout readQuestionLayout =
+          (ReadQuestionLayout) readQuestionFactory.loadQuestionLayout(question);
       surveyVerticalLayout.add(readQuestionLayout);
       readQuestionList.add((ReadQuestionComponent) readQuestionLayout);
     }
-    saveButton.addClickListener(e -> {
-      try {
-        saveResponse();
-      } catch (ValidationException e1) {
-        e1.printStackTrace();
-      }
-    });
+    saveButton.addClickListener(
+        e -> {
+          try {
+            saveResponse();
+          } catch (ValidationException e1) {
+            e1.printStackTrace();
+          }
+        });
     initUI();
   }
 
   /**
-   * Creates a SurveyResponse and stores all Answer(s).
-   * For each readQuestionComponent inside readQuestionList,
-   * gatherResponse() method is called
-   * storing each Answer into respective Bean, connecting them to
-   * each Question of origin.
-   * Saves SurveyResponse to ResponseRepository.
+   * Creates a SurveyResponse and stores all Answer(s). For each readQuestionComponent inside
+   * readQuestionList, gatherResponse() method is called storing each Answer into respective Bean,
+   * connecting them to each Question of origin. Saves SurveyResponse to ResponseRepository.
+   *
    * @throws ValidationException
    */
   public void saveResponse() throws ValidationException {
     SurveyResponse surveyResponse = new SurveyResponse();
 
-    for (ReadQuestionComponent r : readQuestionList){
+    for (ReadQuestionComponent r : readQuestionList) {
       surveyResponse.addAnswer(r.gatherResponse());
     }
 
@@ -164,8 +162,7 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
   }
 
   /**
-   * If no survey is loaded, saveButton changes function,
-   * offers a way back to homeview for User.
+   * If no survey is loaded, saveButton changes function, offers a way back to homeview for User.
    */
   public void goHome() {
     saveButton.setText("Go To Mainview");

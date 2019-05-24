@@ -23,11 +23,12 @@ public class MultiQuestion extends Question {
   @OrderBy("position ASC")
   private Set<MultiQuestionAlternative> alternatives = new HashSet<>();
 
-  public MultiQuestion() {
+  public MultiQuestion() {}
 
-  }
-
-  public MultiQuestion(String questionTitle, QuestionType questionType, boolean mandatory,
+  public MultiQuestion(
+      String questionTitle,
+      QuestionType questionType,
+      boolean mandatory,
       List<String> stringAlternatives) {
     super(questionTitle, questionType, mandatory);
     updateAlternatives(stringAlternatives);
@@ -56,8 +57,9 @@ public class MultiQuestion extends Question {
       alternativeList.add(alternative);
     }
     // Sorting the list after the position index
-    alternativeList.sort((MultiQuestionAlternative m1,
-        MultiQuestionAlternative m2) -> m1.getPosition() - m2.getPosition());
+    alternativeList.sort(
+        (MultiQuestionAlternative m1, MultiQuestionAlternative m2) ->
+            m1.getPosition() - m2.getPosition());
 
     List<String> stringAlternatives = new ArrayList<>();
     for (MultiQuestionAlternative mqa : alternativeList) {
@@ -80,5 +82,4 @@ public class MultiQuestion extends Question {
   public String toString() {
     return "MultiQuestion [alternativeList=" + alternatives + ", questionType=" + "]";
   }
-
 }

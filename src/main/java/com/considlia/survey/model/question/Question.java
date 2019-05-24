@@ -33,8 +33,7 @@ public abstract class Question {
   @JoinColumn(name = "question_id")
   private Set<Answer> answerSet = new HashSet<>();
 
-  public Question() {
-  }
+  public Question() {}
 
   public Question(String questionTitle, QuestionType questionType, boolean mandatory) {
     this.title = questionTitle;
@@ -42,8 +41,8 @@ public abstract class Question {
     this.questionType = questionType;
   }
 
-  public Question(String questionTitle, int position, QuestionType questionType,
-      boolean mandatory) {
+  public Question(
+      String questionTitle, int position, QuestionType questionType, boolean mandatory) {
     this.title = questionTitle;
     this.position = position;
     this.mandatory = mandatory;

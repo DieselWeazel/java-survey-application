@@ -29,6 +29,5 @@ public class QuestionWithButtonsFactory {
     } else {
       return null;
     }
-
   }
 }

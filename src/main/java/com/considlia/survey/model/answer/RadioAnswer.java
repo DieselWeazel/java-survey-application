@@ -10,24 +10,23 @@ public class RadioAnswer extends Answer {
 
   private String chosenAnswer;
 
-  /**
-   * Empty Constructor
-   */
-  public RadioAnswer(){}
+  /** Empty Constructor */
+  public RadioAnswer() {}
 
   /**
    * Constructor for Answer to RadioQuestion
-   * @param chosenAnswer is the chosen answer to
-   * {@link com.considlia.survey.model.question.RadioQuestion}
+   *
+   * @param chosenAnswer is the chosen answer to {@link
+   *     com.considlia.survey.model.question.RadioQuestion}
    */
-  public RadioAnswer(String chosenAnswer){
+  public RadioAnswer(String chosenAnswer) {
     this.chosenAnswer = chosenAnswer;
   }
 
   /**
    * gets the chosen answer
-   * @return the chosen answer of
-   * {@link com.considlia.survey.model.question.RadioQuestion}
+   *
+   * @return the chosen answer of {@link com.considlia.survey.model.question.RadioQuestion}
    */
   public String getChosenAnswer() {
     return chosenAnswer;
@@ -35,6 +34,7 @@ public class RadioAnswer extends Answer {
 
   /**
    * Sets the Chosen Answer.
+   *
    * @param chosenAnswer is the resulet
    */
   public void setChosenAnswer(String chosenAnswer) {

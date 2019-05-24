@@ -40,15 +40,12 @@ public class SurveyGrid extends VerticalLayout {
 
   private SurveyRepository surveyRepository;
 
-  @Autowired
-  private CustomUserService customUserService;
+  @Autowired private CustomUserService customUserService;
 
-  @Autowired
-  private UserRepository userRepository;
+  @Autowired private UserRepository userRepository;
   private boolean isHome = false;
 
-  public SurveyGrid(
-      Class viewingLayout, SurveyRepository surveyRepository) {
+  public SurveyGrid(Class viewingLayout, SurveyRepository surveyRepository) {
     isHome = HomeView.class.equals(viewingLayout);
     this.surveyRepository = surveyRepository;
     this.surveyList = new ArrayList<>();
@@ -87,9 +84,9 @@ public class SurveyGrid extends VerticalLayout {
     grid.addComponentColumn(item -> showDescription(item)).setWidth("1%");
     grid.setItemDetailsRenderer(
         TemplateRenderer.<Survey>of(
-            "<div style='border: 1px solid gray; padding: 10px; width: 100%;box-sizing: border-box;'>"
-                + "<div> <b>[[item.description]]</b></div>"
-                + "</div>")
+                "<div style='border: 1px solid gray; padding: 10px; width: 100%;box-sizing: border-box;'>"
+                    + "<div> <b>[[item.description]]</b></div>"
+                    + "</div>")
             .withProperty("description", Survey::getDescription)
             .withEventHandler(
                 "handleClick",
@@ -104,15 +101,17 @@ public class SurveyGrid extends VerticalLayout {
 
     // Includes deleteSurvey method to Consumer if we are on ProfileView.
     if (!isHome) {
-      grid.addComponentColumn(item -> {
-        GridTools gridTools = new GridTools(item, this::updateGridData);
-        return gridTools;
-      });
+      grid.addComponentColumn(
+          item -> {
+            GridTools gridTools = new GridTools(item, this::updateGridData);
+            return gridTools;
+          });
     } else {
-      grid.addComponentColumn(item -> {
-        GridTools gridTools = new GridTools(item);
-        return gridTools;
-      });
+      grid.addComponentColumn(
+          item -> {
+            GridTools gridTools = new GridTools(item);
+            return gridTools;
+          });
     }
     grid.setDetailsVisibleOnClick(false);
     grid.setSelectionMode(Grid.SelectionMode.NONE);

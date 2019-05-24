@@ -43,8 +43,7 @@ public class User {
   //  @Column(name = "last_name")
   private String lastName;
 
-  @NotBlank
-  private String role;
+  @NotBlank private String role;
 
   // If User doesn't delete its child entity (Surveys) when User is deleted, we might need a Service
   // class for this.
@@ -60,8 +59,7 @@ public class User {
   Could add a private boolean if user is banned/blocked.
    */
 
-  public User() {
-  }
+  public User() {}
 
   public Long getId() {
     return id;

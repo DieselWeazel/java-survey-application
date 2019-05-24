@@ -10,11 +10,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class CustomUserService extends User {
 
-  @Autowired
-  private UserRepository userRepository;
+  @Autowired private UserRepository userRepository;
 
   /**
    * Constructor for UserRepository
+   *
    * @param userRepository inputs the database relation of Users.
    */
   public CustomUserService(UserRepository userRepository) {
@@ -23,6 +23,7 @@ public class CustomUserService extends User {
 
   /**
    * In order to retrieve User info as User object.
+   *
    * @return currently logged in {@link User}
    */
   public User getUser() {

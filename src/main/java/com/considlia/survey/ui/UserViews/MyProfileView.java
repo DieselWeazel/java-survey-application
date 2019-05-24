@@ -18,11 +18,9 @@ public class MyProfileView extends BaseView {
 
   private SurveyGrid surveyGrid;
 
-  @Autowired
-  private SurveyRepository surveyRepository;
+  @Autowired private SurveyRepository surveyRepository;
 
-  @Autowired
-  private UserRepository userRepository;
+  @Autowired private UserRepository userRepository;
 
   //  @Autowired
   private CustomUserService customUserService;
@@ -30,7 +28,8 @@ public class MyProfileView extends BaseView {
   @Autowired
   public MyProfileView(
       SurveyRepository surveyRepository,
-      UserRepository userRepository, CustomUserService customUserService) {
+      UserRepository userRepository,
+      CustomUserService customUserService) {
     super("My Profile");
     this.userRepository = userRepository;
     this.customUserService = customUserService;

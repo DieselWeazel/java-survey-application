@@ -24,14 +24,12 @@ public abstract class Answer {
   @JoinColumn(name = "question_id")
   private Question question;
 
-  /**
-   * Empty Constructor
-   */
-  public Answer() {
-  }
+  /** Empty Constructor */
+  public Answer() {}
 
   /**
    * gets ID of answer.
+   *
    * @return ID.
    */
   public Long getId() {
@@ -40,6 +38,7 @@ public abstract class Answer {
 
   /**
    * gets question to answer.
+   *
    * @return question.
    */
   public Question getQuestion() {
@@ -48,6 +47,7 @@ public abstract class Answer {
 
   /**
    * sets Question to Answer.
+   *
    * @param question related
    */
   public void setQuestion(Question question) {

@@ -7,7 +7,6 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H4;
 import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
@@ -29,12 +28,9 @@ Jonathan
 @Route(value = "login", layout = MainLayout.class)
 public class LoginView extends BaseView implements BeforeEnterObserver {
 
-  @Autowired
-  private AuthenticationManager authenticationManagerBean;
+  @Autowired private AuthenticationManager authenticationManagerBean;
 
-  /**
-   * LoginView Constructor, for signing in. Does not open if user is logged in.
-   */
+  /** LoginView Constructor, for signing in. Does not open if user is logged in. */
   public LoginView() {
     super("Login");
     TextField username = new TextField();
@@ -68,8 +64,8 @@ public class LoginView extends BaseView implements BeforeEnterObserver {
   }
 
   /**
-   * Sets current {@link com.considlia.survey.model.User}
-   * if username and password is correct.
+   * Sets current {@link com.considlia.survey.model.User} if username and password is correct.
+   *
    * @param userName being username.
    * @param password being password.
    * @return true if username and password is correct, false if not.
@@ -88,6 +84,7 @@ public class LoginView extends BaseView implements BeforeEnterObserver {
 
   /**
    * If User is signed in, redirects user back to previous URL.
+   *
    * @param event the accessed URL before class construction.
    */
   @Override

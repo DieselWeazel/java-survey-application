@@ -13,13 +13,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-  @Autowired
-  private UserRepository userRepository;
+  @Autowired private UserRepository userRepository;
 
   /**
    * Constructs an implementation of {@link UserDetailsService}
-   * @param userRepository our repository connection to database, consisting of
-   * type {@link User}, for validating User existence.
+   *
+   * @param userRepository our repository connection to database, consisting of type {@link User},
+   *     for validating User existence.
    */
   @Autowired
   public UserDetailsServiceImpl(UserRepository userRepository) {
@@ -27,8 +27,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
   }
 
   /**
-   * Loads {@link User} via Username of User, for use with roles and access.
-   * Not to be confused with loading object of User, see {@link CustomUserService}
+   * Loads {@link User} via Username of User, for use with roles and access. Not to be confused with
+   * loading object of User, see {@link CustomUserService}
+   *
    * @param username if username exists within database or not.
    * @return if Username exists, returns instance of {@link UserDetails}
    * @throws UsernameNotFoundException if Username doesn't exist within Database.

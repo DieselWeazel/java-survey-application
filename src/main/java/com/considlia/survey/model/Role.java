@@ -10,6 +10,6 @@ public class Role {
   }
 
   public static String[] getAllRoles() {
-    return new String[]{USER, ADMIN};
+    return new String[] {USER, ADMIN};
   }
 }

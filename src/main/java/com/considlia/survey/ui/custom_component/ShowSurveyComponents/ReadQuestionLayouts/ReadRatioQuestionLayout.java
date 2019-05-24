@@ -18,6 +18,7 @@ public class ReadRatioQuestionLayout extends ReadQuestionLayout implements ReadQ
 
   /**
    * Constructs a Layout for Viewing and Storing RatioAnswer
+   *
    * @param question RatioQuestion
    */
   public ReadRatioQuestionLayout(RatioQuestion question) {
@@ -35,7 +36,9 @@ public class ReadRatioQuestionLayout extends ReadQuestionLayout implements ReadQ
       }
     }
 
-    binder.forField(ratioRadioButtons).bind(RatioAnswer::getRatioAnswer, RatioAnswer::setRatioAnswer);
+    binder
+        .forField(ratioRadioButtons)
+        .bind(RatioAnswer::getRatioAnswer, RatioAnswer::setRatioAnswer);
 
     ratioRadioButtons.setItems(options);
     ratioRadioButtons.addThemeVariants(RadioGroupVariant.LUMO_VERTICAL);
@@ -44,6 +47,7 @@ public class ReadRatioQuestionLayout extends ReadQuestionLayout implements ReadQ
 
   /**
    * Gathers Response of filled form.
+   *
    * @return RatioAnswer
    * @throws ValidationException
    */

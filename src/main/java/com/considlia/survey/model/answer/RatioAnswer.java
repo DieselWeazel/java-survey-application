@@ -11,8 +11,9 @@ public class RatioAnswer extends Answer {
 
   /**
    * Gets RatioAnswer
-   * @return the answered number within the ratio of
-   * {@link com.considlia.survey.model.question.RatioQuestion}
+   *
+   * @return the answered number within the ratio of {@link
+   *     com.considlia.survey.model.question.RatioQuestion}
    */
   public String getRatioAnswer() {
     return ratioAnswer;
@@ -20,8 +21,9 @@ public class RatioAnswer extends Answer {
 
   /**
    * Sets the RatioAnswer
-   * @param ratioAnswer within the ratio of
-   * {@link com.considlia.survey.model.question.RatioQuestion}
+   *
+   * @param ratioAnswer within the ratio of {@link
+   *     com.considlia.survey.model.question.RatioQuestion}
    */
   public void setRatioAnswer(String ratioAnswer) {
     this.ratioAnswer = ratioAnswer;

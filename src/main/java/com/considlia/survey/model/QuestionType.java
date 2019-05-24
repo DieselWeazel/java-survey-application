@@ -1,8 +1,11 @@
 package com.considlia.survey.model;
 
 public enum QuestionType {
-  TEXTFIELD("Text question"), RADIO("Radio question"), CHECKBOX("Checkbox question"), RATIO(
-      "Ratio question"), TEXTAREA("Text area");
+  TEXTFIELD("Text question"),
+  RADIO("Radio question"),
+  CHECKBOX("Checkbox question"),
+  RATIO("Ratio question"),
+  TEXTAREA("Text area");
 
   private String text;
 

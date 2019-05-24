@@ -16,8 +16,8 @@ public class ReadTextQuestionLayout extends ReadQuestionLayout implements ReadQu
   private Binder<TextAnswer> binder;
 
   /**
-   * Constructs a Layout for Viewing and Storing TextAnswer(s)
-   * Works with both types of TextQuestion
+   * Constructs a Layout for Viewing and Storing TextAnswer(s) Works with both types of TextQuestion
+   *
    * @param question TextAreaQuestion or TextFieldQuestion
    */
   public ReadTextQuestionLayout(Question question) {
@@ -46,6 +46,7 @@ public class ReadTextQuestionLayout extends ReadQuestionLayout implements ReadQu
 
   /**
    * Gathers Response of filled form.
+   *
    * @return TextAnswer
    * @throws ValidationException
    */

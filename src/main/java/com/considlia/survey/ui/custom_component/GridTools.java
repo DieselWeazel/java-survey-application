@@ -24,25 +24,24 @@ public class GridTools extends HorizontalLayout {
   }
 
   private Button showSurvey(Survey item) {
-    return new Button(new Icon(VaadinIcon.EYE),
-        onShow -> getUI().ifPresent(ui -> ui.navigate(ShowSurveyView.class, item.getId()))
-    );
+    return new Button(
+        new Icon(VaadinIcon.EYE),
+        onShow -> getUI().ifPresent(ui -> ui.navigate(ShowSurveyView.class, item.getId())));
   }
 
   private Button editSurvey(Survey item) {
-    return new Button(new Icon(VaadinIcon.PENCIL),
-        onEdit -> getUI().ifPresent(ui -> ui.navigate(CreateSurveyView.class, item.getId()))
-    );
+    return new Button(
+        new Icon(VaadinIcon.PENCIL),
+        onEdit -> getUI().ifPresent(ui -> ui.navigate(CreateSurveyView.class, item.getId())));
   }
 
   private Button deleteSurvey(Survey item, Consumer<Survey> consumer) {
-    return new Button(new Icon(VaadinIcon.TRASH),
+    return new Button(
+        new Icon(VaadinIcon.TRASH),
         onDelete -> {
-          ConfirmDialog confirmDialog = new ConfirmDialog("Confirm Delete",
-              "Are you sure you want to delete the item?",
-              consumer,
-              item);
+          ConfirmDialog confirmDialog =
+              new ConfirmDialog(
+                  "Confirm Delete", "Are you sure you want to delete the item?", consumer, item);
         });
   }
-
 }

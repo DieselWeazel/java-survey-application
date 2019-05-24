@@ -30,5 +30,4 @@ public class TextQuestionWithButtons extends QuestionWithButtons {
       add(textarea);
     }
   }
-
 }

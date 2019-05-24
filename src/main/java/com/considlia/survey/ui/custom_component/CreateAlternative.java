@@ -29,7 +29,6 @@ public class CreateAlternative extends VerticalLayout {
     alternativeList = new ArrayList<>();
 
     createAlternative(questionType, alternativeList);
-
   }
 
   public void createAlternative(QuestionType questionType, List<String> alternativeList) {
@@ -42,9 +41,10 @@ public class CreateAlternative extends VerticalLayout {
 
       dynamicTextField.setPlaceholder("alternative");
       dynamicTextField.setValueChangeMode(ValueChangeMode.EAGER);
-      dynamicTextField.addValueChangeListener(event -> {
-        textFieldEvent(event);
-      });
+      dynamicTextField.addValueChangeListener(
+          event -> {
+            textFieldEvent(event);
+          });
     } else if (!textFieldList.get(textFieldList.size() - 1).isEmpty()) {
       // checked if the last textField in list is not empty
 
@@ -55,9 +55,10 @@ public class CreateAlternative extends VerticalLayout {
 
       dynamicTextField.setPlaceholder("alternative");
       dynamicTextField.setValueChangeMode(ValueChangeMode.EAGER);
-      dynamicTextField.addValueChangeListener(event -> {
-        textFieldEvent(event);
-      });
+      dynamicTextField.addValueChangeListener(
+          event -> {
+            textFieldEvent(event);
+          });
     }
   }
 
@@ -88,7 +89,8 @@ public class CreateAlternative extends VerticalLayout {
 
     // if the alternativeList is not empty and questionTitleField is not empty
     // and no duplicates exists
-    if (!getAlternativeList().isEmpty() && !csv.getQuestionTitleTextField().isEmpty()
+    if (!getAlternativeList().isEmpty()
+        && !csv.getQuestionTitleTextField().isEmpty()
         && set.size() == alternativeList.size()) {
 
       // if the questionType is radio and there are less than two alternatives
@@ -124,5 +126,4 @@ public class CreateAlternative extends VerticalLayout {
   public void setQuestionType(QuestionType questionType) {
     this.questionType = questionType;
   }
-
 }

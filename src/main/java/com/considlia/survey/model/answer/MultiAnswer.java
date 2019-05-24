@@ -10,9 +10,7 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
-/**
- * MultiAnswer, parent entity of {@link MultiAnswerChoice}.
- */
+/** MultiAnswer, parent entity of {@link MultiAnswerChoice}. */
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 public class MultiAnswer extends Answer {
@@ -21,25 +19,22 @@ public class MultiAnswer extends Answer {
   @JoinColumn(name = "answer_id")
   private Set<MultiAnswerChoice> multiAnswerChoiceSet = new HashSet<>();
 
-  /**
-   * Empty Constructor
-   */
-  public MultiAnswer(){}
+  /** Empty Constructor */
+  public MultiAnswer() {}
 
   /**
    * Constructor for Answer containing MultiQuestion Answer.
-   * @param multiAnswerChoiceSet is the chosen list of answers to
-   * {@link MultiQuestionAlternative}.
+   *
+   * @param multiAnswerChoiceSet is the chosen list of answers to {@link MultiQuestionAlternative}.
    */
-  public MultiAnswer(
-      Set<MultiAnswerChoice> multiAnswerChoiceSet) {
+  public MultiAnswer(Set<MultiAnswerChoice> multiAnswerChoiceSet) {
     this.multiAnswerChoiceSet = multiAnswerChoiceSet;
   }
 
   /**
    * Gets list of Chosen Answers
-   * @return the list of answers to
-   * {@link com.considlia.survey.model.question.MultiQuestion}
+   *
+   * @return the list of answers to {@link com.considlia.survey.model.question.MultiQuestion}
    */
   public Set<MultiAnswerChoice> getMultiAnswerChoiceSet() {
     return multiAnswerChoiceSet;
@@ -47,20 +42,16 @@ public class MultiAnswer extends Answer {
 
   /**
    * Sets Chosen Answer Set.
-   * @param multiAnswerChoiceSet is the resulted chosen answers to
-   * {@link com.considlia.survey.model.question.MultiQuestion}
+   *
+   * @param multiAnswerChoiceSet is the resulted chosen answers to {@link
+   *     com.considlia.survey.model.question.MultiQuestion}
    */
-  public void setMultiAnswerChoiceSet(
-      Set<MultiAnswerChoice> multiAnswerChoiceSet) {
+  public void setMultiAnswerChoiceSet(Set<MultiAnswerChoice> multiAnswerChoiceSet) {
     this.multiAnswerChoiceSet = multiAnswerChoiceSet;
   }
-  /**
-   * @return String Value of Chosen Answer Set.
-   */
+  /** @return String Value of Chosen Answer Set. */
   @Override
   public String toString() {
-    return "MultiAnswer{" +
-        "multiAnswerChoiceSet=" + multiAnswerChoiceSet +
-        '}';
+    return "MultiAnswer{" + "multiAnswerChoiceSet=" + multiAnswerChoiceSet + '}';
   }
 }

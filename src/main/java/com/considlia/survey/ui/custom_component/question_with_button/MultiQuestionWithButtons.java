@@ -39,7 +39,6 @@ public class MultiQuestionWithButtons extends QuestionWithButtons {
       checkBoxButtons.addThemeVariants(CheckboxGroupVariant.LUMO_VERTICAL);
       add(checkBoxButtons);
     }
-
   }
   //
   // public void updateAlternatives() {

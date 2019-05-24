@@ -9,9 +9,7 @@ import javax.persistence.InheritanceType;
 @Inheritance(strategy = InheritanceType.JOINED)
 public class TextQuestion extends Question {
 
-  public TextQuestion() {
-
-  }
+  public TextQuestion() {}
 
   public TextQuestion(String questionTitle, QuestionType type, boolean mandatory) {
     super(questionTitle, type, mandatory);

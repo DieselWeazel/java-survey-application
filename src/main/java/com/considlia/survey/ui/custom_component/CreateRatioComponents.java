@@ -18,16 +18,18 @@ public class CreateRatioComponents extends VerticalLayout {
     lowerLimit = new TextField();
     lowerLimit.setPlaceholder("Lower Limit");
     lowerLimit.setValueChangeMode(ValueChangeMode.EAGER);
-    lowerLimit.addValueChangeListener(e -> {
-      csv.changeBtn();
-    });
+    lowerLimit.addValueChangeListener(
+        e -> {
+          csv.changeBtn();
+        });
 
     upperLimit = new TextField();
     upperLimit.setPlaceholder("Upper Limit");
     upperLimit.setValueChangeMode(ValueChangeMode.EAGER);
-    upperLimit.addValueChangeListener(e -> {
-      csv.changeBtn();
-    });
+    upperLimit.addValueChangeListener(
+        e -> {
+          csv.changeBtn();
+        });
 
     stepperField = new NumberField();
     stepperField.setValue(5d);
@@ -60,5 +62,4 @@ public class CreateRatioComponents extends VerticalLayout {
   public int getStepperValue() {
     return (int) Math.round(stepperField.getValue());
   }
-
 }

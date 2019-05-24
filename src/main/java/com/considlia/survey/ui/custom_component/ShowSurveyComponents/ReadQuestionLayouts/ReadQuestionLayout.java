@@ -14,6 +14,7 @@ public class ReadQuestionLayout extends VerticalLayout {
 
   /**
    * Constructs a generic TextQuestionLayout
+   *
    * @param question works with any abstract Question.
    */
   public ReadQuestionLayout(Question question) {
@@ -22,16 +23,12 @@ public class ReadQuestionLayout extends VerticalLayout {
     add(title);
   }
 
-  /**
-   * @return any type of Question that implements Question.
-   */
+  /** @return any type of Question that implements Question. */
   public Question getQuestion() {
     return question;
   }
 
-  /**
-   * @return Logger for debugging purposes.
-   */
+  /** @return Logger for debugging purposes. */
   public static Logger getLOGGER() {
     return LOGGER;
   }

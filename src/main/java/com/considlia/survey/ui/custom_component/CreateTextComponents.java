@@ -31,5 +31,4 @@ public class CreateTextComponents extends VerticalLayout {
   public void clearRadioButtons() {
     radioButtons.clear();
   }
-
 }
