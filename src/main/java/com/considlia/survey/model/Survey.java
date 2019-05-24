@@ -14,7 +14,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 @Entity
@@ -40,7 +39,7 @@ public class Survey {
 
   @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "survey_id")
-  private List<SurveyResponses> surveyResponses = new ArrayList<>();
+  private List<SurveyResponse> surveyResponseList = new ArrayList<>();
 
   // Related to Status Class, Status.ENUM_VALUE
   //private String currentStatus;
@@ -109,12 +108,12 @@ public class Survey {
     getQuestions().add(question);
   }
 
-  public List<SurveyResponses> getSurveyResponses() {
-    return surveyResponses;
+  public List<SurveyResponse> getSurveyResponseList() {
+    return surveyResponseList;
   }
 
-  public void setSurveyResponses(List<SurveyResponses> surveyResponses) {
-    this.surveyResponses = surveyResponses;
+  public void setSurveyResponseList(List<SurveyResponse> surveyResponseList) {
+    this.surveyResponseList = surveyResponseList;
   }
 
   public void moveQuestion(Question question, int moveDirection) {

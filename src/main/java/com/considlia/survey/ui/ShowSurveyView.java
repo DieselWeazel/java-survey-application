@@ -1,7 +1,7 @@
 package com.considlia.survey.ui;
 
 import com.considlia.survey.model.Survey;
-import com.considlia.survey.model.SurveyResponses;
+import com.considlia.survey.model.SurveyResponse;
 import com.considlia.survey.model.question.Question;
 import com.considlia.survey.repositories.ResponseRepository;
 import com.considlia.survey.repositories.SurveyRepository;
@@ -154,7 +154,7 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
    * @throws ValidationException
    */
   public void saveResponse() throws ValidationException {
-    SurveyResponses surveyResponse = new SurveyResponses();
+    SurveyResponse surveyResponse = new SurveyResponse();
 
     for (ReadQuestionComponent r : readQuestionList){
       surveyResponse.addAnswer(r.gatherResponse());

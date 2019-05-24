@@ -1,6 +1,7 @@
 package com.considlia.survey.model;
 
 import com.considlia.survey.model.answer.Answer;
+import com.considlia.survey.security.SecurityUtils;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
@@ -23,7 +24,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "surveyresponses")
-public class SurveyResponses {
+public class SurveyResponse {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -53,48 +54,91 @@ public class SurveyResponses {
   /**
    * Empty Constructor
    */
-  public SurveyResponses() {
+  public SurveyResponse() {
   }
 
   /**
-   *
-   * @param date
-   * @param answers
+   * Constructs a SurveyResponse with date and list of answers.
+   * @param date is the date of Survey being answered.
+   * @param answers is the answers to the questions of
+   * {@link Survey}
    */
-  public SurveyResponses(LocalDate date, Set<Answer> answers) {
+  public SurveyResponse(LocalDate date, Set<Answer> answers) {
     this.date = date;
     this.answers = answers;
   }
 
+  /**
+   * Adds an Answer to SurveyResponse list.
+   * @param answer is the Answer of
+   * {@link com.considlia.survey.model.question.Question}
+   */
   public void addAnswer(Answer answer) {
     getAnswers().add(answer);
   }
 
+  /**
+   * Gets Date of SurveyResponse creation
+   * @return date of SurveyResponse creation.
+   */
   public LocalDate getDate() {
     return date;
   }
 
+  /**
+   * Sets Date of SurveyResponse creation.
+   * @param date of SurveyResponse creation.
+   */
   public void setDate(LocalDate date) {
     this.date = date;
   }
 
+  /**
+   * Gets list of Answers.
+   * @return list of Answers to
+   * {@link com.considlia.survey.model.question.Question}
+   * belonging to {@link Survey}
+   */
   public Set<Answer> getAnswers() {
     return answers;
   }
 
+  /**
+   * Sets Answers within SurveyResponse.
+   * @param answers list of Answers to
+   * {@link com.considlia.survey.model.question.Question}
+   * belonging to {@link Survey}
+   */
   public void setAnswers(Set<Answer> answers) {
     this.answers = answers;
   }
 
+  /**
+   * Gets the ID of SurveyResponse.
+   * @return the ID of SurveyResponse.
+   */
   public Long getId() {
     return id;
   }
 
+  /**
+   * Gets the User that responded to Survey.
+   * @return User that responded to Survey.
+   * If no user is present, SurveyResponse is anonymous.
+   */
   public User getUser() {
     return user;
   }
 
+  /**
+   * Sets the User that responded to Survey
+   * @param user that responded to Survey.
+   */
   public void setUser(User user) {
-    this.user = user;
+    if (SecurityUtils.isUserLoggedIn()) {
+      this.user = user;
+    } else {
+      throw new RuntimeException("User is not signed in, setting a User for SurveyResponse Entity not possible.");
+    }
   }
 }
