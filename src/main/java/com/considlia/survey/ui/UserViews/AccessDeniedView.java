@@ -12,26 +12,14 @@ import com.vaadin.flow.router.Route;
 @Route(value = "accessdenied", layout = MainLayout.class)
 public class AccessDeniedView extends BaseView {
 
-  private Button loginButton;
-  private Button registerButton;
-  private Button backToHomeButton;
-
-  private HorizontalLayout horizontalLayout;
 
   public AccessDeniedView() {
     super("Oops!");
     add(new H3("Looks like you tried to access a forbidden route."));
     add(new H4("Have you tried logging in before accessing this destination?"));
 
-    this.loginButton = new Button("Login");
-    this.registerButton = new Button("Register");
-    this.backToHomeButton = new Button("Go Home");
-
-    loginButton.addClickListener(e -> UI.getCurrent().navigate("login"));
-    registerButton.addClickListener(e -> UI.getCurrent().navigate("registration"));
-    backToHomeButton.addClickListener(e -> UI.getCurrent().navigate(""));
-
-    this.horizontalLayout = new HorizontalLayout(loginButton, registerButton, backToHomeButton);
-    add(horizontalLayout);
+    add(new HorizontalLayout(new Button("Login", e -> UI.getCurrent().navigate("login")),
+        new Button("Register", e -> UI.getCurrent().navigate("registration")),
+        new Button("Go Home", e -> UI.getCurrent().navigate(""))));
   }
 }
