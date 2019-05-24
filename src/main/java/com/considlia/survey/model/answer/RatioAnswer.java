@@ -7,13 +7,13 @@ import javax.persistence.Table;
 @Table(name = "ratio_answer")
 public class RatioAnswer extends Answers {
 
-  private Integer ratioAnswer;
+  private String ratioAnswer;
 
-  public Integer getRatioAnswer() {
+  public String getRatioAnswer() {
     return ratioAnswer;
   }
 
-  public void setRatioAnswer(Integer ratioAnswer) {
+  public void setRatioAnswer(String ratioAnswer) {
     this.ratioAnswer = ratioAnswer;
   }
 }

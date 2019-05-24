@@ -19,8 +19,6 @@ public class ReadSingleChoiceQuestionLayout extends ReadQuestionLayout implement
   private RadioAnswer singleChoiceAnswer;
   private Binder<RadioAnswer> binder;
 
-//  private List<String> answerAlternativeList = new ArrayList<ChosenAnswer>();
-
   public ReadSingleChoiceQuestionLayout(MultiQuestion question) {
     super(question);
     radioButtons = new RadioButtonGroup<>();
@@ -28,11 +26,6 @@ public class ReadSingleChoiceQuestionLayout extends ReadQuestionLayout implement
     singleChoiceAnswer = new RadioAnswer();
     binder.setBean(singleChoiceAnswer);
 
-    // TODO Duplicate CODE
-//    question.getStringAlternatives().forEach(e ->
-//        answerAlternativeList.add(new ChosenAnswer(e)));
-
-    // might be able to delete setItems?
     radioButtons.setItems(question.getStringAlternatives());
     binder.forField(radioButtons).bind(RadioAnswer::getChosenAnswer, RadioAnswer::setChosenAnswer);
 
@@ -41,13 +34,11 @@ public class ReadSingleChoiceQuestionLayout extends ReadQuestionLayout implement
   }
 
 
-  // Doesn't save answer_id, works for the multichoicelayout however..
   @Override
   public Answers gatherResponse() throws ValidationException {
     singleChoiceAnswer.setQuestion(getQuestion());
     getLOGGER().info("Logging question: '{}'", getQuestion());
     binder.writeBean(singleChoiceAnswer);
-//    answerAlternativeList.forEach(e-> getLOGGER().info("Logging chosenanswer: '{}'", e.toString()));
     getLOGGER().info("Logging answer: '{}'", singleChoiceAnswer);
 
     return singleChoiceAnswer;

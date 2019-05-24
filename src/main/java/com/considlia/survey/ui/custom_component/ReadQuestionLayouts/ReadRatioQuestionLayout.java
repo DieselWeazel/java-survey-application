@@ -1,22 +1,28 @@
 package com.considlia.survey.ui.custom_component.ReadQuestionLayouts;
 
 import com.considlia.survey.model.answer.Answers;
+import com.considlia.survey.model.answer.RadioAnswer;
+import com.considlia.survey.model.answer.RatioAnswer;
 import com.considlia.survey.model.question.RatioQuestion;
 import com.considlia.survey.ui.custom_component.ReadQuestionComponent;
 import com.considlia.survey.ui.custom_component.ReadQuestionLayouts.ReadQuestionLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.radiobutton.RadioGroupVariant;
+import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ReadRatioQuestionLayout extends ReadQuestionLayout implements ReadQuestionComponent {
 
-  private RadioButtonGroup<String> radioOptions;
-  private List<String> options = new ArrayList<>();
+  private RatioAnswer ratioAnswer = new RatioAnswer();
+  private Binder<RatioAnswer> binder = new Binder<>(RatioAnswer.class);
 
   public ReadRatioQuestionLayout(RatioQuestion question) {
     super(question);
+    RadioButtonGroup<String> ratioRadioButtons = new RadioButtonGroup<>();
+    List<String> options = new ArrayList<>();
+    binder.setBean(ratioAnswer);
     for (int i = 1; i <= question.getChoices(); i++) {
       if (i == 1) {
         options.add(Integer.toString(i) + " " + question.getStart());
@@ -27,18 +33,20 @@ public class ReadRatioQuestionLayout extends ReadQuestionLayout implements ReadQ
       }
     }
 
-    radioOptions = new RadioButtonGroup<>();
-    radioOptions.setItems(options);
-    radioOptions.addThemeVariants(RadioGroupVariant.LUMO_VERTICAL);
-    add(radioOptions);
-  }
+    binder.forField(ratioRadioButtons).bind(RatioAnswer::getRatioAnswer, RatioAnswer::setRatioAnswer);
 
-  public RadioButtonGroup<String> getRadioButtons() {
-    return radioOptions;
+    ratioRadioButtons.setItems(options);
+    ratioRadioButtons.addThemeVariants(RadioGroupVariant.LUMO_VERTICAL);
+    add(ratioRadioButtons);
   }
 
   @Override
   public Answers gatherResponse() throws ValidationException {
-    return null;
+    ratioAnswer.setQuestion(getQuestion());
+    getLOGGER().info("Logging question: '{}'", getQuestion());
+    binder.writeBean(ratioAnswer);
+    getLOGGER().info("Logging answer: '{}'", ratioAnswer);
+
+    return ratioAnswer;
   }
 }
