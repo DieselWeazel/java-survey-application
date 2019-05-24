@@ -30,6 +30,7 @@ public class Survey {
 
   private String title, creator, description;
   private LocalDate date = LocalDate.now();
+  private SurveyStatus status;
 
   @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   @JoinColumn(name = "survey_id")
@@ -39,88 +40,198 @@ public class Survey {
   @JoinColumn(name = "user_id")
   private User user;
 
-
   @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "survey_id")
   @OrderBy("position ASC")
   private List<SurveyResponses> surveyResponses = new ArrayList<>();
 
-  // Related to Status Class, Status.ENUM_VALUE
-  // private String currentStatus;
-
+  /**
+   * Constructor for Survey
+   */
   public Survey() {}
 
+  /**
+   * Constructor for Survey
+   * 
+   * @param surveyTitle
+   * @param creator
+   */
   public Survey(String surveyTitle, String creator) {
     setTitle(surveyTitle);
     setCreator(creator);
   }
 
+  /**
+   * Gets the Id from the database
+   * 
+   * @return The id of the Survey from the database
+   */
   public Long getId() {
     return id;
   }
 
+  /**
+   * Gets the title of the Survey
+   * 
+   * @return The title of the Survey
+   */
   public String getTitle() {
     return title;
   }
 
+  /**
+   * Sets the title of the Survey
+   * 
+   * @param title
+   */
   public void setTitle(String title) {
     this.title = title;
   }
 
+  /**
+   * Gets the Creator of the Survey
+   * 
+   * @return The Creator of the Survey
+   */
   public String getCreator() {
     return creator;
   }
 
+  /**
+   * Sets the Creator of the Survey
+   * 
+   * @param creator
+   */
   public void setCreator(String creator) {
     this.creator = creator;
   }
 
+  /**
+   * Gets the date when the Survey was created
+   * 
+   * @return The date when the Survey was created
+   */
   public LocalDate getDate() {
     return date;
   }
 
+  /**
+   * Sets the date when the Survey was created
+   * 
+   * @param date - The current date
+   */
   public void setDate(LocalDate date) {
     this.date = date;
   }
 
+  /**
+   * Gets the list of questions in the Survey
+   * 
+   * @return The list of questions in the Survey
+   */
   public List<Question> getQuestions() {
     return questions;
   }
 
+  /**
+   * Sets the list of questions in the Survey
+   * 
+   * @param questions
+   */
   public void setQuestions(List<Question> questions) {
     this.questions = questions;
   }
 
+  /**
+   * Gets the Description of the Survey
+   * 
+   * @return The description of the Survey
+   */
   public String getDescription() {
     return description;
   }
 
+  /**
+   * Sets the Description of the Survey
+   * 
+   * @param description
+   */
   public void setDescription(String description) {
     this.description = description;
   }
 
+  /**
+   * Gets the user of the Survey
+   * 
+   * @return user
+   */
   public User getUser() {
     return user;
   }
 
+  /**
+   * Sets the User as user of the Survey
+   * 
+   * @param user
+   */
   public void setUser(User user) {
     this.user = user;
   }
 
+  /**
+   * Add a question to the Survey.
+   * 
+   * @param question
+   */
   public void addQuestion(Question question) {
     getQuestions().add(question);
   }
 
+  /**
+   * Gets the list of SurveyResponses
+   * 
+   * @return The list of SurveyResponses
+   */
   public List<SurveyResponses> getSurveyResponses() {
     return surveyResponses;
   }
 
+  /**
+   * Sets the list of SurveyResponses
+   * 
+   * @param surveyResponses - The list of SurveyResponses
+   */
   public void setSurveyResponses(List<SurveyResponses> surveyResponses) {
     this.surveyResponses = surveyResponses;
   }
 
+  /**
+   * To move the question up/down in the survey to change the order of the questions
+   * 
+   * @param question
+   * @param moveDirection
+   */
   public void moveQuestion(Question question, int moveDirection) {
     question.setPosition(question.getPosition() + moveDirection);
+  }
+
+  /**
+   * Gets status of Survey. Can be EDITABLE, PUBLIC, PRIVATE or CLOSED
+   * 
+   * @return The status of the Survey
+   */
+  public SurveyStatus getStatus() {
+    return status;
+  }
+
+  /**
+   * 
+   * Sets status of Survey. Can be EDITABLE, PUBLIC, PRIVATE or CLOSED
+   * 
+   * @param status - The status of the Survey
+   */
+  public void setStatus(SurveyStatus status) {
+    this.status = status;
   }
 
   @Override
