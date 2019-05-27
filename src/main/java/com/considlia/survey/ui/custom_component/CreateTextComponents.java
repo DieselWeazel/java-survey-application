@@ -6,6 +6,10 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 
+/**
+ * Class to create the Radio buttons to choose Textfield or Textarea
+ *
+ */
 public class CreateTextComponents extends VerticalLayout {
 
   private RadioButtonGroup<String> radioButtons;
@@ -14,7 +18,7 @@ public class CreateTextComponents extends VerticalLayout {
 
     HorizontalLayout buttonContainer = new HorizontalLayout();
     Label label = new Label();
-    label.add("Answer in: ");
+    label.add("Answers in: ");
 
     radioButtons = new RadioButtonGroup<>();
     radioButtons.setItems("Textfield", "Textarea");
@@ -24,11 +28,20 @@ public class CreateTextComponents extends VerticalLayout {
     add(label, buttonContainer);
   }
 
+  /**
+   * Gets the Radio buttons to choose Textfield or Textarea
+   * 
+   * @return the Buttons
+   */
   public RadioButtonGroup<String> getRadioButtons() {
     return radioButtons;
   }
 
+  /**
+   * Clears the Radio buttons to choose Textfield or Textarea
+   */
   public void clearRadioButtons() {
     radioButtons.clear();
   }
+
 }
