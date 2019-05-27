@@ -1,5 +1,10 @@
 package com.considlia.survey.ui;
 
+import java.util.HashMap;
+import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import com.considlia.survey.security.SecurityUtils;
 import com.considlia.survey.ui.UserViews.AccessDeniedView;
 import com.considlia.survey.ui.UserViews.LoginView;
@@ -16,11 +21,6 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.RouterLayout;
 import com.vaadin.flow.router.RouterLink;
-import java.util.HashMap;
-import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 @StyleSheet("css/app.css")
 public class MainLayout extends VerticalLayout implements RouterLayout {
@@ -30,7 +30,8 @@ public class MainLayout extends VerticalLayout implements RouterLayout {
 
   private HorizontalLayout navigation;
   private VerticalLayout contentContainer;
-  @Autowired private HttpServletRequest httpServletRequest;
+  @Autowired
+  private HttpServletRequest httpServletRequest;
 
   public MainLayout() {
     setId("mainlayout");
@@ -38,8 +39,8 @@ public class MainLayout extends VerticalLayout implements RouterLayout {
     navigation = new HorizontalLayout();
 
     navigation.add(createRouterLink(HomeView.class, "Home", VaadinIcon.HOME));
-    navigation.add(
-        createRouterLink(CreateSurveyView.class, "Create New Survey", VaadinIcon.PLUS_CIRCLE));
+    navigation
+        .add(createRouterLink(CreateSurveyView.class, "Create New Survey", VaadinIcon.PLUS_CIRCLE));
     navigation.add(createRouterLink(MyProfileView.class, "profileview", VaadinIcon.USER));
 
     if (SecurityUtils.isUserLoggedIn()) {
@@ -62,18 +63,15 @@ public class MainLayout extends VerticalLayout implements RouterLayout {
     UI.getCurrent().getPage().reload();
   }
 
-  private Button createRouterLink(
-      Class<? extends Component> targetViewClass, String text, VaadinIcon icon) {
-    return new Button(
-        text,
-        new Icon(icon),
-        e -> {
-          if (SecurityUtils.hasAccess(targetViewClass)) {
-            getUI().ifPresent(ui -> ui.navigate(targetViewClass));
-          } else {
-            getUI().ifPresent(ui -> ui.navigate(AccessDeniedView.class));
-          }
-        });
+  private Button createRouterLink(Class<? extends Component> targetViewClass, String text,
+      VaadinIcon icon) {
+    return new Button(text, new Icon(icon), e -> {
+      if (SecurityUtils.hasAccess(targetViewClass)) {
+        getUI().ifPresent(ui -> ui.navigate(targetViewClass));
+      } else {
+        getUI().ifPresent(ui -> ui.navigate(AccessDeniedView.class));
+      }
+    });
   }
 
   @Override
