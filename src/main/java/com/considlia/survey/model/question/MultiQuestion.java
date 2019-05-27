@@ -1,6 +1,5 @@
 package com.considlia.survey.model.question;
 
-import com.considlia.survey.model.QuestionType;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -13,7 +12,12 @@ import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
+import com.considlia.survey.model.QuestionType;
 
+/**
+ * Class to create MultiQuestion subclass to Question
+ *
+ */
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 public class MultiQuestion extends Question {
@@ -23,32 +27,69 @@ public class MultiQuestion extends Question {
   @OrderBy("position ASC")
   private Set<MultiQuestionAlternative> alternatives = new HashSet<>();
 
+  /**
+   * Constructor for MultiQuestion
+   */
   public MultiQuestion() {
 
   }
 
+  /**
+   * Constructor for MultiQuestion
+   * 
+   * @param questionTitle - The question
+   * @param questionType - The type of question
+   * @param mandatory - If the question is mandatory
+   * @param stringAlternatives - List of the answer alternatives
+   */
   public MultiQuestion(String questionTitle, QuestionType questionType, boolean mandatory,
       List<String> stringAlternatives) {
     super(questionTitle, questionType, mandatory);
     updateAlternatives(stringAlternatives);
   }
 
+  /**
+   * Gets a set/list of all the answer alternatives
+   * 
+   * @return a set/list of all the answer alternatives
+   */
   public Set<MultiQuestionAlternative> getAlternatives() {
     return alternatives;
   }
 
+  /**
+   * Sets a set/list of all the answer alternatives
+   * 
+   * @param alternatives - The set/list of all the answer alternatives
+   */
   public void setAlternatives(Set<MultiQuestionAlternative> alternatives) {
     this.alternatives = alternatives;
   }
 
+  /**
+   * Adds a answer alternative to the list of answer alternative
+   * 
+   * @param mqa - an answer alternative
+   */
   public void addAlternative(MultiQuestionAlternative mqa) {
     getAlternatives().add(mqa);
   }
 
+  /**
+   * Moves the answer alternative for the MulitQuestion up or down
+   * 
+   * @param mqa - The answer alternative
+   * @param moveDirection - If the answer alternative should move up or down
+   */
   public void moveAlternative(MultiQuestionAlternative mqa, int moveDirection) {
     mqa.setPosition(mqa.getPosition() + moveDirection);
   }
 
+  /**
+   * Gets a list of all the answer alternative for the question
+   * 
+   * @return A list of all the answer alternative
+   */
   public List<String> getStringAlternatives() {
 
     List<MultiQuestionAlternative> alternativeList = new ArrayList<>();
@@ -66,6 +107,11 @@ public class MultiQuestion extends Question {
     return stringAlternatives;
   }
 
+  /**
+   * Updates the list of the answer alternative for the question
+   * 
+   * @param stringAlternatives - the list of the answer alternative
+   */
   public void updateAlternatives(List<String> stringAlternatives) {
     getAlternatives().clear();
     for (int position = 0; position < stringAlternatives.size(); position++) {

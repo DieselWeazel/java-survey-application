@@ -1,5 +1,7 @@
 package com.considlia.survey.ui.UserViews;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import com.considlia.survey.model.Role;
 import com.considlia.survey.repositories.SurveyRepository;
 import com.considlia.survey.repositories.UserRepository;
@@ -9,8 +11,6 @@ import com.considlia.survey.ui.MainLayout;
 import com.considlia.survey.ui.custom_component.SurveyGrid;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.router.Route;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
 
 @Route(value = "profileview", layout = MainLayout.class)
 @Secured({Role.USER, Role.ADMIN})
@@ -24,24 +24,22 @@ public class MyProfileView extends BaseView {
   @Autowired
   private UserRepository userRepository;
 
-  //  @Autowired
+  // @Autowired
   private CustomUserService customUserService;
 
   @Autowired
-  public MyProfileView(
-      SurveyRepository surveyRepository,
-      UserRepository userRepository, CustomUserService customUserService) {
+  public MyProfileView(SurveyRepository surveyRepository, UserRepository userRepository,
+      CustomUserService customUserService) {
     super("My Profile");
     this.userRepository = userRepository;
     this.customUserService = customUserService;
 
     /*
-    does not show username as of now?
+     * does not show username as of now?
      */
     add(new H3(customUserService.getUsername()));
 
     this.surveyRepository = surveyRepository;
-    surveyGrid = new SurveyGrid(this.getClass(), surveyRepository, customUserService);
-    add(surveyGrid);
+    add(new SurveyGrid(this.getClass(), surveyRepository, customUserService));
   }
 }

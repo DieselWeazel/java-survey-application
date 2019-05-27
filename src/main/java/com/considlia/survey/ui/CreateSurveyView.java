@@ -8,6 +8,7 @@ import org.springframework.security.access.annotation.Secured;
 import com.considlia.survey.model.QuestionType;
 import com.considlia.survey.model.Role;
 import com.considlia.survey.model.Survey;
+import com.considlia.survey.model.SurveyStatus;
 import com.considlia.survey.model.question.Question;
 import com.considlia.survey.repositories.SurveyRepository;
 import com.considlia.survey.repositories.UserRepository;
@@ -77,9 +78,14 @@ public class CreateSurveyView extends BaseView
   @Autowired
   private CustomUserService customUserService;
 
+  /**
+   * Constructor for CreateSurveyView
+   * 
+   * @param surveyRepository
+   * @param customUserService
+   */
   public CreateSurveyView(SurveyRepository surveyRepository, CustomUserService customUserService) {
     super("Create Survey");
-    // setId("createsurvey");
 
     this.surveyRepository = surveyRepository;
     this.customUserService = customUserService;
@@ -91,6 +97,10 @@ public class CreateSurveyView extends BaseView
     initLayout();
   }
 
+  /**
+   * Initiates the view for CreateSurvey and creates events for surveyTitleTextField,
+   * creatorNameTextField, descriptionTextArea.
+   */
   public void initSurvey() {
     header = new VerticalLayout();
     header.setId("createheader");
@@ -138,6 +148,28 @@ public class CreateSurveyView extends BaseView
     descriptionTextArea.setValueChangeMode(ValueChangeMode.EAGER);
   }
 
+  /**
+   * adds layouts to containers, invoked by constructor.
+   */
+  public void initLayout() {
+    titleContainer.add(surveyTitleTextField, creatorNameTextField, submitSurveyButton,
+        cancelButton);
+    header.add(titleContainer);
+    header.add(descriptionTextArea);
+
+    addQuestionHorizontalContainer.add(questionTitleTextField, addQuestionButton, mandatory);
+    addQuestionContainer.add(addQuestionHorizontalContainer, selectOptions, extraComponents);
+
+    add(header);
+    add(addQuestionContainer);
+    add(questions);
+  }
+
+  /**
+   * Creates and sets events for questionTitleTextField {@link TextField} and selectOptions
+   * {@link Select}. Events invokes userCreationQuestion with value QuestionType. Also creates
+   * mandatory {@link CheckBox}.
+   */
   public void initAddQuestionContainer() {
     questionTitleTextField = createTextField("300px", "Question", false);
     questionTitleTextField.addValueChangeListener(event -> {
@@ -189,20 +221,6 @@ public class CreateSurveyView extends BaseView
     mandatory = new Checkbox("Mandatory Question");
   }
 
-  public void initLayout() {
-    titleContainer.add(surveyTitleTextField, creatorNameTextField, submitSurveyButton,
-        cancelButton);
-    header.add(titleContainer);
-    header.add(descriptionTextArea);
-
-    addQuestionHorizontalContainer.add(questionTitleTextField, addQuestionButton, mandatory);
-    addQuestionContainer.add(addQuestionHorizontalContainer, selectOptions, extraComponents);
-
-    add(header);
-    add(addQuestionContainer);
-    add(questions);
-  }
-
   /**
    * Creates a new textfield from the parameters, valueChangeMode is set to EAGER
    * 
@@ -222,6 +240,10 @@ public class CreateSurveyView extends BaseView
     return textField;
   }
 
+  /**
+   * Removes all questions, then adds all Questions with new index values. Invokes
+   * {@link updateMoveButtonStatus()}
+   */
   public void refreshItems() {
     setIndex();
     questions.removeAll();
@@ -242,8 +264,10 @@ public class CreateSurveyView extends BaseView
     }
   }
 
-  // Create addQuestion-package with listeners, if already created: save the question
-  // Add handling for multiquestions
+  /**
+   * Adds question to {@link Survey} object. Then clears components and variables used in
+   * addQuestionContainer
+   */
   public void addQuestion() {
     questionTitleTextField.focus();
     questionType = selectOptions.getValue();
@@ -275,6 +299,11 @@ public class CreateSurveyView extends BaseView
     mandatory.setValue(false);
   }
 
+  /**
+   * Updated components in extraComponents Layout for given QuestionType.
+   * 
+   * @param questionType
+   */
   public void userCreationQuestion(QuestionType questionType) {
     // Clears the extraComponentLayout
     extraComponents.removeAll();
@@ -292,18 +321,25 @@ public class CreateSurveyView extends BaseView
     changeBtn();
   }
 
+  /**
+   * Creates instance of componentsCreate START HERESTART HERESTART HERESTART HERESTART HEREType.
+   * This is done here because components are set to null after a Question is saved.
+   */
   public void initExtraComponents() {
     if (createRatioComponents == null) {
       createRatioComponents = new CreateRatioComponents(this);
     }
     if (createAlternative == null) {
-      createAlternative = new CreateAlternative(questionType, this);
+      createAlternative = new CreateAlternative(this);
     }
     if (createTextComponents == null) {
       createTextComponents = new CreateTextComponents(this);
     }
   }
 
+  /**
+   * Manages setEnable for addQuestionButton {@link Button}
+   */
   public void changeBtn() {
     questionType = selectOptions.getValue();
     switch (questionType) {
@@ -334,7 +370,12 @@ public class CreateSurveyView extends BaseView
     }
   }
 
-  // Move question in questions container
+  /**
+   * Manages changing position of questions.
+   * 
+   * @param button the {@link Button} attached to the {@link QuestionWithButtons}
+   * @param moveDirection 1 = down, -1 = up
+   */
   public void moveQuestion(Button button, int moveDirection) {
     QuestionWithButtons qb = (QuestionWithButtons) button.getParent().get().getParent().get();
     int currentIndex = thisSurvey.getQuestions().indexOf(qb.getQuestion());
@@ -345,15 +386,24 @@ public class CreateSurveyView extends BaseView
     hasChanges = true;
   }
 
-  // Remove questions from questions container
-  public void removeQuestion(QuestionWithButtons c) {
-    thisSurvey.getQuestions().remove(c.getQuestion());
+
+  /**
+   * Removes question from questions {@link List} in {@link Survey}. Invoked from
+   * {@link ConfirmDialog}
+   * 
+   * @param questionWithButtons type: {@link QuestionWithButtons}
+   */
+  public void removeQuestion(QuestionWithButtons questionWithButtons) {
+    thisSurvey.getQuestions().remove(questionWithButtons.getQuestion());
 
     refreshItems();
     checkFilledFields();
   }
 
-  // Edit question via pencil buttons in custom components
+  /**
+   * 
+   * @param button
+   */
   public void editQuestion(Button button) {
     new EditDialog(button);
     hasChanges = true;
@@ -368,6 +418,7 @@ public class CreateSurveyView extends BaseView
     thisSurvey.setTitle(surveyTitleTextField.getValue());
     thisSurvey.setDescription(descriptionTextArea.getValue());
     thisSurvey.setDate(LocalDate.now());
+    thisSurvey.setStatus(SurveyStatus.EDITABLE);
 
     thisSurvey.setUser(customUserService.getUser());
     surveyRepository.save(thisSurvey);
@@ -375,7 +426,12 @@ public class CreateSurveyView extends BaseView
     getUI().ifPresent(ui -> ui.navigate(""));
   }
 
-  // Check if title and creator textfields are filled out
+  /**
+   * Manages setEnable for submitSurveyButton {@link Button}
+   * 
+   * @returns true, if: surveyTitleTextField has content, creatorNameTextField has content and
+   *          {@link Survey} contains {@link Question}s. else returns false
+   */
   public boolean checkFilledFields() {
     hasChanges = true;
     if (!(surveyTitleTextField.isEmpty() || creatorNameTextField.isEmpty())
@@ -407,8 +463,9 @@ public class CreateSurveyView extends BaseView
     }
   }
 
-  // HasUrlParameter function, if parameter is null, do nothing but load the view as normal.
-  // If parameter has an surveyId, load questions, title and creator. Add Multiquestion
+  /**
+   * Sets the title, the creator and the description of the Survey
+   */
   @Override
   public void setParameter(BeforeEvent event, @OptionalParameter Long parameter) {
     if (parameter != null) {
@@ -426,14 +483,25 @@ public class CreateSurveyView extends BaseView
     }
   }
 
+  /**
+   * 
+   * @returns addQuestionButton
+   */
   public Button getAddQuestionButton() {
     return addQuestionButton;
   }
 
+  /**
+   * 
+   * @returns questionTitleTextField type: {@link TextField}
+   */
   public TextField getQuestionTitleTextField() {
     return questionTitleTextField;
   }
 
+  /**
+   * Creates dialog to confirm exit if there are unsaved changes to confirm exit.
+   */
   @Override
   public void beforeLeave(BeforeLeaveEvent event) {
     if (hasChanges) {
