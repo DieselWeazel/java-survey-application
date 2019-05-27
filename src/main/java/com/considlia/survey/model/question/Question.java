@@ -1,5 +1,6 @@
 package com.considlia.survey.model.question;
 
+import com.considlia.survey.model.answer.Answer;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.CascadeType;
@@ -13,7 +14,6 @@ import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import com.considlia.survey.model.QuestionType;
-import com.considlia.survey.model.answer.Answers;
 
 /**
  * Class to create questions
@@ -34,7 +34,7 @@ public abstract class Question {
 
   @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "question_id")
-  private Set<Answers> answerSet = new HashSet<>();
+  private Set<Answer> answerSet = new HashSet<>();
 
   /**
    * Constructor for Question
@@ -49,7 +49,7 @@ public abstract class Question {
 
   /**
    * Constructor for Question
-   * 
+   *
    * @param questionTitle - The question
    * @param position - The position in the Survey
    * @param questionType - The question type
@@ -65,7 +65,7 @@ public abstract class Question {
 
   /**
    * Gets the actual question
-   * 
+   *
    * @return title - The question
    */
   public String getTitle() {
@@ -74,7 +74,7 @@ public abstract class Question {
 
   /**
    * Sets the actual question
-   * 
+   *
    * @param title - The question text
    */
   public void setTitle(String title) {
@@ -83,7 +83,7 @@ public abstract class Question {
 
   /**
    * Gets the position of the question in the Survey
-   * 
+   *
    * @return The position of the question in the Survey
    */
   public int getPosition() {
@@ -92,7 +92,7 @@ public abstract class Question {
 
   /**
    * Sets the position of the question in the Survey
-   * 
+   *
    * @param position - The position of the question in the Survey
    */
   public void setPosition(int position) {
@@ -101,7 +101,7 @@ public abstract class Question {
 
   /**
    * Gets the question type
-   * 
+   *
    * @return The question type
    */
   public QuestionType getQuestionType() {
@@ -110,7 +110,7 @@ public abstract class Question {
 
   /**
    * Sets the question type
-   * 
+   *
    * @param questionType - The question type
    */
   public void setQuestionType(QuestionType questionType) {
@@ -119,7 +119,7 @@ public abstract class Question {
 
   /**
    * Gets if the question is mandatory
-   * 
+   *
    * @return If the question is mandatory
    */
   public boolean isMandatory() {
@@ -128,7 +128,7 @@ public abstract class Question {
 
   /**
    * Sets if the question is mandatory
-   * 
+   *
    * @param mandatory - If the question is mandatory
    */
   public void setMandatory(boolean mandatory) {
@@ -137,7 +137,7 @@ public abstract class Question {
 
   /**
    * Gets the id of the question
-   * 
+   *
    * @return The id of the question
    */
   public Long getId() {

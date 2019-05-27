@@ -17,7 +17,7 @@ public class Role {
 
   /**
    * To list all roles
-   * 
+   *
    * @return All roles that exists
    */
   public static String[] getAllRoles() {

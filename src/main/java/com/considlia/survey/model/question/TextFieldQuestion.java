@@ -6,7 +6,7 @@ import com.considlia.survey.model.QuestionType;
 
 /**
  * Subclass of {@link Question} with the {@link QuestionType} set to {@link #TEXTFIELD}
- * 
+ *
  * @author Andreas
  */
 @Entity
@@ -20,7 +20,7 @@ public class TextFieldQuestion extends TextQuestion {
 
   /**
    * Constructs a new {@link TextFieldQuestion} with a questionTitle and if its mandatory
-   * 
+   *
    * @param questionTitle - String value
    * @param mandatory - boolean value
    */

@@ -14,7 +14,7 @@ public class CreateTextComponents extends VerticalLayout {
 
     HorizontalLayout buttonContainer = new HorizontalLayout();
     Label label = new Label();
-    label.add("Answers in: ");
+    label.add("Answer in: ");
 
     radioButtons = new RadioButtonGroup<>();
     radioButtons.setItems("Textfield", "Textarea");
@@ -31,5 +31,4 @@ public class CreateTextComponents extends VerticalLayout {
   public void clearRadioButtons() {
     radioButtons.clear();
   }
-
 }

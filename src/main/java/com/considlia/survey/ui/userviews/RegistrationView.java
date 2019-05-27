@@ -1,4 +1,4 @@
-package com.considlia.survey.ui.UserViews;
+package com.considlia.survey.ui.userviews;
 
 import com.considlia.survey.model.User;
 import com.considlia.survey.repositories.UserRepository;
@@ -48,28 +48,27 @@ public class RegistrationView extends BaseView implements BeforeEnterObserver {
 
   private Binder<User> userBinder;
 
-  @Autowired
-  private PasswordEncoder passwordEncoder;
+  @Autowired private PasswordEncoder passwordEncoder;
   private String passwordString = null;
 
   private User user;
-  @Autowired
-  private AuthenticationManager authenticationManagerBean;
+  @Autowired private AuthenticationManager authenticationManagerBean;
 
-  @Autowired
-  private UserRepository userRepository;
+  @Autowired private UserRepository userRepository;
 
-  @Autowired
-  private UserDetailsServiceImpl userDetailsService;
+  @Autowired private UserDetailsServiceImpl userDetailsService;
 
+  /**
+   * Constructor for View.
+   */
   public RegistrationView() {
     super("Registration");
     initUI("580px");
   }
 
-  //SQLIntegrityConstraintViolationException
-  //DataIntegrityViolationException
-  //ConstraintViolationException
+  /**
+   * Registers User, if all fields are valid.
+   */
   private void registerUser() {
     try {
       userBinder.writeBean(user);
@@ -83,21 +82,26 @@ public class RegistrationView extends BaseView implements BeforeEnterObserver {
     try {
       userRepository.save(user);
       signIn();
-      // The real duplicate is nested within this exception, if we want to show the duplicate correctly
+      // The real duplicate is nested within this exception, if we want to show the duplicate
+      // correctly
       // we will need to dig into the exception. Leaving this here for the future.
     } catch (DataIntegrityViolationException e) {
       ConfirmDialog confirmDialog = new ConfirmDialog();
       confirmDialog.open();
-//      e.printStackTrace();
-//      if(e.getMessage().)
-//      System.out.println(e.getCause());
-//      System.out.println(e.getSuppressed());
+      //      e.printStackTrace();
+      //      if(e.getMessage().)
+      //      System.out.println(e.getCause());
+      //      System.out.println(e.getSuppressed());
 
     }
   }
 
   /*
   Sign in function doesn't work properly now.
+   */
+
+  /**
+   * Signs in User upon successful registration.
    */
   private void signIn() {
     System.out.println(user.getUsername() + " " + user.getPassword());
@@ -109,6 +113,10 @@ public class RegistrationView extends BaseView implements BeforeEnterObserver {
     UI.getCurrent().getPage().reload();
   }
 
+  /**
+   * Initiates UI
+   * @param width being the width for all TextFields.
+   */
   private void initUI(String width) {
     this.registrationLayout = new VerticalLayout();
     this.email = new EmailField("Email");
@@ -120,8 +128,7 @@ public class RegistrationView extends BaseView implements BeforeEnterObserver {
     this.userBinder = new Binder<>(User.class);
     this.user = new User();
 
-    submitButton.addClickListener(
-        e -> registerUser());
+    submitButton.addClickListener(e -> registerUser());
 
     registrationLayout.add(email, firstName, lastName, username, passwordField, submitButton);
     for (int i = 0; i < registrationLayout.getComponentCount(); i++) {
@@ -138,6 +145,9 @@ public class RegistrationView extends BaseView implements BeforeEnterObserver {
     bindFields();
   }
 
+  /**
+   * Binds every input field of the registration form.
+   */
   private void bindFields() {
     userBinder.setBean(user);
     userBinder
@@ -146,27 +156,31 @@ public class RegistrationView extends BaseView implements BeforeEnterObserver {
         .bind(User::getEmail, User::setEmail);
     userBinder
         .forField(firstName)
-        .withValidator(new StringLengthValidator("Must be more than 3 characters & max 255",
-            3, 255))
+        .withValidator(
+            new StringLengthValidator("Must be more than 3 characters & max 255", 3, 255))
         .bind(User::getFirstName, User::setFirstName);
     userBinder
         .forField(lastName)
-        .withValidator(new StringLengthValidator("Must be more than 3 characters & max 255",
-            3, 255))
+        .withValidator(
+            new StringLengthValidator("Must be more than 3 characters & max 255", 3, 255))
         .bind(User::getLastName, User::setLastName);
     userBinder
         .forField(username)
-        .withValidator(new StringLengthValidator("Must be more than 3 characters & max 255",
-            3, 255))
+        .withValidator(
+            new StringLengthValidator("Must be more than 3 characters & max 255", 3, 255))
         .bind(User::getUsername, User::setUsername);
     userBinder
         .forField(passwordField)
-        .withValidator(new StringLengthValidator("Must be more than 3 characters & max 255",
-            3, 255))
+        .withValidator(
+            new StringLengthValidator("Must be more than 3 characters & max 255", 3, 255))
         .bind(User::getPassword, User::setPassword);
-//    userBinder.bindInstanceFields(this);
+    //    userBinder.bindInstanceFields(this);
   }
 
+  /**
+   * If User is signed in, returns User to previous URL.
+   * @param event being the navigation target before this one.
+   */
   @Override
   public void beforeEnter(BeforeEnterEvent event) {
     if (SecurityUtils.isUserLoggedIn()) {

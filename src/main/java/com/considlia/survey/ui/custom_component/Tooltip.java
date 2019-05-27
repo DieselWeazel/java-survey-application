@@ -6,7 +6,7 @@ public class Tooltip {
 
   /**
    * Adds a textLabel when hovering over a enabled component.
-   * 
+   * <p>
    * Dosen't show description if the component is disabled.
    */
 

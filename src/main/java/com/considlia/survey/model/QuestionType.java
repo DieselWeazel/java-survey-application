@@ -12,7 +12,7 @@ public enum QuestionType {
 
   /**
    * Constructor for QuestionType
-   * 
+   *
    * @param text - sends in the QuestionType in text
    */
   QuestionType(final String text) {
@@ -21,7 +21,7 @@ public enum QuestionType {
 
   /**
    * Gets the questionType in text
-   * 
+   *
    * @return The QuestionType in text
    */
   public String getText() {

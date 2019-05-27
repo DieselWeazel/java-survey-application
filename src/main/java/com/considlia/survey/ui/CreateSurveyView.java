@@ -85,7 +85,7 @@ public class CreateSurveyView extends BaseView
 
   /**
    * Constructor for CreateSurveyView
-   * 
+   *
    * @param surveyRepository
    * @param customUserService
    */
@@ -306,7 +306,7 @@ public class CreateSurveyView extends BaseView
 
   /**
    * Updated components in extraComponents Layout for given QuestionType.
-   * 
+   *
    * @param questionType
    */
   public void userCreationQuestion(QuestionType questionType) {
@@ -377,7 +377,7 @@ public class CreateSurveyView extends BaseView
 
   /**
    * Manages changing position of questions.
-   * 
+   *
    * @param button the {@link Button} attached to the {@link QuestionWithButtons}
    * @param moveDirection 1 = down, -1 = up
    */
@@ -394,7 +394,7 @@ public class CreateSurveyView extends BaseView
   /**
    * Removes question from questions {@link List} in {@link Survey}. Invoked from
    * {@link ConfirmDialog}
-   * 
+   *
    * @param questionWithButtons type: {@link QuestionWithButtons}
    */
   public void removeQuestion(QuestionWithButtons questionWithButtons) {
@@ -405,7 +405,7 @@ public class CreateSurveyView extends BaseView
   }
 
   /**
-   * 
+   *
    * @param button
    */
   public void editQuestion(Button button) {
@@ -432,7 +432,7 @@ public class CreateSurveyView extends BaseView
 
   /**
    * Manages setEnable for submitSurveyButton {@link Button}
-   * 
+   *
    * @returns true, if: surveyTitleTextField has content, creatorNameTextField has content and
    *          {@link Survey} contains {@link Question}s. else returns false
    */
@@ -488,7 +488,7 @@ public class CreateSurveyView extends BaseView
   }
 
   /**
-   * 
+   *
    * @returns addQuestionButton
    */
   public Button getAddQuestionButton() {
@@ -496,7 +496,7 @@ public class CreateSurveyView extends BaseView
   }
 
   /**
-   * 
+   *
    * @returns questionTitleTextField type: {@link TextField}
    */
   public TextField getQuestionTitleTextField() {

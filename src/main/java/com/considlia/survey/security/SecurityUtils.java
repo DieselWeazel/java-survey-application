@@ -2,8 +2,8 @@ package com.considlia.survey.security;
 
 import com.considlia.survey.ui.HomeView;
 import com.considlia.survey.ui.ShowSurveyView;
-import com.considlia.survey.ui.UserViews.LoginView;
-import com.considlia.survey.ui.UserViews.RegistrationView;
+import com.considlia.survey.ui.userviews.LoginView;
+import com.considlia.survey.ui.userviews.RegistrationView;
 import com.vaadin.flow.server.ServletHelper.RequestType;
 import com.vaadin.flow.shared.ApplicationConstants;
 import java.util.Arrays;
@@ -19,9 +19,16 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 public class SecurityUtils {
 
-  private SecurityUtils() {
-  }
+  /** Private Constructor, "singleton" use. */
+  private SecurityUtils() {}
 
+  /**
+   * Checks if View is allowed access to {@link com.considlia.survey.model.User}
+   *
+   * @param securedClass being the class to check which roles are allowed.
+   * @return if View is allowed access, true if {@link com.considlia.survey.model.User} is allowed,
+   *     false if not.
+   */
   public static boolean hasAccess(Class securedClass) {
     // TODO might be redundant?
     final boolean allowedViews =
@@ -55,17 +62,28 @@ public class SecurityUtils {
         .anyMatch(roles::contains);
   }
 
+  /**
+   * Checks if User is logged in via method overloading.
+   *
+   * @return true if {@link com.considlia.survey.model.User} is logged in, false if not.
+   */
   public static boolean isUserLoggedIn() {
     return isUserLoggedIn(SecurityContextHolder.getContext().getAuthentication());
   }
 
+  /**
+   * Checks if Logged in User is an instance of AnonymousAuthentication, not to be confused with
+   * {@link com.considlia.survey.model.User}. {@link AnonymousAuthenticationToken} being a
+   * SpringSecurity authentication.
+   *
+   * @param authentication authentication to check.
+   * @return true if User is not signed in.
+   */
   public static boolean isUserLoggedIn(Authentication authentication) {
     return !(authentication instanceof AnonymousAuthenticationToken);
   }
 
-  /**
-   * Checks if internal request, for framework purposes.
-   */
+  /** Checks if internal request, for framework purposes. */
   static boolean isFrameworkInternalRequest(HttpServletRequest request) {
     final String parameterValue = request.getParameter(ApplicationConstants.REQUEST_TYPE_PARAMETER);
     return parameterValue != null
