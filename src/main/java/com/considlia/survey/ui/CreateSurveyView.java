@@ -37,7 +37,12 @@ import com.vaadin.flow.router.BeforeLeaveObserver;
 import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.OptionalParameter;
 import com.vaadin.flow.router.Route;
+import javafx.scene.control.CheckBox;
 
+/**
+ * Handles everything regarding creating or editing a {@link Survey}
+ *
+ */
 @Route(value = "createsurvey", layout = MainLayout.class)
 @Secured({Role.USER, Role.ADMIN})
 public class CreateSurveyView extends BaseView
@@ -385,7 +390,6 @@ public class CreateSurveyView extends BaseView
     refreshItems();
     hasChanges = true;
   }
-
 
   /**
    * Removes question from questions {@link List} in {@link Survey}. Invoked from
