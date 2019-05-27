@@ -17,10 +17,7 @@ public class ConfirmDialog extends Dialog {
   private Button cancelBtn;
 
   public ConfirmDialog(
-      String headerText,
-      String contentText,
-      Consumer<Survey> consumer,
-      Survey item) {
+      String headerText, String contentText, Consumer<Survey> consumer, Survey item) {
     setCloseOnEsc(false);
     setCloseOnOutsideClick(false);
 
@@ -93,7 +90,6 @@ public class ConfirmDialog extends Dialog {
     add(new H5("Error, UserName and/or Email is already taken."));
     add(new Button("Ok", e -> close()));
   }
-
 
   public void initCancelBtn() {
     cancelBtn =

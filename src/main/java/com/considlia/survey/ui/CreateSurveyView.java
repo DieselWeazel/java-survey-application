@@ -80,7 +80,7 @@ public class CreateSurveyView extends BaseView
 
   /**
    * Constructor for CreateSurveyView
-   * 
+   *
    * @param surveyRepository
    * @param customUserService
    */
@@ -221,6 +221,14 @@ public class CreateSurveyView extends BaseView
     mandatory = new Checkbox("Mandatory Question");
   }
 
+  /**
+   * Creates a new textfield from the parameters, valueChangeMode is set to EAGER
+   * 
+   * @param width of the textfield
+   * @param placeholderAndLabel
+   * @param isRequired
+   * @return TextField
+   */
   public TextField createTextField(String width, String placeholderAndLabel, boolean isRequired) {
     TextField textField = new TextField();
     textField.setWidth(width);
@@ -247,6 +255,9 @@ public class CreateSurveyView extends BaseView
     updateMoveButtonStatus();
   }
 
+  /**
+   * Set each questions position depending on its index in the list
+   */
   public void setIndex() {
     for (Question q : thisSurvey.getQuestions()) {
       q.setPosition(thisSurvey.getQuestions().indexOf(q));
@@ -290,7 +301,7 @@ public class CreateSurveyView extends BaseView
 
   /**
    * Updated components in extraComponents Layout for given QuestionType.
-   * 
+   *
    * @param questionType
    */
   public void userCreationQuestion(QuestionType questionType) {
@@ -361,7 +372,7 @@ public class CreateSurveyView extends BaseView
 
   /**
    * Manages changing position of questions.
-   * 
+   *
    * @param button the {@link Button} attached to the {@link QuestionWithButtons}
    * @param moveDirection 1 = down, -1 = up
    */
@@ -375,10 +386,11 @@ public class CreateSurveyView extends BaseView
     hasChanges = true;
   }
 
+
   /**
    * Removes question from questions {@link List} in {@link Survey}. Invoked from
    * {@link ConfirmDialog}
-   * 
+   *
    * @param questionWithButtons type: {@link QuestionWithButtons}
    */
   public void removeQuestion(QuestionWithButtons questionWithButtons) {
@@ -389,7 +401,7 @@ public class CreateSurveyView extends BaseView
   }
 
   /**
-   * 
+   *
    * @param button
    */
   public void editQuestion(Button button) {
@@ -398,7 +410,8 @@ public class CreateSurveyView extends BaseView
   }
 
   /**
-   * Saves survey with questions to database
+   * Sets the surveys title, creator, description, user (questions is already set) and saves it and
+   * then reroute back to homeView
    */
   public void saveSurvey() {
     thisSurvey.setCreator(creatorNameTextField.getValue());
@@ -415,7 +428,7 @@ public class CreateSurveyView extends BaseView
 
   /**
    * Manages setEnable for submitSurveyButton {@link Button}
-   * 
+   *
    * @returns true, if: surveyTitleTextField has content, creatorNameTextField has content and
    *          {@link Survey} contains {@link Question}s. else returns false
    */
@@ -431,6 +444,10 @@ public class CreateSurveyView extends BaseView
     }
   }
 
+  /**
+   * Disables the up button if the question is the first one. DIsbales the down button if the
+   * question is the last one.
+   */
   public void updateMoveButtonStatus() {
     for (int i = 0; i < questions.getComponentCount(); i++) {
       QuestionWithButtons component = (QuestionWithButtons) questions.getComponentAt(i);
@@ -467,7 +484,7 @@ public class CreateSurveyView extends BaseView
   }
 
   /**
-   * 
+   *
    * @returns addQuestionButton
    */
   public Button getAddQuestionButton() {
@@ -475,7 +492,7 @@ public class CreateSurveyView extends BaseView
   }
 
   /**
-   * 
+   *
    * @returns questionTitleTextField type: {@link TextField}
    */
   public TextField getQuestionTitleTextField() {

@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.BiFunction;
-import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /*
@@ -40,31 +39,39 @@ public class SurveyGrid extends VerticalLayout {
 
   private SurveyRepository surveyRepository;
 
-  @Autowired
-  private CustomUserService customUserService;
+  @Autowired private CustomUserService customUserService;
 
-  @Autowired
-  private UserRepository userRepository;
+  @Autowired private UserRepository userRepository;
   private boolean isHome = false;
 
-  public SurveyGrid(
-      Class viewingLayout, SurveyRepository surveyRepository) {
-    isHome = HomeView.class.equals(viewingLayout);
+  /**
+   * Constructor for {@link HomeView}'s SurveyGrid.
+   * @param surveyRepository
+   */
+  public SurveyGrid(SurveyRepository surveyRepository) {
+    isHome = true;
     this.surveyRepository = surveyRepository;
     this.surveyList = new ArrayList<>();
     init();
   }
 
-  public SurveyGrid(
-      Class viewingLayout, SurveyRepository surveyRepository, CustomUserService customUserService) {
-    isHome = HomeView.class.equals(viewingLayout);
+  /**
+   * Constructor for {@link com.considlia.survey.ui.userviews.MyProfileView}'s SurveyGrid.
+   * @param surveyRepository repository connected with loading surveys.
+   * @param customUserService to load Surveys belonging to Survey.
+   */
+  public SurveyGrid(SurveyRepository surveyRepository, CustomUserService customUserService) {
+    isHome = false;
     this.surveyRepository = surveyRepository;
     this.customUserService = customUserService;
     this.surveyList = new ArrayList<>();
     init();
   }
 
-  @PostConstruct
+  /**
+   * Inits Grid UI.
+   */
+//  @PostConstruct
   public void init() {
     grid = new Grid<>();
     surveyList = surveyRepository.findAll();
@@ -84,12 +91,12 @@ public class SurveyGrid extends VerticalLayout {
     titleColumn = grid.addColumn(Survey::getTitle).setHeader("Title").setFlexGrow(4);
 
     // Shows Description from Survey
-    grid.addComponentColumn(item -> showDescription(item)).setWidth("1%");
+    grid.addComponentColumn(item -> loadSurveyDescription(item)).setWidth("1%");
     grid.setItemDetailsRenderer(
         TemplateRenderer.<Survey>of(
-            "<div style='border: 1px solid gray; padding: 10px; width: 100%;box-sizing: border-box;'>"
-                + "<div> <b>[[item.description]]</b></div>"
-                + "</div>")
+                "<div style='border: 1px solid gray; padding: 10px; width: 100%;box-sizing: border-box;'>"
+                    + "<div> <b>[[item.description]]</b></div>"
+                    + "</div>")
             .withProperty("description", Survey::getDescription)
             .withEventHandler(
                 "handleClick",
@@ -104,15 +111,11 @@ public class SurveyGrid extends VerticalLayout {
 
     // Includes deleteSurvey method to Consumer if we are on ProfileView.
     if (!isHome) {
-      grid.addComponentColumn(item -> {
-        GridTools gridTools = new GridTools(item, this::updateGridData);
-        return gridTools;
-      });
+      grid.addComponentColumn(
+          item -> new GridTools(item, this::removeSurveyUpdateGrid));
     } else {
-      grid.addComponentColumn(item -> {
-        GridTools gridTools = new GridTools(item);
-        return gridTools;
-      });
+      grid.addComponentColumn(
+          item -> new GridTools(item));
     }
     grid.setDetailsVisibleOnClick(false);
     grid.setSelectionMode(Grid.SelectionMode.NONE);
@@ -122,6 +125,9 @@ public class SurveyGrid extends VerticalLayout {
     createFilterFields();
   }
 
+  /**
+   * Creates Filter Fields for each column.
+   */
   private void createFilterFields() {
     // ID filter
     idField = createFilterField(filterRow, idColumn);
@@ -166,6 +172,12 @@ public class SurveyGrid extends VerticalLayout {
     }
   }
 
+  /**
+   * Creates FilterTextFields above each value.
+   * @param filterRow place for Filters.
+   * @param column columns of Filter.
+   * @return a textfield for filter for designated column.
+   */
   private TextField createFilterField(HeaderRow filterRow, Grid.Column<Survey> column) {
     TextField filterField = new TextField();
     filterField.setValueChangeMode(ValueChangeMode.EAGER);
@@ -174,6 +186,12 @@ public class SurveyGrid extends VerticalLayout {
     return filterField;
   }
 
+  /**
+   * Filters the Survey to view every Survey with matching filtervalue.
+   * @param filterValue inputString from TextField.
+   * @param func Survey and String, if non existant to String returns false, if
+   * exists, returns true.
+   */
   private void filter(String filterValue, BiFunction<Survey, String, Boolean> func) {
     List<Survey> filteredList = new ArrayList<>(surveyList);
     if (!"".equals(filterValue)) {
@@ -186,13 +204,22 @@ public class SurveyGrid extends VerticalLayout {
     grid.setItems(filteredList);
   }
 
-  private HorizontalLayout showDescription(Survey item) {
+  /**
+   * Loads Description of Survey onto gRID.
+   * @param item being Survey to view.
+   * @return HorizontalLayout containing description.
+   */
+  private HorizontalLayout loadSurveyDescription(Survey item) {
     Icon info = new Icon(VaadinIcon.INFO_CIRCLE_O);
     info.addClickListener(e -> grid.setDetailsVisible(item, !grid.isDetailsVisible(item)));
     return new HorizontalLayout(info);
   }
 
-  private void updateGridData(Survey survey) {
+  /**
+   * Removes Survey, refreshes Grid to correctly show the remaining Surveys.
+   * @param survey to be removed.
+   */
+  private void removeSurveyUpdateGrid(Survey survey) {
     surveyRepository.delete(survey);
     grid.setItems(
         surveyList = surveyRepository.findAllByUserId(customUserService.getUser().getId()));
