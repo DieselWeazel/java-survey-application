@@ -5,6 +5,7 @@ import com.vaadin.flow.component.Component;
 public class Tooltip {
 
   /**
+   * 
    * Dosen't show description if the component is disabled.
    */
 

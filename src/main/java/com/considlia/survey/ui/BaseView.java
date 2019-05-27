@@ -7,10 +7,18 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 @StyleSheet("css/app.css")
 public abstract class BaseView extends VerticalLayout {
 
+  /**
+   * Constructs an empty BaseView.
+   */
   public BaseView() {
     setClassId();
   }
 
+  /**
+   * Constructs a baseView containing a {@link H1}
+   * 
+   * @param viewName the H1 text
+   */
   public BaseView(String viewName) {
     setClassId();
 
@@ -20,6 +28,9 @@ public abstract class BaseView extends VerticalLayout {
     add(title);
   }
 
+  /**
+   * Undefined size so it can be changed with CSS and sets id
+   */
   public void setClassId() {
     setSizeUndefined();
     setId("baseview");

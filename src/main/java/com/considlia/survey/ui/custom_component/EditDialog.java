@@ -1,8 +1,14 @@
 package com.considlia.survey.ui.custom_component;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.considlia.survey.model.question.MultiQuestionAlternative;
+import com.considlia.survey.model.question.Question;
 import com.considlia.survey.ui.custom_component.question_with_button.MultiQuestionWithButtons;
+import com.considlia.survey.ui.custom_component.question_with_button.QuestionWithButtons;
+import com.considlia.survey.ui.custom_component.question_with_button.RatioQuestionWithButtons;
 import com.considlia.survey.ui.custom_component.question_with_button.TextQuestionWithButtons;
+import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.dialog.Dialog;
@@ -11,9 +17,8 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextField;
-import java.util.ArrayList;
-import java.util.List;
 
 public class EditDialog extends Dialog {
 
@@ -24,6 +29,12 @@ public class EditDialog extends Dialog {
   private List<TextField> textFieldList = new ArrayList<>();
   private Checkbox mandatory;
 
+  /**
+   * Creates and opens a dialog component. Depending on the type of the paramater set the dialog
+   * body with different components
+   * 
+   * @param button from which the data is taken from
+   */
   public EditDialog(Button button) {
     open();
     setCloseOnEsc(false);
@@ -38,37 +49,79 @@ public class EditDialog extends Dialog {
 
     if (button.getParent().get().getParent().get() instanceof TextQuestionWithButtons) {
       textQuestion();
+    } else if (button.getParent().get().getParent().get() instanceof RatioQuestionWithButtons) {
+      ratioQuestion();
     } else {
       radioQuestion();
-
     }
 
     footer.add(new HorizontalLayout(new Button("Cancel", onCancel -> close()), confirm));
     add(contentBox, footer);
   }
 
-  public void textQuestion() {
+  /**
+   * Adds the text specific TextFields to the dialog content.
+   * <p>
+   * Confirm Button is created and {@link ClickEvent} is added
+   */
+  private void textQuestion() {
     TextQuestionWithButtons choosenQuestion =
         (TextQuestionWithButtons) inputButton.getParent().get().getParent().get();
-    question.setValue(choosenQuestion.getQuestion().getTitle());
-    mandatory.setValue(choosenQuestion.getQuestion().isMandatory());
+    setCommonValues(choosenQuestion);
 
     confirm = new Button("Confirm");
     confirm.addClickListener(onConfirm -> {
-      choosenQuestion.getQuestion().setMandatory(mandatory.getValue());
-      choosenQuestion.getQuestion().setTitle(question.getValue());
-      choosenQuestion.setTitleInUI();
-
+      updateCommonValues(choosenQuestion);
       close();
     });
 
   }
 
-  public void radioQuestion() {
+  /**
+   * Adds the raito specific TextFields and numberFields to the dialog content.
+   * <p>
+   * Confirm Button is created and {@link ClickEvent} is added
+   */
+  private void ratioQuestion() {
+    RatioQuestionWithButtons choosenQuestion =
+        (RatioQuestionWithButtons) inputButton.getParent().get().getParent().get();
+    setCommonValues(choosenQuestion);
+
+    TextField startLimit = new TextField();
+    startLimit.setValue(choosenQuestion.getStart());
+
+    TextField endLimit = new TextField();
+    endLimit.setValue(choosenQuestion.getEnd());
+
+    NumberField stepperField = new NumberField();
+    stepperField.setValue((double) choosenQuestion.getChoices());
+    stepperField.setMin(2);
+    stepperField.setMax(10);
+    stepperField.setHasControls(true);
+
+    contentBox.add(startLimit, endLimit, stepperField);
+
+    confirm = new Button("Confirm");
+    confirm.addClickListener(onConfirm -> {
+      choosenQuestion.setStart(startLimit.getValue());
+      choosenQuestion.setEnd(endLimit.getValue());
+      choosenQuestion.setChoices((int) Math.round(stepperField.getValue()));
+      updateCommonValues(choosenQuestion);
+      choosenQuestion.updateRadioOptions();
+
+      close();
+    });
+  }
+
+  /**
+   * Adds the Radio specific TextFields to the dialog content.
+   * <p>
+   * Confirm Button is created and {@link ClickEvent} is added
+   */
+  private void radioQuestion() {
     MultiQuestionWithButtons choosenQuestion =
         (MultiQuestionWithButtons) inputButton.getParent().get().getParent().get();
-    question.setValue(choosenQuestion.getQuestion().getTitle());
-    mandatory.setValue(choosenQuestion.getQuestion().isMandatory());
+    setCommonValues(choosenQuestion);
 
     List<MultiQuestionAlternative> alternativeList = new ArrayList<>();
     for (MultiQuestionAlternative alternative : choosenQuestion.getQuestion().getAlternatives()) {
@@ -86,9 +139,7 @@ public class EditDialog extends Dialog {
     footer.add(new Button(new Icon(VaadinIcon.PLUS_CIRCLE), event -> addNewTextField(null)));
     confirm = new Button("Confirm");
     confirm.addClickListener(onConfirm -> {
-      choosenQuestion.getQuestion().setMandatory(mandatory.getValue());
-      choosenQuestion.getQuestion().setTitle(question.getValue());
-      choosenQuestion.setTitleInUI();
+      updateCommonValues(choosenQuestion);
 
       List<String> strings = new ArrayList<>();
       for (TextField txt : textFieldList) {
@@ -109,7 +160,13 @@ public class EditDialog extends Dialog {
     });
   }
 
-  public void addNewTextField(String title) {
+  /**
+   * Creates a new {@link HorizontalLayout} containing a {@link TextField} and {@link Button}.
+   * Button will remove this HorizontalLayout
+   * 
+   * @param title is used for the TextFields value
+   */
+  private void addNewTextField(String title) {
     HorizontalLayout horizontalBox = new HorizontalLayout();
     TextField txtAlternative = new TextField("Alternative " + (contentBox.getComponentCount() - 1));
     if (title != null) {
@@ -125,7 +182,12 @@ public class EditDialog extends Dialog {
     textFieldList.add(txtAlternative);
   }
 
-  public void remove(Button b) {
+  /**
+   * Removes the given components from this component.
+   *
+   * @param b is the components to remove
+   */
+  private void remove(Button b) {
     contentBox.remove(b.getParent().get());
     HorizontalLayout h = (HorizontalLayout) b.getParent().get();
 
@@ -133,7 +195,28 @@ public class EditDialog extends Dialog {
     for (int i = 0; i < textFieldList.size(); i++) {
       textFieldList.get(i).setLabel("Alternative " + (i + 1));
     }
+  }
 
+  /**
+   * Sets the values that every {@link QuestionWithButtons} have in common (title and if its
+   * mandatory)
+   * 
+   * @param choosenQuestion is the component from which the data is taken from
+   */
+  private void setCommonValues(QuestionWithButtons choosenQuestion) {
+    question.setValue(choosenQuestion.getQuestion().getTitle());
+    mandatory.setValue(choosenQuestion.getQuestion().isMandatory());
+  }
+
+  /**
+   * Sets the values that every {@link Question} have in common (title and if its mandatory)
+   * 
+   * @param choosenQuestion is the component that'll be updated
+   */
+  private void updateCommonValues(QuestionWithButtons choosenQuestion) {
+    choosenQuestion.getQuestion().setMandatory(mandatory.getValue());
+    choosenQuestion.getQuestion().setTitle(question.getValue());
+    choosenQuestion.setTitleInUI();
   }
 
 }
