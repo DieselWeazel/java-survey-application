@@ -36,7 +36,7 @@ public class MultiQuestion extends Question {
 
   /**
    * Constructor for MultiQuestion
-   * 
+   *
    * @param questionTitle - The question
    * @param questionType - The type of question
    * @param mandatory - If the question is mandatory
@@ -50,7 +50,7 @@ public class MultiQuestion extends Question {
 
   /**
    * Gets a set/list of all the answer alternatives
-   * 
+   *
    * @return a set/list of all the answer alternatives
    */
   public Set<MultiQuestionAlternative> getAlternatives() {
@@ -59,7 +59,7 @@ public class MultiQuestion extends Question {
 
   /**
    * Sets a set/list of all the answer alternatives
-   * 
+   *
    * @param alternatives - The set/list of all the answer alternatives
    */
   public void setAlternatives(Set<MultiQuestionAlternative> alternatives) {
@@ -68,7 +68,7 @@ public class MultiQuestion extends Question {
 
   /**
    * Adds a answer alternative to the list of answer alternative
-   * 
+   *
    * @param mqa - an answer alternative
    */
   public void addAlternative(MultiQuestionAlternative mqa) {
@@ -77,7 +77,7 @@ public class MultiQuestion extends Question {
 
   /**
    * Moves the answer alternative for the MulitQuestion up or down
-   * 
+   *
    * @param mqa - The answer alternative
    * @param moveDirection - If the answer alternative should move up or down
    */
@@ -87,7 +87,7 @@ public class MultiQuestion extends Question {
 
   /**
    * Gets a list of all the answer alternative for the question
-   * 
+   *
    * @return A list of all the answer alternative
    */
   public List<String> getStringAlternatives() {
@@ -109,7 +109,7 @@ public class MultiQuestion extends Question {
 
   /**
    * Updates the list of the answer alternative for the question
-   * 
+   *
    * @param stringAlternatives - the list of the answer alternative
    */
   public void updateAlternatives(List<String> stringAlternatives) {

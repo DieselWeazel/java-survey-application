@@ -6,7 +6,7 @@ import javax.persistence.Table;
 import com.considlia.survey.model.QuestionType;
 
 /**
- * 
+ *
  * Class to create RadioQuestion subclass to MultiQuestion
  *
  */
@@ -21,7 +21,7 @@ public class RadioQuestion extends MultiQuestion {
 
   /**
    * Constructor for RadioQuestion
-   * 
+   *
    * @param questionTitle - The question
    * @param mandatory - If the question is mandatory
    * @param stringAlternatives - List of the answer alternatives

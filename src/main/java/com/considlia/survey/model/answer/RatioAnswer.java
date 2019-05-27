@@ -5,15 +5,27 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "ratio_answer")
-public class RatioAnswer extends Answers {
+public class RatioAnswer extends Answer {
 
-  private Integer ratioAnswer;
+  private String ratioAnswer;
 
-  public Integer getRatioAnswer() {
+  /**
+   * Gets RatioAnswer
+   *
+   * @return the answered number within the ratio of {@link
+   *     com.considlia.survey.model.question.RatioQuestion}
+   */
+  public String getRatioAnswer() {
     return ratioAnswer;
   }
 
-  public void setRatioAnswer(Integer ratioAnswer) {
+  /**
+   * Sets the RatioAnswer
+   *
+   * @param ratioAnswer within the ratio of {@link
+   *     com.considlia.survey.model.question.RatioQuestion}
+   */
+  public void setRatioAnswer(String ratioAnswer) {
     this.ratioAnswer = ratioAnswer;
   }
 }

@@ -22,7 +22,7 @@ public abstract class TextQuestion extends Question {
 
   /**
    * Constructs a new {@link TextQuestion} with a questionTitle, type and if its mandatory
-   * 
+   *
    * @param questionTitle - String value
    * @param mandatory - boolean value
    */

@@ -25,7 +25,7 @@ public class RatioQuestionWithButtons extends QuestionWithButtons {
   /**
    * Calls the super constructor. Also adds a {@link RadioButtonGroup} from the values off
    * {@link String} start, end and {@link int} choices from the question parameters
-   * 
+   *
    * @param question get {@link QuestionType} and also for passing it to super
    * @param survey for passing it to super
    */
@@ -83,7 +83,7 @@ public class RatioQuestionWithButtons extends QuestionWithButtons {
 
   /**
    * Return the value of {@link String} start
-   * 
+   *
    * @return String value {@link start}
    */
   public String getStart() {
@@ -92,7 +92,7 @@ public class RatioQuestionWithButtons extends QuestionWithButtons {
 
   /**
    * Set the value of {@link String} start. Also set {@link RatioQuestion#setStart(String)}
-   * 
+   *
    * @param start new {@link String} value
    */
   public void setStart(String start) {
@@ -102,7 +102,7 @@ public class RatioQuestionWithButtons extends QuestionWithButtons {
 
   /**
    * Return the value of {@link String} end
-   * 
+   *
    * @return String value {@link end}
    */
   public String getEnd() {
@@ -111,7 +111,7 @@ public class RatioQuestionWithButtons extends QuestionWithButtons {
 
   /**
    * Set the value of {@link String} end. Also set {@link RatioQuestion#setEnd(String)}
-   * 
+   *
    * @param end new {@link String} value
    */
   public void setEnd(String end) {
@@ -121,7 +121,7 @@ public class RatioQuestionWithButtons extends QuestionWithButtons {
 
   /**
    * Return the value of {@link int} choices
-   * 
+   *
    * @return int value {@link choices}
    */
   public int getChoices() {
@@ -130,7 +130,7 @@ public class RatioQuestionWithButtons extends QuestionWithButtons {
 
   /**
    * Set the value of {@link int} choices. Also set {@link RatioQuestion#setChoices(int)}
-   * 
+   *
    * @param choices new {@link int} value
    */
   public void setChoices(int choices) {
@@ -140,7 +140,7 @@ public class RatioQuestionWithButtons extends QuestionWithButtons {
 
   /**
    * Return the question of {@link RatioQuestionWithButtons}
-   * 
+   *
    * @return ratioQuestion {@link RatioQuestion}
    */
   @Override

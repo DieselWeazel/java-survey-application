@@ -45,6 +45,5 @@ public class QuestionWithButtonsFactory {
     } else {
       throw new IllegalIdentifierException("Invalid QuestionType");
     }
-
   }
 }

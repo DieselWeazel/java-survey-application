@@ -29,7 +29,7 @@ public class MultiQuestionAlternative {
 
   /**
    * Constructor for MultiQuestionAlternative
-   * 
+   *
    * @param questionTitle - The question
    */
   public MultiQuestionAlternative(String questionTitle) {
@@ -38,7 +38,7 @@ public class MultiQuestionAlternative {
 
   /**
    * Gets the alternative
-   * 
+   *
    * @return - The alternative
    */
   public String getTitle() {
@@ -47,7 +47,7 @@ public class MultiQuestionAlternative {
 
   /**
    * Sets the alternative
-   * 
+   *
    * @param title - The alternative
    */
   public void setTitle(String title) {
@@ -56,7 +56,7 @@ public class MultiQuestionAlternative {
 
   /**
    * Gets the position of the alternative
-   * 
+   *
    * @return the position
    */
   public int getPosition() {
@@ -65,7 +65,7 @@ public class MultiQuestionAlternative {
 
   /**
    * Sets the position of the alternative
-   * 
+   *
    * @param position - The position
    */
   public void setPosition(int position) {

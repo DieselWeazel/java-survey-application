@@ -18,7 +18,7 @@ public class QuestionFactory {
 
   /**
    * Returns a subclass of {@link Question}. QuestionType specifies which class is created
-   * 
+   *
    * @param type - {@link QuestionType}
    * @param question - String
    * @param mandatory - boolean

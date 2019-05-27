@@ -32,7 +32,7 @@ public class EditDialog extends Dialog {
   /**
    * Creates and opens a dialog component. Depending on the type of the paramater set the dialog
    * body with different components
-   * 
+   *
    * @param button from which the data is taken from
    */
   public EditDialog(Button button) {
@@ -163,7 +163,7 @@ public class EditDialog extends Dialog {
   /**
    * Creates a new {@link HorizontalLayout} containing a {@link TextField} and {@link Button}.
    * Button will remove this HorizontalLayout
-   * 
+   *
    * @param title is used for the TextFields value
    */
   private void addNewTextField(String title) {
@@ -200,7 +200,7 @@ public class EditDialog extends Dialog {
   /**
    * Sets the values that every {@link QuestionWithButtons} have in common (title and if its
    * mandatory)
-   * 
+   *
    * @param choosenQuestion is the component from which the data is taken from
    */
   private void setCommonValues(QuestionWithButtons choosenQuestion) {
@@ -210,7 +210,7 @@ public class EditDialog extends Dialog {
 
   /**
    * Sets the values that every {@link Question} have in common (title and if its mandatory)
-   * 
+   *
    * @param choosenQuestion is the component that'll be updated
    */
   private void updateCommonValues(QuestionWithButtons choosenQuestion) {

@@ -13,6 +13,6 @@ public class HomeView extends BaseView {
   public HomeView(SurveyRepository surveyRepository) {
     super("Home");
 
-    add(new SurveyGrid(this.getClass(), surveyRepository));
+    add(new SurveyGrid(surveyRepository));
   }
 }

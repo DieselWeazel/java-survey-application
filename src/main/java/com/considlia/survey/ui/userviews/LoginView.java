@@ -1,4 +1,4 @@
-package com.considlia.survey.ui.UserViews;
+package com.considlia.survey.ui.userviews;
 
 import com.considlia.survey.security.SecurityUtils;
 import com.considlia.survey.ui.BaseView;
@@ -7,7 +7,6 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H4;
 import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
@@ -22,35 +21,22 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 /*
-Trying to figure out a way to redirect without "UI.getCurrent().navigate(HomeView.class);", looking for a Spring Security integration of sorts.
+Currently needs a refactoring/correctly
+processed way of checking for Username and Password being correct. (throws exception and acts on it as of onw)
 Jonathan
  */
 @Route(value = "login", layout = MainLayout.class)
 public class LoginView extends BaseView implements BeforeEnterObserver {
 
-  // -- Login Components --
-  private TextField username;
-  private PasswordField password;
-  private Button submitButton;
-  private Button registerButton;
+  @Autowired private AuthenticationManager authenticationManagerBean;
 
-  private HorizontalLayout horizontalLayout;
-  // -- Backend Components --
-  @Autowired
-  private AuthenticationManager authenticationManagerBean;
-
-  private VerticalLayout loginView;
-
-
-  public LoginView(
-      AuthenticationManager authenticationManagerBean) {
+  /** LoginView Constructor, for signing in. Does not open if user is logged in. */
+  public LoginView() {
     super("Login");
-    this.authenticationManagerBean = authenticationManagerBean;
-    username = new TextField();
-    password = new PasswordField();
-    submitButton = new Button("Login");
-    this.registerButton = new Button("Register");
-    H4 h4 = new H4("Don't have an account?");
+    TextField username = new TextField();
+    PasswordField password = new PasswordField();
+    Button submitButton = new Button("Login");
+    Button registerButton = new Button("Register");
 
     username.setLabel("Username");
     password.setLabel("Password");
@@ -58,7 +44,6 @@ public class LoginView extends BaseView implements BeforeEnterObserver {
     submitButton.addClickListener(
         event -> {
           if (setCurrentUser(username.getValue(), password.getValue())) {
-//            this.getUI().ifPresent(ui -> ui.navigate(""));
             UI.getCurrent().getSession().close();
             UI.getCurrent().getPage().reload();
           }
@@ -66,21 +51,28 @@ public class LoginView extends BaseView implements BeforeEnterObserver {
 
     username.setWidth("380px");
     password.setWidth("380px");
-    loginView = new VerticalLayout(username, password, submitButton);
+    VerticalLayout loginView = new VerticalLayout(username, password, submitButton);
     add(loginView);
 
     // If User isn't registered, added a small little navigation choice to the register menu
     registerButton.addClickListener(e -> UI.getCurrent().navigate("registration"));
-    this.horizontalLayout = new HorizontalLayout(h4, registerButton);
-    add(horizontalLayout);
+    add(new VerticalLayout(new H4("Don't have an account?"), registerButton));
+
     loginView.setWidth("400px");
     loginView.setAlignItems(Alignment.CENTER);
     setAlignItems(Alignment.CENTER);
   }
 
-  public boolean setCurrentUser(String login, String password) {
+  /**
+   * Sets current {@link com.considlia.survey.model.User} if username and password is correct.
+   *
+   * @param userName being username.
+   * @param password being password.
+   * @return true if username and password is correct, false if not.
+   */
+  public boolean setCurrentUser(String userName, String password) {
     try {
-      Authentication request = new UsernamePasswordAuthenticationToken(login, password);
+      Authentication request = new UsernamePasswordAuthenticationToken(userName, password);
       Authentication result = authenticationManagerBean.authenticate(request);
       SecurityContextHolder.getContext().setAuthentication(result);
     } catch (BadCredentialsException e) {
@@ -90,6 +82,11 @@ public class LoginView extends BaseView implements BeforeEnterObserver {
     return true;
   }
 
+  /**
+   * If User is signed in, redirects user back to previous URL.
+   *
+   * @param event the accessed URL before class construction.
+   */
   @Override
   public void beforeEnter(BeforeEnterEvent event) {
     if (SecurityUtils.isUserLoggedIn()) {

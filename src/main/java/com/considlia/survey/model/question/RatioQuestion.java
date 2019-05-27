@@ -20,7 +20,7 @@ public class RatioQuestion extends Question {
   /**
    * Construct a {@link RatioQuestion} with a title, start, end, if it's mandatory and the number of
    * choices
-   * 
+   *
    * @param questionTitle
    * @param mandatory
    * @param start value of the first element
@@ -37,7 +37,7 @@ public class RatioQuestion extends Question {
 
   /**
    * Returns the String value of local variable {@link start}
-   * 
+   *
    * @return String
    */
   public String getStart() {
@@ -46,7 +46,7 @@ public class RatioQuestion extends Question {
 
   /**
    * Set the value of {@link String} start
-   * 
+   *
    * @param start new {@link String} value
    */
   public void setStart(String start) {
@@ -55,7 +55,7 @@ public class RatioQuestion extends Question {
 
   /**
    * Returns the String value of local variable {@link end}
-   * 
+   *
    * @return String
    */
   public String getEnd() {
@@ -64,7 +64,7 @@ public class RatioQuestion extends Question {
 
   /**
    * Set the value of {@link String} end
-   * 
+   *
    * @param end new {@link String} value
    */
   public void setEnd(String end) {
@@ -73,7 +73,7 @@ public class RatioQuestion extends Question {
 
   /**
    * Returns the int value of local variable {@link choices}
-   * 
+   *
    * @return int
    */
   public int getChoices() {
@@ -82,7 +82,7 @@ public class RatioQuestion extends Question {
 
   /**
    * Set the value of {@link int} choices
-   * 
+   *
    * @param choices new {@link int} value
    */
   public void setChoices(int choices) {

@@ -10,17 +10,21 @@ import org.springframework.stereotype.Service;
 @Service
 public class CustomUserService extends User {
 
-  @Autowired
-  private UserRepository userRepository;
+  @Autowired private UserRepository userRepository;
 
+  /**
+   * Constructor for UserRepository
+   *
+   * @param userRepository inputs the database relation of Users.
+   */
   public CustomUserService(UserRepository userRepository) {
     this.userRepository = userRepository;
   }
 
   /**
-   * In order to retrieve User info, this service gathers more than just the username/password.
+   * In order to retrieve User info as User object.
    *
-   * @return currently logged in User for use as User Object
+   * @return currently logged in {@link User}
    */
   public User getUser() {
     Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
