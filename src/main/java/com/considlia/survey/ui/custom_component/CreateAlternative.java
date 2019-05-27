@@ -25,7 +25,7 @@ public class CreateAlternative extends VerticalLayout {
    * Constructor adds new empty TextField to variable dynamicTextField. Adds new empty ArrayLists to
    * private Lists alternativeList and textFieldList. Invokes createAlternative with given
    * questionType and empty arrayList.
-   * 
+   *
    * @param csv Instance of current CreateSurveyView to get access to addQuestionButton.
    */
   public CreateAlternative(CreateSurveyView csv) {
@@ -45,7 +45,7 @@ public class CreateAlternative extends VerticalLayout {
    * new {@link TextField} if textFieldList is empty or the last TextField in TextFieldList contains
    * value. Adds event on all new TextFields using {@link addValueChangeListener} with
    * {@link ValueChangeMode.EAGER}
-   * 
+   *
    * @param alternativeList
    */
   public void createAlternative(List<String> alternativeList) {
@@ -81,7 +81,7 @@ public class CreateAlternative extends VerticalLayout {
    * there's more than one TextField in textFieldList the TextField is removed. Checks if the
    * {@link String} is more than 255 characters. Puts out notification if alternativeList contains
    * duplicates. Also manages enable/disable for addQuestionButton.
-   * 
+   *
    * @param event, used to get value and source
    */
   public void textFieldEvent(ComponentValueChangeEvent<TextField, String> event) {
@@ -131,7 +131,7 @@ public class CreateAlternative extends VerticalLayout {
   }
 
   /**
-   * 
+   *
    * @returns {@link List} containing Strings with values from TextFields in textFieldList.
    */
   public List<String> getAlternativeList() {
@@ -146,7 +146,7 @@ public class CreateAlternative extends VerticalLayout {
   }
 
   /**
-   * 
+   *
    * @returns QuestionType RADIO or CHECKBOX
    */
   public QuestionType getQuestionType() {
@@ -155,7 +155,7 @@ public class CreateAlternative extends VerticalLayout {
 
   /**
    * Sets QuestionType
-   * 
+   *
    * @param questionType
    */
   public void setQuestionType(QuestionType questionType) {

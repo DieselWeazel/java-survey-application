@@ -6,7 +6,7 @@ import javax.persistence.Table;
 import com.considlia.survey.model.QuestionType;
 
 /**
- * 
+ *
  * Class to create CheckBoxQuestions subclass to MultiQuestion
  *
  */
@@ -23,7 +23,7 @@ public class CheckBoxQuestion extends MultiQuestion {
 
   /**
    * Constructor for CheckBoxQuestion
-   * 
+   *
    * @param questionTitle - The qeustion
    * @param mandatory - If the question is mandatory
    * @param stringAlternatives - List of the answer alternatives

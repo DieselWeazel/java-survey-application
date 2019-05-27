@@ -17,7 +17,7 @@ public class CreateRatioComponents extends VerticalLayout {
   /**
    * Constructs a VerticalLayout containing a HorizontalLayout with then contains two TextFields and
    * one NumberField
-   * 
+   *
    * @param csv CreateSurveyView to get access to the changeBtn-method
    */
   public CreateRatioComponents(CreateSurveyView csv) {
@@ -39,7 +39,7 @@ public class CreateRatioComponents extends VerticalLayout {
 
   /**
    * Returns whether TextFields lowerLimit and upperLimit is considered to be empty.
-   * 
+   *
    * @return True if either is empty. False if not
    */
   public boolean isLimitEmpty() {
@@ -48,7 +48,7 @@ public class CreateRatioComponents extends VerticalLayout {
 
   /**
    * Construct a TextField with ValueChangeMode of EAGER and a {@link ValueChangeListener}
-   * 
+   *
    * @param placeholderInput the TextFields placeholder
    * @return TextField
    */
@@ -73,7 +73,7 @@ public class CreateRatioComponents extends VerticalLayout {
 
   /**
    * Return the value of lowerLimit-TextField
-   * 
+   *
    * @return String value
    */
   public String getLowerLimit() {
@@ -82,7 +82,7 @@ public class CreateRatioComponents extends VerticalLayout {
 
   /**
    * Return the value of uperLimit-TextField
-   * 
+   *
    * @return String value
    */
   public String getUperLimit() {
@@ -91,7 +91,7 @@ public class CreateRatioComponents extends VerticalLayout {
 
   /**
    * Return the value of stepperField-TextField
-   * 
+   *
    * @return int value
    */
   public int getStepperValue() {

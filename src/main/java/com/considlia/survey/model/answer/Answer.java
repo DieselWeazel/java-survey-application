@@ -13,7 +13,7 @@ import javax.persistence.ManyToOne;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-public abstract class Answers {
+public abstract class Answer {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,12 +24,33 @@ public abstract class Answers {
   @JoinColumn(name = "question_id")
   private Question question;
 
-  public Answers() {
-  }
+  /** Empty Constructor */
+  public Answer() {}
 
+  /**
+   * gets ID of answer.
+   *
+   * @return ID.
+   */
   public Long getId() {
     return id;
   }
 
+  /**
+   * gets question to answer.
+   *
+   * @return question.
+   */
+  public Question getQuestion() {
+    return question;
+  }
 
+  /**
+   * sets Question to Answer.
+   *
+   * @param question related
+   */
+  public void setQuestion(Question question) {
+    this.question = question;
+  }
 }

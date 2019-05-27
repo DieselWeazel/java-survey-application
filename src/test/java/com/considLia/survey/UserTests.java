@@ -1,18 +1,18 @@
-//package com.considLia.survey;
+// package com.considLia.survey;
 //
-//import com.considlia.survey.model.User;
-//import com.considlia.survey.repositories.UserRepository;
-//import java.sql.SQLIntegrityConstraintViolationException;
-//import org.hibernate.exception.ConstraintViolationException;
-//import org.junit.Rule;
-//import org.junit.Test;
-//import org.junit.rules.ExpectedException;
-//import org.junit.runner.RunWith;
-//import org.mockito.Mock;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.dao.DataIntegrityViolationException;
+// import com.considlia.survey.model.User;
+// import com.considlia.survey.repositories.UserRepository;
+// import java.sql.SQLIntegrityConstraintViolationException;
+// import org.hibernate.exception.ConstraintViolationException;
+// import org.junit.Rule;
+// import org.junit.Test;
+// import org.junit.rules.ExpectedException;
+// import org.junit.runner.RunWith;
+// import org.mockito.Mock;
+// import org.springframework.beans.factory.annotation.Autowired;
+// import org.springframework.dao.DataIntegrityViolationException;
 //
-//public class UserTests {
+// public class UserTests {
 //
 //
 // TODO: Fix Tests, right now not finished.
@@ -47,4 +47,4 @@
 //    thrown.expect(SQLIntegrityConstraintViolationException.class);
 //    thrown.expect(DataIntegrityViolationException.class);
 //  }
-//}
+// }

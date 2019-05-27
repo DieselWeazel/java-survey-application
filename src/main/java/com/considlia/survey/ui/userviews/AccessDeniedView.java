@@ -1,4 +1,4 @@
-package com.considlia.survey.ui.UserViews;
+package com.considlia.survey.ui.userviews;
 
 import com.considlia.survey.ui.BaseView;
 import com.considlia.survey.ui.MainLayout;
@@ -13,6 +13,9 @@ import com.vaadin.flow.router.Route;
 public class AccessDeniedView extends BaseView {
 
 
+  /**
+   * Constructor for View when reaching a
+   */
   public AccessDeniedView() {
     super("Oops!");
     add(new H3("Looks like you tried to access a forbidden route."));
