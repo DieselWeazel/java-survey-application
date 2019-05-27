@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.BiFunction;
-import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /*
@@ -92,7 +91,7 @@ public class SurveyGrid extends VerticalLayout {
     titleColumn = grid.addColumn(Survey::getTitle).setHeader("Title").setFlexGrow(4);
 
     // Shows Description from Survey
-    grid.addComponentColumn(item -> showDescription(item)).setWidth("1%");
+    grid.addComponentColumn(item -> loadSurveyDescription(item)).setWidth("1%");
     grid.setItemDetailsRenderer(
         TemplateRenderer.<Survey>of(
                 "<div style='border: 1px solid gray; padding: 10px; width: 100%;box-sizing: border-box;'>"
@@ -113,16 +112,10 @@ public class SurveyGrid extends VerticalLayout {
     // Includes deleteSurvey method to Consumer if we are on ProfileView.
     if (!isHome) {
       grid.addComponentColumn(
-          item -> {
-            GridTools gridTools = new GridTools(item, this::removeSurveyUpdateGrid);
-            return gridTools;
-          });
+          item -> new GridTools(item, this::removeSurveyUpdateGrid));
     } else {
       grid.addComponentColumn(
-          item -> {
-            GridTools gridTools = new GridTools(item);
-            return gridTools;
-          });
+          item -> new GridTools(item));
     }
     grid.setDetailsVisibleOnClick(false);
     grid.setSelectionMode(Grid.SelectionMode.NONE);
@@ -216,7 +209,7 @@ public class SurveyGrid extends VerticalLayout {
    * @param item being Survey to view.
    * @return HorizontalLayout containing description.
    */
-  private HorizontalLayout showDescription(Survey item) {
+  private HorizontalLayout loadSurveyDescription(Survey item) {
     Icon info = new Icon(VaadinIcon.INFO_CIRCLE_O);
     info.addClickListener(e -> grid.setDetailsVisible(item, !grid.isDetailsVisible(item)));
     return new HorizontalLayout(info);

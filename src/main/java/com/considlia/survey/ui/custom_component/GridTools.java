@@ -15,27 +15,52 @@ public class GridTools extends HorizontalLayout {
     // Empty Constructor
   }
 
+  /**
+   * Constructor for HomeView SurveyGrid.
+   * @param item for each Survey to be able to be viewed.
+   */
   public GridTools(Survey item) {
-    add(showSurvey(item));
+    add(showSurveyButton(item));
   }
 
+  /**
+   * Constructor for ProfileView.
+   * @param item for each Survey.
+   * @param consumer for each Survey to be able to be deleted, edited and viewed.
+   */
   public GridTools(Survey item, Consumer<Survey> consumer) {
-    add(showSurvey(item), editSurvey(item), deleteSurvey(item, consumer));
+    add(showSurveyButton(item), editSurveyButton(item), deleteSurveyButton(item, consumer));
   }
 
-  private Button showSurvey(Survey item) {
+  /**
+   * Opens Survey
+   * @param item Survey to View.
+   * @return on click, navigates to {@link ShowSurveyView}
+   */
+  private Button showSurveyButton(Survey item) {
     return new Button(
         new Icon(VaadinIcon.EYE),
         onShow -> getUI().ifPresent(ui -> ui.navigate(ShowSurveyView.class, item.getId())));
   }
 
-  private Button editSurvey(Survey item) {
+  /**
+   * Creates a button to edit surveys from inside ProfileView.
+   * @param item Survey to edit, to find ID/parameter.
+   * @return on click, navigates to {@link CreateSurveyView} with Survey parameter.
+   */
+  private Button editSurveyButton(Survey item) {
     return new Button(
         new Icon(VaadinIcon.PENCIL),
         onEdit -> getUI().ifPresent(ui -> ui.navigate(CreateSurveyView.class, item.getId())));
   }
 
-  private Button deleteSurvey(Survey item, Consumer<Survey> consumer) {
+  /**
+   * Creates a button to manage Survey deletion from inside ProfileView
+   * @param item Survey to delete.
+   * @param consumer being method to handle deletion.
+   * @return confirm dialog, to make sure user wants to delete survey.
+   */
+  private Button deleteSurveyButton(Survey item, Consumer<Survey> consumer) {
     return new Button(
         new Icon(VaadinIcon.TRASH),
         onDelete -> {
