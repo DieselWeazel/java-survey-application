@@ -1,5 +1,10 @@
 package com.considlia.survey.ui;
 
+import java.time.LocalDate;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import com.considlia.survey.model.QuestionType;
 import com.considlia.survey.model.Role;
 import com.considlia.survey.model.Survey;
@@ -15,7 +20,6 @@ import com.considlia.survey.ui.custom_component.EditDialog;
 import com.considlia.survey.ui.custom_component.QuestionFactory;
 import com.considlia.survey.ui.custom_component.QuestionWithButtonsFactory;
 import com.considlia.survey.ui.custom_component.question_with_button.QuestionWithButtons;
-import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.notification.Notification;
@@ -32,11 +36,6 @@ import com.vaadin.flow.router.BeforeLeaveObserver;
 import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.OptionalParameter;
 import com.vaadin.flow.router.Route;
-import java.time.LocalDate;
-import java.util.LinkedHashSet;
-import java.util.Set;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
 
 @Route(value = "createsurvey", layout = MainLayout.class)
 @Secured({Role.USER, Role.ADMIN})
@@ -131,11 +130,10 @@ public class CreateSurveyView extends BaseView
     descriptionTextArea.setWidth("600px");
 
     /*
-    Currently doesn't allow for editing of Users name within CreatorName for Survey.
+     * Currently doesn't allow for editing of Users name within CreatorName for Survey.
      */
-    creatorNameTextField.setValue(
-        customUserService.getUser().getLastName() + ", " + customUserService.getUser()
-            .getFirstName());
+    creatorNameTextField.setValue(customUserService.getUser().getLastName() + ", "
+        + customUserService.getUser().getFirstName());
     creatorNameTextField.setEnabled(false);
     descriptionTextArea.setValueChangeMode(ValueChangeMode.EAGER);
   }
@@ -205,6 +203,14 @@ public class CreateSurveyView extends BaseView
     add(questions);
   }
 
+  /**
+   * Creates a new textfield from the parameters, valueChangeMode is set to EAGER
+   * 
+   * @param width of the textfield
+   * @param placeholderAndLabel
+   * @param isRequired
+   * @return TextField
+   */
   public TextField createTextField(String width, String placeholderAndLabel, boolean isRequired) {
     TextField textField = new TextField();
     textField.setWidth(width);
@@ -227,6 +233,9 @@ public class CreateSurveyView extends BaseView
     updateMoveButtonStatus();
   }
 
+  /**
+   * Set each questions position depending on its index in the list
+   */
   public void setIndex() {
     for (Question q : thisSurvey.getQuestions()) {
       q.setPosition(thisSurvey.getQuestions().indexOf(q));
@@ -337,9 +346,8 @@ public class CreateSurveyView extends BaseView
   }
 
   // Remove questions from questions container
-  public void removeQuestion(Component c) {
-    QuestionWithButtons qb = (QuestionWithButtons) c;
-    thisSurvey.getQuestions().remove(qb.getQuestion());
+  public void removeQuestion(QuestionWithButtons c) {
+    thisSurvey.getQuestions().remove(c.getQuestion());
 
     refreshItems();
     checkFilledFields();
@@ -351,7 +359,10 @@ public class CreateSurveyView extends BaseView
     hasChanges = true;
   }
 
-  // Save survey with questions to database
+  /**
+   * Sets the surveys title, creator, description, user (questions is already set) and saves it and
+   * then reroute back to homeView
+   */
   public void saveSurvey() {
     thisSurvey.setCreator(creatorNameTextField.getValue());
     thisSurvey.setTitle(surveyTitleTextField.getValue());
@@ -377,6 +388,10 @@ public class CreateSurveyView extends BaseView
     }
   }
 
+  /**
+   * Disables the up button if the question is the first one. DIsbales the down button if the
+   * question is the last one.
+   */
   public void updateMoveButtonStatus() {
     for (int i = 0; i < questions.getComponentCount(); i++) {
       QuestionWithButtons component = (QuestionWithButtons) questions.getComponentAt(i);

@@ -3,13 +3,21 @@ package com.considlia.survey.ui.custom_component.question_with_button;
 import com.considlia.survey.model.question.Question;
 import com.considlia.survey.ui.CreateSurveyView;
 import com.considlia.survey.ui.custom_component.ConfirmDialog;
+import com.vaadin.flow.component.ClickEvent;
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H5;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
+/**
+ * Abstract class extending {@link VerticalLayout}. Contains the common {@link Component}s that the
+ * subclasses use.
+ *
+ */
 public abstract class QuestionWithButtons extends VerticalLayout {
 
   private static final int MOVE_UP = -1;
@@ -24,6 +32,14 @@ public abstract class QuestionWithButtons extends VerticalLayout {
   private HorizontalLayout content;
   private CreateSurveyView survey;
 
+  /**
+   * Constructs a VerticalLayout containing {@link H1} with the value from
+   * {@link Question#getTitle()} and four different {@link Button}(move up, move down, edit this
+   * question and remove this question)
+   * 
+   * @param question is {@link Question}
+   * @param survey for accessing its class methods
+   */
   public QuestionWithButtons(Question question, CreateSurveyView survey) {
     setId("custom");
     setWidth("100%");
@@ -51,22 +67,40 @@ public abstract class QuestionWithButtons extends VerticalLayout {
     add(content);
   }
 
+  /**
+   * Set a {@link ClickEvent} to the passed {@link Button}
+   * 
+   * @param button witch the {@link ClickEvent} is added to
+   * @param move is the direction that the {@link QuestionWithButtons}-component should move
+   */
   public void initButtonEvent(Button button, int move) {
-    button.addClickListener(
-        onClick -> {
-          survey.moveQuestion(onClick.getSource(), move);
-          survey.updateMoveButtonStatus();
-        });
+    button.addClickListener(onClick -> {
+      survey.moveQuestion(onClick.getSource(), move);
+      survey.updateMoveButtonStatus();
+    });
   }
 
+  /**
+   * Removes the question
+   * 
+   * @param survey used to pass it to {@link ConfirmDialog}
+   */
   public void removeQuestion(CreateSurveyView survey) {
     new ConfirmDialog(survey, this);
   }
 
+  /**
+   * Returns the Question
+   * 
+   * @return {@link Question}
+   */
   public Question getQuestion() {
     return question;
   }
 
+  /**
+   * Update the H5 title value in the GUI
+   */
   public void setTitleInUI() {
 
     H5 updatedTitle = new H5(question.getTitle() + (question.isMandatory() ? "*" : ""));
@@ -76,35 +110,36 @@ public abstract class QuestionWithButtons extends VerticalLayout {
     title = updatedTitle;
   }
 
-  public H5 getTitle() {
-    return title;
-  }
-
-  public void setTitle(H5 title) {
-    this.title = title;
-  }
-
+  /**
+   * Returns upButton object
+   * 
+   * @return {@link Button} upButton
+   */
   public Button getUpButton() {
     return upButton;
   }
 
+  /**
+   * Set the upButton object
+   */
   public void setUpButton(Button upButton) {
     this.upButton = upButton;
   }
 
+  /**
+   * Returns downButton object
+   * 
+   * @return {@link Button} downButton
+   */
   public Button getDownButton() {
     return downButton;
   }
 
+  /**
+   * Set the downButton object
+   */
   public void setDownButton(Button downButton) {
     this.downButton = downButton;
   }
 
-  public HorizontalLayout getContent() {
-    return content;
-  }
-
-  public void setContent(HorizontalLayout content) {
-    this.content = content;
-  }
 }
