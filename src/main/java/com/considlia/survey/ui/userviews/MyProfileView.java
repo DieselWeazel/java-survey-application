@@ -1,4 +1,4 @@
-package com.considlia.survey.ui.UserViews;
+package com.considlia.survey.ui.userviews;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
@@ -27,6 +27,13 @@ public class MyProfileView extends BaseView {
   // @Autowired
   private CustomUserService customUserService;
 
+  /**
+   * ProfileView Constructor
+   * @param surveyRepository to gather User surveys and delete them.
+   * @param userRepository to find User.
+   * @param customUserService to get Username and other User variables connected with
+   * {@link com.considlia.survey.model.User}
+   */
   @Autowired
   public MyProfileView(SurveyRepository surveyRepository, UserRepository userRepository,
       CustomUserService customUserService) {
@@ -40,6 +47,6 @@ public class MyProfileView extends BaseView {
     add(new H3(customUserService.getUsername()));
 
     this.surveyRepository = surveyRepository;
-    add(new SurveyGrid(this.getClass(), surveyRepository, customUserService));
+    add(new SurveyGrid(surveyRepository, customUserService));
   }
 }

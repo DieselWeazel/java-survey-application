@@ -1,16 +1,16 @@
-package com.considlia.survey.ui.custom_component.ShowSurveyComponents.ReadQuestionLayouts;
+package com.considlia.survey.ui.custom_component.showsurveycomponents.showquestionlayouts;
 
 import com.considlia.survey.model.answer.Answer;
 import com.considlia.survey.model.answer.RadioAnswer;
 import com.considlia.survey.model.question.RadioQuestion;
-import com.considlia.survey.ui.custom_component.ShowSurveyComponents.ReadQuestionComponent;
+import com.considlia.survey.ui.custom_component.showsurveycomponents.ShowQuestionComponent;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.radiobutton.RadioGroupVariant;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
 
-public class ReadSingleChoiceQuestionLayout extends ReadQuestionLayout
-    implements ReadQuestionComponent {
+public class ShowSingleChoiceQuestionLayout extends ShowQuestionLayout
+    implements ShowQuestionComponent {
 
   private RadioButtonGroup<String> radioButtons;
   private RadioAnswer singleChoiceAnswer;
@@ -21,7 +21,7 @@ public class ReadSingleChoiceQuestionLayout extends ReadQuestionLayout
    *
    * @param question RadioQuestion
    */
-  public ReadSingleChoiceQuestionLayout(RadioQuestion question) {
+  public ShowSingleChoiceQuestionLayout(RadioQuestion question) {
     super(question);
     radioButtons = new RadioButtonGroup<>();
     binder = new Binder<>(RadioAnswer.class);

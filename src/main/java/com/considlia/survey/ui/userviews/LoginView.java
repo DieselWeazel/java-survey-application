@@ -1,4 +1,4 @@
-package com.considlia.survey.ui.UserViews;
+package com.considlia.survey.ui.userviews;
 
 import com.considlia.survey.security.SecurityUtils;
 import com.considlia.survey.ui.BaseView;

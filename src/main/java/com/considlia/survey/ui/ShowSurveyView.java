@@ -5,10 +5,10 @@ import com.considlia.survey.model.SurveyResponse;
 import com.considlia.survey.model.question.Question;
 import com.considlia.survey.repositories.ResponseRepository;
 import com.considlia.survey.repositories.SurveyRepository;
-import com.considlia.survey.ui.custom_component.ShowSurveyComponents.ReadQuestionComponent;
-import com.considlia.survey.ui.custom_component.ShowSurveyComponents.ReadQuestionFactory;
-import com.considlia.survey.ui.custom_component.ShowSurveyComponents.ReadQuestionLayouts.ReadQuestionLayout;
-import com.considlia.survey.ui.custom_component.ShowSurveyComponents.SurveyLoader;
+import com.considlia.survey.ui.custom_component.showsurveycomponents.ShowQuestionComponent;
+import com.considlia.survey.ui.custom_component.showsurveycomponents.ShowQuestionFactory;
+import com.considlia.survey.ui.custom_component.showsurveycomponents.showquestionlayouts.ShowQuestionLayout;
+import com.considlia.survey.ui.custom_component.showsurveycomponents.SurveyLoader;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H5;
@@ -45,9 +45,9 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
   private boolean containsMandatory = false;
 
   // Factory stuff (Fix me)
-  private ReadQuestionFactory readQuestionFactory;
+  private ShowQuestionFactory showQuestionFactory;
 
-  private List<ReadQuestionComponent> readQuestionList = new ArrayList<>();
+  private List<ShowQuestionComponent> readQuestionList = new ArrayList<>();
 
   /**
    * Constructs view.
@@ -62,7 +62,7 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
       SurveyLoader surveyLoader) {
     this.surveyRepository = surveyRepository;
     this.responseRepository = responseRepository;
-    this.readQuestionFactory = surveyLoader;
+    this.showQuestionFactory = surveyLoader;
     this.h1 = new H1("PlaceHolder // Survey Not Actually Found, Text not Updated");
     this.h5 = new H5();
     this.saveButton = new Button();
@@ -123,15 +123,15 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
   /**
    * Loads Questions,
    *
-   * @param survey, reads all questions inside Survey, for each question, adds a ReadQuestionLayout
-   *     via ReadQuestionFactory into surveyVerticalLayout and each to readQuestionList.
+   * @param survey, reads all questions inside Survey, for each question, adds a ShowQuestionLayout
+   *     via ShowQuestionFactory into surveyVerticalLayout and each to readQuestionList.
    */
   public void loadSurvey(Survey survey) {
     for (Question question : survey.getQuestions()) {
-      ReadQuestionLayout readQuestionLayout =
-          (ReadQuestionLayout) readQuestionFactory.loadQuestionLayout(question);
-      surveyVerticalLayout.add(readQuestionLayout);
-      readQuestionList.add((ReadQuestionComponent) readQuestionLayout);
+      ShowQuestionLayout showQuestionLayout =
+          (ShowQuestionLayout) showQuestionFactory.loadQuestionLayout(question);
+      surveyVerticalLayout.add(showQuestionLayout);
+      readQuestionList.add((ShowQuestionComponent) showQuestionLayout);
     }
     saveButton.addClickListener(
         e -> {
@@ -154,7 +154,7 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
   public void saveResponse() throws ValidationException {
     SurveyResponse surveyResponse = new SurveyResponse();
 
-    for (ReadQuestionComponent r : readQuestionList) {
+    for (ShowQuestionComponent r : readQuestionList) {
       surveyResponse.addAnswer(r.gatherResponse());
     }
 

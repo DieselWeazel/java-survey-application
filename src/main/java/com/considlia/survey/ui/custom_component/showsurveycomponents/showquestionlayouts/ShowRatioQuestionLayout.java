@@ -1,9 +1,9 @@
-package com.considlia.survey.ui.custom_component.ShowSurveyComponents.ReadQuestionLayouts;
+package com.considlia.survey.ui.custom_component.showsurveycomponents.showquestionlayouts;
 
 import com.considlia.survey.model.answer.Answer;
 import com.considlia.survey.model.answer.RatioAnswer;
 import com.considlia.survey.model.question.RatioQuestion;
-import com.considlia.survey.ui.custom_component.ShowSurveyComponents.ReadQuestionComponent;
+import com.considlia.survey.ui.custom_component.showsurveycomponents.ShowQuestionComponent;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.radiobutton.RadioGroupVariant;
 import com.vaadin.flow.data.binder.Binder;
@@ -11,7 +11,7 @@ import com.vaadin.flow.data.binder.ValidationException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ReadRatioQuestionLayout extends ReadQuestionLayout implements ReadQuestionComponent {
+public class ShowRatioQuestionLayout extends ShowQuestionLayout implements ShowQuestionComponent {
 
   private RatioAnswer ratioAnswer = new RatioAnswer();
   private Binder<RatioAnswer> binder = new Binder<>(RatioAnswer.class);
@@ -21,7 +21,7 @@ public class ReadRatioQuestionLayout extends ReadQuestionLayout implements ReadQ
    *
    * @param question RatioQuestion
    */
-  public ReadRatioQuestionLayout(RatioQuestion question) {
+  public ShowRatioQuestionLayout(RatioQuestion question) {
     super(question);
     RadioButtonGroup<String> ratioRadioButtons = new RadioButtonGroup<>();
     List<String> options = new ArrayList<>();

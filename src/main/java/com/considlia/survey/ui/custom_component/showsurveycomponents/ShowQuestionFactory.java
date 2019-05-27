@@ -1,4 +1,4 @@
-package com.considlia.survey.ui.custom_component.ShowSurveyComponents;
+package com.considlia.survey.ui.custom_component.showsurveycomponents;
 
 import com.considlia.survey.model.question.Question;
 
@@ -8,7 +8,7 @@ import com.considlia.survey.model.question.Question;
  *
  * @param <T> Question, or Answer.
  */
-public interface ReadQuestionFactory<T> {
+public interface ShowQuestionFactory<T> {
 
   T loadQuestionLayout(Question question);
 }

@@ -1,16 +1,16 @@
-package com.considlia.survey.ui.custom_component.ShowSurveyComponents.ReadQuestionLayouts;
+package com.considlia.survey.ui.custom_component.showsurveycomponents.showquestionlayouts;
 
 import com.considlia.survey.model.QuestionType;
 import com.considlia.survey.model.answer.Answer;
 import com.considlia.survey.model.answer.TextAnswer;
 import com.considlia.survey.model.question.Question;
-import com.considlia.survey.ui.custom_component.ShowSurveyComponents.ReadQuestionComponent;
+import com.considlia.survey.ui.custom_component.showsurveycomponents.ShowQuestionComponent;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
 
-public class ReadTextQuestionLayout extends ReadQuestionLayout implements ReadQuestionComponent {
+public class ShowTextQuestionLayout extends ShowQuestionLayout implements ShowQuestionComponent {
 
   private TextAnswer textAnswer;
   private Binder<TextAnswer> binder;
@@ -20,7 +20,7 @@ public class ReadTextQuestionLayout extends ReadQuestionLayout implements ReadQu
    *
    * @param question TextAreaQuestion or TextFieldQuestion
    */
-  public ReadTextQuestionLayout(Question question) {
+  public ShowTextQuestionLayout(Question question) {
     super(question);
     TextField questionField = new TextField();
     TextArea questionArea = new TextArea();

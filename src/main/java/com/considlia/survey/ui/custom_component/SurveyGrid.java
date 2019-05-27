@@ -45,23 +45,34 @@ public class SurveyGrid extends VerticalLayout {
   @Autowired private UserRepository userRepository;
   private boolean isHome = false;
 
-  public SurveyGrid(Class viewingLayout, SurveyRepository surveyRepository) {
-    isHome = HomeView.class.equals(viewingLayout);
+  /**
+   * Constructor for {@link HomeView}'s SurveyGrid.
+   * @param surveyRepository
+   */
+  public SurveyGrid(SurveyRepository surveyRepository) {
+    isHome = true;
     this.surveyRepository = surveyRepository;
     this.surveyList = new ArrayList<>();
     init();
   }
 
-  public SurveyGrid(
-      Class viewingLayout, SurveyRepository surveyRepository, CustomUserService customUserService) {
-    isHome = HomeView.class.equals(viewingLayout);
+  /**
+   * Constructor for {@link com.considlia.survey.ui.userviews.MyProfileView}'s SurveyGrid.
+   * @param surveyRepository repository connected with loading surveys.
+   * @param customUserService to load Surveys belonging to Survey.
+   */
+  public SurveyGrid(SurveyRepository surveyRepository, CustomUserService customUserService) {
+    isHome = false;
     this.surveyRepository = surveyRepository;
     this.customUserService = customUserService;
     this.surveyList = new ArrayList<>();
     init();
   }
 
-  @PostConstruct
+  /**
+   * Inits Grid UI.
+   */
+//  @PostConstruct
   public void init() {
     grid = new Grid<>();
     surveyList = surveyRepository.findAll();
@@ -103,7 +114,7 @@ public class SurveyGrid extends VerticalLayout {
     if (!isHome) {
       grid.addComponentColumn(
           item -> {
-            GridTools gridTools = new GridTools(item, this::updateGridData);
+            GridTools gridTools = new GridTools(item, this::removeSurveyUpdateGrid);
             return gridTools;
           });
     } else {
@@ -121,6 +132,9 @@ public class SurveyGrid extends VerticalLayout {
     createFilterFields();
   }
 
+  /**
+   * Creates Filter Fields for each column.
+   */
   private void createFilterFields() {
     // ID filter
     idField = createFilterField(filterRow, idColumn);
@@ -165,6 +179,12 @@ public class SurveyGrid extends VerticalLayout {
     }
   }
 
+  /**
+   * Creates FilterTextFields above each value.
+   * @param filterRow place for Filters.
+   * @param column columns of Filter.
+   * @return a textfield for filter for designated column.
+   */
   private TextField createFilterField(HeaderRow filterRow, Grid.Column<Survey> column) {
     TextField filterField = new TextField();
     filterField.setValueChangeMode(ValueChangeMode.EAGER);
@@ -173,6 +193,12 @@ public class SurveyGrid extends VerticalLayout {
     return filterField;
   }
 
+  /**
+   * Filters the Survey to view every Survey with matching filtervalue.
+   * @param filterValue inputString from TextField.
+   * @param func Survey and String, if non existant to String returns false, if
+   * exists, returns true.
+   */
   private void filter(String filterValue, BiFunction<Survey, String, Boolean> func) {
     List<Survey> filteredList = new ArrayList<>(surveyList);
     if (!"".equals(filterValue)) {
@@ -185,13 +211,22 @@ public class SurveyGrid extends VerticalLayout {
     grid.setItems(filteredList);
   }
 
+  /**
+   * Loads Description of Survey onto gRID.
+   * @param item being Survey to view.
+   * @return HorizontalLayout containing description.
+   */
   private HorizontalLayout showDescription(Survey item) {
     Icon info = new Icon(VaadinIcon.INFO_CIRCLE_O);
     info.addClickListener(e -> grid.setDetailsVisible(item, !grid.isDetailsVisible(item)));
     return new HorizontalLayout(info);
   }
 
-  private void updateGridData(Survey survey) {
+  /**
+   * Removes Survey, refreshes Grid to correctly show the remaining Surveys.
+   * @param survey to be removed.
+   */
+  private void removeSurveyUpdateGrid(Survey survey) {
     surveyRepository.delete(survey);
     grid.setItems(
         surveyList = surveyRepository.findAllByUserId(customUserService.getUser().getId()));

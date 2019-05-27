@@ -1,4 +1,4 @@
-package com.considlia.survey.ui.UserViews;
+package com.considlia.survey.ui.userviews;
 
 import com.considlia.survey.model.User;
 import com.considlia.survey.repositories.UserRepository;
@@ -58,14 +58,17 @@ public class RegistrationView extends BaseView implements BeforeEnterObserver {
 
   @Autowired private UserDetailsServiceImpl userDetailsService;
 
+  /**
+   * Constructor for View.
+   */
   public RegistrationView() {
     super("Registration");
     initUI("580px");
   }
 
-  // SQLIntegrityConstraintViolationException
-  // DataIntegrityViolationException
-  // ConstraintViolationException
+  /**
+   * Registers User, if all fields are valid.
+   */
   private void registerUser() {
     try {
       userBinder.writeBean(user);
@@ -96,6 +99,10 @@ public class RegistrationView extends BaseView implements BeforeEnterObserver {
   /*
   Sign in function doesn't work properly now.
    */
+
+  /**
+   * Signs in User upon successful registration.
+   */
   private void signIn() {
     System.out.println(user.getUsername() + " " + user.getPassword());
     Authentication request =
@@ -106,6 +113,10 @@ public class RegistrationView extends BaseView implements BeforeEnterObserver {
     UI.getCurrent().getPage().reload();
   }
 
+  /**
+   * Initiates UI
+   * @param width being the width for all TextFields.
+   */
   private void initUI(String width) {
     this.registrationLayout = new VerticalLayout();
     this.email = new EmailField("Email");
@@ -134,6 +145,9 @@ public class RegistrationView extends BaseView implements BeforeEnterObserver {
     bindFields();
   }
 
+  /**
+   * Binds every input field of the registration form.
+   */
   private void bindFields() {
     userBinder.setBean(user);
     userBinder
@@ -163,6 +177,10 @@ public class RegistrationView extends BaseView implements BeforeEnterObserver {
     //    userBinder.bindInstanceFields(this);
   }
 
+  /**
+   * If User is signed in, returns User to previous URL.
+   * @param event being the navigation target before this one.
+   */
   @Override
   public void beforeEnter(BeforeEnterEvent event) {
     if (SecurityUtils.isUserLoggedIn()) {
