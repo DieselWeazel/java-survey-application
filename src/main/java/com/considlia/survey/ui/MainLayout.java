@@ -33,6 +33,9 @@ public class MainLayout extends VerticalLayout implements RouterLayout {
   @Autowired
   private HttpServletRequest httpServletRequest;
 
+  /**
+   * Manages header for site. Adds different buttons depending on if user is logged in.
+   */
   public MainLayout() {
     setId("mainlayout");
 
@@ -56,6 +59,9 @@ public class MainLayout extends VerticalLayout implements RouterLayout {
     add(navigation, contentContainer);
   }
 
+  /**
+   * Logs the user out. Reloads the page.
+   */
   private void logoutUser() {
     SecurityContextHolder.clearContext();
     httpServletRequest.getSession(false).invalidate();
@@ -63,6 +69,15 @@ public class MainLayout extends VerticalLayout implements RouterLayout {
     UI.getCurrent().getPage().reload();
   }
 
+  /**
+   * Creates a {@link Button} with a link to a new view. Checks {@link SecurityUtils} before sending
+   * user to targetViewClass
+   * 
+   * @param targetViewClass, the class the Button should navigate to
+   * @param text, text shown to user on Button
+   * @param icon
+   * @returns new {@link Button}
+   */
   private Button createRouterLink(Class<? extends Component> targetViewClass, String text,
       VaadinIcon icon) {
     return new Button(text, new Icon(icon), e -> {
@@ -74,6 +89,17 @@ public class MainLayout extends VerticalLayout implements RouterLayout {
     });
   }
 
+  /**
+   * Shows the content of the layout which is the router target component annotated with a
+   * {@link @Route}.
+   * 
+   * Note implementors should not care about old Route content, because Router automatically removes
+   * it before calling the method.
+   * 
+   * Specified by: showRouterLayoutContent(...) in RouterLayout
+   * 
+   * @param: content the content component or null if the layout content is to be cleared.
+   */
   @Override
   public void showRouterLayoutContent(HasElement content) {
     if (content != null) {
