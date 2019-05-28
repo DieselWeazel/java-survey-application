@@ -1,6 +1,7 @@
 package com.considlia.survey.ui.custom_component.showsurveycomponents.showquestionlayouts.questiontype_layout;
 
 import com.considlia.survey.model.answer.Answer;
+import com.considlia.survey.model.answer.MultiAnswer;
 import com.considlia.survey.model.answer.RadioAnswer;
 import com.considlia.survey.model.question.RadioQuestion;
 import com.considlia.survey.ui.custom_component.showsurveycomponents.ShowQuestionComponent;
@@ -38,7 +39,16 @@ public class ShowSingleChoiceQuestionLayout extends ShowQuestionLayout
 
   @Override
   public void setMandatoryStatus() {
-
+    if (getQuestion().isMandatory()) {
+      binder
+          .forField(radioButtons)
+          .withValidator(ratioAnswerString -> ratioAnswerString != null && !ratioAnswerString.isEmpty(), mandatoryQuestionMessage)
+          .bind(RadioAnswer::getChosenAnswer, RadioAnswer::setChosenAnswer);
+    } else {
+      binder
+          .forField(radioButtons)
+          .bind(RadioAnswer::getChosenAnswer, RadioAnswer::setChosenAnswer);
+    }
   }
 
   /**

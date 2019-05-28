@@ -25,7 +25,6 @@ public class ShowTextQuestionLayout extends ShowQuestionLayout
   public ShowTextQuestionLayout(Question question) {
     super(question);
 
-    TextArea questionArea = new TextArea();
     textAnswer = new TextAnswer();
     binder = new Binder<>(TextAnswer.class);
     binder.setBean(textAnswer);
@@ -40,7 +39,14 @@ public class ShowTextQuestionLayout extends ShowQuestionLayout
 
   @Override
   public void setMandatoryStatus() {
-
+    if (getQuestion().isMandatory()) {
+      binder
+          .forField(questionField)
+          .withValidator(new StringLengthValidator(mandatoryQuestionMessage, 1, null))
+          .bind(TextAnswer::getTextAnswer, TextAnswer::setTextAnswer);
+    } else {
+      binder.forField(questionField).bind(TextAnswer::getTextAnswer, TextAnswer::setTextAnswer);
+    }
   }
 
   /**

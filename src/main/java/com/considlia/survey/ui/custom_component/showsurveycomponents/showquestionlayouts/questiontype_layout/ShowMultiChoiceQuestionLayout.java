@@ -3,6 +3,7 @@ package com.considlia.survey.ui.custom_component.showsurveycomponents.showquesti
 import com.considlia.survey.model.answer.Answer;
 import com.considlia.survey.model.answer.MultiAnswer;
 import com.considlia.survey.model.answer.MultiAnswerChoice;
+import com.considlia.survey.model.answer.RatioAnswer;
 import com.considlia.survey.model.question.MultiQuestion;
 import com.considlia.survey.ui.custom_component.showsurveycomponents.ShowQuestionComponent;
 import com.considlia.survey.ui.custom_component.showsurveycomponents.showquestionlayouts.ShowQuestionLayout;
@@ -18,7 +19,7 @@ public class ShowMultiChoiceQuestionLayout extends ShowQuestionLayout
 
   private MultiAnswer multiChoiceAnswer;
   private Binder<MultiAnswer> binder;
-
+  private CheckboxGroup<MultiAnswerChoice> checkBoxButtons = new CheckboxGroup<>();
   private List<MultiAnswerChoice> answerAlternativeList = new ArrayList<MultiAnswerChoice>();
 
   /**
@@ -28,7 +29,6 @@ public class ShowMultiChoiceQuestionLayout extends ShowQuestionLayout
    */
   public ShowMultiChoiceQuestionLayout(MultiQuestion question) {
     super(question);
-    CheckboxGroup<MultiAnswerChoice> checkBoxButtons = new CheckboxGroup<>();
     binder = new Binder<>(MultiAnswer.class);
     multiChoiceAnswer = new MultiAnswer();
     binder.setBean(multiChoiceAnswer);
@@ -48,7 +48,16 @@ public class ShowMultiChoiceQuestionLayout extends ShowQuestionLayout
 
   @Override
   public void setMandatoryStatus() {
-
+    if (getQuestion().isMandatory()) {
+      binder
+          .forField(checkBoxButtons)
+          .withValidator(ratioAnswerString -> ratioAnswerString != null && !ratioAnswerString.isEmpty(), mandatoryQuestionMessage)
+          .bind(MultiAnswer::getMultiAnswerChoiceSet, MultiAnswer::setMultiAnswerChoiceSet);
+    } else {
+      binder
+          .forField(checkBoxButtons)
+          .bind(MultiAnswer::getMultiAnswerChoiceSet, MultiAnswer::setMultiAnswerChoiceSet);
+    }
   }
 
   /**
