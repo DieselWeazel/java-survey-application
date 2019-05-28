@@ -11,7 +11,6 @@ import com.considlia.survey.ui.custom_component.showsurveycomponents.ShowQuestio
 import com.considlia.survey.ui.custom_component.showsurveycomponents.ShowQuestionFactory;
 import com.considlia.survey.ui.custom_component.showsurveycomponents.SurveyLoader;
 import com.considlia.survey.ui.custom_component.showsurveycomponents.showquestionlayouts.ShowQuestionLayout;
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H5;
@@ -164,7 +163,7 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
     // Connect SurveyResponse to Survey.
     surveyResponse.setSurvey(survey);
     responseRepository.save(surveyResponse);
-    UI.getCurrent().navigate("");
+    navigateBackToHomeView();
   }
 
   /**
@@ -172,7 +171,7 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
    */
   public void goHome() {
     saveButton.setText("Go To Mainview");
-    saveButton.addClickListener(e -> getUI().ifPresent(ui -> ui.navigate("")));
+    saveButton.addClickListener(e -> navigateBackToHomeView());
     add(saveButton);
   }
 }
