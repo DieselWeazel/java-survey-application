@@ -3,6 +3,7 @@ package com.considlia.survey.ui.userviews;
 import com.considlia.survey.security.SecurityUtils;
 import com.considlia.survey.ui.BaseView;
 import com.considlia.survey.ui.MainLayout;
+import com.considlia.survey.ui.custom_component.ConfirmDialog;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H4;
@@ -46,6 +47,9 @@ public class LoginView extends BaseView implements BeforeEnterObserver {
           if (setCurrentUser(username.getValue(), password.getValue())) {
             UI.getCurrent().getSession().close();
             UI.getCurrent().getPage().reload();
+          } else {
+            ConfirmDialog confirmDialog = new ConfirmDialog();
+            confirmDialog.open();
           }
         });
 
@@ -76,7 +80,6 @@ public class LoginView extends BaseView implements BeforeEnterObserver {
       Authentication result = authenticationManagerBean.authenticate(request);
       SecurityContextHolder.getContext().setAuthentication(result);
     } catch (BadCredentialsException e) {
-      Notification.show("Error, Bad Credentials!");
       return false;
     }
     return true;
