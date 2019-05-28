@@ -1,5 +1,6 @@
 package com.considlia.survey.ui.userviews;
 
+import com.considlia.survey.model.Role;
 import com.considlia.survey.model.User;
 import com.considlia.survey.repositories.UserRepository;
 import com.considlia.survey.security.SecurityUtils;
@@ -7,6 +8,7 @@ import com.considlia.survey.security.UserDetailsServiceImpl;
 import com.considlia.survey.ui.BaseView;
 import com.considlia.survey.ui.MainLayout;
 import com.considlia.survey.ui.custom_component.ConfirmDialog;
+import com.considlia.survey.ui.custom_component.showsurveycomponents.showquestionlayouts.ShowQuestionLayout;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasSize;
 import com.vaadin.flow.component.UI;
@@ -22,6 +24,8 @@ import com.vaadin.flow.data.validator.StringLengthValidator;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.Route;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -58,6 +62,8 @@ public class RegistrationView extends BaseView implements BeforeEnterObserver {
 
   @Autowired private UserDetailsServiceImpl userDetailsService;
 
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(RegistrationView.class);
   /**
    * Constructor for View.
    */
@@ -76,29 +82,23 @@ public class RegistrationView extends BaseView implements BeforeEnterObserver {
       return;
     }
 
-    passwordString = passwordField.getValue();
-    user.setPassword(passwordEncoder.encode(passwordString));
-    user.setRole("USER");
-    try {
+    // First Checks if Username is taken, then checks if Email is taken, if both booleans are false, User registers.
+    if (userRepository.existsByUsername(username.getValue())){
+      ConfirmDialog confirmDialog = new ConfirmDialog(username.getValue());
+      confirmDialog.open();
+      return;
+    } else if (userRepository.existsByEmail(email.getValue())){
+      ConfirmDialog confirmDialog = new ConfirmDialog(email.getValue(), true);
+      confirmDialog.open();
+      return;
+    } else {
+      passwordString = passwordField.getValue();
+      user.setPassword(passwordEncoder.encode(passwordString));
+      user.setRole(Role.USER);
       userRepository.save(user);
       signIn();
-      // The real duplicate is nested within this exception, if we want to show the duplicate
-      // correctly
-      // we will need to dig into the exception. Leaving this here for the future.
-    } catch (DataIntegrityViolationException e) {
-      ConfirmDialog confirmDialog = new ConfirmDialog();
-      confirmDialog.open();
-      //      e.printStackTrace();
-      //      if(e.getMessage().)
-      //      System.out.println(e.getCause());
-      //      System.out.println(e.getSuppressed());
-
     }
   }
-
-  /*
-  Sign in function doesn't work properly now.
-   */
 
   /**
    * Signs in User upon successful registration.

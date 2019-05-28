@@ -37,7 +37,6 @@ import com.vaadin.flow.router.BeforeLeaveObserver;
 import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.OptionalParameter;
 import com.vaadin.flow.router.Route;
-import javafx.scene.control.CheckBox;
 
 /**
  * Handles everything regarding creating or editing a {@link Survey}
@@ -177,7 +176,7 @@ public class CreateSurveyView extends BaseView
   /**
    * Creates and sets events for questionTitleTextField {@link TextField} and selectOptions
    * {@link Select}. Events invokes userCreationQuestion with value QuestionType. Also creates
-   * mandatory {@link CheckBox}.
+   * mandatory {@link Checkbox}.
    */
   public void initAddQuestionContainer() {
     questionTitleTextField = createTextField("300px", "Question", false);
@@ -249,8 +248,8 @@ public class CreateSurveyView extends BaseView
    * Removes all questions, then adds all Questions with new index values. Invokes
    * {@link updateMoveButtonStatus()}
    */
-  public void refreshItems() {
-    setIndex();
+  public void refreshItemsInGUI() {
+    setPositions();
     questions.removeAll();
     extraComponents.removeAll();
 
@@ -263,7 +262,7 @@ public class CreateSurveyView extends BaseView
   /**
    * Set each questions position depending on its index in the list
    */
-  public void setIndex() {
+  public void setPositions() {
     for (Question q : thisSurvey.getQuestions()) {
       q.setPosition(thisSurvey.getQuestions().indexOf(q));
     }
@@ -288,7 +287,7 @@ public class CreateSurveyView extends BaseView
         .addQuestion(QuestionFactory.createQuestion(questionType, questionTitleTextField.getValue(),
             mandatory.getValue(), createAlternative.getAlternativeList(), createRatioComponents));
 
-    refreshItems();
+    refreshItemsInGUI();
 
     createAlternative = null;
     createRatioComponents = null;
@@ -378,16 +377,14 @@ public class CreateSurveyView extends BaseView
   /**
    * Manages changing position of questions.
    *
-   * @param button the {@link Button} attached to the {@link QuestionWithButtons}
+   * @param question {@link Question}
    * @param moveDirection 1 = down, -1 = up
    */
-  public void moveQuestion(Button button, int moveDirection) {
-    QuestionWithButtons qb = (QuestionWithButtons) button.getParent().get().getParent().get();
-    int currentIndex = thisSurvey.getQuestions().indexOf(qb.getQuestion());
-    thisSurvey.getQuestions().remove(qb.getQuestion());
-    thisSurvey.getQuestions().add(currentIndex + moveDirection, qb.getQuestion());
+  public void moveQuestion(Question question, int moveDirection) {
+    thisSurvey.getQuestions().remove(question);
+    thisSurvey.getQuestions().add(question.getPosition() + moveDirection, question);
 
-    refreshItems();
+    refreshItemsInGUI();
     hasChanges = true;
   }
 
@@ -395,12 +392,12 @@ public class CreateSurveyView extends BaseView
    * Removes question from questions {@link List} in {@link Survey}. Invoked from
    * {@link ConfirmDialog}
    *
-   * @param questionWithButtons type: {@link QuestionWithButtons}
+   * @param question type: {@link Question}
    */
-  public void removeQuestion(QuestionWithButtons questionWithButtons) {
-    thisSurvey.getQuestions().remove(questionWithButtons.getQuestion());
+  public void removeQuestion(Question question) {
+    thisSurvey.getQuestions().remove(question);
 
-    refreshItems();
+    refreshItemsInGUI();
     checkFilledFields();
   }
 
@@ -478,7 +475,7 @@ public class CreateSurveyView extends BaseView
       surveyTitleTextField.setValue(thisSurvey.getTitle());
       creatorNameTextField.setValue(thisSurvey.getCreator());
       descriptionTextArea.setValue(thisSurvey.getDescription());
-      refreshItems();
+      refreshItemsInGUI();
 
       submitSurveyButton.setText("Save Survey");
       updateMoveButtonStatus();

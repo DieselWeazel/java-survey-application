@@ -24,7 +24,7 @@ public class User {
   private Long id;
 
   @NotEmpty
-  @Email
+  @Email(message = "Email address is already taken, have you forgot your login?")
   @Column(unique = true)
   private String email;
   //  @Column(name = "password")

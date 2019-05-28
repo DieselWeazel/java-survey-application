@@ -81,14 +81,15 @@ public class ConfirmDialog extends Dialog {
    * the survey.
    * 
    * @param survey - {@link CreateSurveyView} to get access to its methods
-   * @param question - the {@link QuestionWithButtons} thats going to be removed
+   * @param question - the {@link QuestionWithButtons} containing the {@link Question} thats going
+   *        to be removed
    */
   public ConfirmDialog(CreateSurveyView survey, QuestionWithButtons question) {
 
     initCancelBtn();
 
     Button confirmBtn = new Button("Confirm", onConfirm -> {
-      survey.removeQuestion(question);
+      survey.removeQuestion(question.getQuestion());
       close();
     });
     add(new H5("Are you sure you want to remove this question?"));
@@ -97,10 +98,28 @@ public class ConfirmDialog extends Dialog {
   }
 
   /**
-   * Dialog showing a error message
+   * Dialog Windows connected to Login/Registration
    */
-  public ConfirmDialog() {
-    add(new H5("Error, UserName and/or Email is already taken."));
+  /**
+   * Dialog showing a error message, if User Username exists.
+   */
+  public ConfirmDialog(){
+    add(new H5("Wrong Username or Password, try again!"));
+    add(new Button("Ok", e -> close()));
+  }
+  /**
+   * Dialog showing a error message, if User Username exists.
+   */
+  public ConfirmDialog(String userinput) {
+    add(new H5("Error, username: " + userinput + " is already taken, please take another one."));
+    add(new Button("Ok", e -> close()));
+  }
+
+  /**
+   * Dialog showing a error message, if User Email exists.
+   */
+  public ConfirmDialog(String userinput, boolean email){
+    add(new H5("There already exists a User registered with this email, have you forgotten your password?"));
     add(new Button("Ok", e -> close()));
   }
 

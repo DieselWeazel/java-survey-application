@@ -2,7 +2,9 @@ package com.considlia.survey.model.answer;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
-
+/**
+ * Child of inheritance from {@link Answer}
+ */
 @Entity
 @Table(name = "ratio_answer")
 public class RatioAnswer extends Answer {

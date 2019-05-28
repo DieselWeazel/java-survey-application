@@ -11,6 +11,13 @@ import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+/**
+ * Answer Entity, related to {@link Question}
+ * Child entity of {@link com.considlia.survey.model.SurveyResponse}
+ *
+ * Meant to hold each answer to each question within Survey and store them inside
+ * a SurveyResponse.
+ */
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Answer {
