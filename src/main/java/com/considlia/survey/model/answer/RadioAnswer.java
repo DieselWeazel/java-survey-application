@@ -4,6 +4,9 @@ import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 
+/**
+ * Child of inheritance from {@link Answer}
+ */
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 public class RadioAnswer extends Answer {

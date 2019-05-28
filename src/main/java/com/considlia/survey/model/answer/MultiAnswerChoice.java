@@ -21,6 +21,12 @@ public class MultiAnswerChoice {
   private String checkedAnswer;
 
   /**
+   * Empty Constructor
+   */
+  public MultiAnswerChoice() {
+  }
+
+  /**
    * Constructs a MultiAnswerChoice for {@link MultiAnswer}
    *
    * @param checkedAnswer is the chosen answer of {@link MultiQuestionAlternative}.

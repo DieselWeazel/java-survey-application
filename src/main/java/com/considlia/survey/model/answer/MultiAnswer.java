@@ -10,7 +10,9 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
-/** MultiAnswer, parent entity of {@link MultiAnswerChoice}. */
+/** MultiAnswer, parent entity of {@link MultiAnswerChoice}.
+ * Also child of inheritance from {@link Answer}
+ * */
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 public class MultiAnswer extends Answer {
