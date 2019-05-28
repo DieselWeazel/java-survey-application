@@ -12,6 +12,9 @@ public class ShowQuestionLayout extends VerticalLayout {
   private Question question;
   private static final Logger LOGGER = LoggerFactory.getLogger(ShowQuestionLayout.class);
 
+  // Used for Mandatory message.
+  public static final String mandatoryQuestionMessage = "Question is mandatory, please fill in details";
+
   /**
    * Constructs a generic TextQuestionLayout
    *
@@ -32,4 +35,5 @@ public class ShowQuestionLayout extends VerticalLayout {
   public static Logger getLOGGER() {
     return LOGGER;
   }
+
 }

@@ -1,9 +1,10 @@
-package com.considlia.survey.ui.custom_component.showsurveycomponents.showquestionlayouts;
+package com.considlia.survey.ui.custom_component.showsurveycomponents.showquestionlayouts.questiontype_layout;
 
 import com.considlia.survey.model.answer.Answer;
 import com.considlia.survey.model.answer.RadioAnswer;
 import com.considlia.survey.model.question.RadioQuestion;
 import com.considlia.survey.ui.custom_component.showsurveycomponents.ShowQuestionComponent;
+import com.considlia.survey.ui.custom_component.showsurveycomponents.showquestionlayouts.ShowQuestionLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.radiobutton.RadioGroupVariant;
 import com.vaadin.flow.data.binder.Binder;
@@ -33,6 +34,11 @@ public class ShowSingleChoiceQuestionLayout extends ShowQuestionLayout
 
     add(radioButtons);
     radioButtons.addThemeVariants(RadioGroupVariant.LUMO_VERTICAL);
+  }
+
+  @Override
+  public void setMandatoryStatus() {
+
   }
 
   /**

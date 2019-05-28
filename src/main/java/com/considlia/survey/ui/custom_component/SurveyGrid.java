@@ -73,7 +73,6 @@ public class SurveyGrid extends VerticalLayout {
    */
   public void init() {
     grid = new Grid<>();
-
     if (isHome) {
       surveyList = surveyRepository.findAll();
     } else {

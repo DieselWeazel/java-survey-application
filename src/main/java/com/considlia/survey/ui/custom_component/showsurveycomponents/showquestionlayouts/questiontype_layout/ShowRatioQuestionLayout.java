@@ -1,21 +1,25 @@
-package com.considlia.survey.ui.custom_component.showsurveycomponents.showquestionlayouts;
+package com.considlia.survey.ui.custom_component.showsurveycomponents.showquestionlayouts.questiontype_layout;
 
 import com.considlia.survey.model.answer.Answer;
 import com.considlia.survey.model.answer.RatioAnswer;
+import com.considlia.survey.model.answer.TextAnswer;
 import com.considlia.survey.model.question.RatioQuestion;
 import com.considlia.survey.ui.custom_component.showsurveycomponents.ShowQuestionComponent;
+import com.considlia.survey.ui.custom_component.showsurveycomponents.showquestionlayouts.ShowQuestionLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.radiobutton.RadioGroupVariant;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
+import com.vaadin.flow.data.validator.StringLengthValidator;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ShowRatioQuestionLayout extends ShowQuestionLayout implements ShowQuestionComponent {
+public class ShowRatioQuestionLayout extends ShowQuestionLayout
+    implements ShowQuestionComponent {
 
   private RatioAnswer ratioAnswer = new RatioAnswer();
   private Binder<RatioAnswer> binder = new Binder<>(RatioAnswer.class);
-
+  private RadioButtonGroup<String> ratioRadioButtons = new RadioButtonGroup<>();
   /**
    * Constructs a Layout for Viewing and Storing RatioAnswer
    *
@@ -23,7 +27,6 @@ public class ShowRatioQuestionLayout extends ShowQuestionLayout implements ShowQ
    */
   public ShowRatioQuestionLayout(RatioQuestion question) {
     super(question);
-    RadioButtonGroup<String> ratioRadioButtons = new RadioButtonGroup<>();
     List<String> options = new ArrayList<>();
     binder.setBean(ratioAnswer);
     for (int i = 1; i <= question.getChoices(); i++) {
@@ -45,6 +48,20 @@ public class ShowRatioQuestionLayout extends ShowQuestionLayout implements ShowQ
     add(ratioRadioButtons);
   }
 
+  @Override
+  public void setMandatoryStatus() {
+    if (getQuestion().isMandatory()) {
+      binder
+          .forField(ratioRadioButtons)
+          .withValidator(ratioAnswerString -> ratioAnswerString != null && !ratioAnswerString.isEmpty(), mandatoryQuestionMessage)
+          .bind(RatioAnswer::getRatioAnswer, RatioAnswer::setRatioAnswer);
+    } else {
+      binder
+          .forField(ratioRadioButtons)
+          .bind(RatioAnswer::getRatioAnswer, RatioAnswer::setRatioAnswer);
+    }
+  }
+
   /**
    * Gathers Response of filled form.
    *
@@ -60,4 +77,5 @@ public class ShowRatioQuestionLayout extends ShowQuestionLayout implements ShowQ
 
     return ratioAnswer;
   }
+
 }

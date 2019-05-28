@@ -1,5 +1,6 @@
 package com.considlia.survey.ui.custom_component.showsurveycomponents;
 
+import com.considlia.survey.model.Survey;
 import com.considlia.survey.model.question.Question;
 
 /**
@@ -10,5 +11,5 @@ import com.considlia.survey.model.question.Question;
  */
 public interface ShowQuestionFactory<T> {
 
-  T loadQuestionLayout(Question question);
+  T initQuestionLayout(Survey survey);
 }
