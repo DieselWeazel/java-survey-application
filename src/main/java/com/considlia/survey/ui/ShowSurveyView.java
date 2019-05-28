@@ -151,7 +151,6 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
   public void saveResponse() throws ValidationException {
     SurveyResponse surveyResponse = new SurveyResponse();
 
-    System.out.println(start.until(LocalDateTime.now(), ChronoUnit.SECONDS));
     surveyResponse.setTime(start.until(LocalDateTime.now(), ChronoUnit.SECONDS));
 
     // Gathers responses from each component and adds them to our list.
