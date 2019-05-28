@@ -5,10 +5,13 @@ import com.considlia.survey.model.SurveyResponse;
 import com.considlia.survey.model.question.Question;
 import com.considlia.survey.repositories.ResponseRepository;
 import com.considlia.survey.repositories.SurveyRepository;
+import com.considlia.survey.security.CustomUserService;
+import com.considlia.survey.security.SecurityUtils;
 import com.considlia.survey.ui.custom_component.showsurveycomponents.ShowQuestionComponent;
 import com.considlia.survey.ui.custom_component.showsurveycomponents.ShowQuestionFactory;
 import com.considlia.survey.ui.custom_component.showsurveycomponents.showquestionlayouts.ShowQuestionLayout;
 import com.considlia.survey.ui.custom_component.showsurveycomponents.SurveyLoader;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H5;
@@ -21,9 +24,15 @@ import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.Route;
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 
-/*
+/**
+ *  Designated View for loading Surveys. Takes a parameter being the Survey ID
+ *  Each survey loaded generates a set of components.
  *
+ *  To gather response, every component implements the interface
+ *  ShowQuestionComponent, which has the method GatherResponse. Call this
+ *  method for each component when gathering all answers to the Survey.
  *  Link:
  *  http://localhost:8080/showsurvey/1
  *  written by: Jonathan Harr
@@ -49,6 +58,8 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
 
   private List<ShowQuestionComponent> readQuestionList = new ArrayList<>();
 
+  @Autowired
+  private CustomUserService customUserService;
   /**
    * Constructs view.
    *
@@ -154,11 +165,22 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
   public void saveResponse() throws ValidationException {
     SurveyResponse surveyResponse = new SurveyResponse();
 
-    for (ShowQuestionComponent r : readQuestionList) {
-      surveyResponse.addAnswer(r.gatherResponse());
+    // Gathers responses from each component and adds them to our list.
+    readQuestionList.forEach(e-> {
+      try {
+        surveyResponse.addAnswer(e.gatherResponse());
+      } catch (ValidationException e1) {
+        e1.printStackTrace();
+      }
+    });
+    // If User is logged in, User is stored, else not.
+    if (SecurityUtils.isUserLoggedIn()) {
+      surveyResponse.setUser(customUserService.getUser());
     }
-
+    // Connect SurveyResponse to Survey.
+    surveyResponse.setSurvey(survey);
     responseRepository.save(surveyResponse);
+    UI.getCurrent().navigate("");
   }
 
   /**

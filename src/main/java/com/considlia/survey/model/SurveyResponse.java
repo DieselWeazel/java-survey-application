@@ -131,10 +131,28 @@ public class SurveyResponse {
   }
 
   /**
+   * Get the Survey of origin for SurveyResponse
+   * @return Survey that owns this SurveyResponse.
+   */
+  public Survey getSurvey() {
+    return survey;
+  }
+
+  /**
+   * Set the Survey of origin to this response.
+   * @param survey
+   */
+  public void setSurvey(Survey survey) {
+    this.survey = survey;
+  }
+
+  /**
    * Sets the User that responded to Survey
    *
    * @param user that responded to Survey.
    */
+
+
   public void setUser(User user) {
     if (SecurityUtils.isUserLoggedIn()) {
       this.user = user;
