@@ -37,6 +37,7 @@ public class Survey {
 
   @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   @JoinColumn(name = "survey_id")
+  @OrderBy("position ASC")
   private List<Question> questions = new ArrayList<>();
 
   @ManyToOne(fetch = FetchType.LAZY)
