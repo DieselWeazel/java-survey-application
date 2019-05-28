@@ -71,11 +71,12 @@ public class SurveyGrid extends VerticalLayout {
   /**
    * Inits Grid UI.
    */
-//  @PostConstruct
   public void init() {
     grid = new Grid<>();
-    surveyList = surveyRepository.findAll();
-    if (!isHome) {
+
+    if (isHome) {
+      surveyList = surveyRepository.findAll();
+    } else {
       surveyList = surveyRepository.findAllByUserId(customUserService.getUser().getId());
     }
     generateGridColumns();
