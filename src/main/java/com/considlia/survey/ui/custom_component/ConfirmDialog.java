@@ -97,10 +97,28 @@ public class ConfirmDialog extends Dialog {
   }
 
   /**
-   * Dialog showing a error message
+   * Dialog Windows connected to Login/Registration
    */
-  public ConfirmDialog() {
-    add(new H5("Error, UserName and/or Email is already taken."));
+  /**
+   * Dialog showing a error message, if User Username exists.
+   */
+  public ConfirmDialog(){
+    add(new H5("Wrong Username or Password, try again!"));
+    add(new Button("Ok", e -> close()));
+  }
+  /**
+   * Dialog showing a error message, if User Username exists.
+   */
+  public ConfirmDialog(String userinput) {
+    add(new H5("Error, username: " + userinput + " is already taken, please take another one."));
+    add(new Button("Ok", e -> close()));
+  }
+
+  /**
+   * Dialog showing a error message, if User Email exists.
+   */
+  public ConfirmDialog(String userinput, boolean email){
+    add(new H5("There already exists a User registered with this email, have you forgotten your password?"));
     add(new Button("Ok", e -> close()));
   }
 
