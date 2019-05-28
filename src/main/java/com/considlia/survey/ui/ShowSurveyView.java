@@ -1,5 +1,7 @@
 package com.considlia.survey.ui;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +51,7 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
   private ResponseRepository responseRepository;
   private Survey survey;
   private boolean containsMandatory = false;
+  private LocalDateTime start = LocalDateTime.now();
 
   // Factory stuff (Fix me)
   private ShowQuestionFactory showQuestionFactory;
@@ -117,11 +120,9 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
   }
 
   /**
-   * <<<<<<< HEAD Loads Questions,
    *
    * @param survey, reads all questions inside Survey, for each question, adds a ShowQuestionLayout
-   *        via ShowQuestionFactory into surveyVerticalLayout and each to readQuestionList. =======
-   *        Loads Questions all questions connected with Survey. >>>>>>> master
+   *        via ShowQuestionFactory into surveyVerticalLayout and each to readQuestionList.
    */
   public void loadSurvey() {
     for (Question question : survey.getQuestions()) {
@@ -149,6 +150,9 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
    */
   public void saveResponse() throws ValidationException {
     SurveyResponse surveyResponse = new SurveyResponse();
+
+    System.out.println(start.until(LocalDateTime.now(), ChronoUnit.SECONDS));
+    surveyResponse.setTime(start.until(LocalDateTime.now(), ChronoUnit.SECONDS));
 
     // Gathers responses from each component and adds them to our list.
     readQuestionList.forEach(e -> {
