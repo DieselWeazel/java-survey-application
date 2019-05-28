@@ -9,6 +9,7 @@ import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.data.validator.StringLengthValidator;
+import java.util.function.Consumer;
 
 public class ShowTextAreaQuestionLayout extends ShowQuestionLayout
     implements ShowQuestionComponent {
@@ -55,12 +56,16 @@ public class ShowTextAreaQuestionLayout extends ShowQuestionLayout
    * @throws ValidationException
    */
   @Override
-  public Answer gatherResponse() throws ValidationException {
+  public Answer gatherResponse(Consumer<Answer> consumer) throws ValidationException {
     textAnswer.setQuestion(getQuestion());
     getLOGGER().info("Logging question: '{}'", getQuestion());
-    binder.writeBean(textAnswer);
-    getLOGGER().info("Logging answer: '{}'", textAnswer);
-
-    return textAnswer;
+    getLOGGER().info("Bean Valid: '{}'", binder.writeBeanIfValid(textAnswer));
+    if (binder.writeBeanIfValid(textAnswer)){
+      getLOGGER().info("Logging answer: '{}'", textAnswer);
+      return textAnswer;
+    } else {
+      consumer.accept(textAnswer);
+    }
+    return null;
   }
 }

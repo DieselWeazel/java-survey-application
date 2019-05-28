@@ -10,6 +10,7 @@ import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.radiobutton.RadioGroupVariant;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
+import java.util.function.Consumer;
 
 public class ShowSingleChoiceQuestionLayout extends ShowQuestionLayout
     implements ShowQuestionComponent {
@@ -58,12 +59,16 @@ public class ShowSingleChoiceQuestionLayout extends ShowQuestionLayout
    * @throws ValidationException
    */
   @Override
-  public Answer gatherResponse() throws ValidationException {
+  public Answer gatherResponse(Consumer<Answer> consumer) throws ValidationException {
     singleChoiceAnswer.setQuestion(getQuestion());
     getLOGGER().info("Logging question: '{}'", getQuestion());
-    binder.writeBean(singleChoiceAnswer);
-    getLOGGER().info("Logging answer: '{}'", singleChoiceAnswer);
-
-    return singleChoiceAnswer;
+    getLOGGER().info("Bean Valid: '{}'", binder.writeBeanIfValid(singleChoiceAnswer));
+    if (binder.writeBeanIfValid(singleChoiceAnswer)){
+      getLOGGER().info("Logging answer: '{}'", singleChoiceAnswer);
+      return singleChoiceAnswer;
+    } else {
+      consumer.accept(singleChoiceAnswer);
+    }
+    return null;
   }
 }

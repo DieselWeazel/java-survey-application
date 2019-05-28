@@ -13,6 +13,7 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class ShowMultiChoiceQuestionLayout extends ShowQuestionLayout
     implements ShowQuestionComponent {
@@ -67,14 +68,16 @@ public class ShowMultiChoiceQuestionLayout extends ShowQuestionLayout
    * @throws ValidationException
    */
   @Override
-  public Answer gatherResponse() throws ValidationException {
+  public Answer gatherResponse(Consumer<Answer> consumer) throws ValidationException {
     multiChoiceAnswer.setQuestion(getQuestion());
     getLOGGER().info("Logging question: '{}'", getQuestion());
-    binder.writeBean(multiChoiceAnswer);
-    answerAlternativeList.forEach(
-        e -> getLOGGER().info("Logging chosenanswer: '{}'", e.toString()));
-    getLOGGER().info("Logging answer: '{}'", multiChoiceAnswer);
-
-    return multiChoiceAnswer;
+    getLOGGER().info("Bean Valid: '{}'", binder.writeBeanIfValid(multiChoiceAnswer));
+    if (binder.writeBeanIfValid(multiChoiceAnswer)){
+      getLOGGER().info("Logging answer: '{}'", multiChoiceAnswer);
+      return multiChoiceAnswer;
+    } else {
+      consumer.accept(multiChoiceAnswer);
+    }
+    return null;
   }
 }

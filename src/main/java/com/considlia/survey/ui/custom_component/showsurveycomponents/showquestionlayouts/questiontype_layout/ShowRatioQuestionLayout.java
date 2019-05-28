@@ -13,6 +13,7 @@ import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.data.validator.StringLengthValidator;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class ShowRatioQuestionLayout extends ShowQuestionLayout
     implements ShowQuestionComponent {
@@ -69,13 +70,16 @@ public class ShowRatioQuestionLayout extends ShowQuestionLayout
    * @throws ValidationException
    */
   @Override
-  public Answer gatherResponse() throws ValidationException {
+  public Answer gatherResponse(Consumer<Answer> consumer) throws ValidationException {
     ratioAnswer.setQuestion(getQuestion());
     getLOGGER().info("Logging question: '{}'", getQuestion());
-    binder.writeBean(ratioAnswer);
-    getLOGGER().info("Logging answer: '{}'", ratioAnswer);
-
-    return ratioAnswer;
+    getLOGGER().info("Bean Valid: '{}'", binder.writeBeanIfValid(ratioAnswer));
+    if (binder.writeBeanIfValid(ratioAnswer)){
+      getLOGGER().info("Logging answer: '{}'", ratioAnswer);
+      return ratioAnswer;
+    } else {
+      consumer.accept(ratioAnswer);
+    }
+    return null;
   }
-
 }

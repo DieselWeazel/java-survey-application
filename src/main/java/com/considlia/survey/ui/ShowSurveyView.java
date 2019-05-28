@@ -2,11 +2,13 @@ package com.considlia.survey.ui;
 
 import com.considlia.survey.model.Survey;
 import com.considlia.survey.model.SurveyResponse;
+import com.considlia.survey.model.answer.Answer;
 import com.considlia.survey.model.question.Question;
 import com.considlia.survey.repositories.ResponseRepository;
 import com.considlia.survey.repositories.SurveyRepository;
 import com.considlia.survey.security.CustomUserService;
 import com.considlia.survey.security.SecurityUtils;
+import com.considlia.survey.ui.custom_component.ConfirmDialog;
 import com.considlia.survey.ui.custom_component.showsurveycomponents.ShowQuestionComponent;
 import com.considlia.survey.ui.custom_component.showsurveycomponents.ShowQuestionFactory;
 import com.considlia.survey.ui.custom_component.showsurveycomponents.SurveyLoader;
@@ -15,6 +17,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H5;
 import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.binder.ValidationException;
@@ -22,6 +25,7 @@ import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.Route;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -53,6 +57,7 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
   private ShowQuestionFactory showQuestionFactory;
 
   private List<ShowQuestionComponent> readQuestionList = new ArrayList<>();
+  private List<ShowQuestionLayout> showQuestionLayoutList = new ArrayList<>();
 
   @Autowired private CustomUserService customUserService;
   /**
@@ -120,15 +125,26 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
    * Loads Questions all questions connected with Survey.
    */
   public void loadSurvey() {
-    for (ShowQuestionLayout showQuestionLayout : showQuestionFactory.initQuestionLayout(survey)){
+//    for (Question question : survey.getQuestions()) {
+//      ShowQuestionLayout showQuestionLayout =
+//          (ShowQuestionLayout) showQuestionFactory.initQuestionLayout(question);
+//      surveyVerticalLayout.add(showQuestionLayout);
+//      readQuestionList.add((ShowQuestionComponent) showQuestionLayout);
+//    }
+    showQuestionLayoutList.addAll(
+        (Collection<? extends ShowQuestionLayout>) showQuestionFactory.initQuestionLayout(survey));
 
+    for (ShowQuestionLayout s : showQuestionLayoutList){
+      surveyVerticalLayout.add(s);
+      readQuestionList.add((ShowQuestionComponent) s);
     }
-    for (Question question : survey.getQuestions()) {
-      ShowQuestionLayout showQuestionLayout =
-          (ShowQuestionLayout) showQuestionFactory.initQuestionLayout(question);
-      surveyVerticalLayout.add(showQuestionLayout);
-      readQuestionList.add((ShowQuestionComponent) showQuestionLayout);
+
+    for (ShowQuestionComponent s : readQuestionList){
+      s.setMandatoryStatus();
     }
+
+
+
     saveButton.addClickListener(
         e -> {
           try {
@@ -154,8 +170,10 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
     readQuestionList.forEach(
         e -> {
           try {
-            surveyResponse.addAnswer(e.gatherResponse());
+            surveyResponse.addAnswer(e.gatherResponse(this::dontForgetTheMandatoryQuestions));
           } catch (ValidationException e1) {
+            e1.printStackTrace();
+          } catch (javax.xml.bind.ValidationException e1) {
             e1.printStackTrace();
           }
         });
@@ -167,6 +185,10 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
     surveyResponse.setSurvey(survey);
     responseRepository.save(surveyResponse);
     navigateBackToHomeView();
+  }
+
+  public void dontForgetTheMandatoryQuestions(Answer answer){
+    Notification.show("Answer is mandatory on *");
   }
 
   /**
