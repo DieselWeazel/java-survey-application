@@ -127,6 +127,8 @@ public class CreateSurveyView extends BaseView
     descriptionTextArea = new TextArea();
 
     surveyTitleTextField.addValueChangeListener(titleChange -> {
+      // validates textField value with validateString
+      titleChange.getSource().setValue(validateString(titleChange.getSource().getValue(), 70));
       checkFilledFields();
     });
     creatorNameTextField.addValueChangeListener(creatorChange -> {
@@ -134,6 +136,8 @@ public class CreateSurveyView extends BaseView
     });
     descriptionTextArea.addValueChangeListener(descChange -> {
       hasChanges = true;
+      // validates textField value with validateString
+      descChange.getSource().setValue(validateString(descChange.getSource().getValue(), 1000));
     });
 
     descriptionTextArea.setLabel("Description");
@@ -174,12 +178,8 @@ public class CreateSurveyView extends BaseView
     questionTitleTextField = createTextField("300px", "Question", false);
     questionTitleTextField.addValueChangeListener(event -> {
 
-      // checks if the the string contains more than 255 characters. If true cuts string after index
-      // 255
-      if (event.getSource().getValue().length() > 255) {
-        event.getSource().setValue(event.getSource().getValue().substring(0, 255));
-        Notification.show("Question can max contain 255 characters");
-      }
+      // validates textField value with validateString
+      event.getSource().setValue(validateString(event.getSource().getValue(), 255));
 
       if (questionTitleTextField.isEmpty() || selectOptions.getValue() == null) {
         addQuestionButton.setEnabled(false);
@@ -509,5 +509,20 @@ public class CreateSurveyView extends BaseView
       ConfirmDialog dialog = new ConfirmDialog(action, this);
       dialog.open();
     }
+  }
+
+  /**
+   * If string is longer than desired it is trimmed down to desired length.
+   * 
+   * @param string
+   * @param stringMaxLength
+   * @returns string with valid length
+   */
+  public String validateString(String string, int stringMaxLength) {
+    if (string.length() > stringMaxLength) {
+      string = string.substring(0, stringMaxLength);
+      Notification.show("Textfield can contain maximum " + stringMaxLength + " characters");
+    }
+    return string;
   }
 }

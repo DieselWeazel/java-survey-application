@@ -1,5 +1,7 @@
 package com.considlia.survey.ui;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.considlia.survey.model.Survey;
 import com.considlia.survey.model.SurveyResponse;
 import com.considlia.survey.model.question.Question;
@@ -7,33 +9,28 @@ import com.considlia.survey.repositories.ResponseRepository;
 import com.considlia.survey.repositories.SurveyRepository;
 import com.considlia.survey.ui.custom_component.showsurveycomponents.ShowQuestionComponent;
 import com.considlia.survey.ui.custom_component.showsurveycomponents.ShowQuestionFactory;
-import com.considlia.survey.ui.custom_component.showsurveycomponents.showquestionlayouts.ShowQuestionLayout;
 import com.considlia.survey.ui.custom_component.showsurveycomponents.SurveyLoader;
+import com.considlia.survey.ui.custom_component.showsurveycomponents.showquestionlayouts.ShowQuestionLayout;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H5;
 import com.vaadin.flow.component.html.Label;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.Route;
-import java.util.ArrayList;
-import java.util.List;
 
 /*
  *
- *  Link:
- *  http://localhost:8080/showsurvey/1
- *  written by: Jonathan Harr
+ * Link: http://localhost:8080/showsurvey/1 written by: Jonathan Harr
  */
 @Route(value = "showsurvey", layout = MainLayout.class)
 public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
 
   // -- Private Variables --
   // -- Containers --
-  private HorizontalLayout headerHorizontalLayout = new HorizontalLayout();
+  private VerticalLayout headerVerticalLayout = new VerticalLayout();
   private VerticalLayout surveyVerticalLayout = new VerticalLayout();
 
   private H1 h1;
@@ -56,9 +53,7 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
    * @param responseRepository for storing SurveyResponse.
    * @param surveyLoader factory loading Questions and Answerform.
    */
-  public ShowSurveyView(
-      SurveyRepository surveyRepository,
-      ResponseRepository responseRepository,
+  public ShowSurveyView(SurveyRepository surveyRepository, ResponseRepository responseRepository,
       SurveyLoader surveyLoader) {
     this.surveyRepository = surveyRepository;
     this.responseRepository = responseRepository;
@@ -67,25 +62,23 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
     this.h5 = new H5();
     this.saveButton = new Button();
     saveButton.setText("Send");
-    //    saveButton.addClickListener(e -> saveResponse());
+    // saveButton.addClickListener(e -> saveResponse());
   }
 
   /** initiates page GUI. */
   private void initUI() {
 
-    headerHorizontalLayout.setId("createheader");
+    headerVerticalLayout.setId("createheader");
     surveyVerticalLayout.setId("questionpackage");
     h1.setMinWidth("70%");
 
-    headerHorizontalLayout.setDefaultVerticalComponentAlignment(Alignment.BASELINE);
-    headerHorizontalLayout.setVerticalComponentAlignment(Alignment.CENTER, h5);
-    headerHorizontalLayout.add(h1, h5);
+    headerVerticalLayout.add(h1, h5);
 
     if (containsMandatory) {
       Label mandatoryLabel = new Label("* = Mandatory question");
-      add(headerHorizontalLayout, mandatoryLabel, surveyVerticalLayout);
+      add(headerVerticalLayout, mandatoryLabel, surveyVerticalLayout);
     } else {
-      add(headerHorizontalLayout, surveyVerticalLayout);
+      add(headerVerticalLayout, surveyVerticalLayout);
     }
     add(saveButton);
   }
@@ -124,7 +117,7 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
    * Loads Questions,
    *
    * @param survey, reads all questions inside Survey, for each question, adds a ShowQuestionLayout
-   *     via ShowQuestionFactory into surveyVerticalLayout and each to readQuestionList.
+   *        via ShowQuestionFactory into surveyVerticalLayout and each to readQuestionList.
    */
   public void loadSurvey(Survey survey) {
     for (Question question : survey.getQuestions()) {
@@ -133,14 +126,13 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
       surveyVerticalLayout.add(showQuestionLayout);
       readQuestionList.add((ShowQuestionComponent) showQuestionLayout);
     }
-    saveButton.addClickListener(
-        e -> {
-          try {
-            saveResponse();
-          } catch (ValidationException e1) {
-            e1.printStackTrace();
-          }
-        });
+    saveButton.addClickListener(e -> {
+      try {
+        saveResponse();
+      } catch (ValidationException e1) {
+        e1.printStackTrace();
+      }
+    });
     initUI();
   }
 
