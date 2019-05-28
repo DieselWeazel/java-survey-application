@@ -9,9 +9,8 @@ import com.considlia.survey.security.CustomUserService;
 import com.considlia.survey.security.SecurityUtils;
 import com.considlia.survey.ui.custom_component.showsurveycomponents.ShowQuestionComponent;
 import com.considlia.survey.ui.custom_component.showsurveycomponents.ShowQuestionFactory;
-import com.considlia.survey.ui.custom_component.showsurveycomponents.showquestionlayouts.ShowQuestionLayout;
 import com.considlia.survey.ui.custom_component.showsurveycomponents.SurveyLoader;
-import com.vaadin.flow.component.UI;
+import com.considlia.survey.ui.custom_component.showsurveycomponents.showquestionlayouts.ShowQuestionLayout;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H5;
@@ -27,15 +26,12 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
- *  Designated View for loading Surveys. Takes a parameter being the Survey ID
- *  Each survey loaded generates a set of components.
+ * Designated View for loading Surveys. Takes a parameter being the Survey ID Each survey loaded
+ * generates a set of components.
  *
- *  To gather response, every component implements the interface
- *  ShowQuestionComponent, which has the method GatherResponse. Call this
- *  method for each component when gathering all answers to the Survey.
- *  Link:
- *  http://localhost:8080/showsurvey/1
- *  written by: Jonathan Harr
+ * <p>To gather response, every component implements the interface ShowQuestionComponent, which has
+ * the method GatherResponse. Call this method for each component when gathering all answers to the
+ * Survey. Link: http://localhost:8080/showsurvey/1 written by: Jonathan Harr
  */
 @Route(value = "showsurvey", layout = MainLayout.class)
 public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
@@ -46,7 +42,7 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
   private VerticalLayout surveyVerticalLayout = new VerticalLayout();
 
   private H1 h1;
-  private H5 h5;
+  private H5 h5 = new H5();
   private Button saveButton;
   private SurveyRepository surveyRepository;
   private ResponseRepository responseRepository;
@@ -58,8 +54,7 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
 
   private List<ShowQuestionComponent> readQuestionList = new ArrayList<>();
 
-  @Autowired
-  private CustomUserService customUserService;
+  @Autowired private CustomUserService customUserService;
   /**
    * Constructs view.
    *
@@ -74,11 +69,9 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
     this.surveyRepository = surveyRepository;
     this.responseRepository = responseRepository;
     this.showQuestionFactory = surveyLoader;
-    this.h1 = new H1("PlaceHolder // Survey Not Actually Found, Text not Updated");
-    this.h5 = new H5();
-    this.saveButton = new Button();
+    h1 = new H1("PlaceHolder // Survey Not Actually Found, Text not Updated");
+    saveButton = new Button();
     saveButton.setText("Send");
-    //    saveButton.addClickListener(e -> saveResponse());
   }
 
   /** initiates page GUI. */
@@ -101,7 +94,6 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
     add(saveButton);
   }
 
-  // TODO change to !parameter ==null, reduce boilerplate code.
   /**
    * Checks if page is meant to load a Survey, if parameter is null, sets text and button into
    * having not found a Survey.
@@ -111,33 +103,23 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
    */
   @Override
   public void setParameter(BeforeEvent event, Long parameter) {
-    try {
-      if (parameter == null) {
-        // Null Pointer Exception? (Survey Null Pointer Exception)
-        h1.setText("ERROR, no survey ID parameter given.");
-        goHome();
+      if (parameter != null) {
+        if (surveyRepository.findById(parameter).isPresent()) {
+          survey = surveyRepository.getSurveyById(parameter);
+          h1.setText(survey.getTitle());
+          h5.setText(survey.getDescription());
+          loadSurvey();
+        } else {
+          add(new H5("ERROR, no Survey by the ID of: " + parameter + " exists."));
+          goHome();
+        }
       }
-      if (surveyRepository.findById(parameter).isPresent()) {
-        survey = surveyRepository.getSurveyById(parameter);
-        h1.setText(survey.getTitle());
-        h5.setText(survey.getDescription());
-        loadSurvey(survey);
-      } else {
-        h1.setText("ERROR, no Survey by the ID of: " + parameter + " exists.");
-        goHome();
-      }
-    } catch (NullPointerException e) {
-      h1.setText(e.getMessage());
-    }
   }
 
   /**
-   * Loads Questions,
-   *
-   * @param survey, reads all questions inside Survey, for each question, adds a ShowQuestionLayout
-   *     via ShowQuestionFactory into surveyVerticalLayout and each to readQuestionList.
+   * Loads Questions all questions connected with Survey.
    */
-  public void loadSurvey(Survey survey) {
+  public void loadSurvey() {
     for (Question question : survey.getQuestions()) {
       ShowQuestionLayout showQuestionLayout =
           (ShowQuestionLayout) showQuestionFactory.loadQuestionLayout(question);
@@ -166,13 +148,14 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
     SurveyResponse surveyResponse = new SurveyResponse();
 
     // Gathers responses from each component and adds them to our list.
-    readQuestionList.forEach(e-> {
-      try {
-        surveyResponse.addAnswer(e.gatherResponse());
-      } catch (ValidationException e1) {
-        e1.printStackTrace();
-      }
-    });
+    readQuestionList.forEach(
+        e -> {
+          try {
+            surveyResponse.addAnswer(e.gatherResponse());
+          } catch (ValidationException e1) {
+            e1.printStackTrace();
+          }
+        });
     // If User is logged in, User is stored, else not.
     if (SecurityUtils.isUserLoggedIn()) {
       surveyResponse.setUser(customUserService.getUser());
@@ -180,7 +163,7 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
     // Connect SurveyResponse to Survey.
     surveyResponse.setSurvey(survey);
     responseRepository.save(surveyResponse);
-    UI.getCurrent().navigate("");
+    navigateBackToHomeView();
   }
 
   /**
@@ -188,7 +171,7 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
    */
   public void goHome() {
     saveButton.setText("Go To Mainview");
-    saveButton.addClickListener(e -> getUI().ifPresent(ui -> ui.navigate("")));
+    saveButton.addClickListener(e -> navigateBackToHomeView());
     add(saveButton);
   }
 }
