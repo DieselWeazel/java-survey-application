@@ -27,6 +27,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+/**
+ * SurveyLoader implementing ShowQuestionFactory.
+ * Displays all Questions and applies functions as if question
+ * contains mandatory fields or not.
+ */
 @Service
 public class SurveyLoader
     implements ShowQuestionFactory<List<Answer>> {
@@ -37,16 +42,18 @@ public class SurveyLoader
 
   private List<ShowQuestionLayout> componentList = new ArrayList<>();
 
-  private String errorMessage;
+  private List<String> errorMessage;
 
+  /**
+   * Loads Survey to ShowSurvey.
+   * @param survey input for all Questions.
+   * @return layout containing all questions with answering method, as well as all
+   * corresponding functions such as if Question requires an answer or not.
+   */
   @Override
   public VerticalLayout getSurveyLayout(Survey survey){
     this.survey=survey;
     VerticalLayout vr = new VerticalLayout();
-//    for(ShowQuestionLayout showQuestionLayout : getSurveyComponentList()){
-//      vr.add(showQuestionLayout);
-//    }
-
     survey.getQuestions().stream().forEach(question ->{
       ShowQuestionLayout layout = loadQuestion(question);
       layout.setMandatoryStatus();
@@ -57,26 +64,35 @@ public class SurveyLoader
     return vr;
   }
 
-  // TODO change me to a DAO Object!
+  /**
+   * If Survey contains mandatory fields, this DTO will check if the Survey is Complete.
+   * @return {@link ErrorVerificationMessageDTO}
+   * boolean showing true if Survey is in conflict, therefor not being completed.
+   * String message with each Question that isn't filled in.
+   */
   @Override
   public ErrorVerificationMessageDTO isComplete() {
-//    boolean[] arr = answerList.forEach(e-> e.isCompleted());
-
-    errorMessage = "Following Questions are mandatory: ";
+    errorMessage = new ArrayList<>();
+    errorMessage.add("Error! This Survey contains questions that are mandatory.");
+    errorMessage.add("The following questions need to be filled in: ");
+    errorMessage.add("");
     boolean isComplete = true;
     for (ShowQuestionLayout s : componentList){
-      LOGGER.info("isComplete inside SurveyLoader '{}'", s.isCompleted());
-      errorMessage += s.getQuestion().getTitle() + ", ";
+
       if (!s.isCompleted()){
+        errorMessage.add(s.getQuestion().getPosition() + ": " + s.getQuestion().getTitle() + ", ");
         isComplete = false;
       }
     }
-    errorMessage += "these have to be answered in order to submit Survey";
-    LOGGER.info("errorMesage is : '{}' ", errorMessage);
-    LOGGER.info("isComplete() returns: '{}', ", isComplete);
+    errorMessage.add("");
+    errorMessage.add("Answer these Questions before submitting your response.");
     return new ErrorVerificationMessageDTO(isComplete, errorMessage);
   }
 
+  /**
+   * Gets the List of Answers, to store within a {@link SurveyResponse}
+   * @return Answers to {@link Question} within {@link Survey}
+   */
   @Override
   public Set<Answer> getList() {
     Set<Answer> list = new HashSet<>();
@@ -84,59 +100,45 @@ public class SurveyLoader
       try {
         list.add(question.gatherResponse());
       } catch (ValidationException e) {
-        //TODO delete do nothing?
         e.printStackTrace();
       }
     });
     return list;
   }
-//  public List<ShowQuestionLayout> getSurveyComponentList() {
-//
-////    List<ShowQuestionLayout> list = new ArrayList<>();
-//////    List<RequiredAnswer> requiredAnswerList = new ArrayList<>();
-//////    list.addAll(survey.getQuestions().stream(question -> loadQuestion(question)));
-//////    survey.getQuestions().stream().forEach(question -> question.isMandatory();
-////    survey.getQuestions().stream().forEach(question -> list.add(loadQuestion(question)));
-//
-//
-//    return answerList;
-//  }
 
 
   /**
-   * Implementation of Factory, Reads
+   * Loads each questions and assigns a layout.
    *
    * @return layout corresponding with Question. {@link ShowQuestionLayout}
    */
-
-
   private ShowQuestionLayout loadQuestion(Question question) {
 
-    LOGGER.info("SurveyLoader: Loading a question");
+//    LOGGER.info("SurveyLoader: Loading a question");
     if (question instanceof CheckBoxQuestion) {
       MultiQuestion mq = (MultiQuestion) question;
       ShowMultiChoiceQuestionLayout showMultiChoiceQuestionLayout =
           new ShowMultiChoiceQuestionLayout(mq);
-      LOGGER.info("SurveyLoader: Loading '{}'", mq.getTitle());
+//      LOGGER.info("SurveyLoader: Loading '{}'", mq.getTitle());
       return showMultiChoiceQuestionLayout;
     } else if (question instanceof RadioQuestion) {
       RadioQuestion radioQuestion = (RadioQuestion) question;
       ShowSingleChoiceQuestionLayout showSingleChoiceQuestionLayout =
           new ShowSingleChoiceQuestionLayout(radioQuestion);
-      LOGGER.info("SurveyLoader: Loading '{}'", radioQuestion.getTitle());
+//      LOGGER.info("SurveyLoader: Loading '{}'", radioQuestion.getTitle());
       return showSingleChoiceQuestionLayout;
     } else if (question instanceof TextQuestion) {
       ShowTextQuestionLayout showTextQuestionLayout = new ShowTextQuestionLayout(question);
-      LOGGER.info("SurveyLoader: Loading '{}'", question.getTitle());
+//      LOGGER.info("SurveyLoader: Loading '{}'", question.getTitle());
       return showTextQuestionLayout;
     } else if (question instanceof TextAreaQuestion) {
       ShowTextAreaQuestionLayout showTextAreaQuestionLayout = new ShowTextAreaQuestionLayout(question);
-      LOGGER.info("SurveyLoader: loading '{}'", question.getTitle());
+//      LOGGER.info("SurveyLoader: loading '{}'", question.getTitle());
       return showTextAreaQuestionLayout;
     } else if (question instanceof RatioQuestion) {
       RatioQuestion rq = (RatioQuestion) question;
       ShowRatioQuestionLayout showRatioQuestionLayout = new ShowRatioQuestionLayout(rq);
-      LOGGER.info("SurveyLoader: Loading '{}'", rq.getTitle());
+//      LOGGER.info("SurveyLoader: Loading '{}'", rq.getTitle());
       return showRatioQuestionLayout;
     }
     throw new RuntimeException("No Layout Available for Question: " + question.getQuestionType());

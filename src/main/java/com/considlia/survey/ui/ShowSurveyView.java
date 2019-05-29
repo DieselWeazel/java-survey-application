@@ -7,6 +7,7 @@ import com.considlia.survey.repositories.ResponseRepository;
 import com.considlia.survey.repositories.SurveyRepository;
 import com.considlia.survey.security.CustomUserService;
 import com.considlia.survey.security.SecurityUtils;
+import com.considlia.survey.ui.custom_component.ConfirmDialog;
 import com.considlia.survey.ui.custom_component.showsurveycomponents.ShowQuestionComponent;
 import com.considlia.survey.ui.custom_component.showsurveycomponents.ShowQuestionFactory;
 import com.considlia.survey.ui.custom_component.showsurveycomponents.SurveyLoader;
@@ -164,6 +165,8 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
             } catch (ValidationException e1) {
               e1.printStackTrace();
             }
+          } else {
+            new ConfirmDialog(showQuestionFactory.isComplete()).open();
           }
         });
     initUI();
