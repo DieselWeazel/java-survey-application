@@ -136,18 +136,26 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
 
     for (ShowQuestionLayout s : showQuestionLayoutList){
       surveyVerticalLayout.add(s);
-      readQuestionList.add((ShowQuestionComponent) s);
     }
 
     for (ShowQuestionComponent s : readQuestionList){
       s.setMandatoryStatus();
     }
 
-
-
     saveButton.addClickListener(
         e -> {
+          for (ShowQuestionLayout s : showQuestionLayoutList) {
+            System.out.println(s.getQuestion().toString() + "," + s.isCompleted());
+          }
           try {
+            for (ShowQuestionLayout s : showQuestionLayoutList) {
+              System.out.println(s.getQuestion().toString() + "," + s.isCompleted());
+              if (!s.isCompleted()) {
+                System.out.println(s.getQuestion().toString() + "," + s.isCompleted());
+                Notification.show("Fail!");
+                return;
+              }
+            }
             saveResponse();
           } catch (ValidationException e1) {
             e1.printStackTrace();
@@ -167,15 +175,9 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
     SurveyResponse surveyResponse = new SurveyResponse();
 
     // Gathers responses from each component and adds them to our list.
-    readQuestionList.forEach(
+    showQuestionLayoutList.forEach(
         e -> {
-          try {
-            surveyResponse.addAnswer(e.gatherResponse(this::dontForgetTheMandatoryQuestions));
-          } catch (ValidationException e1) {
-            e1.printStackTrace();
-          } catch (javax.xml.bind.ValidationException e1) {
-            e1.printStackTrace();
-          }
+            surveyResponse.addAnswer(e.gatherResponse());
         });
     // If User is logged in, User is stored, else not.
     if (SecurityUtils.isUserLoggedIn()) {

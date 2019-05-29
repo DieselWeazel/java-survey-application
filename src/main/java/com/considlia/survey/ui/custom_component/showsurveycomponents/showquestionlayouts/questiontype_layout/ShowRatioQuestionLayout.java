@@ -3,6 +3,7 @@ package com.considlia.survey.ui.custom_component.showsurveycomponents.showquesti
 import com.considlia.survey.model.answer.Answer;
 import com.considlia.survey.model.answer.RatioAnswer;
 import com.considlia.survey.model.answer.TextAnswer;
+import com.considlia.survey.model.question.Question;
 import com.considlia.survey.model.question.RatioQuestion;
 import com.considlia.survey.ui.custom_component.showsurveycomponents.ShowQuestionComponent;
 import com.considlia.survey.ui.custom_component.showsurveycomponents.showquestionlayouts.ShowQuestionLayout;
@@ -15,8 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class ShowRatioQuestionLayout extends ShowQuestionLayout
-    implements ShowQuestionComponent {
+public class ShowRatioQuestionLayout extends ShowQuestionLayout {
 
   private RatioAnswer ratioAnswer = new RatioAnswer();
   private Binder<RatioAnswer> binder = new Binder<>(RatioAnswer.class);
@@ -49,7 +49,6 @@ public class ShowRatioQuestionLayout extends ShowQuestionLayout
     add(ratioRadioButtons);
   }
 
-  @Override
   public void setMandatoryStatus() {
     if (getQuestion().isMandatory()) {
       binder
@@ -70,16 +69,16 @@ public class ShowRatioQuestionLayout extends ShowQuestionLayout
    * @throws ValidationException
    */
   @Override
-  public Answer gatherResponse(Consumer<Answer> consumer) throws ValidationException {
+  public Answer gatherResponse() {
     ratioAnswer.setQuestion(getQuestion());
     getLOGGER().info("Logging question: '{}'", getQuestion());
     getLOGGER().info("Bean Valid: '{}'", binder.writeBeanIfValid(ratioAnswer));
-    if (binder.writeBeanIfValid(ratioAnswer)){
       getLOGGER().info("Logging answer: '{}'", ratioAnswer);
       return ratioAnswer;
-    } else {
-      consumer.accept(ratioAnswer);
-    }
-    return null;
+  }
+
+  public boolean isCompleted(Question question) {
+    getLOGGER().info("ShowMultiChoiceQuestionLayout isCompleted: '{}'", (!ratioRadioButtons.isEmpty()));
+    return (!ratioRadioButtons.isEmpty());
   }
 }

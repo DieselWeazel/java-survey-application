@@ -1,16 +1,19 @@
 package com.considlia.survey.ui.custom_component.showsurveycomponents.showquestionlayouts;
 
+import com.considlia.survey.model.answer.Answer;
 import com.considlia.survey.model.question.Question;
 import com.vaadin.flow.component.html.H5;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ShowQuestionLayout extends VerticalLayout {
+public abstract class ShowQuestionLayout extends VerticalLayout {
 
   private H5 title;
   private Question question;
   private static final Logger LOGGER = LoggerFactory.getLogger(ShowQuestionLayout.class);
+
+  private boolean isCompleted;
 
   // Used for Mandatory message.
   public static final String mandatoryQuestionMessage = "Question is mandatory, please fill in details";
@@ -38,4 +41,19 @@ public class ShowQuestionLayout extends VerticalLayout {
     return LOGGER;
   }
 
+  public abstract Answer gatherResponse();
+
+  public boolean isCompleted() {
+    if(question.isMandatory()){
+      return isCompleted(question);
+    } else {
+      return true;
+    }
+  }
+
+  public abstract boolean isCompleted(Question question);
+
+  public void setCompleted(boolean completed) {
+    isCompleted = completed;
+  }
 }

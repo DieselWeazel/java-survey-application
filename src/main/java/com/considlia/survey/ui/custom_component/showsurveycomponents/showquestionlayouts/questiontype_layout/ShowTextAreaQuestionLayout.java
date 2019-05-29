@@ -11,8 +11,7 @@ import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.data.validator.StringLengthValidator;
 import java.util.function.Consumer;
 
-public class ShowTextAreaQuestionLayout extends ShowQuestionLayout
-    implements ShowQuestionComponent {
+public class ShowTextAreaQuestionLayout extends ShowQuestionLayout {
 
   private TextAnswer textAnswer;
   private Binder<TextAnswer> binder;
@@ -37,15 +36,18 @@ public class ShowTextAreaQuestionLayout extends ShowQuestionLayout
     add(questionArea);
   }
 
-  @Override
   public void setMandatoryStatus() {
     if (getQuestion().isMandatory()) {
       binder
           .forField(questionArea)
           .withValidator(new StringLengthValidator(mandatoryQuestionMessage, 1, null))
           .bind(TextAnswer::getTextAnswer, TextAnswer::setTextAnswer);
+      if (questionArea.getValue().length()<1){
+        setCompleted(false);
+      }
     } else {
       binder.forField(questionArea).bind(TextAnswer::getTextAnswer, TextAnswer::setTextAnswer);
+      setCompleted(true);
     }
   }
 
@@ -56,16 +58,17 @@ public class ShowTextAreaQuestionLayout extends ShowQuestionLayout
    * @throws ValidationException
    */
   @Override
-  public Answer gatherResponse(Consumer<Answer> consumer) throws ValidationException {
+  public Answer gatherResponse() {
     textAnswer.setQuestion(getQuestion());
     getLOGGER().info("Logging question: '{}'", getQuestion());
     getLOGGER().info("Bean Valid: '{}'", binder.writeBeanIfValid(textAnswer));
-    if (binder.writeBeanIfValid(textAnswer)){
+
       getLOGGER().info("Logging answer: '{}'", textAnswer);
       return textAnswer;
-    } else {
-      consumer.accept(textAnswer);
-    }
-    return null;
+  }
+
+  public boolean isCompleted(Question question) {
+    getLOGGER().info("ShowMultiChoiceQuestionLayout isCompleted: '{}'", (!questionArea.isEmpty()));
+    return (!questionArea.isEmpty());
   }
 }

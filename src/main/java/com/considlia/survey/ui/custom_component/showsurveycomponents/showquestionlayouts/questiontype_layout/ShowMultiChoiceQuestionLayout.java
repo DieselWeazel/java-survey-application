@@ -5,6 +5,7 @@ import com.considlia.survey.model.answer.MultiAnswer;
 import com.considlia.survey.model.answer.MultiAnswerChoice;
 import com.considlia.survey.model.answer.RatioAnswer;
 import com.considlia.survey.model.question.MultiQuestion;
+import com.considlia.survey.model.question.Question;
 import com.considlia.survey.ui.custom_component.showsurveycomponents.ShowQuestionComponent;
 import com.considlia.survey.ui.custom_component.showsurveycomponents.showquestionlayouts.ShowQuestionLayout;
 import com.vaadin.flow.component.checkbox.CheckboxGroup;
@@ -15,8 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class ShowMultiChoiceQuestionLayout extends ShowQuestionLayout
-    implements ShowQuestionComponent {
+public class ShowMultiChoiceQuestionLayout extends ShowQuestionLayout {
 
   private MultiAnswer multiChoiceAnswer;
   private Binder<MultiAnswer> binder;
@@ -39,15 +39,14 @@ public class ShowMultiChoiceQuestionLayout extends ShowQuestionLayout
         .forEach(e -> answerAlternativeList.add(new MultiAnswerChoice(e)));
 
     checkBoxButtons.setItems(answerAlternativeList);
-    binder
-        .forField(checkBoxButtons)
-        .bind(MultiAnswer::getMultiAnswerChoiceSet, MultiAnswer::setMultiAnswerChoiceSet);
+//    binder
+//        .forField(checkBoxButtons)
+//        .bind(MultiAnswer::getMultiAnswerChoiceSet, MultiAnswer::setMultiAnswerChoiceSet);
 
     add(checkBoxButtons);
     checkBoxButtons.addThemeVariants(CheckboxGroupVariant.LUMO_VERTICAL);
   }
 
-  @Override
   public void setMandatoryStatus() {
     if (getQuestion().isMandatory()) {
       binder
@@ -68,16 +67,17 @@ public class ShowMultiChoiceQuestionLayout extends ShowQuestionLayout
    * @throws ValidationException
    */
   @Override
-  public Answer gatherResponse(Consumer<Answer> consumer) throws ValidationException {
+  public Answer gatherResponse() {
     multiChoiceAnswer.setQuestion(getQuestion());
     getLOGGER().info("Logging question: '{}'", getQuestion());
     getLOGGER().info("Bean Valid: '{}'", binder.writeBeanIfValid(multiChoiceAnswer));
-    if (binder.writeBeanIfValid(multiChoiceAnswer)){
       getLOGGER().info("Logging answer: '{}'", multiChoiceAnswer);
       return multiChoiceAnswer;
-    } else {
-      consumer.accept(multiChoiceAnswer);
-    }
-    return null;
+  }
+
+  @Override
+  public boolean isCompleted(Question question) {
+    getLOGGER().info("ShowMultiChoiceQuestionLayout isCompleted: '{}'", (!checkBoxButtons.isEmpty()));
+    return (!checkBoxButtons.isEmpty());
   }
 }

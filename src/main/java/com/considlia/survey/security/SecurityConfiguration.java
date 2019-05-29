@@ -79,6 +79,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         .permitAll()
         .antMatchers("/profileview")
         .hasAuthority("USER")
+        .antMatchers("/createsurvey", "/createsurvey/*", "/createsurvey/**")
+        .hasAuthority("USER")
         .antMatchers("/profileview")
         .hasAuthority("ADMIN")
         .antMatchers("/createsurvey", "/createsurvey/*", "/createsurvey/**")
