@@ -353,8 +353,8 @@ public class CreateSurveyView extends BaseView
             && createTextComponents.getRadioButtons().getValue() != null);
         break;
       case RATIO:
-        addQuestionButton
-            .setEnabled(!createRatioComponents.isLimitEmpty() && !questionTitleTextField.isEmpty());
+        addQuestionButton.setEnabled(createRatioComponents.limitsContainsOnlyLetters()
+            && !createRatioComponents.isLimitEmpty() && !questionTitleTextField.isEmpty());
 
         break;
       case RADIO:
