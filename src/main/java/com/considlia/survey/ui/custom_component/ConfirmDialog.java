@@ -81,14 +81,15 @@ public class ConfirmDialog extends Dialog {
    * the survey.
    * 
    * @param survey - {@link CreateSurveyView} to get access to its methods
-   * @param question - the {@link QuestionWithButtons} thats going to be removed
+   * @param question - the {@link QuestionWithButtons} containing the {@link Question} thats going
+   *        to be removed
    */
   public ConfirmDialog(CreateSurveyView survey, QuestionWithButtons question) {
 
     initCancelBtn();
 
     Button confirmBtn = new Button("Confirm", onConfirm -> {
-      survey.removeQuestion(question);
+      survey.removeQuestion(question.getQuestion());
       close();
     });
     add(new H5("Are you sure you want to remove this question?"));
