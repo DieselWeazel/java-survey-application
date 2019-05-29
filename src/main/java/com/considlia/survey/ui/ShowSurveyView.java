@@ -24,6 +24,7 @@ import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.Route;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -62,14 +63,13 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
    *
    * @param surveyRepository for loading Surveys.
    * @param responseRepository for storing SurveyResponse.
-   * @param surveyLoader factory loading Questions and Answerform.
    */
   public ShowSurveyView(
       SurveyRepository surveyRepository,
-      ResponseRepository responseRepository,
-      SurveyLoader surveyLoader) {
+      ResponseRepository responseRepository) {
     this.surveyRepository = surveyRepository;
     this.responseRepository = responseRepository;
+    SurveyLoader surveyLoader = new SurveyLoader();
     this.showQuestionFactory = surveyLoader;
     h1 = new H1("PlaceHolder // Survey Not Actually Found, Text not Updated");
     saveButton = new Button();
@@ -180,7 +180,7 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
     SurveyResponse surveyResponse = new SurveyResponse();
 
 
-//    showQuestionFactory.getEntity().forEach(e-> surveyResponse.addAnswer(e.gatherResponse))
+//    showQuestionFactory.getList().forEach(e-> surveyResponse.addAnswer(e.gatherResponse))
 //
 //    showQuestionFactory.getSurveyComponentList().forEach(e->
 //        e.gatherResponse());
@@ -197,7 +197,7 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
 //        e -> {
 //            surveyResponse.addAnswer(e.gatherResponse());
 //        });
-    surveyResponse = (SurveyResponse) showQuestionFactory.getEntity();
+    surveyResponse.setAnswers(showQuestionFactory.getList());
 
 
     // If User is logged in, User is stored, else not.

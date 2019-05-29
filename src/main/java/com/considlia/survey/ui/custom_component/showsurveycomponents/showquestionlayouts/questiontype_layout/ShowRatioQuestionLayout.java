@@ -69,12 +69,12 @@ public class ShowRatioQuestionLayout extends ShowQuestionLayout {
    * @throws ValidationException
    */
   @Override
-  public Answer gatherResponse() {
+  public Answer gatherResponse() throws ValidationException {
     ratioAnswer.setQuestion(getQuestion());
     getLOGGER().info("Logging question: '{}'", getQuestion());
-    getLOGGER().info("Bean Valid: '{}'", binder.writeBeanIfValid(ratioAnswer));
-      getLOGGER().info("Logging answer: '{}'", ratioAnswer);
-      return ratioAnswer;
+    binder.writeBean(ratioAnswer);
+    getLOGGER().info("Logging answer: '{}'", ratioAnswer);
+    return ratioAnswer;
   }
 
   public boolean isCompleted(Question question) {

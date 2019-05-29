@@ -80,7 +80,7 @@ public class ConfirmDialog extends Dialog {
    * Creates a {@link Dialog} where the "Confirm"-{@link Button} removes the {@link Question} from
    * the survey.
    * 
-   * @param survey - {@link CreateSurveyView} to getEntity access to its methods
+   * @param survey - {@link CreateSurveyView} to getList access to its methods
    * @param question - the {@link QuestionWithButtons} thats going to be removed
    */
   public ConfirmDialog(CreateSurveyView survey, QuestionWithButtons question) {

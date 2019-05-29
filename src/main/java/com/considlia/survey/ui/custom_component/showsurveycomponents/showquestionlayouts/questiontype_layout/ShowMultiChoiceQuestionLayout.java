@@ -67,12 +67,12 @@ public class ShowMultiChoiceQuestionLayout extends ShowQuestionLayout {
    * @throws ValidationException
    */
   @Override
-  public Answer gatherResponse() {
+  public Answer gatherResponse() throws ValidationException {
     multiChoiceAnswer.setQuestion(getQuestion());
     getLOGGER().info("Logging question: '{}'", getQuestion());
-    getLOGGER().info("Bean Valid: '{}'", binder.writeBeanIfValid(multiChoiceAnswer));
-      getLOGGER().info("Logging answer: '{}'", multiChoiceAnswer);
-      return multiChoiceAnswer;
+    binder.writeBean(multiChoiceAnswer);
+    getLOGGER().info("Logging answer: '{}'", multiChoiceAnswer);
+    return multiChoiceAnswer;
   }
 
   @Override

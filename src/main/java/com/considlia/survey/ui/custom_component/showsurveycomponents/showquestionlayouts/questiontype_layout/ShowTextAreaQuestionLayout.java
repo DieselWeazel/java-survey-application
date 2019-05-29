@@ -58,11 +58,11 @@ public class ShowTextAreaQuestionLayout extends ShowQuestionLayout {
    * @throws ValidationException
    */
   @Override
-  public Answer gatherResponse() {
+  public Answer gatherResponse() throws ValidationException {
     textAnswer.setQuestion(getQuestion());
     getLOGGER().info("Logging question: '{}'", getQuestion());
     getLOGGER().info("Bean Valid: '{}'", binder.writeBeanIfValid(textAnswer));
-
+    binder.writeBean(textAnswer);
       getLOGGER().info("Logging answer: '{}'", textAnswer);
       return textAnswer;
   }

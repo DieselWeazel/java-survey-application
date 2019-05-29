@@ -18,7 +18,7 @@ public class CreateRatioComponents extends VerticalLayout {
    * Constructs a VerticalLayout containing a HorizontalLayout with then contains two TextFields and
    * one NumberField
    *
-   * @param csv CreateSurveyView to getEntity access to the changeBtn-method
+   * @param csv CreateSurveyView to getList access to the changeBtn-method
    */
   public CreateRatioComponents(CreateSurveyView csv) {
     this.csv = csv;

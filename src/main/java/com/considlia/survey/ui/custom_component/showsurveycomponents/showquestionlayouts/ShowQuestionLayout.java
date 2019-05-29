@@ -4,6 +4,7 @@ import com.considlia.survey.model.answer.Answer;
 import com.considlia.survey.model.question.Question;
 import com.vaadin.flow.component.html.H5;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.data.binder.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,7 +42,7 @@ public abstract class ShowQuestionLayout extends VerticalLayout {
     return LOGGER;
   }
 
-  public abstract Answer gatherResponse();
+  public abstract Answer gatherResponse() throws ValidationException;
 
   public boolean isCompleted() {
     if(question.isMandatory()){
@@ -50,6 +51,8 @@ public abstract class ShowQuestionLayout extends VerticalLayout {
       return true;
     }
   }
+
+  public abstract void setMandatoryStatus();
 
   public abstract boolean isCompleted(Question question);
 

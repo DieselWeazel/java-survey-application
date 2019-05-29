@@ -27,7 +27,7 @@ public class MultiQuestionWithButtons extends QuestionWithButtons {
    * {@link CheckboxGroup} depending on the {@link QuestionType} from
    * {@link MultiQuestion#getQuestionType()}
    * 
-   * @param question getEntity {@link QuestionType} and also for passing it to super
+   * @param question getList {@link QuestionType} and also for passing it to super
    * @param survey passing it to super
    */
   public MultiQuestionWithButtons(MultiQuestion question, CreateSurveyView survey) {

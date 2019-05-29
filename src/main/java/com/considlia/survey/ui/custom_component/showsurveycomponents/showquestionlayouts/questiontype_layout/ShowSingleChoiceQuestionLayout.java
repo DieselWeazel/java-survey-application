@@ -60,10 +60,10 @@ public class ShowSingleChoiceQuestionLayout extends ShowQuestionLayout {
    * @throws ValidationException
    */
   @Override
-  public Answer gatherResponse() {
+  public Answer gatherResponse() throws ValidationException {
     singleChoiceAnswer.setQuestion(getQuestion());
     getLOGGER().info("Logging question: '{}'", getQuestion());
-    getLOGGER().info("Bean Valid: '{}'", binder.writeBeanIfValid(singleChoiceAnswer));
+    binder.writeBean(singleChoiceAnswer);
     getLOGGER().info("Logging answer: '{}'", singleChoiceAnswer);
     return singleChoiceAnswer;
   }

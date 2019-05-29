@@ -17,15 +17,18 @@ import com.considlia.survey.ui.custom_component.showsurveycomponents.showquestio
 import com.considlia.survey.ui.custom_component.showsurveycomponents.showquestionlayouts.questiontype_layout.ShowTextAreaQuestionLayout;
 import com.considlia.survey.ui.custom_component.showsurveycomponents.showquestionlayouts.questiontype_layout.ShowTextQuestionLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.data.binder.ValidationException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 @Service
 public class SurveyLoader
-    implements ShowQuestionFactory<SurveyResponse> {
+    implements ShowQuestionFactory<List<Answer>> {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(SurveyLoader.class);
 
@@ -43,6 +46,7 @@ public class SurveyLoader
 
     survey.getQuestions().stream().forEach(question ->{
       ShowQuestionLayout layout = loadQuestion(question);
+      layout.setMandatoryStatus();
       componentList.add(layout);
       vr.add(layout);
     });
@@ -64,10 +68,17 @@ public class SurveyLoader
   }
 
   @Override
-  public SurveyResponse getEntity() {
-    SurveyResponse surveyResponse = new SurveyResponse();
-    componentList.forEach(question -> surveyResponse.addAnswer(question.gatherResponse()));
-    return surveyResponse;
+  public Set<Answer> getList() {
+    Set<Answer> list = new HashSet<>();
+    componentList.forEach(question -> {
+      try {
+        list.add(question.gatherResponse());
+      } catch (ValidationException e) {
+        //TODO delete do nothing?
+        e.printStackTrace();
+      }
+    });
+    return list;
   }
 //  public List<ShowQuestionLayout> getSurveyComponentList() {
 //
