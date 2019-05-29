@@ -16,6 +16,6 @@ public interface ShowQuestionFactory<T> {
 
   VerticalLayout getSurveyLayout(Survey survey);
   ErrorVerificationMessageDTO isComplete();
-  Set<Answer> getList();
+  T getList();
 
 }

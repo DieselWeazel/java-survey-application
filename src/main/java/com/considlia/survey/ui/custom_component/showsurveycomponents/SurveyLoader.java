@@ -34,7 +34,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class SurveyLoader
-    implements ShowQuestionFactory<List<Answer>> {
+    implements ShowQuestionFactory<Set<Answer>> {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(SurveyLoader.class);
 
@@ -80,7 +80,7 @@ public class SurveyLoader
     for (ShowQuestionLayout s : componentList){
 
       if (!s.isCompleted()){
-        errorMessage.add(s.getQuestion().getPosition() + ": " + s.getQuestion().getTitle() + ", ");
+        errorMessage.add((s.getQuestion().getPosition()+1) + ": " + s.getQuestion().getTitle() + ", ");
         isComplete = false;
       }
     }
