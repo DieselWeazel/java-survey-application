@@ -2,25 +2,27 @@ package com.considlia.survey.ui.custom_component.showsurveycomponents.showquesti
 
 import com.considlia.survey.model.answer.Answer;
 import com.considlia.survey.model.answer.RatioAnswer;
-import com.considlia.survey.model.answer.TextAnswer;
 import com.considlia.survey.model.question.Question;
 import com.considlia.survey.model.question.RatioQuestion;
-import com.considlia.survey.ui.custom_component.showsurveycomponents.ShowQuestionComponent;
 import com.considlia.survey.ui.custom_component.showsurveycomponents.showquestionlayouts.ShowQuestionLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.radiobutton.RadioGroupVariant;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
-import com.vaadin.flow.data.validator.StringLengthValidator;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
+/**
+ * Shows TextQuestions, inherits from the ShowQuestionLayout for base purposes.
+ *
+ * Written by Jonathan Harr
+ */
 public class ShowRatioQuestionLayout extends ShowQuestionLayout {
 
   private RatioAnswer ratioAnswer = new RatioAnswer();
   private Binder<RatioAnswer> binder = new Binder<>(RatioAnswer.class);
   private RadioButtonGroup<String> ratioRadioButtons = new RadioButtonGroup<>();
+
   /**
    * Constructs a Layout for Viewing and Storing RatioAnswer
    *
@@ -49,6 +51,9 @@ public class ShowRatioQuestionLayout extends ShowQuestionLayout {
     add(ratioRadioButtons);
   }
 
+  /**
+   * Inherited Method, sets the Binder to show a message if fields are empty and only if Question requires an answer.
+   */
   public void setMandatoryStatus() {
     if (getQuestion().isMandatory()) {
       binder
@@ -76,7 +81,11 @@ public class ShowRatioQuestionLayout extends ShowQuestionLayout {
     getLOGGER().info("Logging answer: '{}'", ratioAnswer);
     return ratioAnswer;
   }
-
+  /**
+   * Checks if RatioRadioButtons are empty
+   * @param question if question is mandatory
+   * @return true if RatioRadioButtons are filled in.
+   */
   public boolean isCompleted(Question question) {
     getLOGGER().info("ShowMultiChoiceQuestionLayout isCompleted: '{}'", (!ratioRadioButtons.isEmpty()));
     return (!ratioRadioButtons.isEmpty());

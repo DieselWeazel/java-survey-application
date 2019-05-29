@@ -8,23 +8,18 @@ import com.considlia.survey.repositories.SurveyRepository;
 import com.considlia.survey.security.CustomUserService;
 import com.considlia.survey.security.SecurityUtils;
 import com.considlia.survey.ui.custom_component.ConfirmDialog;
-import com.considlia.survey.ui.custom_component.showsurveycomponents.ShowQuestionComponent;
 import com.considlia.survey.ui.custom_component.showsurveycomponents.ShowQuestionFactory;
 import com.considlia.survey.ui.custom_component.showsurveycomponents.SurveyLoader;
-import com.considlia.survey.ui.custom_component.showsurveycomponents.showquestionlayouts.ShowQuestionLayout;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H5;
 import com.vaadin.flow.component.html.Label;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.Route;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -54,9 +49,6 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
 
   // Factory stuff (Fix me)
   private ShowQuestionFactory showQuestionFactory;
-
-  private List<ShowQuestionComponent> readQuestionList = new ArrayList<>();
-  private List<ShowQuestionLayout> showQuestionLayoutList = new ArrayList<>();
 
   @Autowired private CustomUserService customUserService;
   /**

@@ -11,6 +11,8 @@ import java.util.Set;
  * Question.
  *
  * @param <T> Question, or Answer.
+ *
+ * Written by Jonathan Harr
  */
 public interface ShowQuestionFactory<T> {
 

@@ -8,6 +8,11 @@ import com.vaadin.flow.data.binder.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Abstract base layout to show Questions within {@link com.considlia.survey.ui.ShowSurveyView}
+ *
+ * Written by Jonathan Harr
+ */
 public abstract class ShowQuestionLayout extends VerticalLayout {
 
   private H5 title;
@@ -42,8 +47,19 @@ public abstract class ShowQuestionLayout extends VerticalLayout {
     return LOGGER;
   }
 
+  /**
+   * Abstract Method, each type of ShowQuestionLayout needs to gather its answer accoridingly.
+   * @return Answer
+   * @throws ValidationException
+   */
   public abstract Answer gatherResponse() throws ValidationException;
 
+  /**
+   * Checks if Answer is finished.
+   * @return true if Question is mandatory, and Answer is filled in.
+   * Also true if Question is not mandatory, and Answer is not filled in.
+   * Is false if Question is mandatory and Answer is not filled in.
+   */
   public boolean isCompleted() {
     if(question.isMandatory()){
       return isCompleted(question);
@@ -52,11 +68,18 @@ public abstract class ShowQuestionLayout extends VerticalLayout {
     }
   }
 
-  public abstract void setMandatoryStatus();
-
+  /**
+   * Abstract method, each type of ShowQuestionLayout needs to check if it's
+   * corresponding {@link Question} is mandatory.
+   * @param question
+   * @return true if Question is mandatory, and Answer filled in.
+   * false if Question is mandatory, and Answer is not filled in.
+   */
   public abstract boolean isCompleted(Question question);
 
-  public void setCompleted(boolean completed) {
-    isCompleted = completed;
-  }
+  /**
+   * Abstract method, each type of ShowQuestionLayout needs to verify the
+   * mandatory status of {@link Question}
+   */
+  public abstract void setMandatoryStatus();
 }

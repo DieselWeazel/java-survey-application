@@ -31,6 +31,8 @@ import org.springframework.stereotype.Service;
  * SurveyLoader implementing ShowQuestionFactory.
  * Displays all Questions and applies functions as if question
  * contains mandatory fields or not.
+ *
+ * Written by Jonathan Harr
  */
 @Service
 public class SurveyLoader
