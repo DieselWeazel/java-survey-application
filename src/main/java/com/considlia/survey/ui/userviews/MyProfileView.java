@@ -31,7 +31,7 @@ public class MyProfileView extends BaseView {
    * ProfileView Constructor
    * @param surveyRepository to gather User surveys and delete them.
    * @param userRepository to find User.
-   * @param customUserService to get Username and other User variables connected with
+   * @param customUserService to getEntity Username and other User variables connected with
    * {@link com.considlia.survey.model.User}
    */
   @Autowired
@@ -42,7 +42,7 @@ public class MyProfileView extends BaseView {
     this.customUserService = customUserService;
 
     /*
-     * does not show username as of now?
+     * does not getSurveyLayout username as of now?
      */
     add(new H3(customUserService.getUsername()));
 

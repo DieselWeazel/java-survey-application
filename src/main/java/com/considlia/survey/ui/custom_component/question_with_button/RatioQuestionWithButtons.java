@@ -26,7 +26,7 @@ public class RatioQuestionWithButtons extends QuestionWithButtons {
    * Calls the super constructor. Also adds a {@link RadioButtonGroup} from the values off
    * {@link String} start, end and {@link int} choices from the question parameters
    *
-   * @param question get {@link QuestionType} and also for passing it to super
+   * @param question getEntity {@link QuestionType} and also for passing it to super
    * @param survey for passing it to super
    */
   public RatioQuestionWithButtons(RatioQuestion question, CreateSurveyView survey) {

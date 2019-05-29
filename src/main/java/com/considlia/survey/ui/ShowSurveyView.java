@@ -3,12 +3,10 @@ package com.considlia.survey.ui;
 import com.considlia.survey.model.Survey;
 import com.considlia.survey.model.SurveyResponse;
 import com.considlia.survey.model.answer.Answer;
-import com.considlia.survey.model.question.Question;
 import com.considlia.survey.repositories.ResponseRepository;
 import com.considlia.survey.repositories.SurveyRepository;
 import com.considlia.survey.security.CustomUserService;
 import com.considlia.survey.security.SecurityUtils;
-import com.considlia.survey.ui.custom_component.ConfirmDialog;
 import com.considlia.survey.ui.custom_component.showsurveycomponents.ShowQuestionComponent;
 import com.considlia.survey.ui.custom_component.showsurveycomponents.ShowQuestionFactory;
 import com.considlia.survey.ui.custom_component.showsurveycomponents.SurveyLoader;
@@ -25,7 +23,6 @@ import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.Route;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -43,7 +40,7 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
   // -- Private Variables --
   // -- Containers --
   private HorizontalLayout headerHorizontalLayout = new HorizontalLayout();
-  private VerticalLayout surveyVerticalLayout = new VerticalLayout();
+  private VerticalLayout surveyVerticalLayout;
 
   private H1 h1;
   private H5 h5 = new H5();
@@ -127,38 +124,46 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
   public void loadSurvey() {
 //    for (Question question : survey.getQuestions()) {
 //      ShowQuestionLayout showQuestionLayout =
-//          (ShowQuestionLayout) showQuestionFactory.initQuestionLayout(question);
+//          (ShowQuestionLayout) showQuestionFactory.getSurveyComponentList(question);
 //      surveyVerticalLayout.add(showQuestionLayout);
 //      readQuestionList.add((ShowQuestionComponent) showQuestionLayout);
 //    }
-    showQuestionLayoutList.addAll(
-        (Collection<? extends ShowQuestionLayout>) showQuestionFactory.initQuestionLayout(survey));
+//    showQuestionLayoutList.addAll(
+//        (Collection<? extends ShowQuestionLayout>) showQuestionFactory.getSurveyComponentList(survey));
 
-    for (ShowQuestionLayout s : showQuestionLayoutList){
-      surveyVerticalLayout.add(s);
-    }
-
-    for (ShowQuestionComponent s : readQuestionList){
-      s.setMandatoryStatus();
-    }
+//    for (ShowQuestionLayout s : showQuestionLayoutList){
+//      surveyVerticalLayout.add(s);
+//    }
+//
+//    for (ShowQuestionComponent s : readQuestionList){
+//      s.setMandatoryStatus();
+//    }
+    this.surveyVerticalLayout = showQuestionFactory.getSurveyLayout(survey);
+    //    showQuestionFactory.getSurveyLayout(survey);
 
     saveButton.addClickListener(
         e -> {
-          for (ShowQuestionLayout s : showQuestionLayoutList) {
-            System.out.println(s.getQuestion().toString() + "," + s.isCompleted());
-          }
-          try {
-            for (ShowQuestionLayout s : showQuestionLayoutList) {
-              System.out.println(s.getQuestion().toString() + "," + s.isCompleted());
-              if (!s.isCompleted()) {
-                System.out.println(s.getQuestion().toString() + "," + s.isCompleted());
-                Notification.show("Fail!");
-                return;
-              }
+          if (showQuestionFactory.isComplete()) {
+            //          for (ShowQuestionLayout s : showQuestionLayoutList) {
+            //            System.out.println(s.getQuestion().toString() + "," + s.isCompleted());
+            //          }
+            try {
+              //            for (ShowQuestionLayout s : showQuestionLayoutList) {
+              //              System.out.println(s.getQuestion().toString() + "," +
+              // s.isCompleted());
+              //              if (!s.isCompleted()) {
+              //                System.out.println(s.getQuestion().toString() + "," +
+              // s.isCompleted());
+              //                Notification.show("Fail!");
+              //                return;
+              //              }
+              //            }
+
+              saveResponse();
+
+            } catch (ValidationException e1) {
+              e1.printStackTrace();
             }
-            saveResponse();
-          } catch (ValidationException e1) {
-            e1.printStackTrace();
           }
         });
     initUI();
@@ -174,11 +179,27 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
   public void saveResponse() throws ValidationException {
     SurveyResponse surveyResponse = new SurveyResponse();
 
+
+//    showQuestionFactory.getEntity().forEach(e-> surveyResponse.addAnswer(e.gatherResponse))
+//
+//    showQuestionFactory.getSurveyComponentList().forEach(e->
+//        e.gatherResponse());
+//    showQuestionFactory.getSurveyComponentList().forEach(
+//        e->
+//            surveyResponse.addAnswer(e.ga)
+//    )
+
+//    showQuestionFactory.getSurveyComponentList().forEach(answer ->
+//        surveyResponse.addAnswer(answer.))
+
     // Gathers responses from each component and adds them to our list.
-    showQuestionLayoutList.forEach(
-        e -> {
-            surveyResponse.addAnswer(e.gatherResponse());
-        });
+//    showQuestionLayoutList.forEach(
+//        e -> {
+//            surveyResponse.addAnswer(e.gatherResponse());
+//        });
+    surveyResponse = (SurveyResponse) showQuestionFactory.getEntity();
+
+
     // If User is logged in, User is stored, else not.
     if (SecurityUtils.isUserLoggedIn()) {
       surveyResponse.setUser(customUserService.getUser());
