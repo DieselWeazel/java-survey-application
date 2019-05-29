@@ -29,7 +29,7 @@ public class CreateTextComponents extends VerticalLayout {
     radioButtons.addValueChangeListener(event -> csv.changeBtn());
 
     buttonContainer.add(radioButtons);
-    add(label, buttonContainer);
+    add(buttonContainer);
   }
 
   /**
