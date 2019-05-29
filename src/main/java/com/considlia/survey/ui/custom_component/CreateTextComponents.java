@@ -35,6 +35,7 @@ public class CreateTextComponents extends VerticalLayout {
   /**
    * Gets the Radio buttons to choose Textfield or Textarea
    * 
+   * 
    * @return the Buttons
    */
   public RadioButtonGroup<String> getRadioButtons() {

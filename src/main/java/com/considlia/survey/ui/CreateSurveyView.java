@@ -209,7 +209,6 @@ public class CreateSurveyView extends BaseView
     selectOptions.setLabel("Type of question:");
     selectOptions.setItems(QuestionType.TEXTFIELD, QuestionType.RADIO, QuestionType.CHECKBOX,
         QuestionType.RATIO);
-    selectOptions.setPlaceholder("Text question");
     selectOptions.setValue(QuestionType.TEXTFIELD);
     selectOptions.addValueChangeListener(event -> {
       questionType = selectOptions.getValue();
