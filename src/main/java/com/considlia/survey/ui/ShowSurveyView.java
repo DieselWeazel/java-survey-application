@@ -143,7 +143,7 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
 
     saveButton.addClickListener(
         e -> {
-          if (showQuestionFactory.isComplete()) {
+          if (showQuestionFactory.isComplete().isConflict()) {
             //          for (ShowQuestionLayout s : showQuestionLayoutList) {
             //            System.out.println(s.getQuestion().toString() + "," + s.isCompleted());
             //          }

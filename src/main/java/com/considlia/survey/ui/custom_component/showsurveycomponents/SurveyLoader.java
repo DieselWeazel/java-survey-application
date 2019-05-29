@@ -10,6 +10,7 @@ import com.considlia.survey.model.question.RadioQuestion;
 import com.considlia.survey.model.question.RatioQuestion;
 import com.considlia.survey.model.question.TextAreaQuestion;
 import com.considlia.survey.model.question.TextQuestion;
+import com.considlia.survey.ui.custom_component.ErrorVerificationMessageDTO;
 import com.considlia.survey.ui.custom_component.showsurveycomponents.showquestionlayouts.questiontype_layout.ShowMultiChoiceQuestionLayout;
 import com.considlia.survey.ui.custom_component.showsurveycomponents.showquestionlayouts.ShowQuestionLayout;
 import com.considlia.survey.ui.custom_component.showsurveycomponents.showquestionlayouts.questiontype_layout.ShowRatioQuestionLayout;
@@ -36,6 +37,8 @@ public class SurveyLoader
 
   private List<ShowQuestionLayout> componentList = new ArrayList<>();
 
+  private String errorMessage;
+
   @Override
   public VerticalLayout getSurveyLayout(Survey survey){
     this.survey=survey;
@@ -56,17 +59,22 @@ public class SurveyLoader
 
   // TODO change me to a DAO Object!
   @Override
-  public boolean isComplete() {
+  public ErrorVerificationMessageDTO isComplete() {
 //    boolean[] arr = answerList.forEach(e-> e.isCompleted());
+
+    errorMessage = "Following Questions are mandatory: ";
     boolean isComplete = true;
     for (ShowQuestionLayout s : componentList){
       LOGGER.info("isComplete inside SurveyLoader '{}'", s.isCompleted());
+      errorMessage += s.getQuestion().getTitle() + ", ";
       if (!s.isCompleted()){
         isComplete = false;
       }
     }
+    errorMessage += "these have to be answered in order to submit Survey";
+    LOGGER.info("errorMesage is : '{}' ", errorMessage);
     LOGGER.info("isComplete() returns: '{}', ", isComplete);
-    return isComplete;
+    return new ErrorVerificationMessageDTO(isComplete, errorMessage);
   }
 
   @Override

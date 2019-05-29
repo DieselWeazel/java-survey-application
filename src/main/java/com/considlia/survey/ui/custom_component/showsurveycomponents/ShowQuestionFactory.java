@@ -2,6 +2,7 @@ package com.considlia.survey.ui.custom_component.showsurveycomponents;
 
 import com.considlia.survey.model.Survey;
 import com.considlia.survey.model.answer.Answer;
+import com.considlia.survey.ui.custom_component.ErrorVerificationMessageDTO;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import java.util.Set;
 
@@ -14,7 +15,7 @@ import java.util.Set;
 public interface ShowQuestionFactory<T> {
 
   VerticalLayout getSurveyLayout(Survey survey);
-  boolean isComplete();
+  ErrorVerificationMessageDTO isComplete();
   Set<Answer> getList();
 
 }
