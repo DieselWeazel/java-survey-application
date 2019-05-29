@@ -88,12 +88,16 @@ public class EditDialog extends Dialog {
     setCommonValues(choosenQuestion);
 
     TextField startLimit = new TextField();
+    startLimit.setLabel("The value of the first option");
     startLimit.setValue(choosenQuestion.getStart());
 
     TextField endLimit = new TextField();
+    endLimit.setLabel("The value of the last option");
     endLimit.setValue(choosenQuestion.getEnd());
 
     NumberField stepperField = new NumberField();
+    stepperField.setLabel("Number of options");
+    stepperField.getStyle().set("width", "140px");
     stepperField.setValue((double) choosenQuestion.getChoices());
     stepperField.setMin(2);
     stepperField.setMax(10);
