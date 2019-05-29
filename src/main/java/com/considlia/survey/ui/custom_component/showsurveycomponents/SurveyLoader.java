@@ -58,12 +58,14 @@ public class SurveyLoader
   @Override
   public boolean isComplete() {
 //    boolean[] arr = answerList.forEach(e-> e.isCompleted());
-    boolean isComplete = false;
+    boolean isComplete = true;
     for (ShowQuestionLayout s : componentList){
-      if (s.isCompleted()){
-        isComplete = true;
+      LOGGER.info("isComplete inside SurveyLoader '{}'", s.isCompleted());
+      if (!s.isCompleted()){
+        isComplete = false;
       }
     }
+    LOGGER.info("isComplete() returns: '{}', ", isComplete);
     return isComplete;
   }
 

@@ -63,8 +63,8 @@ public class ShowTextAreaQuestionLayout extends ShowQuestionLayout {
     getLOGGER().info("Logging question: '{}'", getQuestion());
     getLOGGER().info("Bean Valid: '{}'", binder.writeBeanIfValid(textAnswer));
     binder.writeBean(textAnswer);
-      getLOGGER().info("Logging answer: '{}'", textAnswer);
-      return textAnswer;
+    getLOGGER().info("Logging answer: '{}'", textAnswer);
+    return textAnswer;
   }
 
   public boolean isCompleted(Question question) {
