@@ -22,10 +22,9 @@ public class CreateTextComponents extends VerticalLayout {
   public CreateTextComponents(CreateSurveyView csv) {
 
     HorizontalLayout buttonContainer = new HorizontalLayout();
-    Label label = new Label();
-    label.add("Answers in: ");
 
     radioButtons = new RadioButtonGroup<>();
+    radioButtons.setLabel("Answers in:");
     radioButtons.setItems("Textfield", "Textarea");
     radioButtons.addValueChangeListener(event -> csv.changeBtn());
 
