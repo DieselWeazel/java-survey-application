@@ -1,6 +1,5 @@
 package com.considlia.survey.ui;
 
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -35,13 +34,5 @@ public abstract class BaseView extends VerticalLayout {
   public void setClassId() {
     setSizeUndefined();
     setId("baseview");
-  }
-
-  /**
-   * Navigates back to home/HomeView.class
-   * {@link HomeView}
-   */
-  public void navigateBackToHomeView(){
-    UI.getCurrent().navigate("");
   }
 }

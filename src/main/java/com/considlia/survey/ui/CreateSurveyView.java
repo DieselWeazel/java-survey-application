@@ -37,6 +37,7 @@ import com.vaadin.flow.router.BeforeLeaveObserver;
 import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.OptionalParameter;
 import com.vaadin.flow.router.Route;
+import javafx.scene.control.CheckBox;
 
 /**
  * Handles everything regarding creating or editing a {@link Survey}
@@ -176,9 +177,11 @@ public class CreateSurveyView extends BaseView
   /**
    * Creates and sets events for questionTitleTextField {@link TextField} and selectOptions
    * {@link Select}. Events invokes userCreationQuestion with value QuestionType. Also creates
-   * mandatory {@link Checkbox}.
+   * mandatory {@link CheckBox}. Type of question is always Text question and Textfield as
+   * preselected
    */
   public void initAddQuestionContainer() {
+
     questionTitleTextField = createTextField("300px", "Question", false);
     questionTitleTextField.addValueChangeListener(event -> {
 
@@ -203,9 +206,10 @@ public class CreateSurveyView extends BaseView
     });
 
     selectOptions = new Select<>();
-    selectOptions.setPlaceholder("Type of question");
+    selectOptions.setLabel("Type of question:");
     selectOptions.setItems(QuestionType.TEXTFIELD, QuestionType.RADIO, QuestionType.CHECKBOX,
         QuestionType.RATIO);
+    selectOptions.setValue(QuestionType.TEXTFIELD);
     selectOptions.addValueChangeListener(event -> {
       questionType = selectOptions.getValue();
       if (event.getValue() == QuestionType.TEXTFIELD) {
@@ -221,6 +225,10 @@ public class CreateSurveyView extends BaseView
         addQuestionButton.setEnabled(false);
       }
     });
+
+    createTextComponents = new CreateTextComponents(this);
+
+    extraComponents.add(createTextComponents);
 
     mandatory = new Checkbox("Mandatory Question");
   }
@@ -270,9 +278,10 @@ public class CreateSurveyView extends BaseView
 
   /**
    * Adds question to {@link Survey} object. Then clears components and variables used in
-   * addQuestionContainer
+   * addQuestionContainer And sets Type of question as Text question and Textfield as preselected
    */
   public void addQuestion() {
+
     questionTitleTextField.focus();
     questionType = selectOptions.getValue();
 
@@ -289,18 +298,23 @@ public class CreateSurveyView extends BaseView
 
     refreshItemsInGUI();
 
+    questionTitleTextField.setValue("");
+    selectOptions.setValue(QuestionType.TEXTFIELD);
+
+    extraComponents.removeAll();
+    createTextComponents = new CreateTextComponents(this);
+    createTextComponents.getRadioButtons().setValue("Textfield");
+    extraComponents.add(createTextComponents);
+
     createAlternative = null;
     createRatioComponents = null;
-    createTextComponents = null;
     questionType = null;
-
-    questionTitleTextField.setValue("");
-    selectOptions.clear();
     checkFilledFields();
 
     addQuestionContainer.setVisible(true);
     addQuestionButton.setEnabled(false);
     mandatory.setValue(false);
+
   }
 
   /**

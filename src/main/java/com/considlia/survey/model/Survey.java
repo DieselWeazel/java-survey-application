@@ -15,7 +15,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
-import org.hibernate.validator.constraints.Length;
 import com.considlia.survey.model.question.Question;
 
 /**
@@ -32,19 +31,12 @@ public class Survey {
   @Column(name = "survey_id")
   private Long id;
 
-  private String title, creator;
-
-  @Column
-  // setting max length to 1000, default length is 255
-  @Length(max = 1000)
-  private String description;
-
+  private String title, creator, description;
   private LocalDate date = LocalDate.now();
   private SurveyStatus status;
 
   @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   @JoinColumn(name = "survey_id")
-  @OrderBy("position ASC")
   private List<Question> questions = new ArrayList<>();
 
   @ManyToOne(fetch = FetchType.LAZY)
