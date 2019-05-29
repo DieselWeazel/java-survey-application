@@ -116,31 +116,31 @@ public class SurveyLoader
    */
   private ShowQuestionLayout loadQuestion(Question question) {
 
-//    LOGGER.info("SurveyLoader: Loading a question");
+    LOGGER.info("SurveyLoader: Loading a question");
     if (question instanceof CheckBoxQuestion) {
       MultiQuestion mq = (MultiQuestion) question;
       ShowMultiChoiceQuestionLayout showMultiChoiceQuestionLayout =
           new ShowMultiChoiceQuestionLayout(mq);
-//      LOGGER.info("SurveyLoader: Loading '{}'", mq.getTitle());
+      LOGGER.info("SurveyLoader: Loading '{}'", mq.getTitle());
       return showMultiChoiceQuestionLayout;
     } else if (question instanceof RadioQuestion) {
       RadioQuestion radioQuestion = (RadioQuestion) question;
       ShowSingleChoiceQuestionLayout showSingleChoiceQuestionLayout =
           new ShowSingleChoiceQuestionLayout(radioQuestion);
-//      LOGGER.info("SurveyLoader: Loading '{}'", radioQuestion.getTitle());
+      LOGGER.info("SurveyLoader: Loading '{}'", radioQuestion.getTitle());
       return showSingleChoiceQuestionLayout;
     } else if (question instanceof TextQuestion) {
       ShowTextQuestionLayout showTextQuestionLayout = new ShowTextQuestionLayout(question);
-//      LOGGER.info("SurveyLoader: Loading '{}'", question.getTitle());
+      LOGGER.info("SurveyLoader: Loading '{}'", question.getTitle());
       return showTextQuestionLayout;
     } else if (question instanceof TextAreaQuestion) {
       ShowTextAreaQuestionLayout showTextAreaQuestionLayout = new ShowTextAreaQuestionLayout(question);
-//      LOGGER.info("SurveyLoader: loading '{}'", question.getTitle());
+      LOGGER.info("SurveyLoader: loading '{}'", question.getTitle());
       return showTextAreaQuestionLayout;
     } else if (question instanceof RatioQuestion) {
       RatioQuestion rq = (RatioQuestion) question;
       ShowRatioQuestionLayout showRatioQuestionLayout = new ShowRatioQuestionLayout(rq);
-//      LOGGER.info("SurveyLoader: Loading '{}'", rq.getTitle());
+      LOGGER.info("SurveyLoader: Loading '{}'", rq.getTitle());
       return showRatioQuestionLayout;
     }
     throw new RuntimeException("No Layout Available for Question: " + question.getQuestionType());
