@@ -10,7 +10,6 @@ import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
 
-@StyleSheet("css/app.css")
 public class CreateRatioComponents extends VerticalLayout {
 
   private CreateSurveyView csv;
