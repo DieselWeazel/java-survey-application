@@ -14,7 +14,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.Table;
 import com.considlia.survey.model.answer.Answer;
 import com.considlia.survey.security.SecurityUtils;
 
@@ -23,7 +22,6 @@ import com.considlia.survey.security.SecurityUtils;
  * {@link com.considlia.survey.model.question.Question}
  */
 @Entity
-@Table(name = "surveyresponses")
 public class SurveyResponse {
 
   @Id
