@@ -1,7 +1,5 @@
 package com.considlia.survey.model;
 
-import com.considlia.survey.model.answer.Answer;
-import com.considlia.survey.security.SecurityUtils;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
@@ -17,13 +15,15 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import com.considlia.survey.model.answer.Answer;
+import com.considlia.survey.security.SecurityUtils;
 
 /**
  * SurveyResponse of parent entity {@link Survey} Used for storing each response with answers of
  * {@link com.considlia.survey.model.question.Question}
  */
 @Entity
-@Table(name = "surveyresponses")
+@Table(name = "surveyresponse")
 public class SurveyResponse {
 
   @Id
@@ -96,7 +96,7 @@ public class SurveyResponse {
    * Gets list of Answers.
    *
    * @return list of Answers to {@link com.considlia.survey.model.question.Question} belonging to
-   *     {@link Survey}
+   *         {@link Survey}
    */
   public Set<Answer> getAnswers() {
     return answers;
@@ -106,7 +106,7 @@ public class SurveyResponse {
    * Sets Answers within SurveyResponse.
    *
    * @param answers list of Answers to {@link com.considlia.survey.model.question.Question}
-   *     belonging to {@link Survey}
+   *        belonging to {@link Survey}
    */
   public void setAnswers(Set<Answer> answers) {
     this.answers = answers;
@@ -132,6 +132,7 @@ public class SurveyResponse {
 
   /**
    * Get the Survey of origin for SurveyResponse
+   * 
    * @return Survey that owns this SurveyResponse.
    */
   public Survey getSurvey() {
@@ -140,6 +141,7 @@ public class SurveyResponse {
 
   /**
    * Set the Survey of origin to this response.
+   * 
    * @param survey
    */
   public void setSurvey(Survey survey) {
@@ -161,4 +163,14 @@ public class SurveyResponse {
           "User is not signed in, setting a User for SurveyResponse Entity not possible.");
     }
   }
+
+  public Long getTime() {
+    return time;
+  }
+
+  public void setTime(Long time) {
+    this.time = time;
+  }
+
+
 }

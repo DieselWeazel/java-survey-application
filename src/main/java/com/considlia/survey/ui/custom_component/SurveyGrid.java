@@ -216,7 +216,7 @@ public class SurveyGrid extends VerticalLayout {
   }
 
   /**
-   * Removes Survey, refreshes Grid to correctly getSurveyLayout the remaining Surveys.
+   * Removes Survey, refreshes Grid to correctly show the remaining Surveys.
    * @param survey to be removed.
    */
   private void removeSurveyUpdateGrid(Survey survey) {

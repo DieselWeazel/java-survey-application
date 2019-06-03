@@ -20,6 +20,8 @@ import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.Route;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -36,8 +38,8 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
 
   // -- Private Variables --
   // -- Containers --
-  private HorizontalLayout headerHorizontalLayout = new HorizontalLayout();
-  private VerticalLayout surveyVerticalLayout;
+  private VerticalLayout headerVerticalLayout = new VerticalLayout();
+  private VerticalLayout surveyVerticalLayout = new VerticalLayout();
 
   private H1 h1;
   private H5 h5 = new H5();
@@ -46,6 +48,7 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
   private ResponseRepository responseRepository;
   private Survey survey;
   private boolean containsMandatory = false;
+  private LocalDateTime start = LocalDateTime.now();
 
   // Factory stuff (Fix me)
   private ShowQuestionFactory showQuestionFactory;
@@ -72,19 +75,17 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
   /** initiates page GUI. */
   private void initUI() {
 
-    headerHorizontalLayout.setId("createheader");
+    headerVerticalLayout.setId("createheader");
     surveyVerticalLayout.setId("questionpackage");
     h1.setMinWidth("70%");
 
-    headerHorizontalLayout.setDefaultVerticalComponentAlignment(Alignment.BASELINE);
-    headerHorizontalLayout.setVerticalComponentAlignment(Alignment.CENTER, h5);
-    headerHorizontalLayout.add(h1, h5);
+    headerVerticalLayout.add(h1, h5);
 
     if (containsMandatory) {
       Label mandatoryLabel = new Label("* = Mandatory question");
-      add(headerHorizontalLayout, mandatoryLabel, surveyVerticalLayout);
+      add(headerVerticalLayout, mandatoryLabel, surveyVerticalLayout);
     } else {
-      add(headerHorizontalLayout, surveyVerticalLayout);
+      add(headerVerticalLayout, surveyVerticalLayout);
     }
     add(saveButton);
   }
@@ -140,6 +141,8 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
    */
   public void saveResponse() throws ValidationException {
     SurveyResponse surveyResponse = new SurveyResponse();
+    surveyResponse.setTime(start.until(LocalDateTime.now(), ChronoUnit.SECONDS));
+
     surveyResponse.setAnswers((Set<Answer>) showQuestionFactory.getList());
 
     // If User is logged in, User is stored, else not.

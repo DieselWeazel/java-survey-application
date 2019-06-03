@@ -37,7 +37,6 @@ import com.vaadin.flow.router.BeforeLeaveObserver;
 import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.OptionalParameter;
 import com.vaadin.flow.router.Route;
-import javafx.scene.control.CheckBox;
 
 /**
  * Handles everything regarding creating or editing a {@link Survey}
@@ -132,6 +131,8 @@ public class CreateSurveyView extends BaseView
     descriptionTextArea = new TextArea();
 
     surveyTitleTextField.addValueChangeListener(titleChange -> {
+      // validates textField value with validateString
+      titleChange.getSource().setValue(validateString(titleChange.getSource().getValue(), 70));
       checkFilledFields();
     });
     creatorNameTextField.addValueChangeListener(creatorChange -> {
@@ -139,6 +140,8 @@ public class CreateSurveyView extends BaseView
     });
     descriptionTextArea.addValueChangeListener(descChange -> {
       hasChanges = true;
+      // validates textField value with validateString
+      descChange.getSource().setValue(validateString(descChange.getSource().getValue(), 1000));
     });
 
     descriptionTextArea.setLabel("Description");
@@ -173,18 +176,14 @@ public class CreateSurveyView extends BaseView
   /**
    * Creates and sets events for questionTitleTextField {@link TextField} and selectOptions
    * {@link Select}. Events invokes userCreationQuestion with value QuestionType. Also creates
-   * mandatory {@link CheckBox}.
+   * mandatory {@link Checkbox}.
    */
   public void initAddQuestionContainer() {
     questionTitleTextField = createTextField("300px", "Question", false);
     questionTitleTextField.addValueChangeListener(event -> {
 
-      // checks if the the string contains more than 255 characters. If true cuts string after index
-      // 255
-      if (event.getSource().getValue().length() > 255) {
-        event.getSource().setValue(event.getSource().getValue().substring(0, 255));
-        Notification.show("Question can max contain 255 characters");
-      }
+      // validates textField value with validateString
+      event.getSource().setValue(validateString(event.getSource().getValue(), 255));
 
       if (questionTitleTextField.isEmpty() || selectOptions.getValue() == null) {
         addQuestionButton.setEnabled(false);
@@ -204,9 +203,11 @@ public class CreateSurveyView extends BaseView
     });
 
     selectOptions = new Select<>();
-    selectOptions.setPlaceholder("Type of question");
+    selectOptions.setLabel("Type of question: ");
     selectOptions.setItems(QuestionType.TEXTFIELD, QuestionType.RADIO, QuestionType.CHECKBOX,
         QuestionType.RATIO);
+    selectOptions.setValue(QuestionType.TEXTFIELD);
+
     selectOptions.addValueChangeListener(event -> {
       questionType = selectOptions.getValue();
       if (event.getValue() == QuestionType.TEXTFIELD) {
@@ -223,6 +224,8 @@ public class CreateSurveyView extends BaseView
       }
     });
 
+    createTextComponents = new CreateTextComponents(this);
+    extraComponents.add(createTextComponents);
     mandatory = new Checkbox("Mandatory Question");
   }
 
@@ -249,8 +252,8 @@ public class CreateSurveyView extends BaseView
    * Removes all questions, then adds all Questions with new index values. Invokes
    * {@link updateMoveButtonStatus()}
    */
-  public void refreshItems() {
-    setIndex();
+  public void refreshItemsInGUI() {
+    setPositions();
     questions.removeAll();
     extraComponents.removeAll();
 
@@ -263,7 +266,7 @@ public class CreateSurveyView extends BaseView
   /**
    * Set each questions position depending on its index in the list
    */
-  public void setIndex() {
+  public void setPositions() {
     for (Question q : thisSurvey.getQuestions()) {
       q.setPosition(thisSurvey.getQuestions().indexOf(q));
     }
@@ -288,15 +291,19 @@ public class CreateSurveyView extends BaseView
         .addQuestion(QuestionFactory.createQuestion(questionType, questionTitleTextField.getValue(),
             mandatory.getValue(), createAlternative.getAlternativeList(), createRatioComponents));
 
-    refreshItems();
+    refreshItemsInGUI();
+
+    questionTitleTextField.setValue("");
+    selectOptions.setValue(QuestionType.TEXTFIELD);
+
+    extraComponents.removeAll();
+    createTextComponents = new CreateTextComponents(this);
+    createTextComponents.getRadioButtons().setValue("Textfield");
+    extraComponents.add(createTextComponents);
 
     createAlternative = null;
     createRatioComponents = null;
-    createTextComponents = null;
     questionType = null;
-
-    questionTitleTextField.setValue("");
-    selectOptions.clear();
     checkFilledFields();
 
     addQuestionContainer.setVisible(true);
@@ -353,8 +360,8 @@ public class CreateSurveyView extends BaseView
             && createTextComponents.getRadioButtons().getValue() != null);
         break;
       case RATIO:
-        addQuestionButton
-            .setEnabled(!createRatioComponents.isLimitEmpty() && !questionTitleTextField.isEmpty());
+        addQuestionButton.setEnabled(createRatioComponents.limitsContainsOnlyLetters()
+            && !createRatioComponents.isLimitEmpty() && !questionTitleTextField.isEmpty());
 
         break;
       case RADIO:
@@ -378,16 +385,14 @@ public class CreateSurveyView extends BaseView
   /**
    * Manages changing position of questions.
    *
-   * @param button the {@link Button} attached to the {@link QuestionWithButtons}
+   * @param question {@link Question}
    * @param moveDirection 1 = down, -1 = up
    */
-  public void moveQuestion(Button button, int moveDirection) {
-    QuestionWithButtons qb = (QuestionWithButtons) button.getParent().get().getParent().get();
-    int currentIndex = thisSurvey.getQuestions().indexOf(qb.getQuestion());
-    thisSurvey.getQuestions().remove(qb.getQuestion());
-    thisSurvey.getQuestions().add(currentIndex + moveDirection, qb.getQuestion());
+  public void moveQuestion(Question question, int moveDirection) {
+    thisSurvey.getQuestions().remove(question);
+    thisSurvey.getQuestions().add(question.getPosition() + moveDirection, question);
 
-    refreshItems();
+    refreshItemsInGUI();
     hasChanges = true;
   }
 
@@ -395,12 +400,12 @@ public class CreateSurveyView extends BaseView
    * Removes question from questions {@link List} in {@link Survey}. Invoked from
    * {@link ConfirmDialog}
    *
-   * @param questionWithButtons type: {@link QuestionWithButtons}
+   * @param question type: {@link Question}
    */
-  public void removeQuestion(QuestionWithButtons questionWithButtons) {
-    thisSurvey.getQuestions().remove(questionWithButtons.getQuestion());
+  public void removeQuestion(Question question) {
+    thisSurvey.getQuestions().remove(question);
 
-    refreshItems();
+    refreshItemsInGUI();
     checkFilledFields();
   }
 
@@ -478,7 +483,7 @@ public class CreateSurveyView extends BaseView
       surveyTitleTextField.setValue(thisSurvey.getTitle());
       creatorNameTextField.setValue(thisSurvey.getCreator());
       descriptionTextArea.setValue(thisSurvey.getDescription());
-      refreshItems();
+      refreshItemsInGUI();
 
       submitSurveyButton.setText("Save Survey");
       updateMoveButtonStatus();
@@ -513,5 +518,20 @@ public class CreateSurveyView extends BaseView
       ConfirmDialog dialog = new ConfirmDialog(action, this);
       dialog.open();
     }
+  }
+
+  /**
+   * If string is longer than desired it is trimmed down to desired length.
+   * 
+   * @param string
+   * @param stringMaxLength
+   * @returns string with valid length
+   */
+  public String validateString(String string, int stringMaxLength) {
+    if (string.length() > stringMaxLength) {
+      string = string.substring(0, stringMaxLength);
+      Notification.show("Textfield can contain maximum " + stringMaxLength + " characters");
+    }
+    return string;
   }
 }
