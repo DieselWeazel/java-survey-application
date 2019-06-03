@@ -29,7 +29,7 @@ public class CustomUserService extends User {
   public User getUser() {
     Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     User user = new User();
-    // If Principal is of type User, get the User.
+    // If Principal is of type User, getList the User.
     // Mandatory
     if (principal instanceof UserDetails) {
       String username = ((UserDetails) principal).getUsername();

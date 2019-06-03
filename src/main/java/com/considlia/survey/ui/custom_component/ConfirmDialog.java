@@ -124,6 +124,22 @@ public class ConfirmDialog extends Dialog {
   }
 
   /**
+   * ConfirmDialog to handle DTO Verification, this Confirm Dialog is applicable to
+   * all usecases, since input parameter is of class {@link ErrorVerificationMessageDTO}
+   * If only one String, only pass one String into the array.
+   *
+   * Can be expanded/overloaded to handle constructors of type
+   * {@link ErrorVerificationMessageDTO} with only one String.
+   * @param errorVerificationMessageDTO
+   * Written by Jonathan Harr
+   */
+  public ConfirmDialog(ErrorVerificationMessageDTO errorVerificationMessageDTO){
+    for (String s : errorVerificationMessageDTO.getErrorText()){
+      add(new H5(s));
+    }
+    add(new Button("Understood!", e-> close()));
+  }
+  /**
    * Creates a {@link Button} with the text "Cancel" and a {@link ClickEvent} that closes the
    * {@link Dialog}
    */

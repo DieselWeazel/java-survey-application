@@ -77,12 +77,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         .authorizeRequests()
         .requestMatchers(SecurityUtils::isFrameworkInternalRequest)
         .permitAll()
+
         .antMatchers("/profileview")
         .hasAuthority("USER")
-        .antMatchers("/profileview")
-        .hasAuthority("ADMIN")
         .antMatchers("/createsurvey", "/createsurvey/*", "/createsurvey/**")
-        .hasAuthority("ADMIN")
+        .hasAuthority("USER")
+
         //        .anyRequest().hasAnyAuthority(Role.getAllRoles())
         .and()
         .formLogin()
