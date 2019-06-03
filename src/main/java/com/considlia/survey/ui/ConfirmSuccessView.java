@@ -11,6 +11,8 @@ import com.vaadin.flow.router.Route;
 /**
  * Custom Navigation Page, main purpose is to display to user what has happened upon a successful event such as saving a survey
  * or sending in a response. Can be modified to include more purposes.
+ *
+ * Written By Jonathan
  */
 @Route(value = "confirm", layout = MainLayout.class)
 public class ConfirmSuccessView extends BaseView implements HasUrlParameter<String> {
