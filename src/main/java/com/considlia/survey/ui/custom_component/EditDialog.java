@@ -9,16 +9,19 @@ import com.considlia.survey.ui.custom_component.question_with_button.QuestionWit
 import com.considlia.survey.ui.custom_component.question_with_button.RatioQuestionWithButtons;
 import com.considlia.survey.ui.custom_component.question_with_button.TextQuestionWithButtons;
 import com.vaadin.flow.component.ClickEvent;
+import com.vaadin.flow.component.HasValue.ValueChangeListener;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.value.ValueChangeMode;
 
 public class EditDialog extends Dialog {
 
@@ -87,13 +90,10 @@ public class EditDialog extends Dialog {
         (RatioQuestionWithButtons) inputButton.getParent().get().getParent().get();
     setCommonValues(choosenQuestion);
 
-    TextField startLimit = new TextField();
-    startLimit.setLabel("The value of the first option");
-    startLimit.setValue(choosenQuestion.getStart());
-
-    TextField endLimit = new TextField();
-    endLimit.setLabel("The value of the last option");
-    endLimit.setValue(choosenQuestion.getEnd());
+    TextField startLimit =
+        constructRatioTextFields("The value of the first option", choosenQuestion.getStart());
+    TextField endLimit =
+        constructRatioTextFields("The value of the last option", choosenQuestion.getEnd());
 
     NumberField stepperField = new NumberField();
     stepperField.setLabel("Number of options");
@@ -107,14 +107,32 @@ public class EditDialog extends Dialog {
 
     confirm = new Button("Confirm");
     confirm.addClickListener(onConfirm -> {
-      choosenQuestion.setStart(startLimit.getValue());
-      choosenQuestion.setEnd(endLimit.getValue());
+      choosenQuestion.setStart(startLimit.getValue().trim());
+      choosenQuestion.setEnd(endLimit.getValue().trim());
       choosenQuestion.setChoices((int) Math.round(stepperField.getValue()));
       updateCommonValues(choosenQuestion);
       choosenQuestion.updateRadioOptions();
 
       close();
     });
+  }
+
+  /**
+   * Constructs a {@link TextField} with label and value set from the parameters. ValueChangeMode is
+   * set to EAGER. Has a {@link ValueChangeListener}
+   * 
+   * 
+   * @param labelInput - {@link String} value for the label
+   * @param valueInput - {@link String} value for the value
+   * @return constructed {@link TextField}
+   */
+  public TextField constructRatioTextFields(String labelInput, String valueInput) {
+    TextField ratioTxtField = new TextField(labelInput);
+    ratioTxtField.setValue(valueInput);
+    ratioTxtField.setValueChangeMode(ValueChangeMode.EAGER);
+    ratioTxtField.addValueChangeListener(onValueChange -> showValidNotification(ratioTxtField));
+    return ratioTxtField;
+
   }
 
   /**
@@ -148,7 +166,7 @@ public class EditDialog extends Dialog {
       List<String> strings = new ArrayList<>();
       for (TextField txt : textFieldList) {
         if (!txt.getValue().trim().equals("")) {
-          strings.add(txt.getValue());
+          strings.add(txt.getValue().trim());
 
         }
       }
@@ -202,13 +220,35 @@ public class EditDialog extends Dialog {
   }
 
   /**
+   * Shows a {@link Notification} with a error message if the requirements aren't met.
+   * 
+   * @param txtField - {@link TextField}
+   */
+  public void showValidNotification(TextField txtField) {
+    String errorMessage = "";
+    if (txtField.getValue().trim().length() < 1 || txtField.getValue().length() >= 255) {
+      errorMessage += "Can't be empty and can only contain 255 characters.";
+    }
+    if (txtField.getValue().chars().anyMatch(Character::isDigit)) {
+      errorMessage += "Can contain any numbers. ";
+    }
+    if (!errorMessage.equals("")) {
+      confirm.setEnabled(false);
+      new Notification(errorMessage, 2000).open();
+    } else {
+      confirm.setEnabled(true);
+
+    }
+  }
+
+  /**
    * Sets the values that every {@link QuestionWithButtons} have in common (title and if its
    * mandatory)
    *
    * @param choosenQuestion is the component from which the data is taken from
    */
   private void setCommonValues(QuestionWithButtons choosenQuestion) {
-    question.setValue(choosenQuestion.getQuestion().getTitle());
+    question.setValue(choosenQuestion.getQuestion().getTitle().trim());
     mandatory.setValue(choosenQuestion.getQuestion().isMandatory());
   }
 
