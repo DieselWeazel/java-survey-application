@@ -2,7 +2,6 @@ package com.considlia.survey.ui.custom_component;
 
 import com.considlia.survey.ui.CreateSurveyView;
 import com.vaadin.flow.component.HasValue.ValueChangeListener;
-import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -52,13 +51,14 @@ public class CreateRatioComponents extends VerticalLayout {
   }
 
   /**
-   * Returns whether TextFields lowerLimit and upperLimit contains only letters.
+   * Returns whether TextFields lowerLimit and upperLimit dosn't contain any digits.
    *
    * @return True if ther's only letters. False if not
    */
   public boolean limitsContainsOnlyLetters() {
-    return lowerLimit.getValue().chars().allMatch(Character::isLetter)
-        && upperLimit.getValue().chars().allMatch(Character::isLetter);
+
+    return !(lowerLimit.getValue().chars().anyMatch(Character::isDigit)
+        || upperLimit.getValue().chars().anyMatch(Character::isDigit));
   }
 
   /**
@@ -68,11 +68,11 @@ public class CreateRatioComponents extends VerticalLayout {
    */
   public void showValidNotification(TextField txtField) {
     String errorMessage = "";
-    if (txtField.getValue().length() < 1 || txtField.getValue().length() >= 255) {
-      errorMessage += "Can't be empty and can only contain 255 characters. ";
+    if (txtField.getValue().trim().length() < 1 || txtField.getValue().length() >= 255) {
+      errorMessage += "Can't be empty and can only contain 255 characters.";
     }
-    if (!txtField.getValue().chars().allMatch(Character::isLetter)) {
-      errorMessage += "Can only contain letters. ";
+    if (txtField.getValue().chars().anyMatch(Character::isDigit)) {
+      errorMessage += "Can contain any numbers. ";
     }
     if (!errorMessage.equals("")) {
       new Notification(errorMessage, 2000).open();
