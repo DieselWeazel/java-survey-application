@@ -20,8 +20,9 @@ public class ShowTextAnswerLayout extends ShowAnswerLayout {
     super(question);
     for (TextAnswer answer : answerList){
       if (answer.getQuestion().getQuestionType() == QuestionType.TEXTFIELD) {
+        getLOGGER().info("Adding answer '{}'", answer.getTextAnswer());
         allTextAnswers.add(answer.getTextAnswer());
-        add(new H5(answer.getTextAnswer()) + ", ");
+        add(new H5(answer.toString() + ", "));
       }
     }
 

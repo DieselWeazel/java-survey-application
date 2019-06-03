@@ -80,7 +80,7 @@ public class ResponseLoader implements ShowQuestionFactory<List<SurveyResponse>>
 
   @Override
   public ShowAnswerLayout loadLayout(Question question) {
-    LOGGER.info("ReponseLoader: Loading a question, type '{}'", question.getQuestionType());
+    LOGGER.info("Loading a question, type '{}'", question.getQuestionType());
 
     if (question instanceof CheckBoxQuestion) {
 
@@ -93,7 +93,7 @@ public class ResponseLoader implements ShowQuestionFactory<List<SurveyResponse>>
           }
         }
       }
-      LOGGER.info("ReponseLoader: Loading '{}'", question.getTitle());
+      LOGGER.info("Loading '{}'", question.getTitle());
       return new ShowMultiChoiceAnswerLayout(question, list);
 
     } else if (question instanceof RadioQuestion) {
@@ -103,7 +103,7 @@ public class ResponseLoader implements ShowQuestionFactory<List<SurveyResponse>>
       for (Answer answer : question.getAnswerSet()){
         list.add((RadioAnswer) answer);
       }
-      LOGGER.info("ReponseLoader: Loading '{}'", question.getTitle());
+      LOGGER.info("Loading '{}'", question.getTitle());
       return new ShowRadioAnswerLayout(question, list);
 
     } else if (question instanceof TextQuestion) {
@@ -113,7 +113,7 @@ public class ResponseLoader implements ShowQuestionFactory<List<SurveyResponse>>
       for (Answer answer : question.getAnswerSet()){
         list.add((TextAnswer) answer);
       }
-      LOGGER.info("ReponseLoader: Loading '{}'", question.getTitle());
+      LOGGER.info("Loading '{}'", question.getTitle());
       return new ShowTextAnswerLayout(question, list);
 
     } else if (question instanceof TextAreaQuestion) {
@@ -123,7 +123,7 @@ public class ResponseLoader implements ShowQuestionFactory<List<SurveyResponse>>
       for (Answer answer : question.getAnswerSet()){
         list.add((TextAnswer) answer);
       }
-      LOGGER.info("ReponseLoader: loading '{}'", question.getTitle());
+      LOGGER.info("loading '{}'", question.getTitle());
       return new ShowTextAreaAnswerLayout(question, list);
     } else if (question instanceof RatioQuestion) {
 
@@ -132,7 +132,7 @@ public class ResponseLoader implements ShowQuestionFactory<List<SurveyResponse>>
       for (Answer answer : question.getAnswerSet()){
         list.add((RatioAnswer) answer);
       }
-      LOGGER.info("ReponseLoader: Loading '{}'", question.getTitle());
+      LOGGER.info("Loading '{}'", question.getTitle());
       return new ShowRatioAnswerLayout(question, list);
     }
     throw new RuntimeException("No Layout Available for Question: " + question.getQuestionType());

@@ -17,9 +17,9 @@ public class ShowMultiChoiceAnswerLayout extends ShowAnswerLayout {
       List<MultiAnswerChoice> answerList) {
     super(question);
     for (MultiAnswerChoice answer : answerList){
-
+      getLOGGER().info("Adding answer '{}'", answer.getCheckedAnswer());
       allChosenAnswers.add(answer.getCheckedAnswer());
-      add(new H5(answer.getCheckedAnswer()) + ", ");
+      add(new H5(answer.getCheckedAnswer() + ", "));
 
     }
   }

@@ -19,9 +19,9 @@ public class ShowRadioAnswerLayout extends ShowAnswerLayout {
     super(question);
 
     for (RadioAnswer answer : answerList){
-
+      getLOGGER().info("Adding answer '{}'", answer.getChosenAnswer());
       radioAnswerList.add(answer.getChosenAnswer());
-      add(new H5(answer.getChosenAnswer()) + ", ");
+      add(new H5(answer.getChosenAnswer() + ", "));
 
     }
   }

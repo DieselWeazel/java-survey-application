@@ -19,8 +19,10 @@ public class ShowRatioAnswerLayout extends ShowAnswerLayout {
     super(question);
     for (RatioAnswer answer : answerList){
 
+      getLOGGER().info("Adding answer '{}'", answer.getRatioAnswer());
+
       allChosenRatioAnswers.add(answer.getRatioAnswer());
-      add(new H5(answer.getRatioAnswer()) + ", ");
+      add(new H5(answer.getRatioAnswer() + ", "));
 
     }
   }

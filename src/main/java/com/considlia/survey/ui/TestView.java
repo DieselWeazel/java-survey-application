@@ -13,10 +13,13 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.Route;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Route(value = "testview", layout = MainLayout.class)
 public class TestView extends BaseView implements HasUrlParameter<Long> {
 
+  private static final Logger LOGGER = LoggerFactory.getLogger(TestView.class);
   // -- Private Variables --
   // -- Containers --i
   //TODO maybe these could be moved to baseview? or another view, which extends baseview.
@@ -50,6 +53,8 @@ public class TestView extends BaseView implements HasUrlParameter<Long> {
 
     headerVerticalLayout.add(h1);
 
+    add(headerVerticalLayout, surveyVerticalLayout);
+
     add(navigateButton);
   }
 
@@ -58,6 +63,7 @@ public class TestView extends BaseView implements HasUrlParameter<Long> {
     if (parameter != null){
       if (surveyRepository.findById(parameter).isPresent()){
         survey = surveyRepository.getSurveyById(parameter);
+        h1.setText(survey.getTitle());
         loadSurveyResponses();
       } else {
         add(new H5("ERROR, no Survey by the ID of: " + parameter + " exists."));
@@ -67,7 +73,10 @@ public class TestView extends BaseView implements HasUrlParameter<Long> {
   }
 
   private void loadSurveyResponses() {
+    LOGGER.info("Loading Survey: '{}'", survey.getTitle());
     this.surveyVerticalLayout = showQuestionFactory.getSurveyLayout(survey);
+
+    initUI();
   }
 
   /**
