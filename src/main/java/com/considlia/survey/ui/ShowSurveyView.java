@@ -1,5 +1,9 @@
 package com.considlia.survey.ui;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.Set;
+import org.springframework.beans.factory.annotation.Autowired;
 import com.considlia.survey.model.Survey;
 import com.considlia.survey.model.SurveyResponse;
 import com.considlia.survey.model.answer.Answer;
@@ -14,23 +18,19 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H5;
 import com.vaadin.flow.component.html.Label;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.Route;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.Set;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Designated View for loading Surveys. Takes a parameter being the Survey ID Each survey loaded
  * generates a set of components.
  *
- * <p>To gather response, every component implements the interface ShowQuestionComponent, which has
- * the method GatherResponse. Call this method for each component when gathering all answers to the
+ * <p>
+ * To gather response, every component implements the interface ShowQuestionComponent, which has the
+ * method GatherResponse. Call this method for each component when gathering all answers to the
  * Survey. Link: http://localhost:8080/showsurvey/1 written by: Jonathan Harr
  */
 @Route(value = "showsurvey", layout = MainLayout.class)
@@ -50,19 +50,18 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
   private boolean containsMandatory = false;
   private LocalDateTime start = LocalDateTime.now();
 
-  // Factory stuff (Fix me)
   private ShowQuestionFactory showQuestionFactory;
 
-  @Autowired private CustomUserService customUserService;
+  @Autowired
+  private CustomUserService customUserService;
+
   /**
    * Constructs view.
    *
    * @param surveyRepository for loading Surveys.
    * @param responseRepository for storing SurveyResponse.
    */
-  public ShowSurveyView(
-      SurveyRepository surveyRepository,
-      ResponseRepository responseRepository) {
+  public ShowSurveyView(SurveyRepository surveyRepository, ResponseRepository responseRepository) {
     this.surveyRepository = surveyRepository;
     this.responseRepository = responseRepository;
     SurveyLoader surveyLoader = new SurveyLoader();
@@ -72,7 +71,9 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
     saveButton.setText("Send");
   }
 
-  /** initiates page GUI. */
+  /**
+   * Initiates page GUI.
+   */
   private void initUI() {
 
     headerVerticalLayout.setId("createheader");
@@ -99,17 +100,17 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
    */
   @Override
   public void setParameter(BeforeEvent event, Long parameter) {
-      if (parameter != null) {
-        if (surveyRepository.findById(parameter).isPresent()) {
-          survey = surveyRepository.getSurveyById(parameter);
-          h1.setText(survey.getTitle());
-          h5.setText(survey.getDescription());
-          loadSurvey();
-        } else {
-          add(new H5("ERROR, no Survey by the ID of: " + parameter + " exists."));
-          goHome();
-        }
+    if (parameter != null) {
+      if (surveyRepository.findById(parameter).isPresent()) {
+        survey = surveyRepository.getSurveyById(parameter);
+        h1.setText(survey.getTitle());
+        h5.setText(survey.getDescription());
+        loadSurvey();
+      } else {
+        add(new H5("ERROR, no Survey by the ID of: " + parameter + " exists."));
+        goHome();
       }
+    }
   }
 
   /**
@@ -117,18 +118,17 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
    */
   public void loadSurvey() {
     this.surveyVerticalLayout = showQuestionFactory.getSurveyLayout(survey);
-    saveButton.addClickListener(
-        e -> {
-          if (showQuestionFactory.isComplete().isConflict()) {
-            try {
-              saveResponse();
-            } catch (ValidationException e1) {
-              e1.printStackTrace();
-            }
-          } else {
-            new ConfirmDialog(showQuestionFactory.isComplete()).open();
-          }
-        });
+    saveButton.addClickListener(e -> {
+      if (showQuestionFactory.isComplete().isConflict()) {
+        try {
+          saveResponse();
+        } catch (ValidationException e1) {
+          e1.printStackTrace();
+        }
+      } else {
+        new ConfirmDialog(showQuestionFactory.isComplete()).open();
+      }
+    });
     initUI();
   }
 
