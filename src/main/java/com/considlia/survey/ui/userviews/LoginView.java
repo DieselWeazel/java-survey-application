@@ -21,9 +21,9 @@ import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.Route;
 
-/*
- * Currently needs a refactoring/correctly processed way of checking for Username and Password being
- * correct. (throws exception and acts on it as of onw) Jonathan
+/**
+ * Class that handles the login process.
+ * If User is logged in and somehow arrives to this view, the BeforeEnterObserver throws them back.
  */
 @Route(value = "login", layout = MainLayout.class)
 public class LoginView extends BaseView implements BeforeEnterObserver {

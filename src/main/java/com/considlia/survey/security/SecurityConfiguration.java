@@ -90,7 +90,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         .failureUrl("/failedlogin")
         .and()
         .logout()
-        .logoutSuccessUrl("/*");
+        .logoutSuccessUrl("/logout");
   }
 
   /**
