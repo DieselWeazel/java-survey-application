@@ -13,14 +13,16 @@ public abstract class ShowAnswerLayout extends VerticalLayout {
 
   private H5 title;
   private Question question;
-  private List<Answer> answerList;
   private static final Logger LOGGER = LoggerFactory.getLogger(ShowQuestionLayout.class);
 
-  public ShowAnswerLayout(Question question, List<Answer> answerList){
-    this.answerList = answerList;
+  public ShowAnswerLayout(Question question){
     this.question = question;
     title = new H5(question.getTitle() + "type: " + question.getQuestionType());
     LOGGER.info("Loading Question: '{}'", question.getTitle());
-    LOGGER.info("AnswerList size: '{}'", answerList.size());
+
+  }
+
+  public static Logger getLOGGER() {
+    return LOGGER;
   }
 }

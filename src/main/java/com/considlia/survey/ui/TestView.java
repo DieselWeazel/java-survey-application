@@ -3,6 +3,8 @@ package com.considlia.survey.ui;
 import com.considlia.survey.model.Survey;
 import com.considlia.survey.repositories.ResponseRepository;
 import com.considlia.survey.repositories.SurveyRepository;
+import com.considlia.survey.ui.custom_component.layout.ShowQuestionFactory;
+import com.considlia.survey.ui.custom_component.layout.answercomponents.ResponseLoader;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H5;
@@ -30,10 +32,13 @@ public class TestView extends BaseView implements HasUrlParameter<Long> {
   private ResponseRepository responseRepository;
   private SurveyRepository surveyRepository;
 
+  private ShowQuestionFactory showQuestionFactory;
+
   public TestView(ResponseRepository responseRepository, SurveyRepository surveyRepository){
     this.responseRepository = responseRepository;
     this.surveyRepository = surveyRepository;
-
+    ResponseLoader responseLoader = new ResponseLoader();
+    showQuestionFactory = responseLoader;
     h1 = new H1("PlaceHolder // Survey Not Actually Found, Text not Updated");
     navigateButton = new Button("GO Home");
   }
@@ -53,11 +58,16 @@ public class TestView extends BaseView implements HasUrlParameter<Long> {
     if (parameter != null){
       if (surveyRepository.findById(parameter).isPresent()){
         survey = surveyRepository.getSurveyById(parameter);
+        loadSurveyResponses();
       } else {
         add(new H5("ERROR, no Survey by the ID of: " + parameter + " exists."));
         goHome();
       }
     }
+  }
+
+  private void loadSurveyResponses() {
+    this.surveyVerticalLayout = showQuestionFactory.getSurveyLayout(survey);
   }
 
   /**

@@ -1,7 +1,14 @@
 package com.considlia.survey.ui.custom_component.layout.answercomponents;
 
+import com.considlia.survey.model.QuestionType;
 import com.considlia.survey.model.Survey;
 import com.considlia.survey.model.SurveyResponse;
+import com.considlia.survey.model.answer.Answer;
+import com.considlia.survey.model.answer.MultiAnswer;
+import com.considlia.survey.model.answer.MultiAnswerChoice;
+import com.considlia.survey.model.answer.RadioAnswer;
+import com.considlia.survey.model.answer.RatioAnswer;
+import com.considlia.survey.model.answer.TextAnswer;
 import com.considlia.survey.model.question.CheckBoxQuestion;
 import com.considlia.survey.model.question.MultiQuestion;
 import com.considlia.survey.model.question.Question;
@@ -13,6 +20,11 @@ import com.considlia.survey.ui.custom_component.ErrorVerificationMessageDTO;
 import com.considlia.survey.ui.custom_component.layout.LoadLayout;
 import com.considlia.survey.ui.custom_component.layout.ShowQuestionFactory;
 import com.considlia.survey.ui.custom_component.layout.answercomponents.showanswerlayouts.ShowAnswerLayout;
+import com.considlia.survey.ui.custom_component.layout.answercomponents.showanswerlayouts.questiontype_layout.ShowMultiChoiceAnswerLayout;
+import com.considlia.survey.ui.custom_component.layout.answercomponents.showanswerlayouts.questiontype_layout.ShowRadioAnswerLayout;
+import com.considlia.survey.ui.custom_component.layout.answercomponents.showanswerlayouts.questiontype_layout.ShowRatioAnswerLayout;
+import com.considlia.survey.ui.custom_component.layout.answercomponents.showanswerlayouts.questiontype_layout.ShowTextAnswerLayout;
+import com.considlia.survey.ui.custom_component.layout.answercomponents.showanswerlayouts.questiontype_layout.ShowTextAreaAnswerLayout;
 import com.considlia.survey.ui.custom_component.layout.showsurveycomponents.SurveyLoader;
 import com.considlia.survey.ui.custom_component.layout.showsurveycomponents.showquestionlayouts.questiontype_layout.ShowMultiChoiceQuestionLayout;
 import com.considlia.survey.ui.custom_component.layout.showsurveycomponents.showquestionlayouts.questiontype_layout.ShowRatioQuestionLayout;
@@ -20,6 +32,7 @@ import com.considlia.survey.ui.custom_component.layout.showsurveycomponents.show
 import com.considlia.survey.ui.custom_component.layout.showsurveycomponents.showquestionlayouts.questiontype_layout.ShowTextAreaQuestionLayout;
 import com.considlia.survey.ui.custom_component.layout.showsurveycomponents.showquestionlayouts.questiontype_layout.ShowTextQuestionLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import java.util.ArrayList;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,8 +47,13 @@ public class ResponseLoader implements ShowQuestionFactory<List<SurveyResponse>>
 
   @Override
   public VerticalLayout getSurveyLayout(Survey survey) {
-
-    return null;
+    this.survey = survey;
+    VerticalLayout vr = new VerticalLayout();
+    survey.getQuestions().stream().forEach(question -> {
+      ShowAnswerLayout showAnswerLayout = loadLayout(question);
+      vr.add(showAnswerLayout);
+    });
+    return vr;
   }
 
   /**
@@ -62,27 +80,60 @@ public class ResponseLoader implements ShowQuestionFactory<List<SurveyResponse>>
 
   @Override
   public ShowAnswerLayout loadLayout(Question question) {
-    LOGGER.info("ReponseLoader: Loading a question");
+    LOGGER.info("ReponseLoader: Loading a question, type '{}'", question.getQuestionType());
+
     if (question instanceof CheckBoxQuestion) {
 
+      List<MultiAnswerChoice> list = new ArrayList<>();
+
+      for (Answer answer : question.getAnswerSet()){
+        if (answer instanceof MultiAnswer){
+          for (MultiAnswerChoice multiAnswerChoice : ((MultiAnswer) answer).getMultiAnswerChoiceSet()){
+            list.add(multiAnswerChoice);
+          }
+        }
+      }
       LOGGER.info("ReponseLoader: Loading '{}'", question.getTitle());
-//      return showMultiChoiceQuestionLayout;
+      return new ShowMultiChoiceAnswerLayout(question, list);
+
     } else if (question instanceof RadioQuestion) {
 
+      List<RadioAnswer> list = new ArrayList<>();
+
+      for (Answer answer : question.getAnswerSet()){
+        list.add((RadioAnswer) answer);
+      }
       LOGGER.info("ReponseLoader: Loading '{}'", question.getTitle());
-//      return showSingleChoiceQuestionLayout;
+      return new ShowRadioAnswerLayout(question, list);
+
     } else if (question instanceof TextQuestion) {
 
+      List<TextAnswer> list = new ArrayList<>();
+
+      for (Answer answer : question.getAnswerSet()){
+        list.add((TextAnswer) answer);
+      }
       LOGGER.info("ReponseLoader: Loading '{}'", question.getTitle());
-//      return showTextQuestionLayout;
+      return new ShowTextAnswerLayout(question, list);
+
     } else if (question instanceof TextAreaQuestion) {
 
+      List<TextAnswer> list = new ArrayList<>();
+
+      for (Answer answer : question.getAnswerSet()){
+        list.add((TextAnswer) answer);
+      }
       LOGGER.info("ReponseLoader: loading '{}'", question.getTitle());
-//      return showTextAreaQuestionLayout;
+      return new ShowTextAreaAnswerLayout(question, list);
     } else if (question instanceof RatioQuestion) {
 
+      List<RatioAnswer> list = new ArrayList<>();
+
+      for (Answer answer : question.getAnswerSet()){
+        list.add((RatioAnswer) answer);
+      }
       LOGGER.info("ReponseLoader: Loading '{}'", question.getTitle());
-//      return showRatioQuestionLayout;
+      return new ShowRatioAnswerLayout(question, list);
     }
     throw new RuntimeException("No Layout Available for Question: " + question.getQuestionType());
   }
