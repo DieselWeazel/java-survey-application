@@ -20,7 +20,7 @@ public class TextQuestionWithButtons extends QuestionWithButtons {
    * Calls the super constructor. Also adds either a {@link TextField} or {@link TextArea} depending
    * on the {@link QuestionType} from the {@link TextQuestion#getQuestionType()}
    * 
-   * @param question get {@link QuestionType} and also for passing it to super
+   * @param question getList {@link QuestionType} and also for passing it to super
    * @param survey passing it to super
    */
   public TextQuestionWithButtons(TextQuestion question, CreateSurveyView survey) {

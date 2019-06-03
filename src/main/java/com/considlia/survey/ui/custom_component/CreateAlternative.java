@@ -26,7 +26,7 @@ public class CreateAlternative extends VerticalLayout {
    * private Lists alternativeList and textFieldList. Invokes createAlternative with given
    * questionType and empty arrayList.
    *
-   * @param csv Instance of current CreateSurveyView to get access to addQuestionButton.
+   * @param csv Instance of current CreateSurveyView to getList access to addQuestionButton.
    */
   public CreateAlternative(CreateSurveyView csv) {
     this.csv = csv;
@@ -82,7 +82,7 @@ public class CreateAlternative extends VerticalLayout {
    * {@link String} is more than 255 characters. Puts out notification if alternativeList contains
    * duplicates. Also manages enable/disable for addQuestionButton.
    *
-   * @param event, used to get value and source
+   * @param event, used to getList value and source
    */
   public void textFieldEvent(ComponentValueChangeEvent<TextField, String> event) {
     if (event.getSource().getValue().isEmpty() && textFieldList.size() > 1) {

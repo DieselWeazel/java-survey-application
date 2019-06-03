@@ -46,6 +46,6 @@ public class RadioAnswer extends Answer {
 
   @Override
   public String toString() {
-    return chosenAnswer.toString();
+    return chosenAnswer;
   }
 }

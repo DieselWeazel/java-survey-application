@@ -103,26 +103,60 @@ public class ConfirmDialog extends Dialog {
   /**
    * Dialog showing a error message, if User Username exists.
    */
-  public ConfirmDialog(){
+  public ConfirmDialog() {
     add(new H5("Wrong Username or Password, try again!"));
-    add(new Button("Ok", e -> close()));
+    add(initOkButton());
+
   }
+
   /**
    * Dialog showing a error message, if User Username exists.
    */
   public ConfirmDialog(String userinput) {
     add(new H5("Error, username: " + userinput + " is already taken, please take another one."));
-    add(new Button("Ok", e -> close()));
+    add(initOkButton());
   }
 
   /**
    * Dialog showing a error message, if User Email exists.
    */
-  public ConfirmDialog(String userinput, boolean email){
-    add(new H5("There already exists a User registered with this email, have you forgotten your password?"));
-    add(new Button("Ok", e -> close()));
+  public ConfirmDialog(String userinput, boolean email) {
+    add(new H5(
+        "There already exists a User registered with this email, have you forgotten your password?"));
+    add(initOkButton());
   }
 
+  /**
+   * Constructs a new {@link Button} with the text set to "Ok". {@link ClickEvent} is set to
+   * {@link Dialog#close()}. The constructed button is focused.
+   * 
+   * @return button - {@link Button}
+   */
+  public Button initOkButton() {
+    Button okButton = new Button("Ok");
+    okButton.addClickListener(onClick -> {
+      close();
+    });
+    okButton.focus();
+    return okButton;
+  }
+
+  /**
+   * ConfirmDialog to handle DTO Verification, this Confirm Dialog is applicable to
+   * all usecases, since input parameter is of class {@link ErrorVerificationMessageDTO}
+   * If only one String, only pass one String into the array.
+   *
+   * Can be expanded/overloaded to handle constructors of type
+   * {@link ErrorVerificationMessageDTO} with only one String.
+   * @param errorVerificationMessageDTO
+   * Written by Jonathan Harr
+   */
+  public ConfirmDialog(ErrorVerificationMessageDTO errorVerificationMessageDTO){
+    for (String s : errorVerificationMessageDTO.getErrorText()){
+      add(new H5(s));
+    }
+    add(new Button("Understood!", e-> close()));
+  }
   /**
    * Creates a {@link Button} with the text "Cancel" and a {@link ClickEvent} that closes the
    * {@link Dialog}
