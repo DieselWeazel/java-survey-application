@@ -467,6 +467,8 @@ public class CreateSurveyView extends BaseView
     if (parameter != null) {
       thisSurvey = surveyRepository.getSurveyById(parameter);
 
+      setTitle("Editing Survey");
+
       surveyTitleTextField.setValue(thisSurvey.getTitle());
       descriptionTextArea.setValue(thisSurvey.getDescription());
       refreshItemsInGUI();
