@@ -9,7 +9,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ShowAnswerLayout extends VerticalLayout {
+public abstract class ShowAnswerLayout extends VerticalLayout {
 
   private H5 title;
   private Question question;
@@ -19,7 +19,7 @@ public class ShowAnswerLayout extends VerticalLayout {
   public ShowAnswerLayout(Question question, List<Answer> answerList){
     this.answerList = answerList;
     this.question = question;
-    title = new H5(question.getTitle());
+    title = new H5(question.getTitle() + "type: " + question.getQuestionType());
     LOGGER.info("Loading Question: '{}'", question.getTitle());
     LOGGER.info("AnswerList size: '{}'", answerList.size());
   }

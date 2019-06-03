@@ -132,7 +132,7 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
 
   /**
    * Creates a SurveyResponse and stores all Answer(s). For each readQuestionComponent inside
-   * readQuestionList, gatherResponse() method is called storing each Answer into respective Bean,
+   * gatherResponse() method is called storing each Answer into respective Bean,
    * connecting them to each Question of origin. Saves SurveyResponse to ResponseRepository.
    *
    * @throws ValidationException
