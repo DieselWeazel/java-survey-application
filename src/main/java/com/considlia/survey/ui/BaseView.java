@@ -34,6 +34,10 @@ public abstract class BaseView extends VerticalLayout {
     setTitle(viewName);
   }
 
+  /**
+   * Sets the title of the view.
+   * @param titleText Title of view.
+   */
   protected void setTitle(String titleText) {
     title.setText(titleText);
     title.setVisible(true);
@@ -45,6 +49,14 @@ public abstract class BaseView extends VerticalLayout {
   public void setClassId() {
     setSizeUndefined();
     setId("baseview");
+  }
+
+  /**
+   * Navigate to the Custom Success View, see {@link ConfirmSuccessView}
+   * @param s being of a supported String within {@link ConfirmSuccessView}
+   */
+  public void navigateToSuccessView(String s){
+    UI.getCurrent().navigate("confirm/" + s);
   }
 
   /**

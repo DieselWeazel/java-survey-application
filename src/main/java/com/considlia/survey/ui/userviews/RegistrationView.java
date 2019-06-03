@@ -157,22 +157,22 @@ public class RegistrationView extends BaseView implements BeforeEnterObserver {
     userBinder
         .forField(firstName)
         .withValidator(
-            new StringLengthValidator("Must be more than 3 characters & max 255", 3, 255))
+            new StringLengthValidator("Must be more than 3 characters & max 255", 1, 255))
         .bind(User::getFirstName, User::setFirstName);
     userBinder
         .forField(lastName)
         .withValidator(
-            new StringLengthValidator("Must be more than 3 characters & max 255", 3, 255))
+            new StringLengthValidator("Must be more than 3 characters & max 255", 1, 255))
         .bind(User::getLastName, User::setLastName);
     userBinder
         .forField(username)
         .withValidator(
-            new StringLengthValidator("Must be more than 3 characters & max 255", 3, 255))
+            new StringLengthValidator("Must be more than 3 characters & max 255", 1, 255))
         .bind(User::getUsername, User::setUsername);
     userBinder
         .forField(passwordField)
         .withValidator(
-            new StringLengthValidator("Must be more than 3 characters & max 255", 3, 255))
+            new StringLengthValidator("Must be more than 3 characters & max 255", 1, 255))
         .bind(User::getPassword, User::setPassword);
     //    userBinder.bindInstanceFields(this);
   }

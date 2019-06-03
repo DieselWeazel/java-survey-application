@@ -420,7 +420,7 @@ public class CreateSurveyView extends BaseView
     thisSurvey.setUser(customUserService.getUser());
     surveyRepository.save(thisSurvey);
     hasChanges = false;
-    getUI().ifPresent(ui -> ui.navigate(""));
+    navigateToSuccessView(ConfirmSuccessView.SURVEY_CREATED_STRING);
   }
 
   /**
