@@ -8,13 +8,12 @@ import com.considlia.survey.repositories.SurveyRepository;
 import com.considlia.survey.security.CustomUserService;
 import com.considlia.survey.security.SecurityUtils;
 import com.considlia.survey.ui.custom_component.ConfirmDialog;
-import com.considlia.survey.ui.custom_component.showsurveycomponents.ShowQuestionFactory;
-import com.considlia.survey.ui.custom_component.showsurveycomponents.SurveyLoader;
+import com.considlia.survey.ui.custom_component.layout.ShowQuestionFactory;
+import com.considlia.survey.ui.custom_component.layout.showsurveycomponents.SurveyLoader;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H5;
 import com.vaadin.flow.component.html.Label;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.router.BeforeEvent;
@@ -68,8 +67,7 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
     SurveyLoader surveyLoader = new SurveyLoader();
     this.showQuestionFactory = surveyLoader;
     h1 = new H1("PlaceHolder // Survey Not Actually Found, Text not Updated");
-    saveButton = new Button();
-    saveButton.setText("Send");
+    saveButton = new Button("Send");
   }
 
   /** initiates page GUI. */

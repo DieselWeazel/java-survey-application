@@ -1,11 +1,11 @@
-package com.considlia.survey.ui.custom_component.showsurveycomponents.showquestionlayouts.questiontype_layout;
+package com.considlia.survey.ui.custom_component.layout.showsurveycomponents.showquestionlayouts.questiontype_layout;
 
 import com.considlia.survey.model.answer.Answer;
 import com.considlia.survey.model.answer.MultiAnswer;
 import com.considlia.survey.model.answer.MultiAnswerChoice;
 import com.considlia.survey.model.question.MultiQuestion;
 import com.considlia.survey.model.question.Question;
-import com.considlia.survey.ui.custom_component.showsurveycomponents.showquestionlayouts.ShowQuestionLayout;
+import com.considlia.survey.ui.custom_component.layout.showsurveycomponents.showquestionlayouts.ShowQuestionLayout;
 import com.vaadin.flow.component.checkbox.CheckboxGroup;
 import com.vaadin.flow.component.checkbox.CheckboxGroupVariant;
 import com.vaadin.flow.data.binder.Binder;

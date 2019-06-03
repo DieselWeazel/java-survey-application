@@ -1,4 +1,4 @@
-package com.considlia.survey.ui.custom_component.showsurveycomponents;
+package com.considlia.survey.ui.custom_component.layout.showsurveycomponents;
 
 import com.considlia.survey.model.Survey;
 import com.considlia.survey.model.SurveyResponse;
@@ -11,12 +11,14 @@ import com.considlia.survey.model.question.RatioQuestion;
 import com.considlia.survey.model.question.TextAreaQuestion;
 import com.considlia.survey.model.question.TextQuestion;
 import com.considlia.survey.ui.custom_component.ErrorVerificationMessageDTO;
-import com.considlia.survey.ui.custom_component.showsurveycomponents.showquestionlayouts.questiontype_layout.ShowMultiChoiceQuestionLayout;
-import com.considlia.survey.ui.custom_component.showsurveycomponents.showquestionlayouts.ShowQuestionLayout;
-import com.considlia.survey.ui.custom_component.showsurveycomponents.showquestionlayouts.questiontype_layout.ShowRatioQuestionLayout;
-import com.considlia.survey.ui.custom_component.showsurveycomponents.showquestionlayouts.questiontype_layout.ShowSingleChoiceQuestionLayout;
-import com.considlia.survey.ui.custom_component.showsurveycomponents.showquestionlayouts.questiontype_layout.ShowTextAreaQuestionLayout;
-import com.considlia.survey.ui.custom_component.showsurveycomponents.showquestionlayouts.questiontype_layout.ShowTextQuestionLayout;
+import com.considlia.survey.ui.custom_component.layout.LoadLayout;
+import com.considlia.survey.ui.custom_component.layout.ShowQuestionFactory;
+import com.considlia.survey.ui.custom_component.layout.showsurveycomponents.showquestionlayouts.questiontype_layout.ShowMultiChoiceQuestionLayout;
+import com.considlia.survey.ui.custom_component.layout.showsurveycomponents.showquestionlayouts.ShowQuestionLayout;
+import com.considlia.survey.ui.custom_component.layout.showsurveycomponents.showquestionlayouts.questiontype_layout.ShowRatioQuestionLayout;
+import com.considlia.survey.ui.custom_component.layout.showsurveycomponents.showquestionlayouts.questiontype_layout.ShowSingleChoiceQuestionLayout;
+import com.considlia.survey.ui.custom_component.layout.showsurveycomponents.showquestionlayouts.questiontype_layout.ShowTextAreaQuestionLayout;
+import com.considlia.survey.ui.custom_component.layout.showsurveycomponents.showquestionlayouts.questiontype_layout.ShowTextQuestionLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.binder.ValidationException;
 import java.util.ArrayList;
@@ -36,7 +38,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class SurveyLoader
-    implements ShowQuestionFactory<Set<Answer>> {
+    implements ShowQuestionFactory<Set<Answer>>, LoadLayout<ShowQuestionLayout, Question> {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(SurveyLoader.class);
 
@@ -57,7 +59,7 @@ public class SurveyLoader
     this.survey=survey;
     VerticalLayout vr = new VerticalLayout();
     survey.getQuestions().stream().forEach(question ->{
-      ShowQuestionLayout layout = loadQuestion(question);
+      ShowQuestionLayout layout = loadLayout(question);
       layout.setMandatoryStatus();
       componentList.add(layout);
       vr.add(layout);
@@ -114,7 +116,7 @@ public class SurveyLoader
    *
    * @return layout corresponding with Question. {@link ShowQuestionLayout}
    */
-  private ShowQuestionLayout loadQuestion(Question question) {
+  public ShowQuestionLayout loadLayout(Question question) {
 
     LOGGER.info("SurveyLoader: Loading a question");
     if (question instanceof CheckBoxQuestion) {
