@@ -45,7 +45,7 @@ public class SurveyGrid extends VerticalLayout {
   private boolean isHome = false;
 
   /**
-   * Constructor for {@link HomeView}'s SurveyGrid.
+   * Constructor for {@link HomeView}'s SurveyGrid
    * 
    * @param surveyRepository
    */
