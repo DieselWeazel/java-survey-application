@@ -56,7 +56,6 @@ public class CreateSurveyView extends BaseView
 
   // Textfields
   private TextField surveyTitleTextField;
-  private TextField creatorNameTextField;
   private TextField questionTitleTextField;
   private TextArea descriptionTextArea;
 
@@ -127,15 +126,11 @@ public class CreateSurveyView extends BaseView
     cancelButton = new Button("Cancel", event -> getUI().ifPresent(ui -> ui.navigate("")));
 
     surveyTitleTextField = createTextField("400px", "Survey Title", true);
-    creatorNameTextField = createTextField("250px", "Created By", true);
     descriptionTextArea = new TextArea();
 
     surveyTitleTextField.addValueChangeListener(titleChange -> {
       // validates textField value with validateString
       titleChange.getSource().setValue(validateString(titleChange.getSource().getValue(), 70));
-      checkFilledFields();
-    });
-    creatorNameTextField.addValueChangeListener(creatorChange -> {
       checkFilledFields();
     });
     descriptionTextArea.addValueChangeListener(descChange -> {
@@ -146,13 +141,6 @@ public class CreateSurveyView extends BaseView
 
     descriptionTextArea.setLabel("Description");
     descriptionTextArea.setWidth("600px");
-
-    /*
-     * Currently doesn't allow for editing of Users name within CreatorName for Survey.
-     */
-    creatorNameTextField.setValue(customUserService.getUser().getLastName() + ", "
-        + customUserService.getUser().getFirstName());
-    creatorNameTextField.setEnabled(false);
     descriptionTextArea.setValueChangeMode(ValueChangeMode.EAGER);
   }
 
@@ -160,8 +148,7 @@ public class CreateSurveyView extends BaseView
    * adds layouts to containers, invoked by constructor.
    */
   public void initLayout() {
-    titleContainer.add(surveyTitleTextField, creatorNameTextField, submitSurveyButton,
-        cancelButton);
+    titleContainer.add(surveyTitleTextField, submitSurveyButton, cancelButton);
     header.add(titleContainer);
     header.add(descriptionTextArea);
 
@@ -423,7 +410,8 @@ public class CreateSurveyView extends BaseView
    * then reroute back to homeView
    */
   public void saveSurvey() {
-    thisSurvey.setCreator(creatorNameTextField.getValue());
+    thisSurvey.setCreator(customUserService.getUser().getLastName() + ", "
+        + customUserService.getUser().getFirstName());
     thisSurvey.setTitle(surveyTitleTextField.getValue());
     thisSurvey.setDescription(descriptionTextArea.getValue());
     thisSurvey.setDate(LocalDate.now());
@@ -443,8 +431,7 @@ public class CreateSurveyView extends BaseView
    */
   public boolean checkFilledFields() {
     hasChanges = true;
-    if (!(surveyTitleTextField.isEmpty() || creatorNameTextField.isEmpty())
-        && questions.getComponentCount() != 0) {
+    if (!(surveyTitleTextField.isEmpty()) && questions.getComponentCount() != 0) {
       submitSurveyButton.setEnabled(true);
       return true;
     } else {
@@ -481,7 +468,6 @@ public class CreateSurveyView extends BaseView
       thisSurvey = surveyRepository.getSurveyById(parameter);
 
       surveyTitleTextField.setValue(thisSurvey.getTitle());
-      creatorNameTextField.setValue(thisSurvey.getCreator());
       descriptionTextArea.setValue(thisSurvey.getDescription());
       refreshItemsInGUI();
 
