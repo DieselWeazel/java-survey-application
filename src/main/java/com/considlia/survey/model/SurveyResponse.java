@@ -23,7 +23,7 @@ import com.considlia.survey.security.SecurityUtils;
  * {@link com.considlia.survey.model.question.Question}
  */
 @Entity
-@Table(name = "surveyresponses")
+@Table(name = "surveyresponse")
 public class SurveyResponse {
 
   @Id
