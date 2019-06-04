@@ -46,7 +46,7 @@ public class MainLayout extends VerticalLayout implements RouterLayout {
     if (SecurityUtils.isUserLoggedIn()) {
       navigation.add(
           createRouterLink(CreateSurveyView.class, "Create New Survey", VaadinIcon.PLUS_CIRCLE));
-      navigation.add(createRouterLink(MyProfileView.class, "Profileview", VaadinIcon.USER));
+      navigation.add(createRouterLink(MyProfileView.class, "Profile View", VaadinIcon.USER));
       navigation.add(new Button("Logout", new Icon(VaadinIcon.EXIT), e -> logoutUser()));
     } else {
       navigation.add(createRouterLink(LoginView.class, "Login", VaadinIcon.SIGN_IN));
