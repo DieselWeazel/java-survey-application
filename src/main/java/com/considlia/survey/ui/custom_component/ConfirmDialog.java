@@ -49,7 +49,34 @@ public class ConfirmDialog extends Dialog {
    * @param action - {@link ContinueNavigationAction}
    * @param survey - {@link CreateSurveyView}
    */
-  public ConfirmDialog(ContinueNavigationAction action, CreateSurveyView survey) {
+//  public ConfirmDialog(ContinueNavigationAction action, CreateSurveyView survey) {
+//
+//    initCancelBtn();
+//
+//    Button confirmBtn = new Button("Discard", onDiscard -> {
+//      action.proceed();
+//      close();
+//    });
+//    Button saveBtn = new Button("Save", onSave -> {
+//      survey.saveSurvey();
+//      action.proceed();
+//      close();
+//    });
+//
+//    HorizontalLayout buttonContainer = new HorizontalLayout();
+//    if (!survey.checkFilledFields()) {
+//      saveBtn.setEnabled(false);
+//      add(new Text(
+//          "You have to fill out required fields and have at least one question. Fill them out or discard changes"));
+//    } else {
+//      add(new H5("Do you want to save or discard your changes before navigating away?"));
+//    }
+//
+//    buttonContainer.add(saveBtn, confirmBtn, cancelBtn);
+//    add(buttonContainer);
+//  }
+
+  public ConfirmDialog(ContinueNavigationAction action, Runnable runnable, boolean checkFilledFields) {
 
     initCancelBtn();
 
@@ -58,13 +85,13 @@ public class ConfirmDialog extends Dialog {
       close();
     });
     Button saveBtn = new Button("Save", onSave -> {
-      survey.saveSurvey();
+      runnable.run();
       action.proceed();
       close();
     });
 
     HorizontalLayout buttonContainer = new HorizontalLayout();
-    if (!survey.checkFilledFields()) {
+    if (!checkFilledFields) {
       saveBtn.setEnabled(false);
       add(new Text(
           "You have to fill out required fields and have at least one question. Fill them out or discard changes"));

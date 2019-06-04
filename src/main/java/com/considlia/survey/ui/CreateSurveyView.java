@@ -503,7 +503,8 @@ public class CreateSurveyView extends BaseView
   public void beforeLeave(BeforeLeaveEvent event) {
     if (hasChanges) {
       ContinueNavigationAction action = event.postpone();
-      ConfirmDialog dialog = new ConfirmDialog(action, this);
+//      ConfirmDialog dialog = new ConfirmDialog(action, this);
+      ConfirmDialog dialog = new ConfirmDialog(action, this::saveSurvey, checkFilledFields());
       dialog.open();
     }
   }

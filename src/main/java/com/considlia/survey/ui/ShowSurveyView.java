@@ -1,6 +1,9 @@
 package com.considlia.survey.ui;
 
 import com.vaadin.flow.component.UI;
+import com.vaadin.flow.router.BeforeLeaveEvent;
+import com.vaadin.flow.router.BeforeLeaveEvent.ContinueNavigationAction;
+import com.vaadin.flow.router.BeforeLeaveObserver;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Set;
@@ -35,7 +38,7 @@ import com.vaadin.flow.router.Route;
  * Survey. Link: http://localhost:8080/showsurvey/1 written by: Jonathan Harr
  */
 @Route(value = "showsurvey", layout = MainLayout.class)
-public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
+public class ShowSurveyView extends BaseView implements HasUrlParameter<Long>, BeforeLeaveObserver {
 
   // -- Private Variables --
   // -- Containers --
@@ -123,6 +126,7 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
       if (showQuestionFactory.isComplete().isConflict()) {
         try {
           saveResponse();
+          navigateToSuccessView(ConfirmSuccessView.SURVEY_RESPONDED_STRING);
         } catch (ValidationException e1) {
           e1.printStackTrace();
         }
@@ -153,8 +157,6 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
     // Connect SurveyResponse to Survey.
     surveyResponse.setSurvey(survey);
     responseRepository.save(surveyResponse);
-
-    navigateToSuccessView(ConfirmSuccessView.SURVEY_RESPONDED_STRING);
   }
 
   /**
@@ -164,5 +166,24 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
     saveButton.setText("Go To Mainview");
     saveButton.addClickListener(e -> navigateBackToHomeView());
     add(saveButton);
+  }
+
+  @Override
+  public void beforeLeave(BeforeLeaveEvent event) {
+    if (showQuestionFactory.isComplete().isHasChanges()) {
+      ContinueNavigationAction action = event.postpone();
+      ConfirmDialog dialog =
+          new ConfirmDialog(
+              action,
+              () -> {
+                  try {
+                    saveResponse();
+                  } catch (ValidationException e) {
+                    e.printStackTrace();
+                  }
+              },
+              showQuestionFactory.isComplete().isConflict());
+      dialog.open();
+    }
   }
 }
