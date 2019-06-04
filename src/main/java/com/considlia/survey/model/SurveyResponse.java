@@ -40,11 +40,11 @@ public class SurveyResponse {
   @JoinColumn(name = "response_id")
   private Set<Answer> answers = new HashSet<>();
 
-  @OneToOne(fetch = FetchType.LAZY)
+  @OneToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "user_id")
   private User user;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "survey_id")
   private Survey survey;
 
