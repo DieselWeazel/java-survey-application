@@ -50,7 +50,7 @@ public class ShowSingleChoiceQuestionLayout extends ShowQuestionLayout {
           .forField(radioButtons)
           .withValidator(
               ratioAnswerString -> ratioAnswerString != null && !ratioAnswerString.isEmpty(),
-              mandatoryQuestionMessage)
+              MANDATORY_QUESTION_MESSAGE)
           .bind(RadioAnswer::getChosenAnswer, RadioAnswer::setChosenAnswer);
     } else {
       binder

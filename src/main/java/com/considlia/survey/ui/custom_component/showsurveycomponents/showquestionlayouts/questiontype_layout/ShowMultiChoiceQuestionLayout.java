@@ -41,10 +41,6 @@ public class ShowMultiChoiceQuestionLayout extends ShowQuestionLayout {
         .forEach(e -> answerAlternativeList.add(new MultiAnswerChoice(e)));
 
     checkBoxButtons.setItems(answerAlternativeList);
-//    binder
-//        .forField(checkBoxButtons)
-//        .bind(MultiAnswer::getMultiAnswerChoiceSet, MultiAnswer::setMultiAnswerChoiceSet);
-
     add(checkBoxButtons);
     checkBoxButtons.addThemeVariants(CheckboxGroupVariant.LUMO_VERTICAL);
   }
@@ -56,7 +52,8 @@ public class ShowMultiChoiceQuestionLayout extends ShowQuestionLayout {
     if (getQuestion().isMandatory()) {
       binder
           .forField(checkBoxButtons)
-          .withValidator(ratioAnswerString -> ratioAnswerString != null && !ratioAnswerString.isEmpty(), mandatoryQuestionMessage)
+          .withValidator(ratioAnswerString -> ratioAnswerString != null && !ratioAnswerString.isEmpty(),
+              MANDATORY_QUESTION_MESSAGE)
           .bind(MultiAnswer::getMultiAnswerChoiceSet, MultiAnswer::setMultiAnswerChoiceSet);
     } else {
       binder

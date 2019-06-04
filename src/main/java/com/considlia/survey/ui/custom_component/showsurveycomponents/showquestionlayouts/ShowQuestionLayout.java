@@ -15,14 +15,11 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class ShowQuestionLayout extends VerticalLayout {
 
-  private H5 title;
   private Question question;
   private static final Logger LOGGER = LoggerFactory.getLogger(ShowQuestionLayout.class);
 
-  private boolean isCompleted;
-
   // Used for Mandatory message.
-  public static final String mandatoryQuestionMessage = "Question is mandatory, please fill in details";
+  public static final String MANDATORY_QUESTION_MESSAGE = "Question is mandatory, please fill in details";
 
   /**
    * Constructs a generic TextQuestionLayout
@@ -30,11 +27,10 @@ public abstract class ShowQuestionLayout extends VerticalLayout {
    * @param question works with any abstract Question.
    */
   public ShowQuestionLayout(Question question) {
-    this.title = new H5(question.getTitle() + (question.isMandatory() ? "*" : ""));
+    add(new H5(question.getTitle() + (question.isMandatory() ? "*" : "")));
     this.question = question;
     LOGGER.info("Loading Question: '{}'", question.getTitle());
     LOGGER.info("Question is mandatory: '{}'", question.isMandatory());
-    add(title);
   }
 
   /** @return any type of Question that implements Question. */

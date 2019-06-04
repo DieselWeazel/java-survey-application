@@ -69,7 +69,7 @@ public class CreateSurveyView extends BaseView
 
   // Private variables used when creating the survey
   private Survey thisSurvey;
-  private boolean hasChanges;
+  public boolean hasChanges;
   private QuestionType questionType;
   private SurveyRepository surveyRepository;
   private CreateAlternative createAlternative;
