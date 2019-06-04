@@ -2,6 +2,7 @@ package com.considlia.survey.ui;
 
 import java.time.LocalDate;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
@@ -141,6 +142,10 @@ public class CreateSurveyView extends BaseView
 
     descriptionTextArea.setLabel("Description");
     descriptionTextArea.setWidth("600px");
+
+    /*
+     * Currently doesn't allow for editing of Users name within CreatorName for Survey.
+     */
     descriptionTextArea.setValueChangeMode(ValueChangeMode.EAGER);
   }
 
@@ -237,7 +242,7 @@ public class CreateSurveyView extends BaseView
 
   /**
    * Removes all questions, then adds all Questions with new index values. Invokes
-   * {@link updateMoveButtonStatus()}
+   * {@link CreateSurveyView#updateMoveButtonStatus()}
    */
   public void refreshItemsInGUI() {
     setPositions();
@@ -402,14 +407,18 @@ public class CreateSurveyView extends BaseView
    */
   public void editQuestion(Button button) {
     new EditDialog(button);
+    System.out.println("hej");
+    refreshItemsInGUI();
     hasChanges = true;
   }
 
   /**
-   * Sets the surveys title, creator, description, user (questions is already set) and saves it and
-   * then reroute back to homeView
+   * Sets the surveys title, creator, description, user, (questions is already set) and saves it and
+   * then reroute back to homeView. If there is another {@link Survey} that have the same title(case
+   * insensitive) and creator(user) it will show a notification and not save the survey
    */
   public void saveSurvey() {
+
     thisSurvey.setCreator(customUserService.getUser().getLastName() + ", "
         + customUserService.getUser().getFirstName());
     thisSurvey.setTitle(surveyTitleTextField.getValue());
@@ -418,9 +427,19 @@ public class CreateSurveyView extends BaseView
     thisSurvey.setStatus(SurveyStatus.EDITABLE);
 
     thisSurvey.setUser(customUserService.getUser());
-    surveyRepository.save(thisSurvey);
-    hasChanges = false;
-    getUI().ifPresent(ui -> ui.navigate(""));
+
+    if (surveyRepository.findByUserAndTitle(surveyTitleTextField.getValue(), thisSurvey.getUser())
+        .size() < 1) {
+      surveyRepository.save(thisSurvey);
+      hasChanges = false;
+      getUI().ifPresent(ui -> ui.navigate(""));
+    } else {
+      Notification titleError = new Notification(
+          "You already have a Survey with that title. Pleace choose another", 4000);
+      titleError.open();
+      surveyTitleTextField.focus();
+    }
+
   }
 
   /**
