@@ -5,11 +5,12 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.BiFunction;
-import org.springframework.beans.factory.annotation.Autowired;
 import com.considlia.survey.model.Survey;
+import com.considlia.survey.model.SurveyResponse;
+import com.considlia.survey.repositories.ResponseRepository;
 import com.considlia.survey.repositories.SurveyRepository;
-import com.considlia.survey.repositories.UserRepository;
 import com.considlia.survey.security.CustomUserService;
+import com.considlia.survey.security.SecurityUtils;
 import com.considlia.survey.ui.HomeView;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.HeaderRow;
@@ -33,15 +34,13 @@ public class SurveyGrid extends VerticalLayout {
   private HeaderRow filterRow;
 
   private List<Survey> surveyList;
+  private List<SurveyResponse> surveyResponseList;
   private TextField titleField, creatorField, dateField;
 
   private SurveyRepository surveyRepository;
-
-  @Autowired
+  private ResponseRepository responseRepository;
   private CustomUserService customUserService;
 
-  @Autowired
-  private UserRepository userRepository;
   private boolean isHome = false;
 
   /**
@@ -70,6 +69,16 @@ public class SurveyGrid extends VerticalLayout {
     init();
   }
 
+  public SurveyGrid(SurveyRepository surveyRepository, CustomUserService customUserService,
+      ResponseRepository responseRepository) {
+    isHome = true;
+    this.surveyRepository = surveyRepository;
+    this.customUserService = customUserService;
+    this.responseRepository = responseRepository;
+    this.surveyList = new ArrayList<>();
+    init();
+  }
+
   /**
    * Inits Grid UI.
    */
@@ -77,6 +86,23 @@ public class SurveyGrid extends VerticalLayout {
     grid = new Grid<>();
     if (isHome) {
       surveyList = surveyRepository.findAll();
+
+      if (SecurityUtils.isUserLoggedIn()) {
+
+        surveyResponseList =
+            responseRepository.findAllByUserId(customUserService.getUser().getId());
+
+        List<Survey> answeredSurveys = new ArrayList<Survey>();
+
+        for (SurveyResponse sr : surveyResponseList) {
+          for (Survey s : surveyList) {
+            if (s.getId() == sr.getSurvey().getId()) {
+              answeredSurveys.add(s);
+            }
+          }
+        }
+        surveyList.removeAll(answeredSurveys);
+      }
     } else {
       surveyList = surveyRepository.findAllByUserId(customUserService.getUser().getId());
     }
