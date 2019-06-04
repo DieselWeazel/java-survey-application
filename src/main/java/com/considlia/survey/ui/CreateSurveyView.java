@@ -410,8 +410,7 @@ public class CreateSurveyView extends BaseView
    * then reroute back to homeView
    */
   public void saveSurvey() {
-    thisSurvey.setCreator(customUserService.getUser().getLastName() + ", "
-        + customUserService.getUser().getFirstName());
+    thisSurvey.setCreator(customUserService.getUser().getUsername());
     thisSurvey.setTitle(surveyTitleTextField.getValue());
     thisSurvey.setDescription(descriptionTextArea.getValue());
     thisSurvey.setDate(LocalDate.now());
