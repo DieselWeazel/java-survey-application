@@ -190,11 +190,10 @@ public class CreateSurveyView extends BaseView
     });
 
     selectOptions = new Select<>();
-    selectOptions.setLabel("Type of question: ");
+    selectOptions.setLabel("Type of question : ");
     selectOptions.setItems(QuestionType.TEXTFIELD, QuestionType.RADIO, QuestionType.CHECKBOX,
         QuestionType.RATIO);
     selectOptions.setValue(QuestionType.TEXTFIELD);
-
     selectOptions.addValueChangeListener(event -> {
       questionType = selectOptions.getValue();
       if (event.getValue() == QuestionType.TEXTFIELD) {
@@ -472,6 +471,10 @@ public class CreateSurveyView extends BaseView
       surveyTitleTextField.setValue(thisSurvey.getTitle());
       descriptionTextArea.setValue(thisSurvey.getDescription());
       refreshItemsInGUI();
+
+      createTextComponents = new CreateTextComponents(this);
+      createTextComponents.getRadioButtons().setValue("Textfield");
+      extraComponents.add(createTextComponents);
 
       submitSurveyButton.setText("Save Survey");
       updateMoveButtonStatus();
