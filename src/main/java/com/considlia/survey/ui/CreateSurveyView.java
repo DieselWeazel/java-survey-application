@@ -195,11 +195,10 @@ public class CreateSurveyView extends BaseView
     });
 
     selectOptions = new Select<>();
-    selectOptions.setLabel("Type of question: ");
+    selectOptions.setLabel("Type of question : ");
     selectOptions.setItems(QuestionType.TEXTFIELD, QuestionType.RADIO, QuestionType.CHECKBOX,
         QuestionType.RATIO);
     selectOptions.setValue(QuestionType.TEXTFIELD);
-
     selectOptions.addValueChangeListener(event -> {
       questionType = selectOptions.getValue();
       if (event.getValue() == QuestionType.TEXTFIELD) {
@@ -417,10 +416,10 @@ public class CreateSurveyView extends BaseView
    */
   public void saveSurvey() {
 
-    List<Survey> fuck = surveyRepository.findByUserAndTitle(surveyTitleTextField.getValue().trim(),
+    List<Survey> returnedSurveysFromRepository = surveyRepository.findByUserAndTitle(surveyTitleTextField.getValue().trim(),
         customUserService.getUser());
 
-    if ((fuck.size() < 1) || ((fuck.size() >= 1) && (fuck.get(0).getId() == thisSurvey.getId()))) {
+    if ((returnedSurveysFromRepository.size() < 1) || ((returnedSurveysFromRepository.size() >= 1) && (returnedSurveysFromRepository.get(0).getId() == thisSurvey.getId()))) {
 
       thisSurvey.setCreator(customUserService.getUser().getLastName() + ", "
           + customUserService.getUser().getFirstName());
@@ -433,7 +432,7 @@ public class CreateSurveyView extends BaseView
 
       surveyRepository.save(thisSurvey);
       hasChanges = false;
-      getUI().ifPresent(ui -> ui.navigate(""));
+      navigateToSuccessView(ConfirmSuccessView.SURVEY_CREATED_STRING);
     } else {
 
       Notification titleError = new Notification(
@@ -488,9 +487,15 @@ public class CreateSurveyView extends BaseView
     if (parameter != null) {
       thisSurvey = surveyRepository.getSurveyById(parameter);
 
+      setTitle("Editing Survey");
+
       surveyTitleTextField.setValue(thisSurvey.getTitle());
       descriptionTextArea.setValue(thisSurvey.getDescription());
       refreshItemsInGUI();
+
+      createTextComponents = new CreateTextComponents(this);
+      createTextComponents.getRadioButtons().setValue("Textfield");
+      extraComponents.add(createTextComponents);
 
       submitSurveyButton.setText("Save Survey");
       updateMoveButtonStatus();

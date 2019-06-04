@@ -30,6 +30,7 @@ public class CreateTextComponents extends VerticalLayout {
 
     buttonContainer.add(radioButtons);
     add(buttonContainer);
+
   }
 
   /**
