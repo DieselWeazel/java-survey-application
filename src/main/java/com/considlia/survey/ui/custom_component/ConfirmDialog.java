@@ -17,8 +17,6 @@ import com.vaadin.flow.router.BeforeLeaveEvent.ContinueNavigationAction;
  */
 public class ConfirmDialog<T> extends Dialog {
 
-  private Button cancelBtn;
-
   /**
    * Dialog that confirms if you want to delete the passed T, entityObject
    * @param headerText - {@link String} text in header
@@ -31,7 +29,7 @@ public class ConfirmDialog<T> extends Dialog {
     setCloseOnEsc(false);
     setCloseOnOutsideClick(false);
 
-    initCancelBtn();
+    cancelButton();
 
     Button confirmBtn = new Button("Confirm", onConfirm -> {
       consumer.accept(entityObject);
@@ -39,7 +37,7 @@ public class ConfirmDialog<T> extends Dialog {
     });
 
     add(new H2(headerText), new H5(contentText));
-    add(new HorizontalLayout(cancelBtn, confirmBtn));
+    add(new HorizontalLayout(cancelButton(), confirmBtn));
     open();
   }
 
@@ -52,8 +50,6 @@ public class ConfirmDialog<T> extends Dialog {
    * @param checkFilledFields boolean, if some fields are unfinished during creation process.
    */
   public ConfirmDialog(ContinueNavigationAction action, Runnable runnable, boolean checkFilledFields) {
-
-    initCancelBtn();
 
     Button confirmBtn = new Button("Discard", onDiscard -> {
       action.proceed();
@@ -74,7 +70,7 @@ public class ConfirmDialog<T> extends Dialog {
       add(new H5("Do you want to save or discard your changes before navigating away?"));
     }
 
-    buttonContainer.add(saveBtn, confirmBtn, cancelBtn);
+    buttonContainer.add(saveBtn, confirmBtn, cancelButton());
     add(buttonContainer);
   }
 
@@ -117,8 +113,8 @@ public class ConfirmDialog<T> extends Dialog {
    * Creates a {@link Button} with the text "Cancel" and a {@link ClickEvent} that closes the
    * {@link Dialog}
    */
-  public void initCancelBtn() {
-    cancelBtn = new Button("Cancel", onCancel -> {
+  public Button cancelButton() {
+    return new Button("Cancel", onCancel -> {
       close();
     });
   }
