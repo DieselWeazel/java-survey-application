@@ -84,11 +84,11 @@ public class RegistrationView extends BaseView implements BeforeEnterObserver {
 
     // First Checks if Username is taken, then checks if Email is taken, if both booleans are false, User registers.
     if (userRepository.existsByUsername(username.getValue())){
-      ConfirmDialog confirmDialog = new ConfirmDialog(username.getValue());
+      ConfirmDialog confirmDialog = new ConfirmDialog("Error, username: " + username.getValue() + " is already taken, please take another one.");
       confirmDialog.open();
       return;
     } else if (userRepository.existsByEmail(email.getValue())){
-      ConfirmDialog confirmDialog = new ConfirmDialog(email.getValue(), true);
+      ConfirmDialog confirmDialog = new ConfirmDialog("There already exists a User registered with this email, have you forgotten your password?");
       confirmDialog.open();
       return;
     } else {

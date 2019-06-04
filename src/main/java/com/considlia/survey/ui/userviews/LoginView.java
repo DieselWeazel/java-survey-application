@@ -75,7 +75,7 @@ public class LoginView extends BaseView implements BeforeEnterObserver {
       UI.getCurrent().getSession().close();
       UI.getCurrent().getPage().reload();
     } else {
-      ConfirmDialog confirmDialog = new ConfirmDialog();
+      ConfirmDialog confirmDialog = new ConfirmDialog("Wrong Username or Password, try again!");
       confirmDialog.open();
     }
   }

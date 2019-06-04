@@ -1,11 +1,7 @@
 package com.considlia.survey.ui.custom_component;
 
-import com.vaadin.flow.server.Command;
 import java.util.function.Consumer;
 import com.considlia.survey.model.Survey;
-import com.considlia.survey.model.question.Question;
-import com.considlia.survey.ui.CreateSurveyView;
-import com.considlia.survey.ui.custom_component.question_with_button.QuestionWithButtons;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
@@ -15,16 +11,20 @@ import com.vaadin.flow.component.html.H5;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.router.BeforeLeaveEvent.ContinueNavigationAction;
 
+/**
+ * Class that handles all types of ConfirmDialogs, applicable to several forms of Confirms.
+ * @param <T>
+ */
 public class ConfirmDialog<T> extends Dialog {
 
   private Button cancelBtn;
 
   /**
-   * Dialog that confirms if you want to delete the passes {@link Survey}
-   * 
+   * Dialog that confirms if you want to delete the passed T, entityObject
    * @param headerText - {@link String} text in header
    * @param contentText - {@link String} text in body
    * @param consumer - method from {@link SurveyGrid} that removes the item-parameter
+   * @param entityObject being the Entity to remove, or handle.
    */
   public ConfirmDialog(String headerText, String contentText, Consumer<T> consumer,
       T entityObject) {
@@ -39,60 +39,6 @@ public class ConfirmDialog<T> extends Dialog {
     });
 
     add(new H2(headerText), new H5(contentText));
-    add(new HorizontalLayout(cancelBtn, confirmBtn));
-    open();
-  }
-
-//  public ConfirmDialog(String headerText, String contentText, Command command,
-//      Object object) {
-//    setCloseOnEsc(false);
-//    setCloseOnOutsideClick(false);
-//
-//    initCancelBtn();
-//
-//    Button confirmBtn = new Button("Confirm", onConfirm -> {
-//      command.execute();
-//      close();
-//    });
-//
-//    add(new H2(headerText), new H5(contentText));
-//    add(new HorizontalLayout(cancelBtn, confirmBtn));
-//    open();
-//  }
-
-  public ConfirmDialog(String headerText, String contentText, Runnable deleteObjectRunnable) {
-    setCloseOnEsc(false);
-    setCloseOnOutsideClick(false);
-
-    initCancelBtn();
-
-    Button confirmBtn = new Button("Confirm", onConfirm -> {
-      deleteObjectRunnable.run();
-      close();
-    });
-
-    add(new H2(headerText), new H5(contentText));
-    add(new HorizontalLayout(cancelBtn, confirmBtn));
-    open();
-  }
-
-  /**
-   * Creates a {@link Dialog} where the "Confirm"-{@link Button} removes the {@link Question} from
-   * the survey.
-   *
-   * @param survey - {@link CreateSurveyView} to get access to its methods
-   * @param question - the {@link QuestionWithButtons} containing the {@link Question} thats going
-   *        to be removed
-   */
-  public ConfirmDialog(CreateSurveyView survey, QuestionWithButtons question) {
-
-    initCancelBtn();
-
-    Button confirmBtn = new Button("Confirm", onConfirm -> {
-      survey.removeQuestion(question.getQuestion());
-      close();
-    });
-    add(new H5("Are you sure you want to remove this question?"));
     add(new HorizontalLayout(cancelBtn, confirmBtn));
     open();
   }
@@ -132,46 +78,6 @@ public class ConfirmDialog<T> extends Dialog {
     add(buttonContainer);
   }
 
-
-  /**
-   * Dialog Windows connected to Login/Registration
-   */
-  /**
-   * Dialog showing a error message, if User Username exists.
-   */
-  public ConfirmDialog() {
-    add(new H5("Wrong Username or Password, try again!"));
-    add(initOkButton());
-
-  }
-
-  /**
-   * Dialog showing a error message, if User Username exists.
-   */
-  public ConfirmDialog(String userinput) {
-    add(new H5("Error, username: " + userinput + " is already taken, please take another one."));
-    add(initOkButton());
-  }
-
-  /**
-   * Dialog showing a error message, if User Email exists.
-   */
-  public ConfirmDialog(String userinput, boolean email) {
-    add(new H5(
-        "There already exists a User registered with this email, have you forgotten your password?"));
-    add(initOkButton());
-  }
-
-  /**
-   * Constructs a new {@link Button} with the text set to "Ok". {@link ClickEvent} is set to
-   * {@link Dialog#close()}. The constructed button is focused.
-   * 
-   * @return button - {@link Button}
-   */
-  public Button initOkButton() {
-    return new Button("Ok", e-> close());
-  }
-
   /**
    * ConfirmDialog to handle DTO Verification, this Confirm Dialog is applicable to
    * all usecases, since input parameter is of class {@link ErrorVerificationMessageDTO}
@@ -188,6 +94,25 @@ public class ConfirmDialog<T> extends Dialog {
     }
     add(new Button("Understood!", e-> close()));
   }
+
+  /**
+   * Dialog showing a error message, message being input to explain what went wrong.
+   */
+  public ConfirmDialog(String confirmDialogMessage) {
+    add(new H5(confirmDialogMessage));
+    add(okButton());
+  }
+
+  /**
+   * Constructs a new {@link Button} with the text set to "Ok". {@link ClickEvent} is set to
+   * {@link Dialog#close()}. The constructed button is focused.
+   * 
+   * @return button - {@link Button}
+   */
+  public Button okButton() {
+    return new Button("Ok", e-> close());
+  }
+
   /**
    * Creates a {@link Button} with the text "Cancel" and a {@link ClickEvent} that closes the
    * {@link Dialog}
