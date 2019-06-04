@@ -1,5 +1,6 @@
 package com.considlia.survey.ui.custom_component.showsurveycomponents;
 
+import com.considlia.survey.model.QuestionType;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -117,25 +118,25 @@ public class SurveyLoader implements ShowQuestionFactory<Set<Answer>> {
   private ShowQuestionLayout loadQuestion(Question question) {
 
     LOGGER.info("SurveyLoader: Loading a question");
-    if (question instanceof CheckBoxQuestion) {
+    if (question.getQuestionType().equals(QuestionType.CHECKBOX)) {
       MultiQuestion mq = (MultiQuestion) question;
 
       LOGGER.info("SurveyLoader: Loading '{}'", mq.getTitle());
       return new ShowMultiChoiceQuestionLayout(mq);
-    } else if (question instanceof RadioQuestion) {
+    } else if (question.getQuestionType().equals(QuestionType.RADIO)) {
       RadioQuestion radioQuestion = (RadioQuestion) question;
 
       LOGGER.info("SurveyLoader: Loading '{}'", radioQuestion.getTitle());
       return new ShowSingleChoiceQuestionLayout(radioQuestion);
-    } else if (question instanceof TextFieldQuestion) {
+    } else if (question.getQuestionType().equals(QuestionType.TEXTFIELD)) {
 
       LOGGER.info("SurveyLoader: Loading '{}'", question.getTitle());
       return new ShowTextQuestionLayout(question);
-    } else if (question instanceof TextAreaQuestion) {
+    } else if (question.getQuestionType().equals(QuestionType.TEXTAREA)) {
 
       LOGGER.info("SurveyLoader: loading '{}'", question.getTitle());
       return new ShowTextAreaQuestionLayout(question);
-    } else if (question instanceof RatioQuestion) {
+    } else if (question.getQuestionType().equals(QuestionType.RATIO)) {
       RatioQuestion rq = (RatioQuestion) question;
 
       LOGGER.info("SurveyLoader: Loading '{}'", rq.getTitle());
