@@ -90,12 +90,12 @@ public class Survey {
   }
 
   /**
-   * Sets the title of the Survey
+   * Sets the title of the Survey.
    *
-   * @param title
+   * @param title - {@link String#trim()} is used on the value
    */
   public void setTitle(String title) {
-    this.title = title;
+    this.title = title.trim();
   }
 
   /**

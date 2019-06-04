@@ -407,8 +407,6 @@ public class CreateSurveyView extends BaseView
    */
   public void editQuestion(Button button) {
     new EditDialog(button);
-    System.out.println("hej");
-    refreshItemsInGUI();
     hasChanges = true;
   }
 
@@ -419,21 +417,25 @@ public class CreateSurveyView extends BaseView
    */
   public void saveSurvey() {
 
-    thisSurvey.setCreator(customUserService.getUser().getLastName() + ", "
-        + customUserService.getUser().getFirstName());
-    thisSurvey.setTitle(surveyTitleTextField.getValue());
-    thisSurvey.setDescription(descriptionTextArea.getValue());
-    thisSurvey.setDate(LocalDate.now());
-    thisSurvey.setStatus(SurveyStatus.EDITABLE);
+    List<Survey> fuck = surveyRepository.findByUserAndTitle(surveyTitleTextField.getValue().trim(),
+        customUserService.getUser());
 
-    thisSurvey.setUser(customUserService.getUser());
+    if ((fuck.size() < 1) || ((fuck.size() >= 1) && (fuck.get(0).getId() == thisSurvey.getId()))) {
 
-    if (surveyRepository.findByUserAndTitle(surveyTitleTextField.getValue(), thisSurvey.getUser())
-        .size() < 1) {
+      thisSurvey.setCreator(customUserService.getUser().getLastName() + ", "
+          + customUserService.getUser().getFirstName());
+      thisSurvey.setTitle(surveyTitleTextField.getValue());
+      thisSurvey.setDescription(descriptionTextArea.getValue());
+      thisSurvey.setDate(LocalDate.now());
+      thisSurvey.setStatus(SurveyStatus.EDITABLE);
+
+      thisSurvey.setUser(customUserService.getUser());
+
       surveyRepository.save(thisSurvey);
       hasChanges = false;
       getUI().ifPresent(ui -> ui.navigate(""));
     } else {
+
       Notification titleError = new Notification(
           "You already have a Survey with that title. Pleace choose another", 4000);
       titleError.open();
