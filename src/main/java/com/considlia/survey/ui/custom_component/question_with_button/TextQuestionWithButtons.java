@@ -26,7 +26,7 @@ public class TextQuestionWithButtons extends QuestionWithButtons {
    * @param survey passing it to super
    */
   public TextQuestionWithButtons(TextQuestion question, CreateSurveyView survey, Consumer<Question> deleteQuestionConsumer) {
-    super(question, survey);
+    super(question, survey, deleteQuestionConsumer);
 
     if (question.getQuestionType() == QuestionType.TEXTFIELD) {
       TextField textfield = new TextField();

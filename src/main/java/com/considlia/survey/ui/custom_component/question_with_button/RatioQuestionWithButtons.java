@@ -32,7 +32,7 @@ public class RatioQuestionWithButtons extends QuestionWithButtons {
    * @param survey for passing it to super
    */
   public RatioQuestionWithButtons(RatioQuestion question, CreateSurveyView survey, Consumer<Question> deleteQuestionConsumer) {
-    super(question, survey);
+    super(question, survey, deleteQuestionConsumer);
 
     this.ratioQuestion = question;
 

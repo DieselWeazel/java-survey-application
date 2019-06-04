@@ -41,7 +41,7 @@ public abstract class QuestionWithButtons extends VerticalLayout {
    * @param question is {@link Question}
    * @param survey for accessing its class methods
    */
-  public QuestionWithButtons(Question question, CreateSurveyView survey) {
+  public QuestionWithButtons(Question question, CreateSurveyView survey, Consumer<Question> deleteQuestionConsumer) {
     setId("custom");
     setWidth("100%");
 
@@ -63,8 +63,10 @@ public abstract class QuestionWithButtons extends VerticalLayout {
     content.add(title, upButton, downButton);
     content.add(
         new Button(new Icon(VaadinIcon.PENCIL), event -> survey.editQuestion(event.getSource())));
-    content.add(new Button(new Icon(VaadinIcon.TRASH), event -> survey.removeQuestion(question)));
-
+    content.add(new Button(new Icon(VaadinIcon.TRASH), onDelete ->
+        new ConfirmDialog("Confirm Delete",
+            "Are you sure you want to remove question: "
+        + question.getTitle() + "?", deleteQuestionConsumer, question)));
     add(content);
   }
 
@@ -79,25 +81,6 @@ public abstract class QuestionWithButtons extends VerticalLayout {
       survey.moveQuestion(getQuestion(), move);
       survey.updateMoveButtonStatus();
     });
-  }
-
-//  /**
-//   * Removes the question
-//   *
-//   * @param survey used to pass it to {@link ConfirmDialog}
-//   */
-//  public void removeQuestion(CreateSurveyView survey) {
-//    new ConfirmDialog(survey, this);
-//  }
-
-  /**
-   * Removes the question
-   *
-   * @param deleteQuestionConsumer used to pass it to {@link ConfirmDialog}
-   */
-  public void removeQuestion(Consumer<Question> deleteQuestionConsumer) {
-    new ConfirmDialog("Confirm Delete", "Are you sure you want to remove question: "
-        + question.getTitle() + "?", deleteQuestionConsumer, question);
   }
 
   /**

@@ -33,7 +33,7 @@ public class MultiQuestionWithButtons extends QuestionWithButtons {
    * @param survey passing it to super
    */
   public MultiQuestionWithButtons(MultiQuestion question, CreateSurveyView survey, Consumer<Question> deleteQuestionConsumer) {
-    super(question, survey);
+    super(question, survey, deleteQuestionConsumer);
 
     this.stringAlternatives = question.getStringAlternatives();
     this.question = question;
