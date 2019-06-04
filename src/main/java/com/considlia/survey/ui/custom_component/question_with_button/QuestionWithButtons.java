@@ -12,6 +12,7 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import java.util.function.Consumer;
 
 /**
  * Abstract class extending {@link VerticalLayout}. Contains the common {@link Component}s that the
@@ -62,7 +63,7 @@ public abstract class QuestionWithButtons extends VerticalLayout {
     content.add(title, upButton, downButton);
     content.add(
         new Button(new Icon(VaadinIcon.PENCIL), event -> survey.editQuestion(event.getSource())));
-    content.add(new Button(new Icon(VaadinIcon.TRASH), event -> removeQuestion(survey)));
+    content.add(new Button(new Icon(VaadinIcon.TRASH), event -> survey.removeQuestion(question)));
 
     add(content);
   }
@@ -80,13 +81,23 @@ public abstract class QuestionWithButtons extends VerticalLayout {
     });
   }
 
+//  /**
+//   * Removes the question
+//   *
+//   * @param survey used to pass it to {@link ConfirmDialog}
+//   */
+//  public void removeQuestion(CreateSurveyView survey) {
+//    new ConfirmDialog(survey, this);
+//  }
+
   /**
    * Removes the question
-   * 
-   * @param survey used to pass it to {@link ConfirmDialog}
+   *
+   * @param deleteQuestionConsumer used to pass it to {@link ConfirmDialog}
    */
-  public void removeQuestion(CreateSurveyView survey) {
-    new ConfirmDialog(survey, this);
+  public void removeQuestion(Consumer<Question> deleteQuestionConsumer) {
+    new ConfirmDialog("Confirm Delete", "Are you sure you want to remove question: "
+        + question.getTitle() + "?", deleteQuestionConsumer, question);
   }
 
   /**

@@ -1,5 +1,6 @@
 package com.considlia.survey.ui.custom_component.question_with_button;
 
+import com.considlia.survey.model.question.Question;
 import java.util.List;
 import com.considlia.survey.model.QuestionType;
 import com.considlia.survey.model.question.MultiQuestion;
@@ -10,6 +11,7 @@ import com.vaadin.flow.component.checkbox.CheckboxGroupVariant;
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.radiobutton.RadioGroupVariant;
+import java.util.function.Consumer;
 
 /**
  * Class extending {@link QuestionWithButtons}. Contains the specific {@link Component}s for the
@@ -30,7 +32,7 @@ public class MultiQuestionWithButtons extends QuestionWithButtons {
    * @param question getList {@link QuestionType} and also for passing it to super
    * @param survey passing it to super
    */
-  public MultiQuestionWithButtons(MultiQuestion question, CreateSurveyView survey) {
+  public MultiQuestionWithButtons(MultiQuestion question, CreateSurveyView survey, Consumer<Question> deleteQuestionConsumer) {
     super(question, survey);
 
     this.stringAlternatives = question.getStringAlternatives();

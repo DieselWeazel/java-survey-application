@@ -7,6 +7,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.server.Command;
 import java.util.function.Consumer;
 
 public class GridTools extends HorizontalLayout {
@@ -26,10 +27,10 @@ public class GridTools extends HorizontalLayout {
   /**
    * Constructor for ProfileView.
    * @param item for each Survey.
-   * @param consumer for each Survey to be able to be deleted, edited and viewed.
+   * @param deleteSurveyConsumer for each Survey to be able to be deleted, edited and viewed.
    */
-  public GridTools(Survey item, Consumer<Survey> consumer) {
-    add(showSurveyButton(item), editSurveyButton(item), deleteSurveyButton(item, consumer));
+  public GridTools(Survey item, Consumer<Survey> deleteSurveyConsumer) {
+    add(showSurveyButton(item), editSurveyButton(item), deleteSurveyButton(item, deleteSurveyConsumer));
   }
 
   /**
@@ -57,16 +58,17 @@ public class GridTools extends HorizontalLayout {
   /**
    * Creates a button to manage Survey deletion from inside ProfileView
    * @param item Survey to delete.
-   * @param consumer being method to handle deletion.
+   * @param deleteSurveyConsumer consumer that deletes Survey if confirmed within ConfirmDialog.
    * @return confirm dialog, to make sure user wants to delete survey.
    */
-  private Button deleteSurveyButton(Survey item, Consumer<Survey> consumer) {
+  private Button deleteSurveyButton(Survey item, Consumer<Survey> deleteSurveyConsumer) {
     return new Button(
         new Icon(VaadinIcon.TRASH),
         onDelete -> {
           ConfirmDialog confirmDialog =
               new ConfirmDialog(
-                  "Confirm Delete", "Are you sure you want to delete the item?", consumer, item);
+                  "Confirm Delete", "Are you sure you want to delete " + item.getTitle() + "?",
+                  deleteSurveyConsumer, item);
         });
   }
 }

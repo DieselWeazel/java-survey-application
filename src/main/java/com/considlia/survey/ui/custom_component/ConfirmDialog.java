@@ -1,5 +1,6 @@
 package com.considlia.survey.ui.custom_component;
 
+import com.vaadin.flow.server.Command;
 import java.util.function.Consumer;
 import com.considlia.survey.model.Survey;
 import com.considlia.survey.model.question.Question;
@@ -14,7 +15,7 @@ import com.vaadin.flow.component.html.H5;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.router.BeforeLeaveEvent.ContinueNavigationAction;
 
-public class ConfirmDialog extends Dialog {
+public class ConfirmDialog<T> extends Dialog {
 
   private Button cancelBtn;
 
@@ -24,17 +25,49 @@ public class ConfirmDialog extends Dialog {
    * @param headerText - {@link String} text in header
    * @param contentText - {@link String} text in body
    * @param consumer - method from {@link SurveyGrid} that removes the item-parameter
-   * @param item - {@link Survey} thats going to be removed
    */
-  public ConfirmDialog(String headerText, String contentText, Consumer<Survey> consumer,
-      Survey item) {
+  public ConfirmDialog(String headerText, String contentText, Consumer<T> consumer,
+      T entityObject) {
     setCloseOnEsc(false);
     setCloseOnOutsideClick(false);
 
     initCancelBtn();
 
     Button confirmBtn = new Button("Confirm", onConfirm -> {
-      consumer.accept(item);
+      consumer.accept(entityObject);
+      close();
+    });
+
+    add(new H2(headerText), new H5(contentText));
+    add(new HorizontalLayout(cancelBtn, confirmBtn));
+    open();
+  }
+
+//  public ConfirmDialog(String headerText, String contentText, Command command,
+//      Object object) {
+//    setCloseOnEsc(false);
+//    setCloseOnOutsideClick(false);
+//
+//    initCancelBtn();
+//
+//    Button confirmBtn = new Button("Confirm", onConfirm -> {
+//      command.execute();
+//      close();
+//    });
+//
+//    add(new H2(headerText), new H5(contentText));
+//    add(new HorizontalLayout(cancelBtn, confirmBtn));
+//    open();
+//  }
+
+  public ConfirmDialog(String headerText, String contentText, Runnable deleteObjectRunnable) {
+    setCloseOnEsc(false);
+    setCloseOnOutsideClick(false);
+
+    initCancelBtn();
+
+    Button confirmBtn = new Button("Confirm", onConfirm -> {
+      deleteObjectRunnable.run();
       close();
     });
 
@@ -44,38 +77,34 @@ public class ConfirmDialog extends Dialog {
   }
 
   /**
-   * Discards, cancels or saves the changes made to a {@link Survey}
-   * 
-   * @param action - {@link ContinueNavigationAction}
-   * @param survey - {@link CreateSurveyView}
+   * Creates a {@link Dialog} where the "Confirm"-{@link Button} removes the {@link Question} from
+   * the survey.
+   *
+   * @param survey - {@link CreateSurveyView} to get access to its methods
+   * @param question - the {@link QuestionWithButtons} containing the {@link Question} thats going
+   *        to be removed
    */
-//  public ConfirmDialog(ContinueNavigationAction action, CreateSurveyView survey) {
-//
-//    initCancelBtn();
-//
-//    Button confirmBtn = new Button("Discard", onDiscard -> {
-//      action.proceed();
-//      close();
-//    });
-//    Button saveBtn = new Button("Save", onSave -> {
-//      survey.saveSurvey();
-//      action.proceed();
-//      close();
-//    });
-//
-//    HorizontalLayout buttonContainer = new HorizontalLayout();
-//    if (!survey.checkFilledFields()) {
-//      saveBtn.setEnabled(false);
-//      add(new Text(
-//          "You have to fill out required fields and have at least one question. Fill them out or discard changes"));
-//    } else {
-//      add(new H5("Do you want to save or discard your changes before navigating away?"));
-//    }
-//
-//    buttonContainer.add(saveBtn, confirmBtn, cancelBtn);
-//    add(buttonContainer);
-//  }
+  public ConfirmDialog(CreateSurveyView survey, QuestionWithButtons question) {
 
+    initCancelBtn();
+
+    Button confirmBtn = new Button("Confirm", onConfirm -> {
+      survey.removeQuestion(question.getQuestion());
+      close();
+    });
+    add(new H5("Are you sure you want to remove this question?"));
+    add(new HorizontalLayout(cancelBtn, confirmBtn));
+    open();
+  }
+
+  /**
+   * Discards, cancels or saves the changes made to a {@link Survey} or {@link com.considlia.survey.model.SurveyResponse},
+   * can be used with other entity creation views.
+   *
+   * @param action - {@link ContinueNavigationAction}
+   * @param runnable - Method saving entity/object.
+   * @param checkFilledFields boolean, if some fields are unfinished during creation process.
+   */
   public ConfirmDialog(ContinueNavigationAction action, Runnable runnable, boolean checkFilledFields) {
 
     initCancelBtn();
@@ -103,26 +132,6 @@ public class ConfirmDialog extends Dialog {
     add(buttonContainer);
   }
 
-  /**
-   * Creates a {@link Dialog} where the "Confirm"-{@link Button} removes the {@link Question} from
-   * the survey.
-   * 
-   * @param survey - {@link CreateSurveyView} to get access to its methods
-   * @param question - the {@link QuestionWithButtons} containing the {@link Question} thats going
-   *        to be removed
-   */
-  public ConfirmDialog(CreateSurveyView survey, QuestionWithButtons question) {
-
-    initCancelBtn();
-
-    Button confirmBtn = new Button("Confirm", onConfirm -> {
-      survey.removeQuestion(question.getQuestion());
-      close();
-    });
-    add(new H5("Are you sure you want to remove this question?"));
-    add(new HorizontalLayout(cancelBtn, confirmBtn));
-    open();
-  }
 
   /**
    * Dialog Windows connected to Login/Registration
@@ -160,12 +169,7 @@ public class ConfirmDialog extends Dialog {
    * @return button - {@link Button}
    */
   public Button initOkButton() {
-    Button okButton = new Button("Ok");
-    okButton.addClickListener(onClick -> {
-      close();
-    });
-    okButton.focus();
-    return okButton;
+    return new Button("Ok", e-> close());
   }
 
   /**

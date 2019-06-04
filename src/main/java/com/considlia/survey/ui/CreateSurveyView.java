@@ -245,7 +245,7 @@ public class CreateSurveyView extends BaseView
     extraComponents.removeAll();
 
     for (Question q : thisSurvey.getQuestions()) {
-      questions.add(QuestionWithButtonsFactory.create(q, this));
+      questions.add(QuestionWithButtonsFactory.create(q, this, this::removeQuestion));
     }
     updateMoveButtonStatus();
   }
@@ -503,7 +503,6 @@ public class CreateSurveyView extends BaseView
   public void beforeLeave(BeforeLeaveEvent event) {
     if (hasChanges) {
       ContinueNavigationAction action = event.postpone();
-//      ConfirmDialog dialog = new ConfirmDialog(action, this);
       ConfirmDialog dialog = new ConfirmDialog(action, this::saveSurvey, checkFilledFields());
       dialog.open();
     }
