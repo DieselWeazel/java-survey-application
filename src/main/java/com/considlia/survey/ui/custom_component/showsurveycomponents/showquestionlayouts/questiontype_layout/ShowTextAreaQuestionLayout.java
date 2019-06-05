@@ -3,6 +3,7 @@ package com.considlia.survey.ui.custom_component.showsurveycomponents.showquesti
 import com.considlia.survey.model.answer.Answer;
 import com.considlia.survey.model.answer.TextAnswer;
 import com.considlia.survey.model.question.Question;
+import com.considlia.survey.ui.custom_component.showsurveycomponents.SurveyLoader;
 import com.considlia.survey.ui.custom_component.showsurveycomponents.showquestionlayouts.ShowQuestionLayout;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.data.binder.Binder;
@@ -10,7 +11,7 @@ import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.data.validator.StringLengthValidator;
 
 /**
- * Shows TextAreaQuestions, inherits from the ShowQuestionLayout for base purposes.
+ * Shows TextQuestions, inherits from the ShowQuestionLayout for base purposes.
  *
  * Written by Jonathan Harr
  */
@@ -41,15 +42,15 @@ public class ShowTextAreaQuestionLayout extends ShowQuestionLayout {
   }
 
   /**
-   * Inherited Method, sets the Binder to show a message if fields are empty and only if Question
-   * requires an answer.
+   * Inherited Method, sets the Binder to show a message if fields are empty and only if Question requires an answer.
    */
   public void setMandatoryStatus() {
     if (getQuestion().isMandatory()) {
-      binder.forField(questionArea)
-          .withValidator(new StringLengthValidator(mandatoryQuestionMessage, 1, null))
+      binder
+          .forField(questionArea)
+          .withValidator(new StringLengthValidator(MANDATORY_QUESTION_MESSAGE, 1, null))
           .bind(TextAnswer::getTextAnswer, TextAnswer::setTextAnswer);
-      if (questionArea.getValue().length() < 1) {
+      if (questionArea.getValue().length()<1){
       }
     } else {
       binder.forField(questionArea).bind(TextAnswer::getTextAnswer, TextAnswer::setTextAnswer);
@@ -74,13 +75,11 @@ public class ShowTextAreaQuestionLayout extends ShowQuestionLayout {
 
   /**
    * Checks if QuetionArea is empty
-   * 
    * @param question if question is mandatory
    * @return true if QuestionArea is filled in.
    */
   public boolean isCompleted(Question question) {
-    // getLOGGER().info("ShowMultiChoiceQuestionLayout isCompleted: '{}'",
-    // (!questionArea.isEmpty()));
+//    getLOGGER().info("ShowMultiChoiceQuestionLayout isCompleted: '{}'", (!questionArea.isEmpty()));
     return (!questionArea.isEmpty());
   }
 }

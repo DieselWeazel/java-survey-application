@@ -11,6 +11,7 @@ import java.util.List;
 public class ErrorVerificationMessageDTO {
 
   private boolean isConflict;
+  private boolean hasChanges;
   private List<String> errorText;
 
   /**
@@ -23,6 +24,21 @@ public class ErrorVerificationMessageDTO {
    */
   public ErrorVerificationMessageDTO(boolean isConflict, List<String> errorText) {
     this.isConflict = isConflict;
+    this.errorText = errorText;
+  }
+
+  /**
+   * Constructor for easy instantiation.
+   * @param isConflict if input from User is wrong.
+   * @param hasChanges
+   * @param errorText display to User, what went wrong.
+   *
+   * Info: Handles an array of Strings to show several inputs being wrong. Can be
+   * overloaded into handling just one String as well.
+   */
+  public ErrorVerificationMessageDTO(boolean isConflict, boolean hasChanges, List<String> errorText) {
+    this.isConflict = isConflict;
+    this.hasChanges = hasChanges;
     this.errorText = errorText;
   }
 
@@ -40,6 +56,22 @@ public class ErrorVerificationMessageDTO {
    */
   public void setConflict(boolean conflict) {
     isConflict = conflict;
+  }
+
+  /**
+   * To check if any fields has changes.
+   * @return if object has changes.
+   */
+  public boolean isHasChanges() {
+    return hasChanges;
+  }
+
+  /**
+   * Sets the status of changes.
+   * @param hasChanges
+   */
+  public void setHasChanges(boolean hasChanges) {
+    this.hasChanges = hasChanges;
   }
 
   /**

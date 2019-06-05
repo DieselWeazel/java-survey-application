@@ -3,6 +3,7 @@ package com.considlia.survey.ui.custom_component.question_with_button;
 import com.considlia.survey.model.question.Question;
 import com.considlia.survey.ui.CreateSurveyView;
 import com.considlia.survey.ui.custom_component.ConfirmDialog;
+import com.considlia.survey.ui.custom_component.ConfirmDialog.ConfirmDialogBuilder;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
@@ -12,6 +13,7 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import java.util.function.Consumer;
 
 /**
  * Abstract class extending {@link VerticalLayout}. Contains the common {@link Component}s that the
@@ -40,7 +42,7 @@ public abstract class QuestionWithButtons extends VerticalLayout {
    * @param question is {@link Question}
    * @param survey for accessing its class methods
    */
-  public QuestionWithButtons(Question question, CreateSurveyView survey) {
+  public QuestionWithButtons(Question question, CreateSurveyView survey, Consumer<Question> deleteQuestionConsumer) {
     setId("custom");
     setWidth("100%");
 
@@ -62,8 +64,17 @@ public abstract class QuestionWithButtons extends VerticalLayout {
     content.add(title, upButton, downButton);
     content.add(
         new Button(new Icon(VaadinIcon.PENCIL), event -> survey.editQuestion(event.getSource())));
-    content.add(new Button(new Icon(VaadinIcon.TRASH), event -> removeQuestion(survey)));
-
+    content.add(new Button(new Icon(VaadinIcon.TRASH), onDelete -> {
+      ConfirmDialog<Question> confirmDialog = new ConfirmDialogBuilder<Question>()
+        .with($ -> {
+          $.addHeaderText("Confirm Delete");
+          $.addContentText("Are you sure you want to remove question: " + question.getTitle() + "?");
+          $.entityObject = question;
+          $.consumer = deleteQuestionConsumer;
+            })
+          .createConfirmDialog();
+      confirmDialog.open();
+      }));
     add(content);
   }
 
@@ -78,15 +89,6 @@ public abstract class QuestionWithButtons extends VerticalLayout {
       survey.moveQuestion(getQuestion(), move);
       survey.updateMoveButtonStatus();
     });
-  }
-
-  /**
-   * Removes the question
-   * 
-   * @param survey used to pass it to {@link ConfirmDialog}
-   */
-  public void removeQuestion(CreateSurveyView survey) {
-    new ConfirmDialog(survey, this);
   }
 
   /**

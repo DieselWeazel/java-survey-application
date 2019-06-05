@@ -4,6 +4,7 @@ import com.considlia.survey.model.answer.Answer;
 import com.considlia.survey.model.answer.RadioAnswer;
 import com.considlia.survey.model.question.Question;
 import com.considlia.survey.model.question.RadioQuestion;
+import com.considlia.survey.ui.custom_component.showsurveycomponents.SurveyLoader;
 import com.considlia.survey.ui.custom_component.showsurveycomponents.showquestionlayouts.ShowQuestionLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.radiobutton.RadioGroupVariant;
@@ -49,7 +50,7 @@ public class ShowSingleChoiceQuestionLayout extends ShowQuestionLayout {
       binder.forField(radioButtons)
           .withValidator(
               ratioAnswerString -> ratioAnswerString != null && !ratioAnswerString.isEmpty(),
-              mandatoryQuestionMessage)
+              MANDATORY_QUESTION_MESSAGE)
           .bind(RadioAnswer::getChosenAnswer, RadioAnswer::setChosenAnswer);
     } else {
       binder.forField(radioButtons).bind(RadioAnswer::getChosenAnswer,
@@ -65,7 +66,7 @@ public class ShowSingleChoiceQuestionLayout extends ShowQuestionLayout {
    */
   @Override
   public Answer gatherResponse() throws ValidationException {
-    singleChoiceAnswer.setQuestion(getQuestion());
+    singleChoiceAnswer.setQuestion(question);
     getLOGGER().info("Logging question: '{}'", getQuestion());
     binder.writeBean(singleChoiceAnswer);
     getLOGGER().info("Logging answer: '{}'", singleChoiceAnswer);

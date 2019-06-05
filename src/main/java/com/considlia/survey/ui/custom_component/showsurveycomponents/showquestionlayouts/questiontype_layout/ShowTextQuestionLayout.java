@@ -3,6 +3,7 @@ package com.considlia.survey.ui.custom_component.showsurveycomponents.showquesti
 import com.considlia.survey.model.answer.Answer;
 import com.considlia.survey.model.answer.TextAnswer;
 import com.considlia.survey.model.question.Question;
+import com.considlia.survey.ui.custom_component.showsurveycomponents.SurveyLoader;
 import com.considlia.survey.ui.custom_component.showsurveycomponents.showquestionlayouts.ShowQuestionLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
@@ -10,7 +11,7 @@ import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.data.validator.StringLengthValidator;
 
 /**
- * Shows TextFiledQuestions, inherits from the ShowQuestionLayout for base purposes.
+ * Shows TextQuestions, inherits from the ShowQuestionLayout for base purposes.
  *
  * Written by Jonathan Harr
  */
@@ -40,13 +41,13 @@ public class ShowTextQuestionLayout extends ShowQuestionLayout {
   }
 
   /**
-   * Inherited Method, sets the Binder to show a message if fields are empty and only if Question
-   * requires an answer.
+   * Inherited Method, sets the Binder to show a message if fields are empty and only if Question requires an answer.
    */
   public void setMandatoryStatus() {
     if (getQuestion().isMandatory()) {
-      binder.forField(questionField)
-          .withValidator(new StringLengthValidator(mandatoryQuestionMessage, 1, null))
+      binder
+          .forField(questionField)
+          .withValidator(new StringLengthValidator(MANDATORY_QUESTION_MESSAGE, 1, null))
           .bind(TextAnswer::getTextAnswer, TextAnswer::setTextAnswer);
       if (questionField.getValue().length() < 1) {
       }
@@ -69,16 +70,13 @@ public class ShowTextQuestionLayout extends ShowQuestionLayout {
     getLOGGER().info("Logging answer: '{}'", textAnswer);
     return textAnswer;
   }
-
   /**
    * Checks if QuestionField is empty
-   * 
    * @param question if question is mandatory
    * @return true if QuestionField is filled in.
    */
   public boolean isCompleted(Question question) {
-    // getLOGGER().info("ShowMultiChoiceQuestionLayout isCompleted: '{}'",
-    // (!questionField.isEmpty()));
+//    getLOGGER().info("ShowMultiChoiceQuestionLayout isCompleted: '{}'", (!questionField.isEmpty()));
     return (!questionField.isEmpty());
   }
 }
