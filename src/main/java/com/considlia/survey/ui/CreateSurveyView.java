@@ -1,5 +1,7 @@
 package com.considlia.survey.ui;
 
+import com.considlia.survey.ui.custom_component.ConfirmDialog;
+import com.considlia.survey.ui.custom_component.ConfirmDialog.ConfirmDialogBuilder;
 import java.time.LocalDate;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -13,7 +15,6 @@ import com.considlia.survey.model.question.Question;
 import com.considlia.survey.repositories.SurveyRepository;
 import com.considlia.survey.repositories.UserRepository;
 import com.considlia.survey.security.CustomUserService;
-import com.considlia.survey.ui.custom_component.ConfirmDialog;
 import com.considlia.survey.ui.custom_component.CreateAlternative;
 import com.considlia.survey.ui.custom_component.CreateRatioComponents;
 import com.considlia.survey.ui.custom_component.CreateTextComponents;
@@ -385,7 +386,7 @@ public class CreateSurveyView extends BaseView
 
   /**
    * Removes question from questions {@link List} in {@link Survey}. Invoked from
-   * {@link ConfirmDialog}
+   * {@link ConfirmDialogBuilder}
    *
    * @param question type: {@link Question}
    */
@@ -502,9 +503,16 @@ public class CreateSurveyView extends BaseView
   @Override
   public void beforeLeave(BeforeLeaveEvent event) {
     if (hasChanges) {
-      ContinueNavigationAction action = event.postpone();
-      ConfirmDialog dialog = new ConfirmDialog(action, this::saveSurvey, checkFilledFields());
-      dialog.open();
+      ContinueNavigationAction continueNavigationAction = event.postpone();
+
+      ConfirmDialog<Survey> confirmDialog = new ConfirmDialogBuilder<Survey>()
+          .with($ -> {
+              $.action = continueNavigationAction;
+              $.runnable = this::saveSurvey;
+              $.allFieldsCorrectlyFilledIn = checkFilledFields();
+              })
+          .createConfirmDialog();
+      confirmDialog.open();
     }
   }
 

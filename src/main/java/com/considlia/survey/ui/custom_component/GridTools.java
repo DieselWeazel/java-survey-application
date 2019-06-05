@@ -7,7 +7,6 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.server.Command;
 import java.util.function.Consumer;
 
 public class GridTools extends HorizontalLayout {
@@ -58,15 +57,15 @@ public class GridTools extends HorizontalLayout {
   /**
    * Creates a button to manage Survey deletion from inside ProfileView
    * @param item Survey to delete.
-   * @param deleteSurveyConsumer consumer that deletes Survey if confirmed within ConfirmDialog.
+   * @param deleteSurveyConsumer consumer that deletes Survey if confirmed within ConfirmDialogBuilder.
    * @return confirm dialog, to make sure user wants to delete survey.
    */
   private Button deleteSurveyButton(Survey item, Consumer<Survey> deleteSurveyConsumer) {
     return new Button(
         new Icon(VaadinIcon.TRASH),
         onDelete -> {
-          ConfirmDialog confirmDialog =
-              new ConfirmDialog(
+          ConfirmDialogBuilder confirmDialog =
+              new ConfirmDialogBuilder(
                   "Confirm Delete", "Are you sure you want to delete " + item.getTitle() + "?",
                   deleteSurveyConsumer, item);
         });

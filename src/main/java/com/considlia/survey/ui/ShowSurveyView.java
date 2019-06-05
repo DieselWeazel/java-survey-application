@@ -1,6 +1,5 @@
 package com.considlia.survey.ui;
 
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.router.BeforeLeaveEvent;
 import com.vaadin.flow.router.BeforeLeaveEvent.ContinueNavigationAction;
 import com.vaadin.flow.router.BeforeLeaveObserver;
@@ -15,7 +14,7 @@ import com.considlia.survey.repositories.ResponseRepository;
 import com.considlia.survey.repositories.SurveyRepository;
 import com.considlia.survey.security.CustomUserService;
 import com.considlia.survey.security.SecurityUtils;
-import com.considlia.survey.ui.custom_component.ConfirmDialog;
+import com.considlia.survey.ui.custom_component.ConfirmDialogBuilder;
 import com.considlia.survey.ui.custom_component.showsurveycomponents.ShowQuestionFactory;
 import com.considlia.survey.ui.custom_component.showsurveycomponents.SurveyLoader;
 import com.vaadin.flow.component.button.Button;
@@ -131,7 +130,7 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long>, B
           e1.printStackTrace();
         }
       } else {
-        new ConfirmDialog(showQuestionFactory.isComplete()).open();
+        new ConfirmDialogBuilder(showQuestionFactory.isComplete()).open();
       }
     });
     initUI();
@@ -172,8 +171,8 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long>, B
   public void beforeLeave(BeforeLeaveEvent event) {
     if (showQuestionFactory.isComplete().isHasChanges()) {
       ContinueNavigationAction action = event.postpone();
-      ConfirmDialog dialog =
-          new ConfirmDialog(
+      ConfirmDialogBuilder dialog =
+          new ConfirmDialogBuilder(
               action,
               () -> {
                   try {

@@ -1,5 +1,6 @@
 package com.considlia.survey.ui.userviews;
 
+import com.considlia.survey.ui.custom_component.ConfirmDialogBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -9,7 +10,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import com.considlia.survey.security.SecurityUtils;
 import com.considlia.survey.ui.BaseView;
 import com.considlia.survey.ui.MainLayout;
-import com.considlia.survey.ui.custom_component.ConfirmDialog;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
@@ -68,14 +68,14 @@ public class LoginView extends BaseView implements BeforeEnterObserver {
 
   /**
    * Get the values from the username and password {@link TextField}s. If they aren't valid a
-   * {@link ConfirmDialog} is showned
+   * {@link ConfirmDialogBuilder} is showned
    */
   public void logInEvent() {
     if (setCurrentUser(username.getValue(), password.getValue())) {
       UI.getCurrent().getSession().close();
       UI.getCurrent().getPage().reload();
     } else {
-      ConfirmDialog confirmDialog = new ConfirmDialog("Wrong Username or Password, try again!");
+      ConfirmDialogBuilder confirmDialog = new ConfirmDialogBuilder("Wrong Username or Password, try again!");
       confirmDialog.open();
     }
   }
