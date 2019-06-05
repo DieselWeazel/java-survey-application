@@ -11,7 +11,7 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
 
 /**
- * Shows TextQuestions, inherits from the ShowQuestionLayout for base purposes.
+ * Shows SingleChoiceQuestions, inherits from the ShowQuestionLayout for base purposes.
  *
  * Written by Jonathan Harr
  */
@@ -40,22 +40,20 @@ public class ShowSingleChoiceQuestionLayout extends ShowQuestionLayout {
     radioButtons.addThemeVariants(RadioGroupVariant.LUMO_VERTICAL);
   }
 
-
   /**
-   * Inherited Method, sets the Binder to show a message if fields are empty and only if Question requires an answer.
+   * Inherited Method, sets the Binder to show a message if fields are empty and only if Question
+   * requires an answer.
    */
   public void setMandatoryStatus() {
     if (getQuestion().isMandatory()) {
-      binder
-          .forField(radioButtons)
+      binder.forField(radioButtons)
           .withValidator(
               ratioAnswerString -> ratioAnswerString != null && !ratioAnswerString.isEmpty(),
               mandatoryQuestionMessage)
           .bind(RadioAnswer::getChosenAnswer, RadioAnswer::setChosenAnswer);
     } else {
-      binder
-          .forField(radioButtons)
-          .bind(RadioAnswer::getChosenAnswer, RadioAnswer::setChosenAnswer);
+      binder.forField(radioButtons).bind(RadioAnswer::getChosenAnswer,
+          RadioAnswer::setChosenAnswer);
     }
   }
 
@@ -76,6 +74,7 @@ public class ShowSingleChoiceQuestionLayout extends ShowQuestionLayout {
 
   /**
    * Checks if RadioButtons are empty
+   * 
    * @param question if question is mandatory
    * @return true if RadioButtons are filled in.
    */
