@@ -71,8 +71,8 @@ public class GridTools extends HorizontalLayout {
                 $.consumer = deleteSurveyConsumer;
                 $.entityObject = item;
                 $.addHeaderText("Confirm Delete");
-                $.addContentText("Are you sure you want to delete " + item.getTitle() + "?");
-                $.addConfirmEntityRemovalButton();
+                $.addContentText("Are you sure you want to delete survey: " + item.getTitle() + "?");
+                $.addRemoveAndCancelButtonsContainer();
               })
               .createConfirmDialog();
           confirmDialog.open();

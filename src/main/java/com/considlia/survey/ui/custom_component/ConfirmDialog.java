@@ -11,6 +11,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+/**
+ * A Universal ConfirmDialog class, with purpose to be applicable to all kinds of Confirm Dialogs that are needed.
+ * @param <T> being an entity to remove, update or save.
+ */
 public class ConfirmDialog<T> extends Dialog {
 
   public Consumer<T> consumer;
@@ -47,10 +51,6 @@ public class ConfirmDialog<T> extends Dialog {
     public boolean allFieldsCorrectlyFilledIn;
     public ErrorVerificationMessageDTO errorVerificationMessageDTO;
     public List<String> errorQuestionList;
-//    public Button confirmEntityRemovalButton;
-//    public Button cancelButton;
-
-    //  public static Builder
 
     public ConfirmDialogBuilder with(
         Consumer<ConfirmDialogBuilder> builderFunction) {
@@ -78,19 +78,14 @@ public class ConfirmDialog<T> extends Dialog {
       add(new Button("Ok", ok -> close()));
     }
 
-    public void addConfirmEntityRemovalButton() {
-      add(new Button("Confirm", confirm -> consumer.accept(entityObject)));
+    public void addRemoveAndCancelButtonsContainer() {
+      Button confirmButton = new Button("Confirm", confirm -> {
+        consumer.accept(entityObject);
+        close();
+      });
+      Button cancelButton = new Button("Cancel", cancel -> close());
+      add(new HorizontalLayout(confirmButton, cancelButton));
     }
-
-//    public Button confirmSaveEntityButton() {
-//      if (allFieldsCorrectlyFilledIn) {
-//        return new Button("Save", confirm -> runnable.run());
-//      } else {
-//        Button saveButton = new Button("Save");
-//        saveButton.setEnabled(false);
-//        return saveButton;
-//      }
-//    }
 
     public void confirmSaveEntityButton() {
       if (allFieldsCorrectlyFilledIn) {
@@ -106,13 +101,10 @@ public class ConfirmDialog<T> extends Dialog {
       add(new Button(s, cancel -> close()));
     }
 
-//    public void addDiscardButton() {
-//      add(new Button("Discard", discard -> action.proceed()));
-//    }
-
     public void addSaveDiscardCancelAlternatives(){
       Button saveButton = new Button("Save", confirm -> {
         runnable.run();
+        action.proceed();
         close();
       });
       if (!allFieldsCorrectlyFilledIn){
@@ -124,32 +116,6 @@ public class ConfirmDialog<T> extends Dialog {
       });
       Button closeButton = new Button("Close", close -> close());
       add(new HorizontalLayout(saveButton, discardButton, closeButton));
-    }
-
-//    public Button simpleCloseButton(String s) {
-//      return new Button(s, cancel -> close());
-//    }
-//
-//    public Button discardButton() {
-//      return new Button("Discard", discard -> action.proceed());
-//    }
-
-
-
-    public void setTextString(String textString) {
-      this.textString = textString;
-    }
-
-    public void setHeaderString(String headerString) {
-      this.headerString = headerString;
-    }
-
-    public void setContentString(String contentString) {
-      this.contentString = contentString;
-    }
-
-    public void setCancelString(String cancelString) {
-      this.cancelString = cancelString;
     }
 
     public void addMissingFieldsList(ErrorVerificationMessageDTO errorVerificationMessageDTO) {
