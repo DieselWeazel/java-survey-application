@@ -1,8 +1,9 @@
 package com.considlia.survey.ui;
 
-import com.vaadin.flow.component.UI;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.considlia.survey.model.Survey;
@@ -15,6 +16,7 @@ import com.considlia.survey.security.SecurityUtils;
 import com.considlia.survey.ui.custom_component.ConfirmDialog;
 import com.considlia.survey.ui.custom_component.showsurveycomponents.ShowQuestionFactory;
 import com.considlia.survey.ui.custom_component.showsurveycomponents.SurveyLoader;
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H5;
@@ -40,11 +42,11 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
   // -- Private Variables --
   // -- Containers --
   private VerticalLayout headerVerticalLayout = new VerticalLayout();
-  private VerticalLayout surveyVerticalLayout = new VerticalLayout();
+  protected VerticalLayout surveyVerticalLayout = new VerticalLayout();
 
   private H1 h1;
   private H5 h5 = new H5();
-  private Button saveButton;
+  protected Button saveButton;
   private SurveyRepository surveyRepository;
   private ResponseRepository responseRepository;
   private Survey survey;
@@ -164,5 +166,13 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
     saveButton.setText("Go To Mainview");
     saveButton.addClickListener(e -> navigateBackToHomeView());
     add(saveButton);
+  }
+
+  protected List<Component> getQuestionComponents() {
+    List<Component> componentList = new ArrayList<Component>();
+    for (int i = 0; i < surveyVerticalLayout.getComponentCount(); i++) {
+      componentList.add(surveyVerticalLayout.getComponentAt(i));
+    }
+    return componentList;
   }
 }
