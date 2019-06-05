@@ -13,7 +13,7 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
 
 /**
- * Shows TextQuestions, inherits from the ShowQuestionLayout for base purposes.
+ * Shows RatioQuestions, inherits from the ShowQuestionLayout for base purposes.
  *
  * Written by Jonathan Harr
  */
@@ -78,9 +78,6 @@ public class ShowRatioQuestionLayout extends ShowQuestionLayout {
     ratioAnswer.setQuestion(getQuestion());
     getLOGGER().info("Logging question: '{}'", getQuestion());
     binder.writeBean(ratioAnswer);
-    if (ratioAnswer.getRatioAnswer().contains(" ")) {
-      ratioAnswer.setRatioAnswer(ratioAnswer.getRatioAnswer().split(" ")[0]);
-    }
     getLOGGER().info("Logging answer: '{}'", ratioAnswer);
     return ratioAnswer;
   }
