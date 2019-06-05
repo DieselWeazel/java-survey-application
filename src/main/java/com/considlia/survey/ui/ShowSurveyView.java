@@ -129,8 +129,10 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long>, B
       } else {
         ConfirmDialog<SurveyResponse> confirmDialog = new ConfirmDialogBuilder<SurveyResponse>()
             .with($ -> {
-              $.errorQuestionList = showQuestionFactory.isComplete().getErrorText();
-              $.confirmInformationButton();
+              $.addHeaderText("You aren't finished!");
+              $.addMissingFieldsList(showQuestionFactory.isComplete());
+              $.allFieldsCorrectlyFilledIn = showQuestionFactory.isComplete().isConflict();
+              $.addSimpleCloseButton("Got it!");
             })
             .createConfirmDialog();
         confirmDialog.open();
@@ -179,6 +181,9 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long>, B
           .with($ -> {
             $.action = continueNavigationAction;
             $.runnable = this::saveResponse;
+            $.addHeaderText("You aren't finished!");
+            $.addMissingFieldsList(showQuestionFactory.isComplete());
+            $.addSaveDiscardCancelAlternatives();
             $.allFieldsCorrectlyFilledIn = showQuestionFactory.isComplete().isConflict();
             $.addSaveDiscardCancelAlternatives();
           })

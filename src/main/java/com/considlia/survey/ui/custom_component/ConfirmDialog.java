@@ -111,11 +111,17 @@ public class ConfirmDialog<T> extends Dialog {
 //    }
 
     public void addSaveDiscardCancelAlternatives(){
-      Button saveButton = new Button("Save", confirm -> runnable.run());
+      Button saveButton = new Button("Save", confirm -> {
+        runnable.run();
+        close();
+      });
       if (!allFieldsCorrectlyFilledIn){
         saveButton.setEnabled(false);
       }
-      Button discardButton = new Button("Discard", discard -> action.proceed());
+      Button discardButton = new Button("Discard", discard -> {
+        action.proceed();
+        close();
+      });
       Button closeButton = new Button("Close", close -> close());
       add(new HorizontalLayout(saveButton, discardButton, closeButton));
     }
@@ -144,6 +150,12 @@ public class ConfirmDialog<T> extends Dialog {
 
     public void setCancelString(String cancelString) {
       this.cancelString = cancelString;
+    }
+
+    public void addMissingFieldsList(ErrorVerificationMessageDTO errorVerificationMessageDTO) {
+      for (String s : errorVerificationMessageDTO.getErrorText()) {
+        add(new H5(s));
+      }
     }
   }
 }
