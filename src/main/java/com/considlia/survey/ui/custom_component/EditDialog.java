@@ -171,7 +171,7 @@ public class EditDialog extends Dialog {
         }
       }
       if (!strings.isEmpty()) {
-        choosenQuestion.getQuestion().updateAlternatives(strings);
+        choosenQuestion.updateGUI(strings);
         close();
       } else {
         Dialog info = new Dialog();
