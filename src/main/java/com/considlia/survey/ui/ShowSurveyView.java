@@ -1,5 +1,7 @@
 package com.considlia.survey.ui;
 
+import com.considlia.survey.ui.custom_component.ConfirmDialog;
+import com.considlia.survey.ui.custom_component.ConfirmDialog.ConfirmDialogBuilder;
 import com.vaadin.flow.router.BeforeLeaveEvent;
 import com.vaadin.flow.router.BeforeLeaveEvent.ContinueNavigationAction;
 import com.vaadin.flow.router.BeforeLeaveObserver;
@@ -14,7 +16,6 @@ import com.considlia.survey.repositories.ResponseRepository;
 import com.considlia.survey.repositories.SurveyRepository;
 import com.considlia.survey.security.CustomUserService;
 import com.considlia.survey.security.SecurityUtils;
-import com.considlia.survey.ui.custom_component.ConfirmDialogBuilder;
 import com.considlia.survey.ui.custom_component.showsurveycomponents.ShowQuestionFactory;
 import com.considlia.survey.ui.custom_component.showsurveycomponents.SurveyLoader;
 import com.vaadin.flow.component.button.Button;
@@ -123,14 +124,16 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long>, B
     this.surveyVerticalLayout = showQuestionFactory.getSurveyLayout(survey);
     saveButton.addClickListener(e -> {
       if (showQuestionFactory.isComplete().isConflict()) {
-        try {
-          saveResponse();
-          navigateToSuccessView(ConfirmSuccessView.SURVEY_RESPONDED_STRING);
-        } catch (ValidationException e1) {
-          e1.printStackTrace();
-        }
+        saveResponse();
+        navigateToSuccessView(ConfirmSuccessView.SURVEY_RESPONDED_STRING);
       } else {
-        new ConfirmDialogBuilder(showQuestionFactory.isComplete()).open();
+        ConfirmDialog<SurveyResponse> confirmDialog = new ConfirmDialogBuilder<SurveyResponse>()
+            .with($ -> {
+              $.errorQuestionList = showQuestionFactory.isComplete().getErrorText();
+              $.confirmInformationButton();
+            })
+            .createConfirmDialog();
+        confirmDialog.open();
       }
     });
     initUI();
@@ -143,7 +146,7 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long>, B
    *
    * @throws ValidationException
    */
-  public void saveResponse() throws ValidationException {
+  public void saveResponse() {
     SurveyResponse surveyResponse = new SurveyResponse();
     surveyResponse.setTime(start.until(LocalDateTime.now(), ChronoUnit.SECONDS));
 
@@ -170,19 +173,17 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long>, B
   @Override
   public void beforeLeave(BeforeLeaveEvent event) {
     if (showQuestionFactory.isComplete().isHasChanges()) {
-      ContinueNavigationAction action = event.postpone();
-      ConfirmDialogBuilder dialog =
-          new ConfirmDialogBuilder(
-              action,
-              () -> {
-                  try {
-                    saveResponse();
-                  } catch (ValidationException e) {
-                    e.printStackTrace();
-                  }
-              },
-              showQuestionFactory.isComplete().isConflict());
-      dialog.open();
+      ContinueNavigationAction continueNavigationAction = event.postpone();
+
+      ConfirmDialog<Survey> confirmDialog = new ConfirmDialogBuilder<Survey>()
+          .with($ -> {
+            $.action = continueNavigationAction;
+            $.runnable = this::saveResponse;
+            $.allFieldsCorrectlyFilledIn = showQuestionFactory.isComplete().isConflict();
+            $.saveDiscardCancelButtonContainer();
+          })
+          .createConfirmDialog();
+      confirmDialog.open();
     }
   }
 }

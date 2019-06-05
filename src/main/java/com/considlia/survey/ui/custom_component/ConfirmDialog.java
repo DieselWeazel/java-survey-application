@@ -7,32 +7,39 @@ import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.H5;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.router.BeforeLeaveEvent.ContinueNavigationAction;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 
 public class ConfirmDialog<T> extends Dialog {
 
-  private Consumer<T> consumer;
-  private T entityObject;
-  private H2 headerText;
-  private H5 contentText;
-  private ContinueNavigationAction action;
-  private Runnable runnable;
-  private boolean allFieldsCorrectlyFilledIn;
-  private Button confirmEntityRemovalButton;
-  private Button confirmSaveEntityButton;
-  private Button cancelButton;
-  private Button discardButton;
-  private HorizontalLayout saveDiscardCancelButtonContainer;
+//  private Consumer<T> consumer;
+//  private T entityObject;
+//  private H2 headerText;
+//  private H5 contentText;
+//  private ContinueNavigationAction action;
+//  private Runnable runnable;
+//  private boolean allFieldsCorrectlyFilledIn;
+//  private Button confirmEntityRemovalButton;
+//  private Button confirmSaveEntityButton;
+//  private Button cancelButton;
+//  private Button discardButton;
+//  private HorizontalLayout saveDiscardCancelButtonContainer;
+//  private ErrorVerificationMessageDTO errorVerificationMessageDTO;
 
   private ConfirmDialog(Consumer<T> consumer, T entityObject, H2 headerText, Text infoText, H5 contentText, ContinueNavigationAction action,
       Runnable runnable, boolean allFieldsCorrectlyFilledIn, Button confirmEntityRemovalButton, Button confirmSaveEntityButton,
-      Button cancelButton, Button discardButton, HorizontalLayout saveDiscardCancelButtonContainer) {
+      Button cancelButton, Button discardButton, HorizontalLayout saveDiscardCancelButtonContainer,
+      List<String> errorQuestionList) {
 
     add(headerText, contentText);
     add(infoText);
     add(confirmEntityRemovalButton);
     add(cancelButton);
     add(saveDiscardCancelButtonContainer);
+    for(String s : errorQuestionList){
+      add(new H5(s));
+    }
     open();
   }
 
@@ -49,7 +56,8 @@ public class ConfirmDialog<T> extends Dialog {
     public ContinueNavigationAction action;
     public Runnable runnable;
     public boolean allFieldsCorrectlyFilledIn;
-
+    public ErrorVerificationMessageDTO errorVerificationMessageDTO;
+    public List<String> errorQuestionList;
 //    public Button confirmEntityRemovalButton;
 //    public Button cancelButton;
 
@@ -75,7 +83,8 @@ public class ConfirmDialog<T> extends Dialog {
           confirmSaveEntityButton(),
           cancelButton(),
           discardButton(),
-          saveDiscardCancelButtonContainer());
+          saveDiscardCancelButtonContainer(),
+          errorQuestionList);
     }
 
     public H2 headerText(String headerString) {
@@ -88,6 +97,10 @@ public class ConfirmDialog<T> extends Dialog {
 
     public H5 contentText(String contentString) {
       return new H5(contentString);
+    }
+
+    public Button confirmInformationButton(){
+      return new Button("Ok", ok -> close());
     }
 
     public Button confirmEntityRemovalButton() {
@@ -115,5 +128,6 @@ public class ConfirmDialog<T> extends Dialog {
     public HorizontalLayout saveDiscardCancelButtonContainer(){
       return new HorizontalLayout(confirmSaveEntityButton(), discardButton(), cancelButton());
     }
+
   }
 }
