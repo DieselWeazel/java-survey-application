@@ -10,7 +10,7 @@ import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.data.validator.StringLengthValidator;
 
 /**
- * Shows TextQuestions, inherits from the ShowQuestionLayout for base purposes.
+ * Shows TextFiledQuestions, inherits from the ShowQuestionLayout for base purposes.
  *
  * Written by Jonathan Harr
  */
@@ -40,12 +40,12 @@ public class ShowTextQuestionLayout extends ShowQuestionLayout {
   }
 
   /**
-   * Inherited Method, sets the Binder to show a message if fields are empty and only if Question requires an answer.
+   * Inherited Method, sets the Binder to show a message if fields are empty and only if Question
+   * requires an answer.
    */
   public void setMandatoryStatus() {
     if (getQuestion().isMandatory()) {
-      binder
-          .forField(questionField)
+      binder.forField(questionField)
           .withValidator(new StringLengthValidator(mandatoryQuestionMessage, 1, null))
           .bind(TextAnswer::getTextAnswer, TextAnswer::setTextAnswer);
       if (questionField.getValue().length() < 1) {
@@ -69,13 +69,16 @@ public class ShowTextQuestionLayout extends ShowQuestionLayout {
     getLOGGER().info("Logging answer: '{}'", textAnswer);
     return textAnswer;
   }
+
   /**
    * Checks if QuestionField is empty
+   * 
    * @param question if question is mandatory
    * @return true if QuestionField is filled in.
    */
   public boolean isCompleted(Question question) {
-//    getLOGGER().info("ShowMultiChoiceQuestionLayout isCompleted: '{}'", (!questionField.isEmpty()));
+    // getLOGGER().info("ShowMultiChoiceQuestionLayout isCompleted: '{}'",
+    // (!questionField.isEmpty()));
     return (!questionField.isEmpty());
   }
 }

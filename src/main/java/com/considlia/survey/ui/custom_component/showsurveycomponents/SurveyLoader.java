@@ -19,7 +19,7 @@ import com.considlia.survey.model.question.TextAreaQuestion;
 import com.considlia.survey.model.question.TextFieldQuestion;
 import com.considlia.survey.ui.custom_component.ErrorVerificationMessageDTO;
 import com.considlia.survey.ui.custom_component.showsurveycomponents.showquestionlayouts.ShowQuestionLayout;
-import com.considlia.survey.ui.custom_component.showsurveycomponents.showquestionlayouts.questiontype_layout.ShowMultiChoiceQuestionLayout;
+import com.considlia.survey.ui.custom_component.showsurveycomponents.showquestionlayouts.questiontype_layout.ShowCheckBoxChoiceQuestionLayout;
 import com.considlia.survey.ui.custom_component.showsurveycomponents.showquestionlayouts.questiontype_layout.ShowRatioQuestionLayout;
 import com.considlia.survey.ui.custom_component.showsurveycomponents.showquestionlayouts.questiontype_layout.ShowSingleChoiceQuestionLayout;
 import com.considlia.survey.ui.custom_component.showsurveycomponents.showquestionlayouts.questiontype_layout.ShowTextAreaQuestionLayout;
@@ -119,10 +119,10 @@ public class SurveyLoader implements ShowQuestionFactory<Set<Answer>> {
     LOGGER.info("SurveyLoader: Loading a question");
     if (question instanceof CheckBoxQuestion) {
       MultiQuestion mq = (MultiQuestion) question;
-      ShowMultiChoiceQuestionLayout showMultiChoiceQuestionLayout =
-          new ShowMultiChoiceQuestionLayout(mq);
+      ShowCheckBoxChoiceQuestionLayout showCheckBoxChoiceQuestionLayout =
+          new ShowCheckBoxChoiceQuestionLayout(mq);
       LOGGER.info("SurveyLoader: Loading '{}'", mq.getTitle());
-      return showMultiChoiceQuestionLayout;
+      return showCheckBoxChoiceQuestionLayout;
     } else if (question instanceof RadioQuestion) {
       RadioQuestion radioQuestion = (RadioQuestion) question;
       ShowSingleChoiceQuestionLayout showSingleChoiceQuestionLayout =
