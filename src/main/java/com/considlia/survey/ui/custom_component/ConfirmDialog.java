@@ -17,67 +17,72 @@ import java.util.function.Consumer;
  */
 public class ConfirmDialog<T> extends Dialog {
 
-  public Consumer<T> consumer;
-  public T entityObject;
-  public H2 headerText;
-  public Text text;
-  public String textString;
-  public String headerString;
-  public H5 contentText;
-  public String contentString;
-  private String cancelString;
-  public ContinueNavigationAction action;
-  public Runnable runnable;
-  public boolean allFieldsCorrectlyFilledIn;
-  public ErrorVerificationMessageDTO errorVerificationMessageDTO;
-  public List<String> errorQuestionList;
-
-  public ConfirmDialog() {
+  /**
+   * Private Constructor, this ConfirmDialog is never meant to be instantiated. See {@link ConfirmDialogBuilder}
+   */
+  private ConfirmDialog() {
   }
 
+  /**
+   * Builder Class, sets up the ConfirmDialog, with whatever method is needed.
+   * @param <T> being an entity to remove, update or save.
+   */
   public static class ConfirmDialogBuilder<T> extends ConfirmDialog<T> {
 
     public Consumer<T> consumer;
     public T entityObject;
-    public H2 headerText;
-    public Text text;
-    public String textString;
-    public String headerString;
-    public H5 contentText;
-    public String contentString;
-    private String cancelString;
     public ContinueNavigationAction action;
     public Runnable runnable;
     public boolean allFieldsCorrectlyFilledIn;
-    public ErrorVerificationMessageDTO errorVerificationMessageDTO;
-    public List<String> errorQuestionList;
 
+    /**
+     * Add appropriate method, or function, to the ConfirmDialog, in any order possible.
+     * @param builderFunction Method to add from this ConfirmDialogBuilder class only.
+     * @return {@link ConfirmDialog}
+     */
     public ConfirmDialogBuilder with(
         Consumer<ConfirmDialogBuilder> builderFunction) {
       builderFunction.accept(this);
       return this;
     }
 
+    /**
+     * Creates ConfirmDialog. Call this method on the end.
+     * @return a finished/built {@link ConfirmDialog}
+     */
     public ConfirmDialog<T> createConfirmDialog() {
       return this;
     }
 
+    /**
+     * Adds HeaderText to the ConfirmDialog.
+     * @param s being the String to display on top.
+     */
     public void addHeaderText(String s) {
       add(new H2(s));
     }
 
+    /**
+     * Adds Text to the ConfirmDialog.
+     * @param s being Text to add.
+     */
     public void addInformationText(String s){
       add(new Text(s));
     }
 
+    /**
+     * Adds Content Text to the ConfirmDialog
+     * @param s being the String of main information text to add.
+     */
     public void addContentText(String s) {
       add(new H5(s));
     }
 
-    public void confirmInformationButton(){
-      add(new Button("Ok", ok -> close()));
-    }
-
+    /**
+     * Adds a container with options to Confirm the entity removal/update/save process of type, and a cancel button.
+     * Important: the type, has to be the same as the ConfirmDialogs instantiation type. {@link ConfirmDialog<T>}
+     * Will not work without setting the {@link Consumer}
+     */
     public void addRemoveAndCancelButtonsContainer() {
       Button confirmButton = new Button("Confirm", confirm -> {
         consumer.accept(entityObject);
@@ -87,6 +92,10 @@ public class ConfirmDialog<T> extends Dialog {
       add(new HorizontalLayout(confirmButton, cancelButton));
     }
 
+    /**
+     * Adds a Confirm button to save an entity.
+     * Requires a method passed for the Runnable, {@link Runnable}
+     */
     public void confirmSaveEntityButton() {
       if (allFieldsCorrectlyFilledIn) {
         add(new Button("Save", confirm -> runnable.run()));
@@ -97,10 +106,22 @@ public class ConfirmDialog<T> extends Dialog {
       }
     }
 
+    /**
+     * Adds a simple Close Button. Can be altered to include whatever Text to display on the button.
+     * @param s being the Buttons text.
+     */
     public void addSimpleCloseButton(String s){
       add(new Button(s, cancel -> close()));
     }
 
+    /**
+     * Adds a container with options to Save the entity removal/update/save process of type, a Discard button,
+     * and a cancel button.
+     * Important: the type, has to be the same as the ConfirmDialogs instantiation type. {@link ConfirmDialog<T>}
+     * Will not work without setting the {@link Consumer}
+     * Will not work without passing the desired course of action/method to the {@link Runnable}, as in, navigate to next page
+     * or whatever is needed.
+     */
     public void addSaveDiscardCancelAlternatives(){
       Button saveButton = new Button("Save", confirm -> {
         runnable.run();
@@ -118,6 +139,10 @@ public class ConfirmDialog<T> extends Dialog {
       add(new HorizontalLayout(saveButton, discardButton, closeButton));
     }
 
+    /**
+     * Adds a list of all missing fields. Needs a correctly setup {@link ErrorVerificationMessageDTO}
+     * @param errorVerificationMessageDTO to pass the list of missing fields.
+     */
     public void addMissingFieldsList(ErrorVerificationMessageDTO errorVerificationMessageDTO) {
       for (String s : errorVerificationMessageDTO.getErrorText()) {
         add(new H5(s));

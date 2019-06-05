@@ -29,7 +29,6 @@ public abstract class ShowQuestionLayout extends VerticalLayout {
   public ShowQuestionLayout(Question question) {
     add(new H5(question.getTitle() + (question.isMandatory() ? "*" : "")));
     this.question = question;
-
     LOGGER.info("Loading Question: '{}'", question.getTitle());
     LOGGER.info("Question is mandatory: '{}'", question.isMandatory());
   }
