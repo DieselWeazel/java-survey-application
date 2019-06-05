@@ -183,7 +183,6 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long>, B
             $.runnable = this::saveResponse;
             $.addHeaderText("You aren't finished!");
             $.addMissingFieldsList(showQuestionFactory.isComplete());
-            $.addSaveDiscardCancelAlternatives();
             $.allFieldsCorrectlyFilledIn = showQuestionFactory.isComplete().isConflict();
             $.addSaveDiscardCancelAlternatives();
           })
