@@ -180,7 +180,7 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long>, B
             $.action = continueNavigationAction;
             $.runnable = this::saveResponse;
             $.allFieldsCorrectlyFilledIn = showQuestionFactory.isComplete().isConflict();
-            $.saveDiscardCancelButtonContainer();
+            $.addSaveDiscardCancelAlternatives();
           })
           .createConfirmDialog();
       confirmDialog.open();

@@ -2,6 +2,8 @@ package com.considlia.survey.ui.custom_component.question_with_button;
 
 import com.considlia.survey.model.question.Question;
 import com.considlia.survey.ui.CreateSurveyView;
+import com.considlia.survey.ui.custom_component.ConfirmDialog;
+import com.considlia.survey.ui.custom_component.ConfirmDialog.ConfirmDialogBuilder;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
@@ -62,10 +64,17 @@ public abstract class QuestionWithButtons extends VerticalLayout {
     content.add(title, upButton, downButton);
     content.add(
         new Button(new Icon(VaadinIcon.PENCIL), event -> survey.editQuestion(event.getSource())));
-    content.add(new Button(new Icon(VaadinIcon.TRASH), onDelete ->
-        new ConfirmDialogBuilder("Confirm Delete",
-            "Are you sure you want to remove question: "
-        + question.getTitle() + "?", deleteQuestionConsumer, question)));
+    content.add(new Button(new Icon(VaadinIcon.TRASH), onDelete -> {
+      ConfirmDialog<Question> confirmDialog = new ConfirmDialogBuilder<Question>()
+        .with($ -> {
+          $.addHeaderText("Confirm Delete");
+          $.addContentText("Are you sure you want to remove question: " + question.getTitle() + "?");
+          $.entityObject = question;
+          $.consumer = deleteQuestionConsumer;
+            })
+          .createConfirmDialog();
+      confirmDialog.open();
+      }));
     add(content);
   }
 

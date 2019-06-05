@@ -13,37 +13,25 @@ import java.util.function.Consumer;
 
 public class ConfirmDialog<T> extends Dialog {
 
-//  private Consumer<T> consumer;
-//  private T entityObject;
-//  private H2 headerText;
-//  private H5 contentText;
-//  private ContinueNavigationAction action;
-//  private Runnable runnable;
-//  private boolean allFieldsCorrectlyFilledIn;
-//  private Button confirmEntityRemovalButton;
-//  private Button confirmSaveEntityButton;
-//  private Button cancelButton;
-//  private Button discardButton;
-//  private HorizontalLayout saveDiscardCancelButtonContainer;
-//  private ErrorVerificationMessageDTO errorVerificationMessageDTO;
+  public Consumer<T> consumer;
+  public T entityObject;
+  public H2 headerText;
+  public Text text;
+  public String textString;
+  public String headerString;
+  public H5 contentText;
+  public String contentString;
+  private String cancelString;
+  public ContinueNavigationAction action;
+  public Runnable runnable;
+  public boolean allFieldsCorrectlyFilledIn;
+  public ErrorVerificationMessageDTO errorVerificationMessageDTO;
+  public List<String> errorQuestionList;
 
-  private ConfirmDialog(Consumer<T> consumer, T entityObject, H2 headerText, Text infoText, H5 contentText, ContinueNavigationAction action,
-      Runnable runnable, boolean allFieldsCorrectlyFilledIn, Button confirmEntityRemovalButton, Button confirmSaveEntityButton,
-      Button cancelButton, Button discardButton, HorizontalLayout saveDiscardCancelButtonContainer,
-      List<String> errorQuestionList) {
-
-    add(headerText, contentText);
-    add(infoText);
-    add(confirmEntityRemovalButton);
-    add(cancelButton);
-    add(saveDiscardCancelButtonContainer);
-    for(String s : errorQuestionList){
-      add(new H5(s));
-    }
-    open();
+  public ConfirmDialog() {
   }
 
-  public static class ConfirmDialogBuilder<T> extends Dialog {
+  public static class ConfirmDialogBuilder<T> extends ConfirmDialog<T> {
 
     public Consumer<T> consumer;
     public T entityObject;
@@ -53,6 +41,7 @@ public class ConfirmDialog<T> extends Dialog {
     public String headerString;
     public H5 contentText;
     public String contentString;
+    private String cancelString;
     public ContinueNavigationAction action;
     public Runnable runnable;
     public boolean allFieldsCorrectlyFilledIn;
@@ -70,64 +59,91 @@ public class ConfirmDialog<T> extends Dialog {
     }
 
     public ConfirmDialog<T> createConfirmDialog() {
-      return new ConfirmDialog<T>(
-          consumer,
-          entityObject,
-          headerText(headerString),
-          informationText(textString),
-          contentText(contentString),
-          action,
-          runnable,
-          allFieldsCorrectlyFilledIn,
-          confirmEntityRemovalButton(),
-          confirmSaveEntityButton(),
-          cancelButton(),
-          discardButton(),
-          saveDiscardCancelButtonContainer(),
-          errorQuestionList);
+      return this;
     }
 
-    public H2 headerText(String headerString) {
-      return new H2(headerString);
+    public void addHeaderText(String s) {
+      add(new H2(s));
     }
 
-    public Text informationText(String textString){
-      return new Text(textString);
+    public void addInformationText(String s){
+      add(new Text(s));
     }
 
-    public H5 contentText(String contentString) {
-      return new H5(contentString);
+    public void addContentText(String s) {
+      add(new H5(s));
     }
 
-    public Button confirmInformationButton(){
-      return new Button("Ok", ok -> close());
+    public void confirmInformationButton(){
+      add(new Button("Ok", ok -> close()));
     }
 
-    public Button confirmEntityRemovalButton() {
-      return new Button("Confirm", confirm -> consumer.accept(entityObject));
+    public void addConfirmEntityRemovalButton() {
+      add(new Button("Confirm", confirm -> consumer.accept(entityObject)));
     }
 
-    public Button confirmSaveEntityButton() {
+//    public Button confirmSaveEntityButton() {
+//      if (allFieldsCorrectlyFilledIn) {
+//        return new Button("Save", confirm -> runnable.run());
+//      } else {
+//        Button saveButton = new Button("Save");
+//        saveButton.setEnabled(false);
+//        return saveButton;
+//      }
+//    }
+
+    public void confirmSaveEntityButton() {
       if (allFieldsCorrectlyFilledIn) {
-        return new Button("Save", confirm -> runnable.run());
+        add(new Button("Save", confirm -> runnable.run()));
       } else {
         Button saveButton = new Button("Save");
         saveButton.setEnabled(false);
-        return saveButton;
+        add(saveButton);
       }
     }
 
-    public Button cancelButton() {
-      return new Button("Cancel", cancel -> close());
+    public void addSimpleCloseButton(String s){
+      add(new Button(s, cancel -> close()));
     }
 
-    public Button discardButton() {
-      return new Button("Discard", discard -> action.proceed());
+//    public void addDiscardButton() {
+//      add(new Button("Discard", discard -> action.proceed()));
+//    }
+
+    public void addSaveDiscardCancelAlternatives(){
+      Button saveButton = new Button("Save", confirm -> runnable.run());
+      if (!allFieldsCorrectlyFilledIn){
+        saveButton.setEnabled(false);
+      }
+      Button discardButton = new Button("Discard", discard -> action.proceed());
+      Button closeButton = new Button("Close", close -> close());
+      add(new HorizontalLayout(saveButton, discardButton, closeButton));
     }
 
-    public HorizontalLayout saveDiscardCancelButtonContainer(){
-      return new HorizontalLayout(confirmSaveEntityButton(), discardButton(), cancelButton());
+//    public Button simpleCloseButton(String s) {
+//      return new Button(s, cancel -> close());
+//    }
+//
+//    public Button discardButton() {
+//      return new Button("Discard", discard -> action.proceed());
+//    }
+
+
+
+    public void setTextString(String textString) {
+      this.textString = textString;
     }
 
+    public void setHeaderString(String headerString) {
+      this.headerString = headerString;
+    }
+
+    public void setContentString(String contentString) {
+      this.contentString = contentString;
+    }
+
+    public void setCancelString(String cancelString) {
+      this.cancelString = cancelString;
+    }
   }
 }

@@ -3,6 +3,7 @@ package com.considlia.survey.ui.custom_component;
 import com.considlia.survey.model.Survey;
 import com.considlia.survey.ui.CreateSurveyView;
 import com.considlia.survey.ui.ShowSurveyView;
+import com.considlia.survey.ui.custom_component.ConfirmDialog.ConfirmDialogBuilder;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -64,10 +65,16 @@ public class GridTools extends HorizontalLayout {
     return new Button(
         new Icon(VaadinIcon.TRASH),
         onDelete -> {
-          ConfirmDialogBuilder confirmDialog =
-              new ConfirmDialogBuilder(
-                  "Confirm Delete", "Are you sure you want to delete " + item.getTitle() + "?",
-                  deleteSurveyConsumer, item);
+
+          ConfirmDialog<Survey> confirmDialog = new ConfirmDialogBuilder<Survey>()
+              .with($ -> {
+                $.consumer = deleteSurveyConsumer;
+                $.entityObject = item;
+                $.addHeaderText("Confirm Delete");
+                $.addContentText("Are you sure you want to delete " + item.getTitle() + "?");
+              })
+              .createConfirmDialog();
+          confirmDialog.open();
         });
   }
 }

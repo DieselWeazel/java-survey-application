@@ -7,7 +7,8 @@ import com.considlia.survey.security.SecurityUtils;
 import com.considlia.survey.security.UserDetailsServiceImpl;
 import com.considlia.survey.ui.BaseView;
 import com.considlia.survey.ui.MainLayout;
-import com.considlia.survey.ui.custom_component.ConfirmDialogBuilder;
+import com.considlia.survey.ui.custom_component.ConfirmDialog;
+import com.considlia.survey.ui.custom_component.ConfirmDialog.ConfirmDialogBuilder;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasSize;
 import com.vaadin.flow.component.UI;
@@ -82,11 +83,23 @@ public class RegistrationView extends BaseView implements BeforeEnterObserver {
 
     // First Checks if Username is taken, then checks if Email is taken, if both booleans are false, User registers.
     if (userRepository.existsByUsername(username.getValue())){
-      ConfirmDialogBuilder confirmDialog = new ConfirmDialogBuilder("Error, username: " + username.getValue() + " is already taken, please take another one.");
+      ConfirmDialog<RegistrationView> confirmDialog = new ConfirmDialogBuilder<RegistrationView>()
+          .with($ -> {
+            $.addHeaderText("Username taken!");
+            $.addContentText("Error, username: " + username.getValue() + " is already taken, please take another one.");
+            $.addSimpleCloseButton("Ok");
+              })
+          .createConfirmDialog();
       confirmDialog.open();
       return;
     } else if (userRepository.existsByEmail(email.getValue())){
-      ConfirmDialogBuilder confirmDialog = new ConfirmDialogBuilder("There already exists a User registered with this email, have you forgotten your password?");
+      ConfirmDialog<RegistrationView> confirmDialog = new ConfirmDialogBuilder<RegistrationView>()
+          .with($ -> {
+            $.addHeaderText("Email already exists!");
+            $.addContentText("There already exists a User registered with this email, have you forgotten your password?");
+            $.addSimpleCloseButton("Ok");
+          })
+          .createConfirmDialog();
       confirmDialog.open();
       return;
     } else {

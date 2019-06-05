@@ -20,8 +20,8 @@
 //
 //  public Consumer<T> consumer;
 //  public T entityObject;
-//  public String headerText;
-//  public String contentText;
+//  public String addHeaderText;
+//  public String addContentText;
 //  public ContinueNavigationAction action;
 //  public Runnable runnable;
 //  public boolean allFieldsCorrectlyFilledIn;
@@ -50,18 +50,18 @@
 //    return new Button("Cancel", cancel -> close());
 //  }
 //
-//  public String headerText(String s){
+//  public String addHeaderText(String s){
 //    return s;
 //  }
 //
 //  /**
 //   * Dialog that confirms if you want to delete the passed T, entityObject
-//   * @param headerText - {@link String} text in header
-//   * @param contentText - {@link String} text in body
+//   * @param addHeaderText - {@link String} text in header
+//   * @param addContentText - {@link String} text in body
 //   * @param consumer - method from {@link SurveyGrid} that removes the item-parameter
 //   * @param entityObject being the Entity to remove, or handle.
 //   */
-//  public ConfirmDialogBuilder(String headerText, String contentText, Consumer<T> consumer,
+//  public ConfirmDialogBuilder(String addHeaderText, String addContentText, Consumer<T> consumer,
 //      T entityObject) {
 //    setCloseOnEsc(false);
 //    setCloseOnOutsideClick(false);
@@ -73,7 +73,7 @@
 //      close();
 //    });
 //
-//    add(new H2(headerText), new H5(contentText));
+//    add(new H2(addHeaderText), new H5(addContentText));
 //    add(new HorizontalLayout(cancelButton(), confirmBtn));
 //    open();
 //  }
@@ -160,8 +160,8 @@
 ////
 ////    private consumer<T> consumer;
 ////    private T entityObject;
-////    private String headerText;
-////    private String contentText;
+////    private String addHeaderText;
+////    private String addContentText;
 ////    private ContinueNavigationAction action;
 ////    private Runnable runnable;
 ////    private boolean allFieldsCorrectlyFilledIn;
@@ -176,8 +176,8 @@
 ////  private ConfirmDialogBuilder(Builder builder){
 ////    this.consumer = builder.consumer;
 ////    this.entityObject = builder.entityObject;
-////    this.headerText = builder.headerText;
-////    this.contentText = builder.contentText;
+////    this.addHeaderText = builder.addHeaderText;
+////    this.addContentText = builder.addContentText;
 ////    this.action = builder.action;
 ////    this.runnable = builder.runnable;
 ////    this.allFieldsCorrectlyFilledIn = builder.allFieldsCorrectlyFilledIn;
@@ -193,12 +193,12 @@
 ////    return entityObject;
 ////  }
 ////
-////  public String headerText(){
-////    return headerText;
+////  public String addHeaderText(){
+////    return addHeaderText;
 ////  }
 ////
-////  public String contentText(){
-////    return contentText;
+////  public String addContentText(){
+////    return addContentText;
 ////  }
 ////
 ////  public ContinueNavigationAction action(){
@@ -228,22 +228,22 @@
 //
 //  private Consumer<T> consumer;
 //  private T entityObject;
-//  private String headerText;
-//  private String contentText;
+//  private String addHeaderText;
+//  private String addContentText;
 //  private ContinueNavigationAction action;
 //  private Runnable runnable;
 //  private boolean allFieldsCorrectlyFilledIn;
 //  private Button confirmButton;
 //  private Button cancelButton;
 //
-//  public ConfirmDialogx(Consumer<T> consumer, T entityObject, String headerText,
-//      String contentText, ContinueNavigationAction action, Runnable runnable,
+//  public ConfirmDialogx(Consumer<T> consumer, T entityObject, String addHeaderText,
+//      String addContentText, ContinueNavigationAction action, Runnable runnable,
 //      boolean allFieldsCorrectlyFilledIn, Button confirmButton,
 //      Button cancelButton) {
 //    this.consumer = consumer;
 //    this.entityObject = entityObject;
-//    this.headerText = headerText;
-//    this.contentText = contentText;
+//    this.addHeaderText = addHeaderText;
+//    this.addContentText = addContentText;
 //    this.action = action;
 //    this.runnable = runnable;
 //    this.allFieldsCorrectlyFilledIn = allFieldsCorrectlyFilledIn;

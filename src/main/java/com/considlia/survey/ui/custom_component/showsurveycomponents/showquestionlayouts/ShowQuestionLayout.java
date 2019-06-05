@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class ShowQuestionLayout extends VerticalLayout {
 
-  private Question question;
+  protected Question question;
   private static final Logger LOGGER = LoggerFactory.getLogger(ShowQuestionLayout.class);
 
   // Used for Mandatory message.
@@ -29,6 +29,7 @@ public abstract class ShowQuestionLayout extends VerticalLayout {
   public ShowQuestionLayout(Question question) {
     add(new H5(question.getTitle() + (question.isMandatory() ? "*" : "")));
     this.question = question;
+
     LOGGER.info("Loading Question: '{}'", question.getTitle());
     LOGGER.info("Question is mandatory: '{}'", question.isMandatory());
   }

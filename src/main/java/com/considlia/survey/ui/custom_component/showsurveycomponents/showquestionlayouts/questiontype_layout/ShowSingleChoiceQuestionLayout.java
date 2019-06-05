@@ -68,7 +68,7 @@ public class ShowSingleChoiceQuestionLayout extends ShowQuestionLayout {
    */
   @Override
   public Answer gatherResponse() throws ValidationException {
-    singleChoiceAnswer.setQuestion(getQuestion());
+    singleChoiceAnswer.setQuestion(question);
     getLOGGER().info("Logging question: '{}'", getQuestion());
     binder.writeBean(singleChoiceAnswer);
     getLOGGER().info("Logging answer: '{}'", singleChoiceAnswer);

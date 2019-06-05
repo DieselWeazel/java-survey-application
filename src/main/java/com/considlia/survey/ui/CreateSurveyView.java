@@ -510,7 +510,7 @@ public class CreateSurveyView extends BaseView
               $.action = continueNavigationAction;
               $.runnable = this::saveSurvey;
               $.allFieldsCorrectlyFilledIn = checkFilledFields();
-              $.saveDiscardCancelButtonContainer();
+              $.addSaveDiscardCancelAlternatives();
               })
           .createConfirmDialog();
       confirmDialog.open();
