@@ -15,6 +15,8 @@ import com.considlia.survey.ui.custom_component.ConfirmDialog;
 import com.considlia.survey.ui.custom_component.ConfirmDialog.ConfirmDialogBuilder;
 import com.considlia.survey.ui.custom_component.showsurveycomponents.ShowQuestionFactory;
 import com.considlia.survey.ui.custom_component.showsurveycomponents.SurveyLoader;
+import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.HasEnabled;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H5;
@@ -42,22 +44,22 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long>, B
 
   // -- Private Variables --
   // -- Containers --
-  private VerticalLayout headerVerticalLayout = new VerticalLayout();
-  private VerticalLayout surveyVerticalLayout = new VerticalLayout();
+  VerticalLayout headerVerticalLayout = new VerticalLayout();
+  protected VerticalLayout surveyVerticalLayout = new VerticalLayout();
 
   private H1 h1;
   private H5 h5 = new H5();
   protected Button saveButton;
   private SurveyRepository surveyRepository;
   private ResponseRepository responseRepository;
-  private Survey survey;
-  private boolean containsMandatory = false;
+  protected Survey survey;
+  protected boolean containsMandatory = false;
   private LocalDateTime start = LocalDateTime.now();
-
-  private ShowQuestionFactory showQuestionFactory;
+  protected boolean isPreviewMode = false;
+  protected ShowQuestionFactory showQuestionFactory;
 
   @Autowired
-  private CustomUserService customUserService;
+  protected CustomUserService customUserService;
 
   /**
    * Constructs view.
@@ -122,6 +124,23 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long>, B
    */
   public void loadSurvey() {
     this.surveyVerticalLayout = showQuestionFactory.getSurveyLayout(survey);
+    if (isPreviewMode) {
+      if (customUserService.getUser().getId() == survey.getUser().getId()) {
+        for (int i = 0; i < this.surveyVerticalLayout.getComponentCount(); i++) {
+          Component componet = this.surveyVerticalLayout.getComponentAt(i);
+          if (componet instanceof HasEnabled) {
+            HasEnabled hasEnabled = (HasEnabled) componet;
+            hasEnabled.setEnabled(false);
+          }
+        }
+      } else {
+        this.surveyVerticalLayout = new VerticalLayout();
+        h1.setText("Restricted Access!");
+        h5.setText(
+            "It seems you have stumbled to a faulty URL. If you are looking to preview a survey, "
+                + "please go to My Profile, and from there choose the Survey you wish to preview");
+      }
+    }
     saveButton.addClickListener(e -> {
       if (showQuestionFactory.isComplete().isConflict()) {
         saveResponse();
@@ -160,6 +179,8 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long>, B
     // Connect SurveyResponse to Survey.
     surveyResponse.setSurvey(survey);
     responseRepository.save(surveyResponse);
+
+    navigateToSuccessView(ConfirmSuccessView.SURVEY_RESPONDED_STRING);
   }
 
   /**

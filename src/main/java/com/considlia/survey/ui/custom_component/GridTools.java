@@ -1,14 +1,15 @@
 package com.considlia.survey.ui.custom_component;
 
+import java.util.function.Consumer;
 import com.considlia.survey.model.Survey;
 import com.considlia.survey.ui.CreateSurveyView;
+import com.considlia.survey.ui.PreviewSurvey;
 import com.considlia.survey.ui.ShowSurveyView;
 import com.considlia.survey.ui.custom_component.ConfirmDialog.ConfirmDialogBuilder;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import java.util.function.Consumer;
 
 public class GridTools extends HorizontalLayout {
 
@@ -30,7 +31,7 @@ public class GridTools extends HorizontalLayout {
    * @param deleteSurveyConsumer for each Survey to be able to be deleted, edited and viewed.
    */
   public GridTools(Survey item, Consumer<Survey> deleteSurveyConsumer) {
-    add(showSurveyButton(item), editSurveyButton(item), deleteSurveyButton(item, deleteSurveyConsumer));
+    add(previewButton(item), editSurveyButton(item), deleteSurveyButton(item, deleteSurveyConsumer));
   }
 
   /**
@@ -78,4 +79,10 @@ public class GridTools extends HorizontalLayout {
           confirmDialog.open();
         });
   }
+
+  private Button previewButton(Survey item) {
+    return new Button(new Icon(VaadinIcon.EYE),
+        onShow -> getUI().ifPresent(ui -> ui.navigate(PreviewSurvey.class, item.getId())));
+  }
+
 }
