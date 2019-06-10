@@ -1,4 +1,4 @@
-package com.considlia.survey.ui.custom_component.showsurveycomponents.showquestionlayouts;
+package com.considlia.survey.ui.custom_component.layout.showsurveycomponents.showquestionlayouts;
 
 import com.considlia.survey.model.answer.Answer;
 import com.considlia.survey.model.question.Question;

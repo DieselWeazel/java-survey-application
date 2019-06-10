@@ -2,6 +2,8 @@ package com.considlia.survey.ui;
 
 import com.considlia.survey.ui.custom_component.ConfirmDialog;
 import com.considlia.survey.ui.custom_component.ConfirmDialog.ConfirmDialogBuilder;
+import com.considlia.survey.ui.custom_component.layout.ShowQuestionFactory;
+import com.considlia.survey.ui.custom_component.layout.showsurveycomponents.SurveyLoader;
 import com.vaadin.flow.router.BeforeLeaveEvent;
 import com.vaadin.flow.router.BeforeLeaveEvent.ContinueNavigationAction;
 import com.vaadin.flow.router.BeforeLeaveObserver;
@@ -16,8 +18,6 @@ import com.considlia.survey.repositories.ResponseRepository;
 import com.considlia.survey.repositories.SurveyRepository;
 import com.considlia.survey.security.CustomUserService;
 import com.considlia.survey.security.SecurityUtils;
-import com.considlia.survey.ui.custom_component.showsurveycomponents.ShowQuestionFactory;
-import com.considlia.survey.ui.custom_component.showsurveycomponents.SurveyLoader;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H5;

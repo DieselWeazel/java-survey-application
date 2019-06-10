@@ -144,6 +144,14 @@ public abstract class Question {
     return id;
   }
 
+  /**
+   * Gets the Answers to this Question.
+   * @return answers related to this question.
+   */
+  public Set<Answer> getAnswerSet() {
+    return answerSet;
+  }
+
   @Override
   public String toString() {
     return getTitle();

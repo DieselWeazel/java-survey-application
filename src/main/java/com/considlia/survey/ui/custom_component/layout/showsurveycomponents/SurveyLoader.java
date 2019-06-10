@@ -1,6 +1,13 @@
-package com.considlia.survey.ui.custom_component.showsurveycomponents;
+package com.considlia.survey.ui.custom_component.layout.showsurveycomponents;
 
 import com.considlia.survey.model.QuestionType;
+import com.considlia.survey.ui.custom_component.layout.ShowQuestionFactory;
+import com.considlia.survey.ui.custom_component.layout.showsurveycomponents.showquestionlayouts.ShowQuestionLayout;
+import com.considlia.survey.ui.custom_component.layout.showsurveycomponents.showquestionlayouts.questiontype_layout.ShowMultiChoiceQuestionLayout;
+import com.considlia.survey.ui.custom_component.layout.showsurveycomponents.showquestionlayouts.questiontype_layout.ShowRatioQuestionLayout;
+import com.considlia.survey.ui.custom_component.layout.showsurveycomponents.showquestionlayouts.questiontype_layout.ShowSingleChoiceQuestionLayout;
+import com.considlia.survey.ui.custom_component.layout.showsurveycomponents.showquestionlayouts.questiontype_layout.ShowTextAreaQuestionLayout;
+import com.considlia.survey.ui.custom_component.layout.showsurveycomponents.showquestionlayouts.questiontype_layout.ShowTextQuestionLayout;
 import com.vaadin.flow.component.AbstractField;
 import com.vaadin.flow.component.Component;
 import java.util.ArrayList;
@@ -18,12 +25,6 @@ import com.considlia.survey.model.question.Question;
 import com.considlia.survey.model.question.RadioQuestion;
 import com.considlia.survey.model.question.RatioQuestion;
 import com.considlia.survey.ui.custom_component.ErrorVerificationMessageDTO;
-import com.considlia.survey.ui.custom_component.showsurveycomponents.showquestionlayouts.ShowQuestionLayout;
-import com.considlia.survey.ui.custom_component.showsurveycomponents.showquestionlayouts.questiontype_layout.ShowMultiChoiceQuestionLayout;
-import com.considlia.survey.ui.custom_component.showsurveycomponents.showquestionlayouts.questiontype_layout.ShowRatioQuestionLayout;
-import com.considlia.survey.ui.custom_component.showsurveycomponents.showquestionlayouts.questiontype_layout.ShowSingleChoiceQuestionLayout;
-import com.considlia.survey.ui.custom_component.showsurveycomponents.showquestionlayouts.questiontype_layout.ShowTextAreaQuestionLayout;
-import com.considlia.survey.ui.custom_component.showsurveycomponents.showquestionlayouts.questiontype_layout.ShowTextQuestionLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.binder.ValidationException;
 
@@ -81,7 +82,7 @@ public class SurveyLoader implements ShowQuestionFactory<Set<Answer>> {
 
   /**
    * If Survey contains mandatory fields, this DTO will check if the Survey is Complete.
-   * 
+   *
    * @return {@link ErrorVerificationMessageDTO} boolean showing true if Survey is in conflict,
    *         therefor not being completed. String message with each Question that isn't filled in.
    */
@@ -107,7 +108,7 @@ public class SurveyLoader implements ShowQuestionFactory<Set<Answer>> {
 
   /**
    * Gets the List of Answers, to store within a {@link SurveyResponse}
-   * 
+   *
    * @return Answers to {@link Question} within {@link Survey}
    */
   @Override
