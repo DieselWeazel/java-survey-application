@@ -41,7 +41,7 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
 
   // -- Private Variables --
   // -- Containers --
-  private VerticalLayout headerVerticalLayout = new VerticalLayout();
+  VerticalLayout headerVerticalLayout = new VerticalLayout();
   protected VerticalLayout surveyVerticalLayout = new VerticalLayout();
 
   private H1 h1;

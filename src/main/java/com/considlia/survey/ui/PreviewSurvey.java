@@ -1,9 +1,7 @@
 package com.considlia.survey.ui;
 
-import java.util.List;
 import com.considlia.survey.repositories.ResponseRepository;
 import com.considlia.survey.repositories.SurveyRepository;
-import com.vaadin.flow.component.Component;
 import com.vaadin.flow.router.Route;
 
 /**
@@ -22,13 +20,5 @@ public class PreviewSurvey extends ShowSurveyView {
   public PreviewSurvey(SurveyRepository surveyRepository, ResponseRepository responseRepository) {
     super(surveyRepository, responseRepository);
     saveButton.setVisible(false);
-
-    List<Component> componentList = super.getQuestionComponents();
-    System.out.println(componentList.size());
-    for (Component c : componentList) {
-      System.out.println(c.toString());
-    }
-
-
   }
 }
