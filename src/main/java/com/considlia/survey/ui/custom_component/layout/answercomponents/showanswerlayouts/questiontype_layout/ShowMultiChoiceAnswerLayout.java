@@ -68,16 +68,16 @@ public class ShowMultiChoiceAnswerLayout extends ShowAnswerLayout {
 //      }
 //    }
 
-//    for (int i = 0; i < valuesList.length; i++){
-//      for (int j = 0; j < stringList.length; j++){
-//        for (int k = 0; k < stringList[j].length(); k++){
-//          if (j == k){
-//            valuesList[i] += 1;
-//            System.out.println(valuesList[i]);
-//          }
-//        }
-//      }
-//    }
+    for (int i = 0; i < valuesList.length; i++){
+      for (int j = 0; j < stringList.length; j++){
+        for (int k = 0; k < stringList[j].length(); k++){
+          if (j == k){
+            valuesList[i] += 1;
+            System.out.println(valuesList[i]);
+          }
+        }
+      }
+    }
 
 //    for (int i = 0; i < valuesList.length; i++){
 
@@ -126,7 +126,7 @@ public class ShowMultiChoiceAnswerLayout extends ShowAnswerLayout {
             .withDataLabels(DataLabelsBuilder.get().withEnabled(false).build())
             .withStroke(
                 StrokeBuilder.get().withShow(true).withWidth(5.0).withColors("red").build())
-            .withSeries(new Series<>("choices", stringList))
+            .withSeries(new Series<>("choices", valuesList))
             .withYaxis(
                 YAxisBuilder.get()
                     .withTitle(com.github.appreciated.apexcharts.config.yaxis.builder.TitleBuilder.get().withText("lol").build())
