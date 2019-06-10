@@ -1,7 +1,5 @@
 package com.considlia.survey.ui;
 
-import com.considlia.survey.ui.custom_component.ConfirmDialog;
-import com.considlia.survey.ui.custom_component.ConfirmDialog.ConfirmDialogBuilder;
 import java.time.LocalDate;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -16,6 +14,8 @@ import com.considlia.survey.model.question.Question;
 import com.considlia.survey.repositories.SurveyRepository;
 import com.considlia.survey.repositories.UserRepository;
 import com.considlia.survey.security.CustomUserService;
+import com.considlia.survey.ui.custom_component.ConfirmDialog;
+import com.considlia.survey.ui.custom_component.ConfirmDialog.ConfirmDialogBuilder;
 import com.considlia.survey.ui.custom_component.CreateAlternative;
 import com.considlia.survey.ui.custom_component.CreateRatioComponents;
 import com.considlia.survey.ui.custom_component.CreateTextComponents;
@@ -134,13 +134,15 @@ public class CreateSurveyView extends BaseView
 
     surveyTitleTextField.addValueChangeListener(titleChange -> {
       // validates textField value with validateString
-      titleChange.getSource().setValue(validateString(titleChange.getSource().getValue(), 70));
+      titleChange.getSource()
+          .setValue(validateStringLength(titleChange.getSource().getValue(), 70));
       checkFilledFields();
     });
     descriptionTextArea.addValueChangeListener(descChange -> {
       hasChanges = true;
       // validates textField value with validateString
-      descChange.getSource().setValue(validateString(descChange.getSource().getValue(), 1000));
+      descChange.getSource()
+          .setValue(validateStringLength(descChange.getSource().getValue(), 1000));
     });
 
     descriptionTextArea.setLabel("Description");
@@ -237,7 +239,7 @@ public class CreateSurveyView extends BaseView
     questionTitleTextField.addValueChangeListener(event -> {
 
       // validates textField value with validateString
-      event.getSource().setValue(validateString(event.getSource().getValue(), 255));
+      event.getSource().setValue(validateStringLength(event.getSource().getValue(), 255));
 
       if (questionTitleTextField.isEmpty() || selectOptions.getValue() == null) {
         addQuestionButton.setEnabled(false);
@@ -589,17 +591,16 @@ public class CreateSurveyView extends BaseView
     if (hasChanges) {
       ContinueNavigationAction continueNavigationAction = event.postpone();
 
-      ConfirmDialog<Survey> confirmDialog = new ConfirmDialogBuilder<Survey>()
-          .with($ -> {
-              $.action = continueNavigationAction;
-              $.runnable = this::saveSurvey;
-              $.allFieldsCorrectlyFilledIn = checkFilledFields();
-            $.addHeaderText("You aren't finished!");
-            $.addContentText("You have to fill out required fields and have at least one question. Fill them out or discard changes");
-            $.addContentText("Do you want to save or discard your changes before navigating away?");
-            $.addSaveDiscardCancelAlternatives();
-              })
-          .createConfirmDialog();
+      ConfirmDialog<Survey> confirmDialog = new ConfirmDialogBuilder<Survey>().with($ -> {
+        $.action = continueNavigationAction;
+        $.runnable = this::saveSurvey;
+        $.allFieldsCorrectlyFilledIn = checkFilledFields();
+        $.addHeaderText("You aren't finished!");
+        $.addContentText(
+            "You have to fill out required fields and have at least one question. Fill them out or discard changes");
+        $.addContentText("Do you want to save or discard your changes before navigating away?");
+        $.addSaveDiscardCancelAlternatives();
+      }).createConfirmDialog();
       confirmDialog.open();
     }
   }
@@ -611,7 +612,7 @@ public class CreateSurveyView extends BaseView
    * @param stringMaxLength
    * @returns string with valid length
    */
-  public String validateString(String string, int stringMaxLength) {
+  public static String validateStringLength(String string, int stringMaxLength) {
     if (string.length() > stringMaxLength) {
       string = string.substring(0, stringMaxLength);
       Notification.show("Textfield can contain maximum " + stringMaxLength + " characters");
