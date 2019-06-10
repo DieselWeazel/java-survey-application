@@ -31,7 +31,7 @@ public class GridTools extends HorizontalLayout {
    * @param deleteSurveyConsumer for each Survey to be able to be deleted, edited and viewed.
    */
   public GridTools(Survey item, Consumer<Survey> deleteSurveyConsumer) {
-    add(showSurveyButton(item), editSurveyButton(item), deleteSurveyButton(item, deleteSurveyConsumer));
+    add(previewButton(item), editSurveyButton(item), deleteSurveyButton(item, deleteSurveyConsumer));
   }
 
   /**
