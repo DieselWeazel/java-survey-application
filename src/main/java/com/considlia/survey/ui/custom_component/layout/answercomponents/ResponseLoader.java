@@ -9,6 +9,7 @@ import com.considlia.survey.model.answer.RadioAnswer;
 import com.considlia.survey.model.answer.RatioAnswer;
 import com.considlia.survey.model.answer.TextAnswer;
 import com.considlia.survey.model.question.CheckBoxQuestion;
+import com.considlia.survey.model.question.MultiQuestionAlternative;
 import com.considlia.survey.model.question.Question;
 import com.considlia.survey.model.question.RadioQuestion;
 import com.considlia.survey.model.question.RatioQuestion;
@@ -26,6 +27,7 @@ import com.considlia.survey.ui.custom_component.layout.answercomponents.showansw
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -77,6 +79,8 @@ public class ResponseLoader implements ShowQuestionFactory<List<SurveyResponse>>
     if (question instanceof CheckBoxQuestion) {
 
       List<CheckBoxAnswerChoice> list = new ArrayList<>();
+      List<String> categoryList = ((CheckBoxQuestion) question).getStringAlternatives();
+
 
       for (Answer answer : question.getAnswerSet()){
         if (answer instanceof CheckBoxAnswer){
@@ -85,8 +89,20 @@ public class ResponseLoader implements ShowQuestionFactory<List<SurveyResponse>>
           }
         }
       }
+
+      System.out.println("gonna show the string[] inside responseloader");
+      String [] stringList = new String[list.size()];
+      for (int i = 0; i < list.size(); i++){
+        stringList[i] = list.get(i).getCheckedAnswer();
+        System.out.println("Responseloader: " + stringList[i]);
+      }
+
+//      for (int i = 0; i < stringList.length; i++) {
+//        System.out.println(stringList[i]);
+//      }
+
       LOGGER.info("ReponseLoader: Loading '{}'", question.getTitle());
-      return new ShowMultiChoiceAnswerLayout(question, list);
+      return new ShowMultiChoiceAnswerLayout(question, stringList, list, categoryList);
 
     } else if (question instanceof RadioQuestion) {
 
