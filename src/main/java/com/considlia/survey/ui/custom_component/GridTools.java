@@ -42,7 +42,7 @@ public class GridTools extends HorizontalLayout {
    * @return on click, navigates to {@link ShowSurveyView}
    */
   private Button showSurveyButton(Survey item) {
-    return new Button(new Icon(VaadinIcon.EYE),
+    return new Button(new Icon(VaadinIcon.EDIT),
         onShow -> getUI().ifPresent(ui -> ui.navigate(ShowSurveyView.class, item.getId())));
   }
 
@@ -53,7 +53,7 @@ public class GridTools extends HorizontalLayout {
    * @return on click, navigates to {@link CreateSurveyView} with Survey parameter.
    */
   private Button editSurveyButton(Survey item) {
-    return new Button(new Icon(VaadinIcon.PENCIL),
+    return new Button(new Icon(VaadinIcon.WRENCH),
         onEdit -> getUI().ifPresent(ui -> ui.navigate(CreateSurveyView.class, item.getId())));
   }
 
