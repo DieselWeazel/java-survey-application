@@ -1,6 +1,7 @@
 package com.considlia.survey.ui.custom_component.layout.showsurveycomponents;
 
 import com.considlia.survey.model.QuestionType;
+import com.considlia.survey.ui.custom_component.layout.showsurveycomponents.showquestionlayouts.questiontype_layout.ShowCheckBoxChoiceQuestionLayout;
 import com.vaadin.flow.component.AbstractField;
 import com.vaadin.flow.component.Component;
 import java.util.ArrayList;
@@ -18,9 +19,7 @@ import com.considlia.survey.model.question.Question;
 import com.considlia.survey.model.question.RadioQuestion;
 import com.considlia.survey.model.question.RatioQuestion;
 import com.considlia.survey.ui.custom_component.ErrorVerificationMessageDTO;
-import com.considlia.survey.ui.custom_component.layout.LoadLayout;
 import com.considlia.survey.ui.custom_component.layout.ShowQuestionFactory;
-import com.considlia.survey.ui.custom_component.layout.showsurveycomponents.showquestionlayouts.questiontype_layout.ShowMultiChoiceQuestionLayout;
 import com.considlia.survey.ui.custom_component.layout.showsurveycomponents.showquestionlayouts.ShowQuestionLayout;
 import com.considlia.survey.ui.custom_component.layout.showsurveycomponents.showquestionlayouts.questiontype_layout.ShowRatioQuestionLayout;
 import com.considlia.survey.ui.custom_component.layout.showsurveycomponents.showquestionlayouts.questiontype_layout.ShowSingleChoiceQuestionLayout;
@@ -28,13 +27,6 @@ import com.considlia.survey.ui.custom_component.layout.showsurveycomponents.show
 import com.considlia.survey.ui.custom_component.layout.showsurveycomponents.showquestionlayouts.questiontype_layout.ShowTextQuestionLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.binder.ValidationException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 
 /**
  * SurveyLoader implementing ShowQuestionFactory. Displays all Questions and applies functions as if
@@ -145,7 +137,7 @@ public class SurveyLoader implements ShowQuestionFactory<Set<Answer>> {
       MultiQuestion mq = (MultiQuestion) question;
 
       LOGGER.info("SurveyLoader: Loading '{}'", mq.getTitle());
-      return new ShowMultiChoiceQuestionLayout(mq);
+      return new ShowCheckBoxChoiceQuestionLayout(mq);
     } else if (question.getQuestionType().equals(QuestionType.RADIO)) {
       RadioQuestion radioQuestion = (RadioQuestion) question;
 
