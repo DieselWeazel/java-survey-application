@@ -71,6 +71,8 @@ public class TestView extends BaseView implements HasUrlParameter<Long> {
     System.out.println("Am I alive?");
 
     this.surveyVerticalLayout = showQuestionFactory.getSurveyLayout(survey);
+
+    initUI();
   }
 
   /**
