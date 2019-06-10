@@ -1,12 +1,14 @@
 package com.considlia.survey.ui.custom_component.question_with_button;
 
 import com.considlia.survey.model.QuestionType;
+import com.considlia.survey.model.question.Question;
 import com.considlia.survey.model.question.TextQuestion;
 import com.considlia.survey.ui.CreateSurveyView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
+import java.util.function.Consumer;
 
 /**
  * Class extending {@link QuestionWithButtons}. Contains the specific {@link Component}s for the
@@ -23,8 +25,8 @@ public class TextQuestionWithButtons extends QuestionWithButtons {
    * @param question getList {@link QuestionType} and also for passing it to super
    * @param survey passing it to super
    */
-  public TextQuestionWithButtons(TextQuestion question, CreateSurveyView survey) {
-    super(question, survey);
+  public TextQuestionWithButtons(TextQuestion question, CreateSurveyView survey, Consumer<Question> deleteQuestionConsumer) {
+    super(question, survey, deleteQuestionConsumer);
 
     if (question.getQuestionType() == QuestionType.TEXTFIELD) {
       TextField textfield = new TextField();

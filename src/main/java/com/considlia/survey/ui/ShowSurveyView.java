@@ -1,5 +1,10 @@
 package com.considlia.survey.ui;
 
+import com.considlia.survey.ui.custom_component.ConfirmDialog;
+import com.considlia.survey.ui.custom_component.ConfirmDialog.ConfirmDialogBuilder;
+import com.vaadin.flow.router.BeforeLeaveEvent;
+import com.vaadin.flow.router.BeforeLeaveEvent.ContinueNavigationAction;
+import com.vaadin.flow.router.BeforeLeaveObserver;
 import com.considlia.survey.ui.custom_component.showsurveycomponents.showquestionlayouts.ShowQuestionLayout;
 import com.vaadin.flow.component.HasEnabled;
 import java.awt.CheckboxGroup;
@@ -16,7 +21,6 @@ import com.considlia.survey.repositories.ResponseRepository;
 import com.considlia.survey.repositories.SurveyRepository;
 import com.considlia.survey.security.CustomUserService;
 import com.considlia.survey.security.SecurityUtils;
-import com.considlia.survey.ui.custom_component.ConfirmDialog;
 import com.considlia.survey.ui.custom_component.showsurveycomponents.ShowQuestionFactory;
 import com.considlia.survey.ui.custom_component.showsurveycomponents.SurveyLoader;
 import com.vaadin.flow.component.Component;
@@ -40,7 +44,7 @@ import com.vaadin.flow.router.Route;
  * Survey. Link: http://localhost:8080/showsurvey/1 written by: Jonathan Harr
  */
 @Route(value = "showsurvey", layout = MainLayout.class)
-public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
+public class ShowSurveyView extends BaseView implements HasUrlParameter<Long>, BeforeLeaveObserver {
 
   // -- Private Variables --
   // -- Containers --
@@ -142,13 +146,18 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
     }
     saveButton.addClickListener(e -> {
       if (showQuestionFactory.isComplete().isConflict()) {
-        try {
-          saveResponse();
-        } catch (ValidationException e1) {
-          e1.printStackTrace();
-        }
+        saveResponse();
+        navigateToSuccessView(ConfirmSuccessView.SURVEY_RESPONDED_STRING);
       } else {
-        new ConfirmDialog(showQuestionFactory.isComplete()).open();
+        ConfirmDialog<SurveyResponse> confirmDialog = new ConfirmDialogBuilder<SurveyResponse>()
+            .with($ -> {
+              $.addHeaderText("You aren't finished!");
+              $.addMissingFieldsList(showQuestionFactory.isComplete());
+              $.allFieldsCorrectlyFilledIn = showQuestionFactory.isComplete().isConflict();
+              $.addSimpleCloseButton("Got it!");
+            })
+            .createConfirmDialog();
+        confirmDialog.open();
       }
     });
     initUI();
@@ -161,7 +170,7 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
    *
    * @throws ValidationException
    */
-  public void saveResponse() throws ValidationException {
+  public void saveResponse() {
     SurveyResponse surveyResponse = new SurveyResponse();
     surveyResponse.setTime(start.until(LocalDateTime.now(), ChronoUnit.SECONDS));
 
@@ -185,5 +194,24 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
     saveButton.setText("Go To Mainview");
     saveButton.addClickListener(e -> navigateBackToHomeView());
     add(saveButton);
+  }
+
+  @Override
+  public void beforeLeave(BeforeLeaveEvent event) {
+    if (showQuestionFactory.isComplete().isHasChanges()) {
+      ContinueNavigationAction continueNavigationAction = event.postpone();
+
+      ConfirmDialog<Survey> confirmDialog = new ConfirmDialogBuilder<Survey>()
+          .with($ -> {
+            $.action = continueNavigationAction;
+            $.runnable = this::saveResponse;
+            $.addHeaderText("You aren't finished!");
+            $.addMissingFieldsList(showQuestionFactory.isComplete());
+            $.allFieldsCorrectlyFilledIn = showQuestionFactory.isComplete().isConflict();
+            $.addSaveDiscardCancelAlternatives();
+          })
+          .createConfirmDialog();
+      confirmDialog.open();
+    }
   }
 }
