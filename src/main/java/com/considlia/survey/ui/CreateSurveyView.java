@@ -1,7 +1,10 @@
 package com.considlia.survey.ui;
 
+import com.considlia.survey.ui.custom_component.ConfirmDialog;
+import com.considlia.survey.ui.custom_component.ConfirmDialog.ConfirmDialogBuilder;
 import java.time.LocalDate;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
@@ -13,7 +16,6 @@ import com.considlia.survey.model.question.Question;
 import com.considlia.survey.repositories.SurveyRepository;
 import com.considlia.survey.repositories.UserRepository;
 import com.considlia.survey.security.CustomUserService;
-import com.considlia.survey.ui.custom_component.ConfirmDialog;
 import com.considlia.survey.ui.custom_component.CreateAlternative;
 import com.considlia.survey.ui.custom_component.CreateRatioComponents;
 import com.considlia.survey.ui.custom_component.CreateTextComponents;
@@ -23,6 +25,8 @@ import com.considlia.survey.ui.custom_component.QuestionWithButtonsFactory;
 import com.considlia.survey.ui.custom_component.question_with_button.QuestionWithButtons;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
+import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.H5;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -56,7 +60,6 @@ public class CreateSurveyView extends BaseView
 
   // Textfields
   private TextField surveyTitleTextField;
-  private TextField creatorNameTextField;
   private TextField questionTitleTextField;
   private TextArea descriptionTextArea;
 
@@ -70,7 +73,7 @@ public class CreateSurveyView extends BaseView
 
   // Private variables used when creating the survey
   private Survey thisSurvey;
-  private boolean hasChanges;
+  public boolean hasChanges;
   private QuestionType questionType;
   private SurveyRepository surveyRepository;
   private CreateAlternative createAlternative;
@@ -127,15 +130,11 @@ public class CreateSurveyView extends BaseView
     cancelButton = new Button("Cancel", event -> getUI().ifPresent(ui -> ui.navigate("")));
 
     surveyTitleTextField = createTextField("400px", "Survey Title", true);
-    creatorNameTextField = createTextField("250px", "Created By", true);
     descriptionTextArea = new TextArea();
 
     surveyTitleTextField.addValueChangeListener(titleChange -> {
       // validates textField value with validateString
       titleChange.getSource().setValue(validateString(titleChange.getSource().getValue(), 70));
-      checkFilledFields();
-    });
-    creatorNameTextField.addValueChangeListener(creatorChange -> {
       checkFilledFields();
     });
     descriptionTextArea.addValueChangeListener(descChange -> {
@@ -150,9 +149,6 @@ public class CreateSurveyView extends BaseView
     /*
      * Currently doesn't allow for editing of Users name within CreatorName for Survey.
      */
-    creatorNameTextField.setValue(customUserService.getUser().getLastName() + ", "
-        + customUserService.getUser().getFirstName());
-    creatorNameTextField.setEnabled(false);
     descriptionTextArea.setValueChangeMode(ValueChangeMode.EAGER);
   }
 
@@ -160,8 +156,10 @@ public class CreateSurveyView extends BaseView
    * adds layouts to containers, invoked by constructor.
    */
   public void initLayout() {
-    titleContainer.add(surveyTitleTextField, creatorNameTextField, submitSurveyButton,
-        cancelButton);
+    Button showPreviewButton = new Button("Preview Survey", onClick -> showPreview());
+    showPreviewButton.getStyle().set("margin-left", "auto");
+
+    titleContainer.add(surveyTitleTextField, submitSurveyButton, cancelButton, showPreviewButton);
     header.add(titleContainer);
     header.add(descriptionTextArea);
 
@@ -171,6 +169,62 @@ public class CreateSurveyView extends BaseView
     add(header);
     add(addQuestionContainer);
     add(questions);
+  }
+
+  /**
+   * Hides the components in creation mode and adds the necessary components for preview mode.
+   */
+  private void showPreview() {
+    setComponentsVisable(false);
+
+    VerticalLayout previewHeaderContent = new VerticalLayout();
+    previewHeaderContent.setClassName("standardPadding");
+
+    Button btn = new Button("Close Preview", e -> resetHeaderAfterPreview(previewHeaderContent));
+    btn.getStyle().set("margin-left", "auto");
+
+    HorizontalLayout titleAndBtnContainer = new HorizontalLayout();
+    titleAndBtnContainer.setDefaultVerticalComponentAlignment(Alignment.BASELINE);
+    titleAndBtnContainer.getStyle().set("width", "100%");
+    titleAndBtnContainer.add(new H1(surveyTitleTextField.getValue()), btn);
+
+    previewHeaderContent.add(titleAndBtnContainer, new H5(descriptionTextArea.getValue().trim()));
+    header.add(previewHeaderContent);
+
+    refreshItemsInGUI();
+
+    for (Object qwb : questions.getChildren().toArray()) {
+      QuestionWithButtons q = (QuestionWithButtons) qwb;
+      q.setContentVisable(false);
+    }
+  }
+
+  /**
+   * Sets title(from baseView, titleContainer, descriptionTextArea and addQuestionContainer
+   * visibility to the parameter value
+   * 
+   * @param isVisable- boolean. Components is set visible if true
+   */
+  public void setComponentsVisable(boolean isVisible) {
+    title.setVisible(isVisible); // the title is from baseView
+    titleContainer.setVisible(isVisible);
+    descriptionTextArea.setVisible(isVisible);
+    addQuestionContainer.setVisible(isVisible);
+  }
+
+  /**
+   * 
+   * @param previewHeaderContent {@link VerticalLayout} containing the components needed for
+   *        prewviewing the survey
+   */
+  public void resetHeaderAfterPreview(VerticalLayout previewHeaderContent) {
+    previewHeaderContent.removeAll();
+    header.remove(previewHeaderContent);
+    setComponentsVisable(true);
+
+    refreshItemsInGUI();
+    createTextComponents = new CreateTextComponents(this);
+    extraComponents.add(createTextComponents);
   }
 
   /**
@@ -203,11 +257,10 @@ public class CreateSurveyView extends BaseView
     });
 
     selectOptions = new Select<>();
-    selectOptions.setLabel("Type of question: ");
+    selectOptions.setLabel("Type of question : ");
     selectOptions.setItems(QuestionType.TEXTFIELD, QuestionType.RADIO, QuestionType.CHECKBOX,
         QuestionType.RATIO);
     selectOptions.setValue(QuestionType.TEXTFIELD);
-
     selectOptions.addValueChangeListener(event -> {
       questionType = selectOptions.getValue();
       if (event.getValue() == QuestionType.TEXTFIELD) {
@@ -250,7 +303,7 @@ public class CreateSurveyView extends BaseView
 
   /**
    * Removes all questions, then adds all Questions with new index values. Invokes
-   * {@link updateMoveButtonStatus()}
+   * {@link CreateSurveyView#updateMoveButtonStatus()}
    */
   public void refreshItemsInGUI() {
     setPositions();
@@ -258,7 +311,7 @@ public class CreateSurveyView extends BaseView
     extraComponents.removeAll();
 
     for (Question q : thisSurvey.getQuestions()) {
-      questions.add(QuestionWithButtonsFactory.create(q, this));
+      questions.add(QuestionWithButtonsFactory.create(q, this, this::removeQuestion));
     }
     updateMoveButtonStatus();
   }
@@ -398,7 +451,7 @@ public class CreateSurveyView extends BaseView
 
   /**
    * Removes question from questions {@link List} in {@link Survey}. Invoked from
-   * {@link ConfirmDialog}
+   * {@link ConfirmDialogBuilder}
    *
    * @param question type: {@link Question}
    */
@@ -419,20 +472,36 @@ public class CreateSurveyView extends BaseView
   }
 
   /**
-   * Sets the surveys title, creator, description, user (questions is already set) and saves it and
-   * then reroute back to homeView
+   * Sets the surveys title, creator, description, user, (questions is already set) and saves it and
+   * then reroute back to homeView. If there is another {@link Survey} that have the same title(case
+   * insensitive) and creator(user) it will show a notification and not save the survey
    */
   public void saveSurvey() {
-    thisSurvey.setCreator(creatorNameTextField.getValue());
-    thisSurvey.setTitle(surveyTitleTextField.getValue());
-    thisSurvey.setDescription(descriptionTextArea.getValue());
-    thisSurvey.setDate(LocalDate.now());
-    thisSurvey.setStatus(SurveyStatus.EDITABLE);
 
-    thisSurvey.setUser(customUserService.getUser());
-    surveyRepository.save(thisSurvey);
-    hasChanges = false;
-    getUI().ifPresent(ui -> ui.navigate(""));
+    List<Survey> returnedSurveysFromRepository = surveyRepository
+        .findByUserAndTitle(surveyTitleTextField.getValue().trim(), customUserService.getUser());
+
+    if ((returnedSurveysFromRepository.size() < 1) || ((returnedSurveysFromRepository.size() >= 1)
+        && (returnedSurveysFromRepository.get(0).getId() == thisSurvey.getId()))) {
+
+      thisSurvey.setCreator(customUserService.getUser().getUsername());
+      thisSurvey.setTitle(surveyTitleTextField.getValue());
+      thisSurvey.setDescription(descriptionTextArea.getValue());
+      thisSurvey.setDate(LocalDate.now());
+      thisSurvey.setStatus(SurveyStatus.EDITABLE);
+
+      thisSurvey.setUser(customUserService.getUser());
+
+      surveyRepository.save(thisSurvey);
+      hasChanges = false;
+      navigateToSuccessView(ConfirmSuccessView.SURVEY_CREATED_STRING);
+    } else {
+
+      Notification titleError = new Notification(
+          "You already have a Survey with that title. Pleace choose another", 4000);
+      titleError.open();
+      surveyTitleTextField.focus();
+    }
   }
 
   /**
@@ -443,8 +512,7 @@ public class CreateSurveyView extends BaseView
    */
   public boolean checkFilledFields() {
     hasChanges = true;
-    if (!(surveyTitleTextField.isEmpty() || creatorNameTextField.isEmpty())
-        && questions.getComponentCount() != 0) {
+    if (!(surveyTitleTextField.isEmpty()) && questions.getComponentCount() != 0) {
       submitSurveyButton.setEnabled(true);
       return true;
     } else {
@@ -480,10 +548,15 @@ public class CreateSurveyView extends BaseView
     if (parameter != null) {
       thisSurvey = surveyRepository.getSurveyById(parameter);
 
+      setTitle("Editing Survey");
+
       surveyTitleTextField.setValue(thisSurvey.getTitle());
-      creatorNameTextField.setValue(thisSurvey.getCreator());
       descriptionTextArea.setValue(thisSurvey.getDescription());
       refreshItemsInGUI();
+
+      createTextComponents = new CreateTextComponents(this);
+      createTextComponents.getRadioButtons().setValue("Textfield");
+      extraComponents.add(createTextComponents);
 
       submitSurveyButton.setText("Save Survey");
       updateMoveButtonStatus();
@@ -514,9 +587,20 @@ public class CreateSurveyView extends BaseView
   @Override
   public void beforeLeave(BeforeLeaveEvent event) {
     if (hasChanges) {
-      ContinueNavigationAction action = event.postpone();
-      ConfirmDialog dialog = new ConfirmDialog(action, this);
-      dialog.open();
+      ContinueNavigationAction continueNavigationAction = event.postpone();
+
+      ConfirmDialog<Survey> confirmDialog = new ConfirmDialogBuilder<Survey>()
+          .with($ -> {
+              $.action = continueNavigationAction;
+              $.runnable = this::saveSurvey;
+              $.allFieldsCorrectlyFilledIn = checkFilledFields();
+            $.addHeaderText("You aren't finished!");
+            $.addContentText("You have to fill out required fields and have at least one question. Fill them out or discard changes");
+            $.addContentText("Do you want to save or discard your changes before navigating away?");
+            $.addSaveDiscardCancelAlternatives();
+              })
+          .createConfirmDialog();
+      confirmDialog.open();
     }
   }
 

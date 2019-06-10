@@ -47,7 +47,7 @@ public class ShowTextAreaQuestionLayout extends ShowQuestionLayout {
     if (getQuestion().isMandatory()) {
       binder
           .forField(questionArea)
-          .withValidator(new StringLengthValidator(mandatoryQuestionMessage, 1, null))
+          .withValidator(new StringLengthValidator(MANDATORY_QUESTION_MESSAGE, 1, null))
           .bind(TextAnswer::getTextAnswer, TextAnswer::setTextAnswer);
       if (questionArea.getValue().length()<1){
       }

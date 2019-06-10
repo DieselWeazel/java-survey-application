@@ -1,11 +1,5 @@
 package com.considlia.survey.ui.custom_component;
 
-import java.util.function.Consumer;
-import com.considlia.survey.model.Survey;
-import com.considlia.survey.model.question.Question;
-import com.considlia.survey.ui.CreateSurveyView;
-import com.considlia.survey.ui.custom_component.question_with_button.QuestionWithButtons;
-import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
@@ -13,139 +7,146 @@ import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.H5;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.router.BeforeLeaveEvent.ContinueNavigationAction;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
 
-public class ConfirmDialog extends Dialog {
-
-  private Button cancelBtn;
+/**
+ * A Universal ConfirmDialog class, with purpose to be applicable to all kinds of Confirm Dialogs that are needed.
+ * @param <T> being an entity to remove, update or save.
+ */
+public class ConfirmDialog<T> extends Dialog {
 
   /**
-   * Dialog that confirms if you want to delete the passes {@link Survey}
-   * 
-   * @param headerText - {@link String} text in header
-   * @param contentText - {@link String} text in body
-   * @param consumer - method from {@link SurveyGrid} that removes the item-parameter
-   * @param item - {@link Survey} thats going to be removed
+   * Private Constructor, this ConfirmDialog is never meant to be instantiated. See {@link ConfirmDialogBuilder}
    */
-  public ConfirmDialog(String headerText, String contentText, Consumer<Survey> consumer,
-      Survey item) {
-    setCloseOnEsc(false);
-    setCloseOnOutsideClick(false);
-
-    initCancelBtn();
-
-    Button confirmBtn = new Button("Confirm", onConfirm -> {
-      consumer.accept(item);
-      close();
-    });
-
-    add(new H2(headerText), new H5(contentText));
-    add(new HorizontalLayout(cancelBtn, confirmBtn));
-    open();
+  private ConfirmDialog() {
   }
 
   /**
-   * Discards, cancels or saves the changes made to a {@link Survey}
-   * 
-   * @param action - {@link ContinueNavigationAction}
-   * @param survey - {@link CreateSurveyView}
+   * Builder Class, sets up the ConfirmDialog, with whatever method is needed.
+   * @param <T> being an entity to remove, update or save.
    */
-  public ConfirmDialog(ContinueNavigationAction action, CreateSurveyView survey) {
+  public static class ConfirmDialogBuilder<T> extends ConfirmDialog<T> {
 
-    initCancelBtn();
+    public Consumer<T> consumer;
+    public T entityObject;
+    public ContinueNavigationAction action;
+    public Runnable runnable;
+    public boolean allFieldsCorrectlyFilledIn;
 
-    Button confirmBtn = new Button("Discard", onDiscard -> {
-      action.proceed();
-      close();
-    });
-    Button saveBtn = new Button("Save", onSave -> {
-      survey.saveSurvey();
-      action.proceed();
-      close();
-    });
-
-    HorizontalLayout buttonContainer = new HorizontalLayout();
-    if (!survey.checkFilledFields()) {
-      saveBtn.setEnabled(false);
-      add(new Text(
-          "You have to fill out required fields and have at least one question. Fill them out or discard changes"));
-    } else {
-      add(new H5("Do you want to save or discard your changes before navigating away?"));
+    /**
+     * Add appropriate method, or function, to the ConfirmDialog, in any order possible.
+     * @param builderFunction Method to add from this ConfirmDialogBuilder class only.
+     * @return {@link ConfirmDialog}
+     */
+    public ConfirmDialogBuilder with(
+        Consumer<ConfirmDialogBuilder> builderFunction) {
+      builderFunction.accept(this);
+      return this;
     }
 
-    buttonContainer.add(saveBtn, confirmBtn, cancelBtn);
-    add(buttonContainer);
-  }
+    /**
+     * Creates ConfirmDialog. Call this method on the end.
+     * @return a finished/built {@link ConfirmDialog}
+     */
+    public ConfirmDialog<T> createConfirmDialog() {
+      return this;
+    }
 
-  /**
-   * Creates a {@link Dialog} where the "Confirm"-{@link Button} removes the {@link Question} from
-   * the survey.
-   * 
-   * @param survey - {@link CreateSurveyView} to get access to its methods
-   * @param question - the {@link QuestionWithButtons} containing the {@link Question} thats going
-   *        to be removed
-   */
-  public ConfirmDialog(CreateSurveyView survey, QuestionWithButtons question) {
+    /**
+     * Adds HeaderText to the ConfirmDialog.
+     * @param s being the String to display on top.
+     */
+    public void addHeaderText(String s) {
+      add(new H2(s));
+    }
 
-    initCancelBtn();
+    /**
+     * Adds Text to the ConfirmDialog.
+     * @param s being Text to add.
+     */
+    public void addInformationText(String s){
+      add(new Text(s));
+    }
 
-    Button confirmBtn = new Button("Confirm", onConfirm -> {
-      survey.removeQuestion(question.getQuestion());
-      close();
-    });
-    add(new H5("Are you sure you want to remove this question?"));
-    add(new HorizontalLayout(cancelBtn, confirmBtn));
-    open();
-  }
-
-  /**
-   * Dialog Windows connected to Login/Registration
-   */
-  /**
-   * Dialog showing a error message, if User Username exists.
-   */
-  public ConfirmDialog(){
-    add(new H5("Wrong Username or Password, try again!"));
-    add(new Button("Ok", e -> close()));
-  }
-  /**
-   * Dialog showing a error message, if User Username exists.
-   */
-  public ConfirmDialog(String userinput) {
-    add(new H5("Error, username: " + userinput + " is already taken, please take another one."));
-    add(new Button("Ok", e -> close()));
-  }
-
-  /**
-   * Dialog showing a error message, if User Email exists.
-   */
-  public ConfirmDialog(String userinput, boolean email){
-    add(new H5("There already exists a User registered with this email, have you forgotten your password?"));
-    add(new Button("Ok", e -> close()));
-  }
-
-  /**
-   * ConfirmDialog to handle DTO Verification, this Confirm Dialog is applicable to
-   * all usecases, since input parameter is of class {@link ErrorVerificationMessageDTO}
-   * If only one String, only pass one String into the array.
-   *
-   * Can be expanded/overloaded to handle constructors of type
-   * {@link ErrorVerificationMessageDTO} with only one String.
-   * @param errorVerificationMessageDTO
-   * Written by Jonathan Harr
-   */
-  public ConfirmDialog(ErrorVerificationMessageDTO errorVerificationMessageDTO){
-    for (String s : errorVerificationMessageDTO.getErrorText()){
+    /**
+     * Adds Content Text to the ConfirmDialog
+     * @param s being the String of main information text to add.
+     */
+    public void addContentText(String s) {
       add(new H5(s));
     }
-    add(new Button("Understood!", e-> close()));
-  }
-  /**
-   * Creates a {@link Button} with the text "Cancel" and a {@link ClickEvent} that closes the
-   * {@link Dialog}
-   */
-  public void initCancelBtn() {
-    cancelBtn = new Button("Cancel", onCancel -> {
-      close();
-    });
+
+    /**
+     * Adds a container with options to Confirm the entity removal/update/save process of type, and a cancel button.
+     * Important: the type, has to be the same as the ConfirmDialogs instantiation type. {@link ConfirmDialog<T>}
+     * Will not work without setting the {@link Consumer}
+     */
+    public void addRemoveAndCancelButtonsContainer() {
+      Button confirmButton = new Button("Confirm", confirm -> {
+        consumer.accept(entityObject);
+        close();
+      });
+      Button cancelButton = new Button("Cancel", cancel -> close());
+      add(new HorizontalLayout(confirmButton, cancelButton));
+    }
+
+    /**
+     * Adds a Confirm button to save an entity.
+     * Requires a method passed for the Runnable, {@link Runnable}
+     */
+    public void confirmSaveEntityButton() {
+      if (allFieldsCorrectlyFilledIn) {
+        add(new Button("Save", confirm -> runnable.run()));
+      } else {
+        Button saveButton = new Button("Save");
+        saveButton.setEnabled(false);
+        add(saveButton);
+      }
+    }
+
+    /**
+     * Adds a simple Close Button. Can be altered to include whatever Text to display on the button.
+     * @param s being the Buttons text.
+     */
+    public void addSimpleCloseButton(String s){
+      add(new Button(s, cancel -> close()));
+    }
+
+    /**
+     * Adds a container with options to Save the entity removal/update/save process of type, a Discard button,
+     * and a cancel button.
+     * Important: the type, has to be the same as the ConfirmDialogs instantiation type. {@link ConfirmDialog<T>}
+     * Will not work without setting the {@link Consumer}
+     * Will not work without passing the desired course of action/method to the {@link Runnable}, as in, navigate to next page
+     * or whatever is needed.
+     */
+    public void addSaveDiscardCancelAlternatives(){
+      Button saveButton = new Button("Save", confirm -> {
+        runnable.run();
+        action.proceed();
+        close();
+      });
+      if (!allFieldsCorrectlyFilledIn){
+        saveButton.setEnabled(false);
+      }
+      Button discardButton = new Button("Discard", discard -> {
+        action.proceed();
+        close();
+      });
+      Button closeButton = new Button("Close", close -> close());
+      add(new HorizontalLayout(saveButton, discardButton, closeButton));
+    }
+
+    /**
+     * Adds a list of all missing fields. Needs a correctly setup {@link ErrorVerificationMessageDTO}
+     * @param errorVerificationMessageDTO to pass the list of missing fields.
+     */
+    public void addMissingFieldsList(ErrorVerificationMessageDTO errorVerificationMessageDTO) {
+      for (String s : errorVerificationMessageDTO.getErrorText()) {
+        add(new H5(s));
+      }
+    }
   }
 }

@@ -8,10 +8,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-/** MultiAnswerChoice, child entity of {@link MultiAnswer}. */
+/** MultiAnswerChoice, child entity of {@link CheckBoxAnswer}. */
 @Entity
 @Table(name = "chosen_answer")
-public class MultiAnswerChoice {
+public class CheckBoxAnswerChoice {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,20 +23,20 @@ public class MultiAnswerChoice {
   /**
    * Empty Constructor
    */
-  public MultiAnswerChoice() {
+  public CheckBoxAnswerChoice() {
   }
 
   /**
-   * Constructs a MultiAnswerChoice for {@link MultiAnswer}
+   * Constructs a MultiAnswerChoice for {@link CheckBoxAnswer}
    *
    * @param checkedAnswer is the chosen answer of {@link MultiQuestionAlternative}.
    */
-  public MultiAnswerChoice(String checkedAnswer) {
+  public CheckBoxAnswerChoice(String checkedAnswer) {
     this.checkedAnswer = checkedAnswer;
   }
 
   /**
-   * Gets the MultiAnswerChoice of {@link MultiAnswer}.
+   * Gets the MultiAnswerChoice of {@link CheckBoxAnswer}.
    *
    * @return the chosen answer of {@link MultiQuestionAlternative}
    */
@@ -45,7 +45,7 @@ public class MultiAnswerChoice {
   }
 
   /**
-   * Sets MultiAnswerChoice for {@link MultiAnswer}
+   * Sets MultiAnswerChoice for {@link CheckBoxAnswer}
    *
    * @param checkedAnswer is the resulted chosen answer to {@link MultiQuestionAlternative}.
    */

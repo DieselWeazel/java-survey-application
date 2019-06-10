@@ -1,5 +1,6 @@
 package com.considlia.survey.ui;
 
+import com.considlia.survey.ui.userviews.LogoutView;
 import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
@@ -30,8 +31,6 @@ public class MainLayout extends VerticalLayout implements RouterLayout {
 
   private HorizontalLayout navigation;
   private VerticalLayout contentContainer;
-  @Autowired
-  private HttpServletRequest httpServletRequest;
 
   /**
    * Manages header for site. Adds different buttons depending on if user is logged in.
@@ -43,31 +42,21 @@ public class MainLayout extends VerticalLayout implements RouterLayout {
 
     navigation.add(createRouterLink(HomeView.class, "Home", VaadinIcon.HOME));
 
-
     if (SecurityUtils.isUserLoggedIn()) {
-      navigation
-          .add(createRouterLink(CreateSurveyView.class, "Create New Survey", VaadinIcon.PLUS_CIRCLE));
-      navigation.add(createRouterLink(MyProfileView.class, "profileview", VaadinIcon.USER));
-      navigation.add(new Button("Logout", new Icon(VaadinIcon.EXIT), e -> logoutUser()));
+      navigation.add(
+          createRouterLink(CreateSurveyView.class, "Create New Survey", VaadinIcon.PLUS_CIRCLE));
+      navigation.add(createRouterLink(MyProfileView.class, "Profileview", VaadinIcon.USER));
+      navigation.add(createRouterLink(LogoutView.class, "Logout", VaadinIcon.EXIT));
+
     } else {
       navigation.add(createRouterLink(LoginView.class, "Login", VaadinIcon.SIGN_IN));
-      navigation.add(createRouterLink(RegistrationView.class, "registration", VaadinIcon.PENCIL));
+      navigation.add(createRouterLink(RegistrationView.class, "Registration", VaadinIcon.PENCIL));
     }
     navigation.setClassName("header");
     contentContainer = new VerticalLayout();
     contentContainer.setClassName("content");
 
     add(navigation, contentContainer);
-  }
-
-  /**
-   * Logs the user out. Reloads the page.
-   */
-  private void logoutUser() {
-    SecurityContextHolder.clearContext();
-    httpServletRequest.getSession(false).invalidate();
-    UI.getCurrent().getSession().close();
-    UI.getCurrent().getPage().reload();
   }
 
   /**

@@ -8,6 +8,7 @@ import com.considlia.survey.security.UserDetailsServiceImpl;
 import com.considlia.survey.ui.BaseView;
 import com.considlia.survey.ui.MainLayout;
 import com.considlia.survey.ui.custom_component.ConfirmDialog;
+import com.considlia.survey.ui.custom_component.ConfirmDialog.ConfirmDialogBuilder;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasSize;
 import com.vaadin.flow.component.UI;
@@ -82,11 +83,23 @@ public class RegistrationView extends BaseView implements BeforeEnterObserver {
 
     // First Checks if Username is taken, then checks if Email is taken, if both booleans are false, User registers.
     if (userRepository.existsByUsername(username.getValue())){
-      ConfirmDialog confirmDialog = new ConfirmDialog(username.getValue());
+      ConfirmDialog<RegistrationView> confirmDialog = new ConfirmDialogBuilder<RegistrationView>()
+          .with($ -> {
+            $.addHeaderText("Username taken!");
+            $.addContentText("Error, username: " + username.getValue() + " is already taken, please take another one.");
+            $.addSimpleCloseButton("Ok");
+              })
+          .createConfirmDialog();
       confirmDialog.open();
       return;
     } else if (userRepository.existsByEmail(email.getValue())){
-      ConfirmDialog confirmDialog = new ConfirmDialog(email.getValue(), true);
+      ConfirmDialog<RegistrationView> confirmDialog = new ConfirmDialogBuilder<RegistrationView>()
+          .with($ -> {
+            $.addHeaderText("Email already exists!");
+            $.addContentText("There already exists a User registered with this email, have you forgotten your password?");
+            $.addSimpleCloseButton("Ok");
+          })
+          .createConfirmDialog();
       confirmDialog.open();
       return;
     } else {
@@ -155,22 +168,22 @@ public class RegistrationView extends BaseView implements BeforeEnterObserver {
     userBinder
         .forField(firstName)
         .withValidator(
-            new StringLengthValidator("Must be more than 3 characters & max 255", 3, 255))
+            new StringLengthValidator("Must be more than 3 characters & max 255", 1, 255))
         .bind(User::getFirstName, User::setFirstName);
     userBinder
         .forField(lastName)
         .withValidator(
-            new StringLengthValidator("Must be more than 3 characters & max 255", 3, 255))
+            new StringLengthValidator("Must be more than 3 characters & max 255", 1, 255))
         .bind(User::getLastName, User::setLastName);
     userBinder
         .forField(username)
         .withValidator(
-            new StringLengthValidator("Must be more than 3 characters & max 255", 3, 255))
+            new StringLengthValidator("Must be more than 3 characters & max 255", 1, 255))
         .bind(User::getUsername, User::setUsername);
     userBinder
         .forField(passwordField)
         .withValidator(
-            new StringLengthValidator("Must be more than 3 characters & max 255", 3, 255))
+            new StringLengthValidator("Must be more than 3 characters & max 255", 1, 255))
         .bind(User::getPassword, User::setPassword);
     //    userBinder.bindInstanceFields(this);
   }

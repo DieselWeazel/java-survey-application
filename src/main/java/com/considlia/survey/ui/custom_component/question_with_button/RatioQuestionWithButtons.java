@@ -1,5 +1,6 @@
 package com.considlia.survey.ui.custom_component.question_with_button;
 
+import com.considlia.survey.model.question.Question;
 import java.util.ArrayList;
 import java.util.List;
 import com.considlia.survey.model.QuestionType;
@@ -8,6 +9,7 @@ import com.considlia.survey.ui.CreateSurveyView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.radiobutton.RadioGroupVariant;
+import java.util.function.Consumer;
 
 /**
  * Class extending {@link QuestionWithButtons}. Contains the specific {@link Component}s for
@@ -29,8 +31,8 @@ public class RatioQuestionWithButtons extends QuestionWithButtons {
    * @param question getList {@link QuestionType} and also for passing it to super
    * @param survey for passing it to super
    */
-  public RatioQuestionWithButtons(RatioQuestion question, CreateSurveyView survey) {
-    super(question, survey);
+  public RatioQuestionWithButtons(RatioQuestion question, CreateSurveyView survey, Consumer<Question> deleteQuestionConsumer) {
+    super(question, survey, deleteQuestionConsumer);
 
     this.ratioQuestion = question;
 
@@ -43,6 +45,7 @@ public class RatioQuestionWithButtons extends QuestionWithButtons {
     radioOptions = new RadioButtonGroup<>();
     radioOptions.setItems(options);
     radioOptions.addThemeVariants(RadioGroupVariant.LUMO_VERTICAL);
+    radioOptions.setEnabled(false);
     add(radioOptions);
   }
 
@@ -75,6 +78,7 @@ public class RatioQuestionWithButtons extends QuestionWithButtons {
     RadioButtonGroup<String> newRadio = new RadioButtonGroup<>();
     newRadio.setItems(options);
     newRadio.addThemeVariants(RadioGroupVariant.LUMO_VERTICAL);
+    newRadio.setEnabled(false);
 
     replace(radioOptions, newRadio);
     radioOptions = newRadio;
