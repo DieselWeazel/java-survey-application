@@ -20,5 +20,7 @@ public class PreviewSurvey extends ShowSurveyView {
   public PreviewSurvey(SurveyRepository surveyRepository, ResponseRepository responseRepository) {
     super(surveyRepository, responseRepository);
     saveButton.setVisible(false);
+    isPreviewMode = true;
+    containsMandatory = false;
   }
 }

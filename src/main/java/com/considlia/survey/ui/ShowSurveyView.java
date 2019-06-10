@@ -1,5 +1,8 @@
 package com.considlia.survey.ui;
 
+import com.considlia.survey.ui.custom_component.showsurveycomponents.showquestionlayouts.ShowQuestionLayout;
+import com.vaadin.flow.component.HasEnabled;
+import java.awt.CheckboxGroup;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -49,14 +52,14 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
   protected Button saveButton;
   private SurveyRepository surveyRepository;
   private ResponseRepository responseRepository;
-  private Survey survey;
-  private boolean containsMandatory = false;
+  protected Survey survey;
+  protected boolean containsMandatory = false;
   private LocalDateTime start = LocalDateTime.now();
-
-  private ShowQuestionFactory showQuestionFactory;
+  protected boolean isPreviewMode = false;
+  protected ShowQuestionFactory showQuestionFactory;
 
   @Autowired
-  private CustomUserService customUserService;
+  protected CustomUserService customUserService;
 
   /**
    * Constructs view.
@@ -121,6 +124,22 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
    */
   public void loadSurvey() {
     this.surveyVerticalLayout = showQuestionFactory.getSurveyLayout(survey);
+    if (isPreviewMode) {
+      if (customUserService.getUser().getId() == survey.getUser().getId()) {
+        for (int i = 0; i < this.surveyVerticalLayout.getComponentCount(); i++) {
+          Component componet = this.surveyVerticalLayout.getComponentAt(i);
+          if (componet instanceof HasEnabled) {
+            HasEnabled hasEnabled = (HasEnabled) componet;
+            hasEnabled.setEnabled(false);
+          }
+        }
+      } else {
+        this.surveyVerticalLayout = new VerticalLayout();
+        h1.setText("Restricted Access!");
+        h5.setText("It seems you have stumbled to a faulty URL. If you are looking to preview a survey, "
+            + "please go to My Profile, and from there choose the Survey you wish to preview");
+      }
+    }
     saveButton.addClickListener(e -> {
       if (showQuestionFactory.isComplete().isConflict()) {
         try {
@@ -166,13 +185,5 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
     saveButton.setText("Go To Mainview");
     saveButton.addClickListener(e -> navigateBackToHomeView());
     add(saveButton);
-  }
-
-  protected List<Component> getQuestionComponents() {
-    List<Component> componentList = new ArrayList<Component>();
-    for (int i = 0; i < surveyVerticalLayout.getComponentCount(); i++) {
-      componentList.add(surveyVerticalLayout.getComponentAt(i));
-    }
-    return componentList;
   }
 }
