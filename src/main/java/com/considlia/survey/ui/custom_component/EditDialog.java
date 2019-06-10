@@ -239,10 +239,10 @@ public class EditDialog extends Dialog {
       errorMessage += "Can't be empty and can only contain 255 characters.";
     }
     if (txtField.getValue().chars().anyMatch(Character::isDigit)) {
-      errorMessage += "Can contain any numbers. ";
+      errorMessage += "Can't contain any numbers. ";
     }
     if (txtField.getValue().length() == 255) {
-      new Notification("Can contain any more characters.", 2000).open();
+      new Notification("Can't contain any more characters.", 2000).open();
     }
     if (!errorMessage.equals("")) {
       confirm.setEnabled(false);
