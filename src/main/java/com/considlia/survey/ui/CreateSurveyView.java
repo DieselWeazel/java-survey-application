@@ -24,6 +24,8 @@ import com.considlia.survey.ui.custom_component.QuestionWithButtonsFactory;
 import com.considlia.survey.ui.custom_component.question_with_button.QuestionWithButtons;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
+import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.H5;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -153,7 +155,10 @@ public class CreateSurveyView extends BaseView
    * adds layouts to containers, invoked by constructor.
    */
   public void initLayout() {
-    titleContainer.add(surveyTitleTextField, submitSurveyButton, cancelButton);
+    Button showPreviewButton = new Button("Preview Survey", onClick -> showPreview());
+    showPreviewButton.getStyle().set("margin-left", "auto");
+
+    titleContainer.add(surveyTitleTextField, submitSurveyButton, cancelButton, showPreviewButton);
     header.add(titleContainer);
     header.add(descriptionTextArea);
 
@@ -163,6 +168,62 @@ public class CreateSurveyView extends BaseView
     add(header);
     add(addQuestionContainer);
     add(questions);
+  }
+
+  /**
+   * Hides the components in creation mode and adds the necessary components for preview mode.
+   */
+  private void showPreview() {
+    setComponentsVisable(false);
+
+    VerticalLayout previewHeaderContent = new VerticalLayout();
+    previewHeaderContent.setClassName("standardPadding");
+
+    Button btn = new Button("Close Preview", e -> resetHeaderAfterPreview(previewHeaderContent));
+    btn.getStyle().set("margin-left", "auto");
+
+    HorizontalLayout titleAndBtnContainer = new HorizontalLayout();
+    titleAndBtnContainer.setDefaultVerticalComponentAlignment(Alignment.BASELINE);
+    titleAndBtnContainer.getStyle().set("width", "100%");
+    titleAndBtnContainer.add(new H1(surveyTitleTextField.getValue()), btn);
+
+    previewHeaderContent.add(titleAndBtnContainer, new H5(descriptionTextArea.getValue().trim()));
+    header.add(previewHeaderContent);
+
+    refreshItemsInGUI();
+
+    for (Object qwb : questions.getChildren().toArray()) {
+      QuestionWithButtons q = (QuestionWithButtons) qwb;
+      q.setContentVisable(false);
+    }
+  }
+
+  /**
+   * Sets title(from baseView, titleContainer, descriptionTextArea and addQuestionContainer
+   * visibility to the parameter value
+   * 
+   * @param isVisable- boolean. Components is set visible if true
+   */
+  public void setComponentsVisable(boolean isVisible) {
+    title.setVisible(isVisible); // the title is from baseView
+    titleContainer.setVisible(isVisible);
+    descriptionTextArea.setVisible(isVisible);
+    addQuestionContainer.setVisible(isVisible);
+  }
+
+  /**
+   * 
+   * @param previewHeaderContent {@link VerticalLayout} containing the components needed for
+   *        prewviewing the survey
+   */
+  public void resetHeaderAfterPreview(VerticalLayout previewHeaderContent) {
+    previewHeaderContent.removeAll();
+    header.remove(previewHeaderContent);
+    setComponentsVisable(true);
+
+    refreshItemsInGUI();
+    createTextComponents = new CreateTextComponents(this);
+    extraComponents.add(createTextComponents);
   }
 
   /**

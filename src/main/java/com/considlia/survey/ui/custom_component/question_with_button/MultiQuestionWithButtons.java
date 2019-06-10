@@ -43,12 +43,14 @@ public class MultiQuestionWithButtons extends QuestionWithButtons {
       radioButtons = new RadioButtonGroup<>();
       radioButtons.setItems(stringAlternatives);
       radioButtons.addThemeVariants(RadioGroupVariant.LUMO_VERTICAL);
+      radioButtons.setEnabled(false);
       add(radioButtons);
 
     } else if (question.getQuestionType() == QuestionType.CHECKBOX) {
       checkBoxButtons = new CheckboxGroup<>();
       checkBoxButtons.setItems(stringAlternatives);
       checkBoxButtons.addThemeVariants(CheckboxGroupVariant.LUMO_VERTICAL);
+      checkBoxButtons.setEnabled(false);
       add(checkBoxButtons);
     }
   }
@@ -65,7 +67,7 @@ public class MultiQuestionWithButtons extends QuestionWithButtons {
       RadioButtonGroup<String> newRadioButtons = new RadioButtonGroup<>();
       newRadioButtons.setItems(question.getStringAlternatives());
       newRadioButtons.addThemeVariants(RadioGroupVariant.LUMO_VERTICAL);
-
+      newRadioButtons.setEnabled(false);
       replace(radioButtons, newRadioButtons);
       radioButtons = newRadioButtons;
 
@@ -73,7 +75,7 @@ public class MultiQuestionWithButtons extends QuestionWithButtons {
       CheckboxGroup<String> newCheckBox = new CheckboxGroup<>();
       newCheckBox.setItems(question.getStringAlternatives());
       newCheckBox.addThemeVariants(CheckboxGroupVariant.LUMO_VERTICAL);
-
+      newCheckBox.setEnabled(false);
       replace(checkBoxButtons, newCheckBox);
       checkBoxButtons = newCheckBox;
     }

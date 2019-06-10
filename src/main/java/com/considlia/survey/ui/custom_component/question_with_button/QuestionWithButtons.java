@@ -26,7 +26,7 @@ public abstract class QuestionWithButtons extends VerticalLayout {
   private Question question;
   private H5 title;
 
-  private Button upButton;
+  private Button upButton, editButton, removeButton;
   private Button downButton;
 
   private HorizontalLayout content;
@@ -58,11 +58,11 @@ public abstract class QuestionWithButtons extends VerticalLayout {
 
     initButtonEvent(upButton, MOVE_UP);
     initButtonEvent(downButton, MOVE_DOWN);
+    editButton =
+        new Button(new Icon(VaadinIcon.PENCIL), event -> survey.editQuestion(event.getSource()));
+    removeButton = new Button(new Icon(VaadinIcon.TRASH), event -> removeQuestion(survey));
 
-    content.add(title, upButton, downButton);
-    content.add(
-        new Button(new Icon(VaadinIcon.PENCIL), event -> survey.editQuestion(event.getSource())));
-    content.add(new Button(new Icon(VaadinIcon.TRASH), event -> removeQuestion(survey)));
+    content.add(title, upButton, downButton, editButton, removeButton);
 
     add(content);
   }
@@ -140,6 +140,14 @@ public abstract class QuestionWithButtons extends VerticalLayout {
    */
   public void setDownButton(Button downButton) {
     this.downButton = downButton;
+  }
+
+  public void setContentVisable(boolean isVisable) {
+    upButton.setVisible(isVisable);
+    downButton.setVisible(isVisable);
+    editButton.setVisible(isVisable);
+    removeButton.setVisible(isVisable);
+
   }
 
 }

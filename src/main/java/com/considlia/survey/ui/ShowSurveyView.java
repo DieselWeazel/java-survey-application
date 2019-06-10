@@ -1,6 +1,5 @@
 package com.considlia.survey.ui;
 
-import com.vaadin.flow.component.UI;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Set;
@@ -44,7 +43,7 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long> {
 
   private H1 h1;
   private H5 h5 = new H5();
-  private Button saveButton;
+  protected Button saveButton;
   private SurveyRepository surveyRepository;
   private ResponseRepository responseRepository;
   private Survey survey;
