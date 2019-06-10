@@ -55,50 +55,63 @@ public class ShowMultiChoiceAnswerLayout extends ShowAnswerLayout {
 
     double [] valuesList = new double[categoryList.size()];
 
+    //    for (int i = 0; i < stringList.length; i++){
+    //      for (int j = 0; j < stringList[i].length(); j++){
+    //        if (i == j){
+    //
+    //          for (int k = 0; k < valuesList.length; k++){
+    //            valuesList[k] += 1;
+    //            System.out.println(valuesList[k]);
+    //          }
+    //        }
+    //      }
+    //    }
 
-//    for (int i = 0; i < stringList.length; i++){
-//      for (int j = 0; j < stringList[i].length(); j++){
-//        if (i == j){
-//
-//          for (int k = 0; k < valuesList.length; k++){
-//            valuesList[k] += 1;
-//            System.out.println(valuesList[k]);
-//          }
-//        }
-//      }
-//    }
+    //    for (int i = 0; i < valuesList.length; i++){
+    //      for (int j = 0; j < stringList.length; j++){
+    //        for (int k = 0; k < stringList[j].length(); k++){
+    //          if (j == k){
+    //            valuesList[i] += 1;
+    //            System.out.println(valuesList[i]);
+    //          }
+    //        }
+    //      }
+    //    }
 
-    for (int i = 0; i < valuesList.length; i++){
-      for (int j = 0; j < stringList.length; j++){
-        for (int k = 0; k < stringList[j].length(); k++){
-          if (j == k){
-            valuesList[i] += 1;
-            System.out.println(valuesList[i]);
+    //    for (int i = 0; i < valuesList.length; i++){
+
+    //      for (CheckBoxAnswerChoice checkBoxAnswerChoice : answerList) {
+    //        for (CheckBoxAnswerChoice checkBoxAnswerChoice1 : answerList) {
+    //          if
+    // (checkBoxAnswerChoice.getCheckedAnswer().equals(checkBoxAnswerChoice1.getCheckedAnswer())){
+    //            valuesList[i] += 1.0;
+    //          }
+    //        }
+    //      }
+    //    }
+
+    //    for (CheckBoxAnswerChoice checkBoxAnswerChoice : answerList){
+    //      for (CheckBoxAnswerChoice checkBoxAnswerChoice1 : answerList){
+    //        if
+    // (checkBoxAnswerChoice.getCheckedAnswer().equals(checkBoxAnswerChoice1.getCheckedAnswer())){
+    //
+    //        }
+    //      }
+    //    }
+
+    // note to self: this gives everything the same value, your iterating the wrong way and your missing the details..
+    // problem being once youve got one value you get it again the next loop iteration
+    for (int i = 0; i < valuesList.length; i++) {
+
+      for (String s : categoryList) {
+        for (CheckBoxAnswerChoice checkBoxAnswerChoice : answerList) {
+          if (checkBoxAnswerChoice.getCheckedAnswer().equals(s)) {
+            System.out.println("STRIKE, found equals of: " + s + checkBoxAnswerChoice.getCheckedAnswer());
+            valuesList[i] += 1.0;
           }
         }
       }
     }
-
-//    for (int i = 0; i < valuesList.length; i++){
-
-
-//      for (CheckBoxAnswerChoice checkBoxAnswerChoice : answerList) {
-//        for (CheckBoxAnswerChoice checkBoxAnswerChoice1 : answerList) {
-//          if (checkBoxAnswerChoice.getCheckedAnswer().equals(checkBoxAnswerChoice1.getCheckedAnswer())){
-//            valuesList[i] += 1.0;
-//          }
-//        }
-//      }
-//    }
-
-//    for (CheckBoxAnswerChoice checkBoxAnswerChoice : answerList){
-//      for (CheckBoxAnswerChoice checkBoxAnswerChoice1 : answerList){
-//        if (checkBoxAnswerChoice.getCheckedAnswer().equals(checkBoxAnswerChoice1.getCheckedAnswer())){
-//
-//        }
-//      }
-//    }
-
 //    for (CheckBoxAnswerChoice checkBoxAnswerChoice : answerList) {
 //      if (checkBoxAnswerChoice.get)
 //    }
