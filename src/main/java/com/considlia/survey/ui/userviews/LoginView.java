@@ -1,5 +1,7 @@
 package com.considlia.survey.ui.userviews;
 
+import com.considlia.survey.ui.custom_component.ConfirmDialog;
+import com.considlia.survey.ui.custom_component.ConfirmDialog.ConfirmDialogBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -9,7 +11,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import com.considlia.survey.security.SecurityUtils;
 import com.considlia.survey.ui.BaseView;
 import com.considlia.survey.ui.MainLayout;
-import com.considlia.survey.ui.custom_component.ConfirmDialog;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
@@ -21,9 +22,9 @@ import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.Route;
 
-/*
- * Currently needs a refactoring/correctly processed way of checking for Username and Password being
- * correct. (throws exception and acts on it as of onw) Jonathan
+/**
+ * Class that handles the login process.
+ * If User is logged in and somehow arrives to this view, the BeforeEnterObserver throws them back.
  */
 @Route(value = "login", layout = MainLayout.class)
 public class LoginView extends BaseView implements BeforeEnterObserver {
@@ -68,14 +69,20 @@ public class LoginView extends BaseView implements BeforeEnterObserver {
 
   /**
    * Get the values from the username and password {@link TextField}s. If they aren't valid a
-   * {@link ConfirmDialog} is showned
+   * {@link ConfirmDialogBuilder} is showed
    */
   public void logInEvent() {
     if (setCurrentUser(username.getValue(), password.getValue())) {
       UI.getCurrent().getSession().close();
       UI.getCurrent().getPage().reload();
     } else {
-      ConfirmDialog confirmDialog = new ConfirmDialog();
+      ConfirmDialog confirmDialog = new ConfirmDialogBuilder<RegistrationView>()
+          .with($ -> {
+            $.addHeaderText("Bad Credentials!");
+            $.addContentText("Wrong Username of Password, try again!");
+            $.addSimpleCloseButton("Ok");
+          })
+          .createConfirmDialog();
       confirmDialog.open();
     }
   }

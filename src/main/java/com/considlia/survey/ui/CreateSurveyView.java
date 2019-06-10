@@ -1,5 +1,7 @@
 package com.considlia.survey.ui;
 
+import com.considlia.survey.ui.custom_component.ConfirmDialog;
+import com.considlia.survey.ui.custom_component.ConfirmDialog.ConfirmDialogBuilder;
 import java.time.LocalDate;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -14,7 +16,6 @@ import com.considlia.survey.model.question.Question;
 import com.considlia.survey.repositories.SurveyRepository;
 import com.considlia.survey.repositories.UserRepository;
 import com.considlia.survey.security.CustomUserService;
-import com.considlia.survey.ui.custom_component.ConfirmDialog;
 import com.considlia.survey.ui.custom_component.CreateAlternative;
 import com.considlia.survey.ui.custom_component.CreateRatioComponents;
 import com.considlia.survey.ui.custom_component.CreateTextComponents;
@@ -70,7 +71,7 @@ public class CreateSurveyView extends BaseView
 
   // Private variables used when creating the survey
   private Survey thisSurvey;
-  private boolean hasChanges;
+  public boolean hasChanges;
   private QuestionType questionType;
   private SurveyRepository surveyRepository;
   private CreateAlternative createAlternative;
@@ -249,7 +250,7 @@ public class CreateSurveyView extends BaseView
     extraComponents.removeAll();
 
     for (Question q : thisSurvey.getQuestions()) {
-      questions.add(QuestionWithButtonsFactory.create(q, this));
+      questions.add(QuestionWithButtonsFactory.create(q, this, this::removeQuestion));
     }
     updateMoveButtonStatus();
   }
@@ -389,7 +390,7 @@ public class CreateSurveyView extends BaseView
 
   /**
    * Removes question from questions {@link List} in {@link Survey}. Invoked from
-   * {@link ConfirmDialog}
+   * {@link ConfirmDialogBuilder}
    *
    * @param question type: {@link Question}
    */
@@ -525,9 +526,20 @@ public class CreateSurveyView extends BaseView
   @Override
   public void beforeLeave(BeforeLeaveEvent event) {
     if (hasChanges) {
-      ContinueNavigationAction action = event.postpone();
-      ConfirmDialog dialog = new ConfirmDialog(action, this);
-      dialog.open();
+      ContinueNavigationAction continueNavigationAction = event.postpone();
+
+      ConfirmDialog<Survey> confirmDialog = new ConfirmDialogBuilder<Survey>()
+          .with($ -> {
+              $.action = continueNavigationAction;
+              $.runnable = this::saveSurvey;
+              $.allFieldsCorrectlyFilledIn = checkFilledFields();
+            $.addHeaderText("You aren't finished!");
+            $.addContentText("You have to fill out required fields and have at least one question. Fill them out or discard changes");
+            $.addContentText("Do you want to save or discard your changes before navigating away?");
+            $.addSaveDiscardCancelAlternatives();
+              })
+          .createConfirmDialog();
+      confirmDialog.open();
     }
   }
 

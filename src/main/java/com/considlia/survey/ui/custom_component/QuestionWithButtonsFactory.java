@@ -1,5 +1,6 @@
 package com.considlia.survey.ui.custom_component;
 
+import java.util.function.Consumer;
 import org.hibernate.boot.model.naming.IllegalIdentifierException;
 import com.considlia.survey.model.QuestionType;
 import com.considlia.survey.model.question.CheckBoxQuestion;
@@ -30,18 +31,18 @@ public class QuestionWithButtonsFactory {
    * @throws IllegalIdentifierException
    * @return - returns a subclass of {@link QuestionWithButtons}
    */
-  public static QuestionWithButtons create(Question question, CreateSurveyView csv) {
+  public static QuestionWithButtons create(Question question, CreateSurveyView csv, Consumer<Question> deleteQuestionConsumer) {
 
     if (question.getQuestionType() == QuestionType.TEXTFIELD) {
-      return new TextQuestionWithButtons((TextQuestion) question, csv);
+      return new TextQuestionWithButtons((TextQuestion) question, csv, deleteQuestionConsumer);
     } else if (question.getQuestionType() == QuestionType.TEXTAREA) {
-      return new TextQuestionWithButtons((TextQuestion) question, csv);
+      return new TextQuestionWithButtons((TextQuestion) question, csv, deleteQuestionConsumer);
     } else if (question.getQuestionType() == QuestionType.CHECKBOX) {
-      return new MultiQuestionWithButtons((CheckBoxQuestion) question, csv);
+      return new MultiQuestionWithButtons((CheckBoxQuestion) question, csv, deleteQuestionConsumer);
     } else if (question.getQuestionType() == QuestionType.RADIO) {
-      return new MultiQuestionWithButtons((RadioQuestion) question, csv);
+      return new MultiQuestionWithButtons((RadioQuestion) question, csv, deleteQuestionConsumer);
     } else if (question.getQuestionType() == QuestionType.RATIO) {
-      return new RatioQuestionWithButtons((RatioQuestion) question, csv);
+      return new RatioQuestionWithButtons((RatioQuestion) question, csv, deleteQuestionConsumer);
     } else {
       throw new IllegalIdentifierException("Invalid QuestionType");
     }
