@@ -8,7 +8,7 @@ import com.considlia.survey.security.UserDetailsServiceImpl;
 import com.considlia.survey.ui.BaseView;
 import com.considlia.survey.ui.MainLayout;
 import com.considlia.survey.ui.custom_component.ConfirmDialog;
-import com.considlia.survey.ui.custom_component.showsurveycomponents.showquestionlayouts.ShowQuestionLayout;
+import com.considlia.survey.ui.custom_component.ConfirmDialog.ConfirmDialogBuilder;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasSize;
 import com.vaadin.flow.component.UI;
@@ -27,7 +27,6 @@ import com.vaadin.flow.router.Route;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -84,11 +83,23 @@ public class RegistrationView extends BaseView implements BeforeEnterObserver {
 
     // First Checks if Username is taken, then checks if Email is taken, if both booleans are false, User registers.
     if (userRepository.existsByUsername(username.getValue())){
-      ConfirmDialog confirmDialog = new ConfirmDialog(username.getValue());
+      ConfirmDialog<RegistrationView> confirmDialog = new ConfirmDialogBuilder<RegistrationView>()
+          .with($ -> {
+            $.addHeaderText("Username taken!");
+            $.addContentText("Error, username: " + username.getValue() + " is already taken, please take another one.");
+            $.addSimpleCloseButton("Ok");
+              })
+          .createConfirmDialog();
       confirmDialog.open();
       return;
     } else if (userRepository.existsByEmail(email.getValue())){
-      ConfirmDialog confirmDialog = new ConfirmDialog(email.getValue(), true);
+      ConfirmDialog<RegistrationView> confirmDialog = new ConfirmDialogBuilder<RegistrationView>()
+          .with($ -> {
+            $.addHeaderText("Email already exists!");
+            $.addContentText("There already exists a User registered with this email, have you forgotten your password?");
+            $.addSimpleCloseButton("Ok");
+          })
+          .createConfirmDialog();
       confirmDialog.open();
       return;
     } else {

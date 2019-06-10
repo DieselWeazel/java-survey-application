@@ -4,6 +4,7 @@ import com.considlia.survey.model.answer.Answer;
 import com.considlia.survey.model.answer.RatioAnswer;
 import com.considlia.survey.model.question.Question;
 import com.considlia.survey.model.question.RatioQuestion;
+import com.considlia.survey.ui.custom_component.showsurveycomponents.SurveyLoader;
 import com.considlia.survey.ui.custom_component.showsurveycomponents.showquestionlayouts.ShowQuestionLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.radiobutton.RadioGroupVariant;
@@ -34,9 +35,9 @@ public class ShowRatioQuestionLayout extends ShowQuestionLayout {
     binder.setBean(ratioAnswer);
     for (int i = 1; i <= question.getChoices(); i++) {
       if (i == 1) {
-        options.add(Integer.toString(i) + " " + question.getStart());
+        options.add(i + " " + question.getStart());
       } else if (i == question.getChoices()) {
-        options.add(Integer.toString(i) + " " + question.getEnd());
+        options.add(i + " " + question.getEnd());
       } else {
         options.add(Integer.toString(i));
       }
@@ -58,7 +59,8 @@ public class ShowRatioQuestionLayout extends ShowQuestionLayout {
     if (getQuestion().isMandatory()) {
       binder
           .forField(ratioRadioButtons)
-          .withValidator(ratioAnswerString -> ratioAnswerString != null && !ratioAnswerString.isEmpty(), mandatoryQuestionMessage)
+          .withValidator(ratioAnswerString -> ratioAnswerString != null && !ratioAnswerString.isEmpty(),
+              MANDATORY_QUESTION_MESSAGE)
           .bind(RatioAnswer::getRatioAnswer, RatioAnswer::setRatioAnswer);
     } else {
       binder

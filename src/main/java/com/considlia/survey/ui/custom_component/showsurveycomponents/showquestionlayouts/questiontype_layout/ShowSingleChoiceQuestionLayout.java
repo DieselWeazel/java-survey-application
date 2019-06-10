@@ -4,6 +4,7 @@ import com.considlia.survey.model.answer.Answer;
 import com.considlia.survey.model.answer.RadioAnswer;
 import com.considlia.survey.model.question.Question;
 import com.considlia.survey.model.question.RadioQuestion;
+import com.considlia.survey.ui.custom_component.showsurveycomponents.SurveyLoader;
 import com.considlia.survey.ui.custom_component.showsurveycomponents.showquestionlayouts.ShowQuestionLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.radiobutton.RadioGroupVariant;
@@ -11,7 +12,7 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
 
 /**
- * Shows TextQuestions, inherits from the ShowQuestionLayout for base purposes.
+ * Shows SingleChoiceQuestions, inherits from the ShowQuestionLayout for base purposes.
  *
  * Written by Jonathan Harr
  */
@@ -40,22 +41,20 @@ public class ShowSingleChoiceQuestionLayout extends ShowQuestionLayout {
     radioButtons.addThemeVariants(RadioGroupVariant.LUMO_VERTICAL);
   }
 
-
   /**
-   * Inherited Method, sets the Binder to show a message if fields are empty and only if Question requires an answer.
+   * Inherited Method, sets the Binder to show a message if fields are empty and only if Question
+   * requires an answer.
    */
   public void setMandatoryStatus() {
     if (getQuestion().isMandatory()) {
-      binder
-          .forField(radioButtons)
+      binder.forField(radioButtons)
           .withValidator(
               ratioAnswerString -> ratioAnswerString != null && !ratioAnswerString.isEmpty(),
-              mandatoryQuestionMessage)
+              MANDATORY_QUESTION_MESSAGE)
           .bind(RadioAnswer::getChosenAnswer, RadioAnswer::setChosenAnswer);
     } else {
-      binder
-          .forField(radioButtons)
-          .bind(RadioAnswer::getChosenAnswer, RadioAnswer::setChosenAnswer);
+      binder.forField(radioButtons).bind(RadioAnswer::getChosenAnswer,
+          RadioAnswer::setChosenAnswer);
     }
   }
 
@@ -67,7 +66,7 @@ public class ShowSingleChoiceQuestionLayout extends ShowQuestionLayout {
    */
   @Override
   public Answer gatherResponse() throws ValidationException {
-    singleChoiceAnswer.setQuestion(getQuestion());
+    singleChoiceAnswer.setQuestion(question);
     getLOGGER().info("Logging question: '{}'", getQuestion());
     binder.writeBean(singleChoiceAnswer);
     getLOGGER().info("Logging answer: '{}'", singleChoiceAnswer);
@@ -76,6 +75,7 @@ public class ShowSingleChoiceQuestionLayout extends ShowQuestionLayout {
 
   /**
    * Checks if RadioButtons are empty
+   * 
    * @param question if question is mandatory
    * @return true if RadioButtons are filled in.
    */
