@@ -11,7 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 @StyleSheet("css/app.css")
 public abstract class BaseView extends VerticalLayout {
 
-  private final H1 title;
+  protected final H1 title;
 
   /**
    * Constructs an empty BaseView.
@@ -39,6 +39,7 @@ public abstract class BaseView extends VerticalLayout {
 
   /**
    * Sets the title of the view.
+   * 
    * @param titleText Title of view.
    */
   protected void setTitle(String titleText) {
@@ -56,9 +57,10 @@ public abstract class BaseView extends VerticalLayout {
 
   /**
    * Navigate to the Custom Success View, see {@link ConfirmSuccessView}
+   * 
    * @param s being of a supported String within {@link ConfirmSuccessView}
    */
-  public void navigateToSuccessView(String s){
+  public void navigateToSuccessView(String s) {
     UI.getCurrent().navigate("confirm/" + s);
   }
 

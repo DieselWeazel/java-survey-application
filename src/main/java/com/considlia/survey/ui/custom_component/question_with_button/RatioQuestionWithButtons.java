@@ -45,6 +45,7 @@ public class RatioQuestionWithButtons extends QuestionWithButtons {
     radioOptions = new RadioButtonGroup<>();
     radioOptions.setItems(options);
     radioOptions.addThemeVariants(RadioGroupVariant.LUMO_VERTICAL);
+    radioOptions.setEnabled(false);
     add(radioOptions);
   }
 
@@ -77,6 +78,7 @@ public class RatioQuestionWithButtons extends QuestionWithButtons {
     RadioButtonGroup<String> newRadio = new RadioButtonGroup<>();
     newRadio.setItems(options);
     newRadio.addThemeVariants(RadioGroupVariant.LUMO_VERTICAL);
+    newRadio.setEnabled(false);
 
     replace(radioOptions, newRadio);
     radioOptions = newRadio;

@@ -1,17 +1,7 @@
 package com.considlia.survey.ui;
 
-import com.considlia.survey.ui.custom_component.ConfirmDialog;
-import com.considlia.survey.ui.custom_component.ConfirmDialog.ConfirmDialogBuilder;
-import com.vaadin.flow.router.BeforeLeaveEvent;
-import com.vaadin.flow.router.BeforeLeaveEvent.ContinueNavigationAction;
-import com.vaadin.flow.router.BeforeLeaveObserver;
-import com.considlia.survey.ui.custom_component.showsurveycomponents.showquestionlayouts.ShowQuestionLayout;
-import com.vaadin.flow.component.HasEnabled;
-import java.awt.CheckboxGroup;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.considlia.survey.model.Survey;
@@ -21,9 +11,12 @@ import com.considlia.survey.repositories.ResponseRepository;
 import com.considlia.survey.repositories.SurveyRepository;
 import com.considlia.survey.security.CustomUserService;
 import com.considlia.survey.security.SecurityUtils;
+import com.considlia.survey.ui.custom_component.ConfirmDialog;
+import com.considlia.survey.ui.custom_component.ConfirmDialog.ConfirmDialogBuilder;
 import com.considlia.survey.ui.custom_component.showsurveycomponents.ShowQuestionFactory;
 import com.considlia.survey.ui.custom_component.showsurveycomponents.SurveyLoader;
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.HasEnabled;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H5;
@@ -31,6 +24,9 @@ import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.router.BeforeEvent;
+import com.vaadin.flow.router.BeforeLeaveEvent;
+import com.vaadin.flow.router.BeforeLeaveEvent.ContinueNavigationAction;
+import com.vaadin.flow.router.BeforeLeaveObserver;
 import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.Route;
 
@@ -140,8 +136,9 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long>, B
       } else {
         this.surveyVerticalLayout = new VerticalLayout();
         h1.setText("Restricted Access!");
-        h5.setText("It seems you have stumbled to a faulty URL. If you are looking to preview a survey, "
-            + "please go to My Profile, and from there choose the Survey you wish to preview");
+        h5.setText(
+            "It seems you have stumbled to a faulty URL. If you are looking to preview a survey, "
+                + "please go to My Profile, and from there choose the Survey you wish to preview");
       }
     }
     saveButton.addClickListener(e -> {
@@ -149,14 +146,13 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long>, B
         saveResponse();
         navigateToSuccessView(ConfirmSuccessView.SURVEY_RESPONDED_STRING);
       } else {
-        ConfirmDialog<SurveyResponse> confirmDialog = new ConfirmDialogBuilder<SurveyResponse>()
-            .with($ -> {
+        ConfirmDialog<SurveyResponse> confirmDialog =
+            new ConfirmDialogBuilder<SurveyResponse>().with($ -> {
               $.addHeaderText("You aren't finished!");
               $.addMissingFieldsList(showQuestionFactory.isComplete());
               $.allFieldsCorrectlyFilledIn = showQuestionFactory.isComplete().isConflict();
               $.addSimpleCloseButton("Got it!");
-            })
-            .createConfirmDialog();
+            }).createConfirmDialog();
         confirmDialog.open();
       }
     });
@@ -201,16 +197,14 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long>, B
     if (showQuestionFactory.isComplete().isHasChanges()) {
       ContinueNavigationAction continueNavigationAction = event.postpone();
 
-      ConfirmDialog<Survey> confirmDialog = new ConfirmDialogBuilder<Survey>()
-          .with($ -> {
-            $.action = continueNavigationAction;
-            $.runnable = this::saveResponse;
-            $.addHeaderText("You aren't finished!");
-            $.addMissingFieldsList(showQuestionFactory.isComplete());
-            $.allFieldsCorrectlyFilledIn = showQuestionFactory.isComplete().isConflict();
-            $.addSaveDiscardCancelAlternatives();
-          })
-          .createConfirmDialog();
+      ConfirmDialog<Survey> confirmDialog = new ConfirmDialogBuilder<Survey>().with($ -> {
+        $.action = continueNavigationAction;
+        $.runnable = this::saveResponse;
+        $.addHeaderText("You aren't finished!");
+        $.addMissingFieldsList(showQuestionFactory.isComplete());
+        $.allFieldsCorrectlyFilledIn = showQuestionFactory.isComplete().isConflict();
+        $.addSaveDiscardCancelAlternatives();
+      }).createConfirmDialog();
       confirmDialog.open();
     }
   }
