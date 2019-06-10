@@ -71,6 +71,7 @@ public abstract class QuestionWithButtons extends VerticalLayout {
           $.addContentText("Are you sure you want to remove question: " + question.getTitle() + "?");
           $.entityObject = question;
           $.consumer = deleteQuestionConsumer;
+          $.addRemoveAndCancelButtonsContainer();
             })
           .createConfirmDialog();
       confirmDialog.open();
