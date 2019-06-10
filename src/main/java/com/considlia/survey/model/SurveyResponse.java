@@ -36,7 +36,7 @@ public class SurveyResponse {
   // Time spent on Survey
   private Long time;
 
-  @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
   @JoinColumn(name = "response_id")
   private Set<Answer> answers = new HashSet<>();
 

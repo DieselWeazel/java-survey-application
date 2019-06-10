@@ -3,6 +3,7 @@ package com.considlia.survey.model.answer;
 import com.considlia.survey.model.question.Question;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -10,6 +11,7 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import org.hibernate.annotations.Fetch;
 
 /**
  * Answer Entity, related to {@link Question}
@@ -27,7 +29,7 @@ public abstract class Answer {
   @Column(name = "answer_id")
   private Long id;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "question_id")
   private Question question;
 

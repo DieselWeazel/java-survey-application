@@ -4,8 +4,8 @@ import com.considlia.survey.model.QuestionType;
 import com.considlia.survey.model.Survey;
 import com.considlia.survey.model.SurveyResponse;
 import com.considlia.survey.model.answer.Answer;
-import com.considlia.survey.model.answer.MultiAnswer;
-import com.considlia.survey.model.answer.MultiAnswerChoice;
+import com.considlia.survey.model.answer.CheckBoxAnswer;
+import com.considlia.survey.model.answer.CheckBoxAnswerChoice;
 import com.considlia.survey.model.answer.RadioAnswer;
 import com.considlia.survey.model.answer.RatioAnswer;
 import com.considlia.survey.model.answer.TextAnswer;
@@ -84,11 +84,11 @@ public class ResponseLoader implements ShowQuestionFactory<List<SurveyResponse>>
 
     if (question instanceof CheckBoxQuestion) {
 
-      List<MultiAnswerChoice> list = new ArrayList<>();
+      List<CheckBoxAnswerChoice> list = new ArrayList<>();
 
       for (Answer answer : question.getAnswerSet()){
-        if (answer instanceof MultiAnswer){
-          for (MultiAnswerChoice multiAnswerChoice : ((MultiAnswer) answer).getMultiAnswerChoiceSet()){
+        if (answer instanceof CheckBoxAnswer){
+          for (CheckBoxAnswerChoice multiAnswerChoice : ((CheckBoxAnswer) answer).getMultiAnswerChoiceSet()){
             list.add(multiAnswerChoice);
           }
         }
