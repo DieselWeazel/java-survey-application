@@ -3,6 +3,7 @@ package com.considlia.survey.ui.custom_component;
 import com.considlia.survey.ui.CreateSurveyView;
 import com.vaadin.flow.component.HasValue.ValueChangeListener;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.Notification.Position;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.NumberField;
@@ -75,7 +76,7 @@ public class CreateRatioComponents extends VerticalLayout {
       errorMessage += "Can contain any numbers. ";
     }
     if (!errorMessage.equals("")) {
-      new Notification(errorMessage, 2000).open();
+      new Notification(errorMessage, 2000, Position.MIDDLE).open();
     }
   }
 
