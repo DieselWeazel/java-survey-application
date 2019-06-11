@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import com.considlia.survey.model.question.MultiQuestionAlternative;
 import com.considlia.survey.model.question.Question;
+import com.considlia.survey.ui.CreateSurveyView;
 import com.considlia.survey.ui.custom_component.question_with_button.MultiQuestionWithButtons;
 import com.considlia.survey.ui.custom_component.question_with_button.QuestionWithButtons;
 import com.considlia.survey.ui.custom_component.question_with_button.RatioQuestionWithButtons;
@@ -46,10 +47,12 @@ public class EditDialog extends Dialog {
 
     inputButton = button;
     question = new TextField("Question:");
-    contentBox.add(question);
+    question.setValueChangeMode(ValueChangeMode.EAGER);
+    question.addValueChangeListener(onChange -> question
+        .setValue(CreateSurveyView.validateStringLength(question.getValue(), 255)));
 
     mandatory = new Checkbox("Mandatory Question");
-    contentBox.add(mandatory);
+    contentBox.add(question, mandatory);
 
     if (button.getParent().get().getParent().get() instanceof TextQuestionWithButtons) {
       textQuestion();
@@ -131,6 +134,7 @@ public class EditDialog extends Dialog {
     TextField ratioTxtField = new TextField(labelInput);
     ratioTxtField.setValue(valueInput);
     ratioTxtField.setValueChangeMode(ValueChangeMode.EAGER);
+    ratioTxtField.setMaxLength(255);
     ratioTxtField.addValueChangeListener(onValueChange -> showValidNotification(ratioTxtField));
     return ratioTxtField;
 
@@ -192,6 +196,11 @@ public class EditDialog extends Dialog {
   private void addNewTextField(String title) {
     HorizontalLayout horizontalBox = new HorizontalLayout();
     TextField txtAlternative = new TextField("Alternative " + (contentBox.getComponentCount() - 1));
+    txtAlternative.setValueChangeMode(ValueChangeMode.EAGER);
+    txtAlternative.addValueChangeListener(onChange -> {
+      txtAlternative
+          .setValue(CreateSurveyView.validateStringLength(txtAlternative.getValue(), 255));
+    });
     if (title != null) {
       txtAlternative.setValue(title);
     }
@@ -227,19 +236,22 @@ public class EditDialog extends Dialog {
    */
   public void showValidNotification(TextField txtField) {
     String errorMessage = "";
-    if (txtField.getValue().trim().length() < 1 || txtField.getValue().length() >= 255) {
+    if (txtField.getValue().trim().length() < 1 || txtField.getValue().length() > 255) {
       errorMessage += "Can't be empty and can only contain 255 characters.";
     }
     if (txtField.getValue().chars().anyMatch(Character::isDigit)) {
-      errorMessage += "Can contain any numbers. ";
+      errorMessage += "Can't contain any numbers. ";
+    }
+    if (txtField.getValue().length() == 255) {
+      new Notification("Can't contain any more characters.", 2000).open();
     }
     if (!errorMessage.equals("")) {
       confirm.setEnabled(false);
       new Notification(errorMessage, 2000, Position.MIDDLE).open();
     } else {
       confirm.setEnabled(true);
-
     }
+
   }
 
   /**
