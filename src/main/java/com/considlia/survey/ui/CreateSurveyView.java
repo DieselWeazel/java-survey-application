@@ -28,6 +28,7 @@ import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H5;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.Notification.Position;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.select.Select;
@@ -615,7 +616,8 @@ public class CreateSurveyView extends BaseView
   public static String validateStringLength(String string, int stringMaxLength) {
     if (string.length() > stringMaxLength) {
       string = string.substring(0, stringMaxLength);
-      Notification.show("Textfield can contain maximum " + stringMaxLength + " characters");
+      Notification.show("Textfield can contain maximum " + stringMaxLength + " characters", 2000,
+          Position.MIDDLE);
     }
     return string;
   }
