@@ -492,16 +492,19 @@ public class CreateSurveyView extends BaseView
       thisSurvey.setDescription(descriptionTextArea.getValue());
       thisSurvey.setDate(LocalDate.now());
       thisSurvey.setStatus(SurveyStatus.EDITABLE);
-
       thisSurvey.setUser(customUserService.getUser());
 
       surveyRepository.save(thisSurvey);
       hasChanges = false;
-      navigateToSuccessView(ConfirmSuccessView.SURVEY_CREATED_STRING);
+      if (returnedSurveysFromRepository.size() == 0) {
+        navigateToSuccessView(ConfirmSuccessView.SURVEY_CREATED_STRING);
+      } else {
+        navigateToSuccessView(ConfirmSuccessView.SURVEY_MODIFIED_STRING);
+      }
     } else {
 
       Notification titleError = new Notification(
-          "You already have a Survey with that title. Pleace choose another", 4000);
+          "You already have a Survey with that title. Please choose another", 4000);
       titleError.open();
       surveyTitleTextField.focus();
     }

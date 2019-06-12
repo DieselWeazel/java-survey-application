@@ -9,8 +9,8 @@ import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.Route;
 
 /**
- * Custom Navigation Page, main purpose is to display to user what has happened upon a successful event such as saving a survey
- * or sending in a response. Can be modified to include more purposes.
+ * Custom Navigation Page, main purpose is to display to user what has happened upon a successful
+ * event such as saving a survey or sending in a response. Can be modified to include more purposes.
  *
  * Written By Jonathan
  */
@@ -18,37 +18,48 @@ import com.vaadin.flow.router.Route;
 public class ConfirmSuccessView extends BaseView implements HasUrlParameter<String> {
 
   /**
-   * Custom Strings for Navigating to this View, add new Strings depending on the purpose of the arrival to this view.
+   * Custom Strings for Navigating to this View, add new Strings depending on the purpose of the
+   * arrival to this view.
    */
   public static String SURVEY_RESPONDED_STRING = "responded";
   public static String SURVEY_CREATED_STRING = "created";
+  public static String SURVEY_MODIFIED_STRING = "modified";
 
   private H5 informationText;
 
-  private Button goToProfileButton = new Button("My Profile", e -> UI.getCurrent().navigate("profileview"));
-  private Button goHomeButton = new Button("Back to Home", e-> navigateBackToHomeView());
+  private Button goToProfileButton =
+      new Button("My Profile", e -> UI.getCurrent().navigate("profileview"));
+  private Button goHomeButton = new Button("Back to Home", e -> navigateBackToHomeView());
 
   /**
    * Constructor for View.
    */
-  public ConfirmSuccessView(){
+  public ConfirmSuccessView() {
     super("Done!");
     informationText = new H5();
   }
 
   /**
-   * Parameter is mainly used for the purpose of the page. The only supported parameters are within this class.
+   * Parameter is mainly used for the purpose of the page. The only supported parameters are within
+   * this class.
+   * 
    * @param event being the navigation event.
    * @param parameter being the arrival purpose. Creation of Survey, responded survey, etc.
    */
   @Override
   public void setParameter(BeforeEvent event, String parameter) {
-    if (!parameter.isEmpty()){
-      if (parameter.equals(SURVEY_RESPONDED_STRING)){
+    if (!parameter.isEmpty()) {
+      if (parameter.equals(SURVEY_RESPONDED_STRING)) {
         informationText.setText("Your Response has been saved, thank you for participating!");
         add(informationText, goHomeButton);
-      } else if (parameter.equals(SURVEY_CREATED_STRING)){
-        informationText.setText("Your Survey has been created. You can find it under your profile. Where do you want to go now?");
+      } else if (parameter.equals(SURVEY_CREATED_STRING)) {
+        informationText.setText(
+            "Your Survey has been created. You can find it under your profile. Where do you want to go now?");
+        add(informationText);
+        add(new HorizontalLayout(goHomeButton, goToProfileButton));
+      } else if (parameter.equals(SURVEY_MODIFIED_STRING)) {
+        informationText.setText(
+            "Your Survey has been modified. You can find it under your profile. Where do you want to go now?");
         add(informationText);
         add(new HorizontalLayout(goHomeButton, goToProfileButton));
       }
