@@ -44,9 +44,9 @@ public class MainLayout extends VerticalLayout implements RouterLayout {
     navigation.add(createRouterLink(HomeView.class, "Home", VaadinIcon.HOME));
 
     if (SecurityUtils.isUserLoggedIn()) {
+      navigation.add(createRouterLink(MyProfileView.class, "Profile", VaadinIcon.USER));
       navigation.add(
           createRouterLink(CreateSurveyView.class, "Create New Survey", VaadinIcon.PLUS_CIRCLE));
-      navigation.add(createRouterLink(MyProfileView.class, "Profile View", VaadinIcon.USER));
 
       H4 usernameHeader = new H4();
       usernameHeader.setText("Logged in as: " + customUserService.getUser().getUsername());
