@@ -1,21 +1,20 @@
 package com.considlia.survey.ui;
 
-import com.considlia.survey.ui.userviews.LogoutView;
 import java.util.HashMap;
 import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
+import com.considlia.survey.security.CustomUserService;
 import com.considlia.survey.security.SecurityUtils;
 import com.considlia.survey.ui.userviews.AccessDeniedView;
 import com.considlia.survey.ui.userviews.LoginView;
+import com.considlia.survey.ui.userviews.LogoutView;
 import com.considlia.survey.ui.userviews.MyProfileView;
 import com.considlia.survey.ui.userviews.RegistrationView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasElement;
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.StyleSheet;
+import com.vaadin.flow.component.html.H4;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -31,26 +30,41 @@ public class MainLayout extends VerticalLayout implements RouterLayout {
 
   private HorizontalLayout navigation;
   private VerticalLayout contentContainer;
+  @Autowired
+  private CustomUserService customUserService;
 
   /**
    * Manages header for site. Adds different buttons depending on if user is logged in.
    */
-  public MainLayout() {
+  public MainLayout(CustomUserService customUserService) {
+    this.customUserService = customUserService;
     setId("mainlayout");
 
     navigation = new HorizontalLayout();
-
     navigation.add(createRouterLink(HomeView.class, "Home", VaadinIcon.HOME));
 
     if (SecurityUtils.isUserLoggedIn()) {
       navigation.add(
           createRouterLink(CreateSurveyView.class, "Create New Survey", VaadinIcon.PLUS_CIRCLE));
-      navigation.add(createRouterLink(MyProfileView.class, "Profileview", VaadinIcon.USER));
-      navigation.add(createRouterLink(LogoutView.class, "Logout", VaadinIcon.EXIT));
+      navigation.add(createRouterLink(MyProfileView.class, "Profile View", VaadinIcon.USER));
+
+      H4 usernameHeader = new H4();
+      usernameHeader.setText("Logged in as: " + customUserService.getUser().getUsername());
+      navigation.add(usernameHeader);
+      usernameHeader.getStyle().set("margin-left", "auto");
+      usernameHeader.getStyle().set("margin-top", "auto");
+      usernameHeader.getStyle().set("color", "#3966d8");
+
+      Button logoutButton = createRouterLink(LogoutView.class, "Logout", VaadinIcon.EXIT);
+      navigation.add(logoutButton);
 
     } else {
-      navigation.add(createRouterLink(LoginView.class, "Login", VaadinIcon.SIGN_IN));
+
       navigation.add(createRouterLink(RegistrationView.class, "Registration", VaadinIcon.PENCIL));
+      Button loginButton = createRouterLink(LoginView.class, "Login", VaadinIcon.SIGN_IN);
+      navigation.add(loginButton);
+      loginButton.getStyle().set("margin-left", "auto");
+
     }
     navigation.setClassName("header");
     contentContainer = new VerticalLayout();
