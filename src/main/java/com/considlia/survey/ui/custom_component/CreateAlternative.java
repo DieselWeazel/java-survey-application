@@ -9,6 +9,7 @@ import com.considlia.survey.ui.CreateSurveyView;
 import com.vaadin.flow.component.AbstractField.ComponentValueChangeEvent;
 import com.vaadin.flow.component.BlurNotifier.BlurEvent;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.Notification.Position;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
@@ -94,7 +95,7 @@ public class CreateAlternative extends VerticalLayout {
       textFieldList.get(textFieldList.size() - 1).focus();
     } else if (event.getSource().getValue().length() > 255) {
       event.getSource().setValue(event.getSource().getValue().substring(0, 255));
-      Notification.show("Alternative can max contain 255 characters");
+      Notification.show("Alternative can max contain 255 characters", 2000, Position.MIDDLE);
     }
 
     createAlternative(alternativeList);
@@ -136,7 +137,7 @@ public class CreateAlternative extends VerticalLayout {
       }
     }
     if (containsDuplicate && !getAlternativeList().isEmpty()) {
-      Notification.show("Your alternatives contain duplicates");
+      Notification.show("Your alternatives contain duplicates", 2000, Position.MIDDLE);
     }
   }
 
