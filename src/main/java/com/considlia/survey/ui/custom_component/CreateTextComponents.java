@@ -24,7 +24,7 @@ public class CreateTextComponents extends VerticalLayout {
 
     radioButtons = new RadioButtonGroup<>();
     radioButtons.setLabel("Answer in: ");
-    radioButtons.setItems("Textfield", "Textarea");
+    radioButtons.setItems("Textfield (255 character)", "Textarea (10 000 character)");
     radioButtons.setValue("Textfield");
     radioButtons.addValueChangeListener(event -> csv.changeBtn());
 
