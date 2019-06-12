@@ -62,7 +62,7 @@ public abstract class QuestionWithButtons extends VerticalLayout {
     initButtonEvent(upButton, MOVE_UP);
     initButtonEvent(downButton, MOVE_DOWN);
     editButton =
-        new Button(new Icon(VaadinIcon.PENCIL), event -> survey.editQuestion(event.getSource()));
+        new Button(new Icon(VaadinIcon.WRENCH), event -> survey.editQuestion(event.getSource()));
     removeButton = new Button(new Icon(VaadinIcon.TRASH), onDelete -> {
       ConfirmDialog<Question> confirmDialog = new ConfirmDialogBuilder<Question>().with($ -> {
         $.addHeaderText("Confirm Delete");

@@ -125,7 +125,7 @@ public class ShowSurveyView extends BaseView implements HasUrlParameter<Long>, B
   public void loadSurvey() {
     this.surveyVerticalLayout = showQuestionFactory.getSurveyLayout(survey);
     if (isPreviewMode) {
-      if (customUserService.getUser().getId() == survey.getUser().getId()) {
+      if (customUserService.getUser().getId().equals(survey.getUser().getId())) {
         for (int i = 0; i < this.surveyVerticalLayout.getComponentCount(); i++) {
           Component componet = this.surveyVerticalLayout.getComponentAt(i);
           if (componet instanceof HasEnabled) {

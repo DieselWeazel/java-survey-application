@@ -7,6 +7,7 @@ import java.util.Set;
 import com.considlia.survey.model.QuestionType;
 import com.considlia.survey.ui.CreateSurveyView;
 import com.vaadin.flow.component.AbstractField.ComponentValueChangeEvent;
+import com.vaadin.flow.component.BlurNotifier.BlurEvent;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.Notification.Position;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -49,7 +50,7 @@ public class CreateAlternative extends VerticalLayout {
    *
    * @param alternativeList
    */
-  public void createAlternative(List<String> alternativeList) {
+  private void createAlternative(List<String> alternativeList) {
 
     if (textFieldList.isEmpty()) {
 
@@ -58,6 +59,7 @@ public class CreateAlternative extends VerticalLayout {
 
       dynamicTextField.setPlaceholder("alternative");
       dynamicTextField.setValueChangeMode(ValueChangeMode.EAGER);
+      dynamicTextField.addBlurListener(blurevent -> blurTextFieldEvent(blurevent));
       dynamicTextField.addValueChangeListener(event -> {
         textFieldEvent(event);
       });
@@ -71,6 +73,7 @@ public class CreateAlternative extends VerticalLayout {
 
       dynamicTextField.setPlaceholder("alternative");
       dynamicTextField.setValueChangeMode(ValueChangeMode.EAGER);
+      dynamicTextField.addBlurListener(blurevent -> blurTextFieldEvent(blurevent));
       dynamicTextField.addValueChangeListener(event -> {
         textFieldEvent(event);
       });
@@ -85,7 +88,7 @@ public class CreateAlternative extends VerticalLayout {
    *
    * @param event, used to getList value and source
    */
-  public void textFieldEvent(ComponentValueChangeEvent<TextField, String> event) {
+  private void textFieldEvent(ComponentValueChangeEvent<TextField, String> event) {
     if (event.getSource().getValue().isEmpty() && textFieldList.size() > 1) {
       remove(event.getSource());
       textFieldList.remove(event.getSource());
@@ -98,16 +101,7 @@ public class CreateAlternative extends VerticalLayout {
     createAlternative(alternativeList);
     event.getSource().focus();
 
-    boolean containsDuplicate = false;
-
-    for (TextField t : textFieldList) {
-      if (t.getValue().equals(event.getSource().getValue()) && t != event.getSource()) {
-        containsDuplicate = true;
-      }
-    }
-
-    // using both Set and the above boolean to check if alternativeList
-    // contains duplicates to manage Notifications
+    // using Set to check if alternativeList contains duplicates
     Set<String> set = new LinkedHashSet<>();
     set.addAll(getAlternativeList());
 
@@ -125,9 +119,25 @@ public class CreateAlternative extends VerticalLayout {
 
     } else {
       csv.getAddQuestionButton().setEnabled(false);
-      if (containsDuplicate && !getAlternativeList().isEmpty()) {
-        Notification.show("Your alternatives contain duplicates", 2000, Position.MIDDLE);
+    }
+  }
+
+  /**
+   * This method manages the notification if the alternatives contain duplicates. The blurevent is
+   * triggered when the component loses focus.
+   * 
+   * @param blurevent
+   */
+  private void blurTextFieldEvent(BlurEvent<TextField> blurevent) {
+    boolean containsDuplicate = false;
+
+    for (TextField t : textFieldList) {
+      if (t.getValue().equals(blurevent.getSource().getValue()) && t != blurevent.getSource()) {
+        containsDuplicate = true;
       }
+    }
+    if (containsDuplicate && !getAlternativeList().isEmpty()) {
+      Notification.show("Your alternatives contain duplicates", 2000, Position.MIDDLE);
     }
   }
 

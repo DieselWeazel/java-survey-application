@@ -1,7 +1,5 @@
 package com.considlia.survey.ui.userviews;
 
-import com.considlia.survey.ui.custom_component.ConfirmDialog;
-import com.considlia.survey.ui.custom_component.ConfirmDialog.ConfirmDialogBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -11,6 +9,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import com.considlia.survey.security.SecurityUtils;
 import com.considlia.survey.ui.BaseView;
 import com.considlia.survey.ui.MainLayout;
+import com.considlia.survey.ui.custom_component.ConfirmDialog;
+import com.considlia.survey.ui.custom_component.ConfirmDialog.ConfirmDialogBuilder;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
@@ -23,8 +23,8 @@ import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.Route;
 
 /**
- * Class that handles the login process.
- * If User is logged in and somehow arrives to this view, the BeforeEnterObserver throws them back.
+ * Class that handles the login process. If User is logged in and somehow arrives to this view, the
+ * BeforeEnterObserver throws them back.
  */
 @Route(value = "login", layout = MainLayout.class)
 public class LoginView extends BaseView implements BeforeEnterObserver {
@@ -76,13 +76,11 @@ public class LoginView extends BaseView implements BeforeEnterObserver {
       UI.getCurrent().getSession().close();
       UI.getCurrent().getPage().reload();
     } else {
-      ConfirmDialog confirmDialog = new ConfirmDialogBuilder<RegistrationView>()
-          .with($ -> {
-            $.addHeaderText("Bad Credentials!");
-            $.addContentText("Wrong Username of Password, try again!");
-            $.addSimpleCloseButton("Ok");
-          })
-          .createConfirmDialog();
+      ConfirmDialog confirmDialog = new ConfirmDialogBuilder<RegistrationView>().with($ -> {
+        $.addHeaderText("Bad Credentials!");
+        $.addContentText("Wrong Username or Password, try again!");
+        $.addSimpleCloseButton("Ok");
+      }).createConfirmDialog();
       confirmDialog.open();
     }
   }
