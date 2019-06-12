@@ -103,10 +103,10 @@ public class ShowMultiChoiceAnswerLayout extends ShowAnswerLayout {
     // problem being once youve got one value you get it again the next loop iteration
     for (int i = 0; i < valuesList.length; i++) {
 
-      for (String s : categoryList) {
-        for (CheckBoxAnswerChoice checkBoxAnswerChoice : answerList) {
-          if (checkBoxAnswerChoice.getCheckedAnswer().equals(s)) {
-            System.out.println("STRIKE, found equals of: " + s + checkBoxAnswerChoice.getCheckedAnswer());
+      for (int j = 0 ; j < categoryList.size(); j++) {
+        for (int k = 1; k < answerList.size(); k++) {
+          if (answerList.get(k).getCheckedAnswer().equals(categoryList.get(j))) {
+            System.out.println("STRIKE, found equals of: " + answerList.get(k).getCheckedAnswer() + categoryList.get(j));
             valuesList[i] += 1.0;
           }
         }
