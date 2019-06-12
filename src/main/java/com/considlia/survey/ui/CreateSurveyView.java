@@ -135,13 +135,15 @@ public class CreateSurveyView extends BaseView
 
     surveyTitleTextField.addValueChangeListener(titleChange -> {
       // validates textField value with validateString
-      titleChange.getSource().setValue(validateString(titleChange.getSource().getValue(), 70));
+      titleChange.getSource()
+          .setValue(validateStringLength(titleChange.getSource().getValue(), 70));
       checkFilledFields();
     });
     descriptionTextArea.addValueChangeListener(descChange -> {
       hasChanges = true;
       // validates textField value with validateString
-      descChange.getSource().setValue(validateString(descChange.getSource().getValue(), 1000));
+      descChange.getSource()
+          .setValue(validateStringLength(descChange.getSource().getValue(), 1000));
     });
 
     descriptionTextArea.setLabel("Description");
@@ -238,7 +240,7 @@ public class CreateSurveyView extends BaseView
     questionTitleTextField.addValueChangeListener(event -> {
 
       // validates textField value with validateString
-      event.getSource().setValue(validateString(event.getSource().getValue(), 255));
+      event.getSource().setValue(validateStringLength(event.getSource().getValue(), 255));
 
       if (questionTitleTextField.isEmpty() || selectOptions.getValue() == null) {
         addQuestionButton.setEnabled(false);
@@ -611,7 +613,7 @@ public class CreateSurveyView extends BaseView
    * @param stringMaxLength
    * @returns string with valid length
    */
-  public String validateString(String string, int stringMaxLength) {
+  public static String validateStringLength(String string, int stringMaxLength) {
     if (string.length() > stringMaxLength) {
       string = string.substring(0, stringMaxLength);
       Notification.show("Textfield can contain maximum " + stringMaxLength + " characters", 2000,
