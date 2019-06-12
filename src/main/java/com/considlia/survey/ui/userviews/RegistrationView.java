@@ -12,7 +12,6 @@ import com.considlia.survey.model.Role;
 import com.considlia.survey.model.User;
 import com.considlia.survey.repositories.UserRepository;
 import com.considlia.survey.security.SecurityUtils;
-import com.considlia.survey.security.UserDetailsServiceImpl;
 import com.considlia.survey.ui.BaseView;
 import com.considlia.survey.ui.MainLayout;
 import com.considlia.survey.ui.custom_component.ConfirmDialog;
@@ -29,6 +28,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.data.validator.EmailValidator;
+import com.vaadin.flow.data.validator.RegexpValidator;
 import com.vaadin.flow.data.validator.StringLengthValidator;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
@@ -61,10 +61,6 @@ public class RegistrationView extends BaseView implements BeforeEnterObserver {
 
   @Autowired
   private UserRepository userRepository;
-
-  @Autowired
-  private UserDetailsServiceImpl userDetailsService;
-
 
   private static final Logger LOGGER = LoggerFactory.getLogger(RegistrationView.class);
 
@@ -146,6 +142,11 @@ public class RegistrationView extends BaseView implements BeforeEnterObserver {
 
     firstName = new TextField("First Name");
     firstName.addKeyPressListener(Key.ENTER, event -> registerUser());
+    // firstName.addValueChangeListener(e -> {
+    // if (!firstName.getValue().matches("^[a-zA-Z]+$")) {
+    // Notification.show("FirstName can only contain letters!");
+    // }
+    // });
 
     lastName = new TextField("Last Name");
     lastName.addKeyPressListener(Key.ENTER, event -> registerUser());
@@ -179,25 +180,27 @@ public class RegistrationView extends BaseView implements BeforeEnterObserver {
    */
   private void bindFields() {
     userBinder.setBean(user);
-    userBinder.forField(email).withValidator(new EmailValidator("Must be an Email address"))
+    userBinder.forField(email).asRequired("Email can not be left empty")
+        .withValidator(new EmailValidator("Must be an Email address"))
         .bind(User::getEmail, User::setEmail);
-    userBinder.forField(firstName)
-        .withValidator(
-            new StringLengthValidator("Must be more than 3 characters & max 255", 1, 255))
+
+    userBinder.forField(firstName).asRequired("Firstname can not be left empty")
+        .withValidator(new StringLengthValidator("Firstname can max be 10 characters", 1, 30))
+        .withValidator(new RegexpValidator("Field can only contain letters", "^[a-zA-ZåÅäÄöÖ]+$"))
         .bind(User::getFirstName, User::setFirstName);
-    userBinder.forField(lastName)
-        .withValidator(
-            new StringLengthValidator("Must be more than 3 characters & max 255", 1, 255))
+
+    userBinder.forField(lastName).asRequired("Lastname can not be left empty")
+        .withValidator(new StringLengthValidator("Lastname can max be 10 characters", 1, 30))
+        .withValidator(new RegexpValidator("Field can only contain letters", "^[a-zA-ZåÅäÄöÖ]+$"))
         .bind(User::getLastName, User::setLastName);
-    userBinder.forField(username)
+    userBinder.forField(username).asRequired("Username can not be left empty")
         .withValidator(
             new StringLengthValidator("Must be more than 3 characters & max 255", 1, 255))
         .bind(User::getUsername, User::setUsername);
-    userBinder.forField(passwordField)
+    userBinder.forField(passwordField).asRequired("Password can not be left empty")
         .withValidator(
             new StringLengthValidator("Must be more than 3 characters & max 255", 1, 255))
         .bind(User::getPassword, User::setPassword);
-    // userBinder.bindInstanceFields(this);
   }
 
   /**

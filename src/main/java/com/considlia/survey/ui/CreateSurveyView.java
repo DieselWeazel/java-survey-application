@@ -12,7 +12,6 @@ import com.considlia.survey.model.Survey;
 import com.considlia.survey.model.SurveyStatus;
 import com.considlia.survey.model.question.Question;
 import com.considlia.survey.repositories.SurveyRepository;
-import com.considlia.survey.repositories.UserRepository;
 import com.considlia.survey.security.CustomUserService;
 import com.considlia.survey.ui.custom_component.ConfirmDialog;
 import com.considlia.survey.ui.custom_component.ConfirmDialog.ConfirmDialogBuilder;
@@ -80,8 +79,6 @@ public class CreateSurveyView extends BaseView
   private CreateRatioComponents createRatioComponents;
   private CreateTextComponents createTextComponents;
 
-  @Autowired
-  private UserRepository userRepository;
   @Autowired
   private CustomUserService customUserService;
 
@@ -484,7 +481,7 @@ public class CreateSurveyView extends BaseView
         .findByUserAndTitle(surveyTitleTextField.getValue().trim(), customUserService.getUser());
 
     if ((returnedSurveysFromRepository.size() < 1) || ((returnedSurveysFromRepository.size() >= 1)
-        && (returnedSurveysFromRepository.get(0).getId() == thisSurvey.getId()))) {
+        && (returnedSurveysFromRepository.get(0).getId().equals(thisSurvey.getId())))) {
 
       thisSurvey.setCreator(customUserService.getUser().getUsername());
       thisSurvey.setTitle(surveyTitleTextField.getValue());
