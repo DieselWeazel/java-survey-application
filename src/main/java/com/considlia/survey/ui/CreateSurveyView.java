@@ -496,7 +496,7 @@ public class CreateSurveyView extends BaseView
 
       surveyRepository.save(thisSurvey);
       hasChanges = false;
-      if (returnedSurveysFromRepository.size() == 0) {
+      if (title.getText().equals("Create Survey")) {
         navigateToSuccessView(ConfirmSuccessView.SURVEY_CREATED_STRING);
       } else {
         navigateToSuccessView(ConfirmSuccessView.SURVEY_MODIFIED_STRING);
