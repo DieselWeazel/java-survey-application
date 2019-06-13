@@ -142,11 +142,6 @@ public class RegistrationView extends BaseView implements BeforeEnterObserver {
 
     firstName = new TextField("First Name");
     firstName.addKeyPressListener(Key.ENTER, event -> registerUser());
-    // firstName.addValueChangeListener(e -> {
-    // if (!firstName.getValue().matches("^[a-zA-Z]+$")) {
-    // Notification.show("FirstName can only contain letters!");
-    // }
-    // });
 
     lastName = new TextField("Last Name");
     lastName.addKeyPressListener(Key.ENTER, event -> registerUser());
@@ -185,21 +180,21 @@ public class RegistrationView extends BaseView implements BeforeEnterObserver {
         .bind(User::getEmail, User::setEmail);
 
     userBinder.forField(firstName).asRequired("Firstname can not be left empty")
-        .withValidator(new StringLengthValidator("Firstname can max be 10 characters", 1, 30))
+        .withValidator(new StringLengthValidator("Firstname can max be 30 characters", 1, 30))
         .withValidator(new RegexpValidator("Field can only contain letters", "^[a-zA-ZåÅäÄöÖ]+$"))
         .bind(User::getFirstName, User::setFirstName);
 
     userBinder.forField(lastName).asRequired("Lastname can not be left empty")
-        .withValidator(new StringLengthValidator("Lastname can max be 10 characters", 1, 30))
+        .withValidator(new StringLengthValidator("Lastname can max be 30 characters", 1, 30))
         .withValidator(new RegexpValidator("Field can only contain letters", "^[a-zA-ZåÅäÄöÖ]+$"))
         .bind(User::getLastName, User::setLastName);
     userBinder.forField(username).asRequired("Username can not be left empty")
         .withValidator(
-            new StringLengthValidator("Must be more than 3 characters & max 255", 1, 255))
+            new StringLengthValidator("Must be more than 2 characters & max 255", 2, 255))
         .bind(User::getUsername, User::setUsername);
     userBinder.forField(passwordField).asRequired("Password can not be left empty")
         .withValidator(
-            new StringLengthValidator("Must be more than 3 characters & max 255", 1, 255))
+            new StringLengthValidator("Must be more than 6 characters & max 255", 6, 255))
         .bind(User::getPassword, User::setPassword);
   }
 
