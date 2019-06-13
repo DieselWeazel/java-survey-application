@@ -117,7 +117,6 @@ public class RegistrationView extends BaseView implements BeforeEnterObserver {
    * Signs in User upon successful registration.
    */
   private void signIn() {
-    System.out.println(user.getUsername() + " " + user.getPassword());
     Authentication request =
         new UsernamePasswordAuthenticationToken(user.getUsername(), passwordString);
     Authentication result = authenticationManagerBean.authenticate(request);
@@ -189,12 +188,10 @@ public class RegistrationView extends BaseView implements BeforeEnterObserver {
         .withValidator(new RegexpValidator("Field can only contain letters", "^[a-zA-ZåÅäÄöÖ]+$"))
         .bind(User::getLastName, User::setLastName);
     userBinder.forField(username).asRequired("Username can not be left empty")
-        .withValidator(
-            new StringLengthValidator("Must be more than 2 characters & max 255", 2, 255))
+        .withValidator(new StringLengthValidator("Must be 2 or more characters & max 40", 2, 40))
         .bind(User::getUsername, User::setUsername);
     userBinder.forField(passwordField).asRequired("Password can not be left empty")
-        .withValidator(
-            new StringLengthValidator("Must be more than 6 characters & max 255", 6, 255))
+        .withValidator(new StringLengthValidator("Must be 6 or more characters & max 40", 6, 40))
         .bind(User::getPassword, User::setPassword);
   }
 
