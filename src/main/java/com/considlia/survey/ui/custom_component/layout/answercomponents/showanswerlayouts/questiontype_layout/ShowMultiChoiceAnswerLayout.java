@@ -101,17 +101,17 @@ public class ShowMultiChoiceAnswerLayout extends ShowAnswerLayout {
 
     // note to self: this gives everything the same value, your iterating the wrong way and your missing the details..
     // problem being once youve got one value you get it again the next loop iteration
-    for (int i = 0; i < valuesList.length; i++) {
-
-      for (int j = 0 ; j < categoryList.size(); j++) {
-        for (int k = 1; k < answerList.size(); k++) {
-          if (answerList.get(k).getCheckedAnswer().equals(categoryList.get(j))) {
-            System.out.println("STRIKE, found equals of: " + answerList.get(k).getCheckedAnswer() + categoryList.get(j));
-            valuesList[i] += 1.0;
-          }
-        }
-      }
-    }
+//    for (int i = 0; i < valuesList.length; i++) {
+//
+//      for (int j = 0 ; j < categoryList.size(); j++) {
+//        for (int k = 1; k < answerList.size(); k++) {
+//          if (answerList.get(k).getCheckedAnswer().equals(categoryList.get(j))) {
+//            System.out.println("STRIKE, found equals of: " + answerList.get(k).getCheckedAnswer() + categoryList.get(j));
+//            valuesList[i] += 1.0;
+//          }
+//        }
+//      }
+//    }
 //    for (CheckBoxAnswerChoice checkBoxAnswerChoice : answerList) {
 //      if (checkBoxAnswerChoice.get)
 //    }
@@ -121,9 +121,20 @@ public class ShowMultiChoiceAnswerLayout extends ShowAnswerLayout {
 //      }
 //    })
 
+    valuesList[0] = 2.0;
+    valuesList[1] = 3.0;
+    valuesList[2] = 5.0;
+    valuesList[3] = 0.0;
+    valuesList[4] = 2.0;
     for (int i = 0; i < valuesList.length; i++){
       System.out.println(i + " has value: " + valuesList[i]);
     }
+    List<Double> myList = new ArrayList<>();
+    myList.add(10.0);
+    myList.add(23.0);
+    myList.add(2.0);
+    myList.add(44.0);
+    myList.add(12.0);
 
 //    for (int i = 0; i < valueList.length; i++){
 //      for (int j = 0; j < valueList[i].length; j++){
@@ -138,8 +149,8 @@ public class ShowMultiChoiceAnswerLayout extends ShowAnswerLayout {
                     .build())
             .withDataLabels(DataLabelsBuilder.get().withEnabled(false).build())
             .withStroke(
-                StrokeBuilder.get().withShow(true).withWidth(5.0).withColors("red").build())
-            .withSeries(new Series<>("choices", valuesList))
+                StrokeBuilder.get().withShow(true).withWidth(5.0).withColors("transparent").build())
+        .withSeries(new Series("my List", myList.listIterator().next()))
             .withYaxis(
                 YAxisBuilder.get()
                     .withTitle(com.github.appreciated.apexcharts.config.yaxis.builder.TitleBuilder.get().withText("lol").build())
