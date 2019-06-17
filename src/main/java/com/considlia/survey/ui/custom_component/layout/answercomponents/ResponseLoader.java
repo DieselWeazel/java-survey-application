@@ -1,10 +1,15 @@
 package com.considlia.survey.ui.custom_component.layout.answercomponents;
 
+import com.considlia.survey.model.QuestionType;
 import com.considlia.survey.model.Survey;
 import com.considlia.survey.model.SurveyResponse;
 import com.considlia.survey.model.answer.Answer;
 import com.considlia.survey.model.answer.CheckBoxAnswer;
 import com.considlia.survey.model.answer.CheckBoxAnswerChoice;
+import com.considlia.survey.model.answer.RadioAnswer;
+import com.considlia.survey.model.answer.RatioAnswer;
+import com.considlia.survey.model.answer.TextAnswer;
+import com.considlia.survey.model.answer.Answer;
 import com.considlia.survey.model.answer.RadioAnswer;
 import com.considlia.survey.model.answer.RatioAnswer;
 import com.considlia.survey.model.answer.TextAnswer;
@@ -27,7 +32,6 @@ import com.considlia.survey.ui.custom_component.layout.answercomponents.showansw
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
