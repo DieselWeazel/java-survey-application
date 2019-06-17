@@ -351,7 +351,7 @@ public class CreateSurveyView extends BaseView
 
     extraComponents.removeAll();
     createTextComponents = new CreateTextComponents(this);
-    createTextComponents.getRadioButtons().setValue("Textfield");
+    createTextComponents.getRadioButtons().setValue("Textfield (255 character)");
     extraComponents.add(createTextComponents);
 
     createAlternative = null;

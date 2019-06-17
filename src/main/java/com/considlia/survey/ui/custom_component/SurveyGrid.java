@@ -96,7 +96,7 @@ public class SurveyGrid extends VerticalLayout {
 
         for (SurveyResponse sr : surveyResponseList) {
           for (Survey s : surveyList) {
-            if (s.getId() == sr.getSurvey().getId()) {
+            if (s.getId().equals(sr.getSurvey().getId())) {
               answeredSurveys.add(s);
             }
           }
